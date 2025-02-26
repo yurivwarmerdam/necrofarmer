@@ -5,7 +5,7 @@ from random import randint, random
 from scripts.tilemap import Tilemap
 from pygame.sprite import Sprite
 from pygame.key import ScancodeWrapper
-
+import time
 
 class PlayerEntity:
     def __init__(self, game, e_type, pos, size, sprite, mana=200):
@@ -68,7 +68,26 @@ class Skeleton(Sprite):
 
         self.walking = False
         self.walk_goal = Vector2(0, 0)
-        self.walk_speed = 1
+        self.walk_speed = 1.15
+        self.sleep_time=60
+
+    def wait(self):
+        while True:
+            if random() < 0.01:
+                return True
+            time.sleep(1/self.sleep_time)
+        
+
+    def pick_player_walk_goal(self):
+        return self.player.pos + Vector2(
+                randint(-50, 50), randint(-50, 50)
+            )
+
+    def walk_toward_goal(self,goal:Vector2):
+        while self.rect.center !=goal:
+            Vector2(self.rect.center).move_towards(goal,self.walk_speed)
+            time.sleep(1/self.sleep_time)
+        return True
 
     def update(self):
         # TODO: this might work better wiht some subpixel position precision.

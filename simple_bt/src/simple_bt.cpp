@@ -1,9 +1,19 @@
 #include "simple_bt.h"
-// #include <boost/python/module.hpp>
+#include <chrono>
 #include <pybind11/pybind11.h>
+#include <pybind11/pytypes.h>
+#include <pybind11/stl.h>
+#include <thread>
 
 namespace py = pybind11;
 
+struct SkeletonActions {
+  py::function wait;
+  py::function walk_toward_player;
+
+public:
+  SkeletonActions
+};
 
 BT::NodeStatus ApproachObject::tick() {
   std::cout << "approach object: " << this->name() << std::endl;
@@ -29,6 +39,9 @@ BT::NodeStatus GripperInterface::close() {
 }
 
 int simple_run() {
+  std::cout << "testing" << std::endl;
+  // Fairly sure this is an overview of different ways in wich you can
+  // call/organize/define your nodes/actions.
   BT::BehaviorTreeFactory factory;
   factory.registerNodeType<ApproachObject>("ApproachObject");
   factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
@@ -39,38 +52,37 @@ int simple_run() {
   factory.registerSimpleAction("CloseGripper",
                                std::bind(&GripperInterface::close, &gripper));
 
-  auto tree = factory.createTreeFromFile("/c/dev/c/btrees/simple_bt/some_tree.xml");
+  auto tree =
+      factory.createTreeFromFile("/c/dev/c/btrees/simple_bt/some_tree.xml");
   tree.tickOnce();
 
   return 0;
 }
 
-// How to expose function as C. Makes it consumable by ctypes. 
-// You lose class functions and all that jazz, tho. Feels like it's more for funciton calls.
-extern "C" {
-  int c_run(){
-    return simple_run();
+int test_func(py::function thing) {
+  thing();
+  py::gil_scoped_release release;
+  std::cout << "starting" << std::endl;
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::cout << "ended" << std::endl;
+
+  return 0;
+}
+
+class SkeletonAI {
+  SkeletonActions actions;
+public:
+  SkeletonAI(py::function wait, py::function walk_toward_player) {
+    actions.wait = wait;
+    actions.walk_toward_player = walk_toward_player;
   }
-}
+};
 
-float some_fn(float x, float y) {
-  return x+y;
-}
+// this does... nothing? Because it's not referenced in the cmake.
+PYBIND11_MODULE(bind, handle) { handle.def("asd", &test_func); }
 
-// PYBIND11_MODULE(some_bind, m) {
-//   m.doc()="an example plugin";
-//   m.def("simple_run", &simple_run);
-// }
-
-
-PYBIND11_MODULE(some_bind, handle){
+PYBIND11_MODULE(simple_run_bind, handle) {
   handle.doc() = "some docstring";
   handle.def("a_func", &simple_run);
+  handle.def("test_func", &test_func);
 }
-
-
-// This how to do it in Boost. Boost seems p. outdated, tho.
-// BOOST_PYTHON_MODULE(simple_module) {
-//   using namespace boost::python;
-//   def("run", simple_run);
-// }

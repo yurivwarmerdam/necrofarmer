@@ -7,7 +7,17 @@ from scripts.entities import PlayerEntity, Skeleton, Seed
 from scripts.utils import load_image  # , sheet_to_sprite
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-import ctypes
+from simple_bt.build import simple_run_bind
+from threading import Thread
+
+from time import sleep
+
+asd="asd!"
+
+def sleeper():
+    print(f"starting sleep{asd}")
+    sleep(2)
+    print("ending sleep")
 
 class MainClass:
     def __init__(self):
@@ -77,8 +87,17 @@ class MainClass:
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
         # print(self.tilemap.layers["ground"].sprites())
 
-        my_thing=ctypes.CDLL("/c/dev/c/btrees/simple_bt/build/libsimple_lib.so")
-        my_thing.c_run()
+        
+        # my_thing=ctypes.CDLL("/c/dev/c/btrees/simple_bt/build/libsimple_lib.so")
+        # my_thing.c_run()
+        print("---")
+        # simple_run_bind.test_func(sleeper)
+        print("---")
+        thread=Thread(target=simple_run_bind.test_func,args=[sleeper])
+        # # thread=Thread(target=sleeper)
+        thread.start()
+        # print("asddef")
+        
 
     def main(self):
         while True:

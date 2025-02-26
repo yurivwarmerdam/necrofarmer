@@ -24,7 +24,7 @@ find_package(pybind11 REQUIRED)
 
 INCLUDE_DIRECTORIES(
     ${BTREEC_INC}
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
     ${Boost_INCLUDE_DIR}
     ${PYTHON_INCLUDE_DIRS}
 )
@@ -55,9 +55,9 @@ TARGET_LINK_LIBRARIES(simple_run
     ${PYTHON_LIBRARIES}
 )
 
-pybind11_add_module(some_bind src/simple_bt.cpp)
+pybind11_add_module(simple_run_bind src/simple_bt.cpp)
 
-TARGET_LINK_LIBRARIES(some_bind PUBLIC
+TARGET_LINK_LIBRARIES(simple_run_bind PUBLIC
     behaviortree_cpp
     ${PYTHON_LIBRARIES}
 )
