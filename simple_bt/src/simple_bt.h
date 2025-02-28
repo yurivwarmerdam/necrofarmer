@@ -4,7 +4,6 @@
 #include <chrono>
 #include <iostream>
 
-
 using namespace std::chrono_literals;
 using std::string;
 
@@ -27,5 +26,3 @@ private:
 };
 
 int simple_run();
-
-// int main() { return 0; }

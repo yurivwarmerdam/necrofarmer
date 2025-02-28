@@ -1,5 +1,7 @@
 #include "simple_bt.h"
+#include <behaviortree_cpp/basic_types.h>
 #include <chrono>
+#include <functional>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
@@ -9,10 +11,8 @@ namespace py = pybind11;
 
 struct SkeletonActions {
   py::function wait;
-  py::function walk_toward_player;
-
-public:
-  SkeletonActions
+  py::function pick_player_walk_goal;
+  py::function walk_toward_goal;
 };
 
 BT::NodeStatus ApproachObject::tick() {
@@ -71,10 +71,42 @@ int test_func(py::function thing) {
 
 class SkeletonAI {
   SkeletonActions actions;
+  BT::BehaviorTreeFactory factory;
+
 public:
-  SkeletonAI(py::function wait, py::function walk_toward_player) {
+  SkeletonAI(py::function wait, py::function pick_player_walk_goal,
+             py::function walk_toward_goal) {
     actions.wait = wait;
-    actions.walk_toward_player = walk_toward_player;
+    actions.pick_player_walk_goal =
+        pick_player_walk_goal actions.walk_toward_goal = walk_toward_goal;
+    factory.registerSimpleAction("Wait", std::bind(wait))
+  }
+
+  BT::NodeStatus wait() {
+    bool result = actions.wait();
+    if (result) {
+      return BT::NodeStatus::SUCCESS;
+    } else {
+      return BT::NodeStatus::FAILURE;
+    }
+  }
+
+  BT::NodeStatus pick_player_walk_goal() {
+    bool result = actions.pick_player_walk_goal();
+    if (result) {
+      return BT::NodeStatus::SUCCESS;
+    } else {
+      return BT::NodeStatus::FAILURE;
+    }
+  }
+
+  BT::NodeStatus walk_toward_goal() {
+    bool result = actions.walk_toward_goal();
+    if (result) {
+      return BT::NodeStatus::SUCCESS;
+    } else {
+      return BT::NodeStatus::FAILURE;
+    }
   }
 };
 
