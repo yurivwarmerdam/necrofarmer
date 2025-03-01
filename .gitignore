@@ -2,3 +2,4 @@ build/
 btcpp_sample/
 venv/
 .vscode/
+scripts/__pycache__/
