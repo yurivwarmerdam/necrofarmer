@@ -8,6 +8,14 @@ git clone --recurse-submodules git@github.com:yurivwarmerdam/simple_bt.git
 source venv/bin/activate
 ```
 
+environment setup install script:
+```
+sudo apt install libczmq-dev libsqlite3-dev pybind11-dev
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Some notes:
 - [pytmx](https://pytmx.readthedocs.io/en/latest/). Allows loading of tilemaps into pygame. [code snippet at this video timestamp](https://youtu.be/N6xqCwblyiw?t=4793)
 - [pydew valley](https://www.youtube.com/llkwatch?v=T4IX36sP_0c) Steal this liberally
@@ -17,11 +25,6 @@ source venv/bin/activate
 - [BehaviorTree.cpp github repo](https://github.com/BehaviorTree/BehaviorTree.CPP?tab=readme-ov-file)  
 
 all installs have been done from source.  
-
-Required backround apps:
-```
-sudo apt install libczmq-dev libsqlite3-dev sqlite pybind11-dev
-```
 ### Links:
 
 [The Intian guy tutorial](https://www.youtube.com/watch?v=4PUiDmD5dkg)  
