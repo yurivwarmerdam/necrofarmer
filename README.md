@@ -27,7 +27,8 @@ pip install -r requirements.txt
 all installs have been done from source.  
 ### Links:
 
-[The Intian guy tutorial](https://www.youtube.com/watch?v=4PUiDmD5dkg)  
+[The Hummingbird tutorial P2](https://www.youtube.com/watch?v=4PUiDmD5dkg)  
+[The Hummingbird tutorial P3](https://www.youtube.com/watch?v=T_Q57-audMk)  
 
 [Sample Project](https://github.com/BehaviorTree/btcpp_sample)
 
@@ -58,4 +59,7 @@ tilemap...
 coordinate calculation?
 
 Currently looking at pybind11: https://www.youtube.com/watch?v=_5T70cAXDJ0  
-Corresponding gist: https://gist.github.com/safijari/f7aec85b89906b4b90a8f33039c11263
+Corresponding gist: https://gist.github.com/safijari/f7aec85b89906b4b90a8f33039c11263  
+functors: https://www.geeksforgeeks.org/functors-in-cpp/  
+The BT paper: https://arxiv.org/pdf/1709.00084  
+Indian demo P3 github: https://github.com/thehummingbird/robotics_demos/blob/main/behavior_trees/grasp_place_robot_demo/bt_demo.cpp
