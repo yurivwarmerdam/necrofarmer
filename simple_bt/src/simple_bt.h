@@ -59,3 +59,7 @@ public:
 
   BT::NodeStatus walk_toward_goal();
 };
+
+class sleeper : BT::StatefulActionNode{
+  
+};

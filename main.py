@@ -12,11 +12,21 @@ from threading import Thread
 
 from time import sleep
 
-asd="asd!"
+asd = "asd!"
+
 
 def sleeper():
     print(f"starting sleep{asd}")
-    sleep(2)
+    sleep(0.5)
+    print("ending sleep")
+
+def output_dummy()->int:
+    """Simulates returning a value such as a move target"""
+    return 1
+
+def parameter_sleeper(value:int):
+    print(f"My param is: {value}! Time to sleep")
+    sleep(0.5)
     print("ending sleep")
 
 class MainClass:
@@ -59,27 +69,27 @@ class MainClass:
             Skeleton(
                 self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
             ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
+            # ),
         )
 
         self.ui = Group(ManaBar(self))
@@ -87,17 +97,15 @@ class MainClass:
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
         # print(self.tilemap.layers["ground"].sprites())
 
-        
         # my_thing=ctypes.CDLL("/c/dev/c/btrees/simple_bt/build/libsimple_lib.so")
         # my_thing.c_run()
         print("---")
         # simple_run_bind.test_func(sleeper)
         print("---")
-        thread=Thread(target=simple_run_bind.test_func,args=[sleeper])
+        thread = Thread(target=simple_run_bind.test_func, args=[sleeper])
         # # thread=Thread(target=sleeper)
         thread.start()
         # print("asddef")
-        
 
     def main(self):
         while True:
@@ -105,7 +113,7 @@ class MainClass:
             _delta = self.clock.get_time()
             # fill bg
             self.display.fill((14, 64, 128))
-            # quit boilerplate. Consider moving to generic outer loop
+            # Input stuff and quit boilerplate. Consider moving quit to generic outer loop.
             for event in pg.event.get():
                 if event.type == pg.QUIT or (
                     event.type == pg.KEYDOWN and event.key == pg.K_F8

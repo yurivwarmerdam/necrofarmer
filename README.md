@@ -63,3 +63,76 @@ Corresponding gist: https://gist.github.com/safijari/f7aec85b89906b4b90a8f33039c
 functors: https://www.geeksforgeeks.org/functors-in-cpp/  
 The BT paper: https://arxiv.org/pdf/1709.00084  
 Indian demo P3 github: https://github.com/thehummingbird/robotics_demos/blob/main/behavior_trees/grasp_place_robot_demo/bt_demo.cpp
+
+
+### Cheecky generated code to peek at:
+```
+import threading
+import time
+import mymodule  # This is the compiled Pybind11 module
+
+def my_python_function():
+    print("Python function started...")
+    time.sleep(1)  # Simulate work
+    print("Python function finished.")
+
+# Call the C++ function inside a Python thread
+thread = threading.Thread(target=mymodule.start_cpp_function, args=(my_python_function,))
+thread.start()
+thread.join()  # Wait for the thread to finish
+
+```
+
+```
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>  // Needed for passing Python functions
+#include <thread>
+#include <atomic>
+#include <chrono>
+#include <iostream>
+
+namespace py = pybind11;
+
+// Function to be called from Python
+void start_cpp_function(std::function<void()> py_func) {
+    std::atomic<bool> finished(false);
+
+    // Start the Python function in a separate thread
+    std::thread py_thread([&]() {
+        py_func();  // Call the Python function
+        finished = true;  // Mark it as finished
+    });
+
+    // Monitor progress every 100ms
+    while (!finished) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::cout << "Checking if Python function is done...\n";
+    }
+
+    py_thread.join();  // Ensure the Python thread finishes
+    std::cout << "Python function has completed! Exiting C++ function.\n";
+}
+
+// Bind the function to Python using Pybind11
+PYBIND11_MODULE(mymodule, m) {
+    m.def("start_cpp_function", &start_cpp_function, "Start a Python function in a separate thread and monitor it.");
+}
+
+```
+expected:
+```
+Checking if Python function is done...
+Checking if Python function is done...
+Checking if Python function is done...
+Python function started...
+Checking if Python function is done...
+Python function finished.
+Python function has completed! Exiting C++ function.
+
+```
+
+### TODO:
+- dummy implementation of bt.
+- write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
+- integrate actual behaviors. Maybe move to static spot.
+- take it from there. (probably work the three threads draw, tick, and action into execution)
