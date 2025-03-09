@@ -7,8 +7,6 @@
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
 
-
-
 namespace py = pybind11;
 
 using namespace std::chrono_literals;
@@ -60,6 +58,14 @@ public:
   BT::NodeStatus walk_toward_goal();
 };
 
-class sleeper : BT::StatefulActionNode{
-  
+class SleeperC : BT::StatefulActionNode
+{
+private:
+  py::function py_sleeper;
+
+public:
+  void SleeperC(py::function py_sleeper);
+  BT::NodeStatus onStart() override;
+  BT:NodeStatus onRunning() override;
+  BT:NodeStatus onHalted() override;
 };
