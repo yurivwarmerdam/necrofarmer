@@ -62,10 +62,10 @@ class SleeperC : BT::StatefulActionNode
 {
 private:
   py::function py_sleeper;
-
-public:
-  void SleeperC(py::function py_sleeper);
+  std::thread py_thread;
+  public: 
+  SleeperC(py::function py_sleeper);
   BT::NodeStatus onStart() override;
   BT:NodeStatus onRunning() override;
   BT:NodeStatus onHalted() override;
-};
+};  

@@ -131,6 +131,44 @@ Python function has completed! Exiting C++ function.
 
 ```
 
+-----------------  
+Boilerplate example of a thread function. Note the double wrapping with the destructor. (that ~ notation)
+```
+#include <iostream>
+#include <thread>
+
+class Worker {
+private:
+    std::thread workerThread;
+
+    void run() {
+        for (int i = 0; i < 5; ++i) {
+            std::cout << "Worker thread running: " << i << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    }
+
+public:
+    Worker() {
+        // Assign the thread to a member variable and start it
+        workerThread = std::thread(&Worker::run, this);
+    }
+
+    ~Worker() {
+        if (workerThread.joinable()) {
+            workerThread.join();  // Ensure thread is joined before destruction
+        }
+    }
+};
+
+int main() {
+    Worker w;  // Thread starts automatically in constructor
+    std::this_thread::sleep_for(std::chrono::seconds(3));  // Main thread waits
+    std::cout << "Main thread exiting\n";
+    return 0;  // Worker destructor ensures thread cleanup
+```
+
+
 ### TODO:
 - dummy implementation of bt.
 - write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
