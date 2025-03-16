@@ -10,6 +10,7 @@
 namespace py = pybind11;
 
 using namespace std::chrono_literals;
+using namespace BT;
 using std::string;
 
 class ApproachObject : public BT::SyncActionNode
@@ -34,38 +35,28 @@ private:
 
 int simple_run();
 
-struct SkeletonActions
-{
-  py::function wait;
-  py::function pick_player_walk_goal;
-  py::function walk_toward_goal;
-};
-
-class SkeletonAI
-{
-private:
-  SkeletonActions actions;
-  BT::BehaviorTreeFactory factory;
-
-public:
-  SkeletonAI(py::function wait, py::function pick_player_walk_goal,
-             py::function walk_toward_goal);
-
-  BT::NodeStatus c_wait();
-
-  BT::NodeStatus pick_player_walk_goal();
-
-  BT::NodeStatus walk_toward_goal();
-};
-
 class SleeperC : BT::StatefulActionNode
 {
+public:
+  // SleeperC(py::function py_sleeper);
+  SleeperC(const std::string &name, const NodeConfig &config, py::function py_sleeper);
+  static BT::PortsList providedPorts();
+
+  BT::NodeStatus onStart() override;
+  BT::NodeStatus onRunning() override;
+  void onHalted() override;
+
 private:
   py::function py_sleeper;
   std::thread py_thread;
-  public: 
-  SleeperC(py::function py_sleeper);
+};
+
+class OutputDummyC : BT::StatefulActionNode
+{
+  OutputDummyC((const std::string &name, const NodeConfig &config);
+  static BT::PortsList providedPorts();
+
   BT::NodeStatus onStart() override;
-  BT:NodeStatus onRunning() override;
-  BT:NodeStatus onHalted() override;
-};  
+  BT::NodeStatus onRunning() override;
+  void onHalted() override; 
+}

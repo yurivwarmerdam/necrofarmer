@@ -18,6 +18,9 @@ find_package(PythonLibs 3.12 REQUIRED)
 find_package(Boost COMPONENTS REQUIRED python)
 find_package(pybind11 REQUIRED)
 
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+
 ### Iclude and link stuff ###
 
 
@@ -54,6 +57,10 @@ TARGET_LINK_LIBRARIES(simple_run
     ${Boost_LIBRARIES}
     ${PYTHON_LIBRARIES}
 )
+
+# target_compile_options(simple_lib PRIVATE -fvisibility=hidden)
+# target_compile_options(simple_run PUBLIC -fvisibility=hidden)
+
 
 pybind11_add_module(simple_run_bind src/simple_bt.cpp)
 
