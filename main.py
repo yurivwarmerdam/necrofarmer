@@ -99,12 +99,13 @@ class MainClass:
 
         # my_thing=ctypes.CDLL("/c/dev/c/btrees/simple_bt/build/libsimple_lib.so")
         # my_thing.c_run()
-        print("---")
         # simple_run_bind.test_func(sleeper)
+        print(dir(simple_run_bind.PyTreeBuilder))
         print("---")
         thread = Thread(target=simple_run_bind.test_func, args=[sleeper])
         # # thread=Thread(target=sleeper)
         thread.start()
+        print("---")
         # print("asddef")
 
     def main(self):

@@ -39,10 +39,6 @@ ADD_LIBRARY(simple_lib SHARED
     ${SRC}/simple_bt.cpp
 )
 
-# ADD_LIBRARY(some_bind SHARED
-#     ${SRC}/simple_bt.cpp
-# )
-
 ADD_EXECUTABLE(simple_run
     ${SRC}/simple_run.cpp
 )

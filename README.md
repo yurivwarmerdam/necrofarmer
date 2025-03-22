@@ -168,6 +168,16 @@ int main() {
     return 0;  // Worker destructor ensures thread cleanup
 ```
 
+### Relevant vscode extentions:  
+- clangd
+- C/C++
+- C/C++ Themes
+- C/C++ extension Pack
+- CMake
+- CMake IntelliSense
+- CMake Tools
+
+
 
 ### TODO:
 - dummy implementation of bt.
