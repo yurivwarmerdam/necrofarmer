@@ -65,10 +65,11 @@ PYBIND11_MODULE(simple_run_bind, handle) {
   handle.def("a_func", &simple_run);
   handle.def("test_func", &test_func);
 
-  py::class_<TreeBuilder>(handle, "PyTreeBuilder").def(py::init<py::list>());
+  // py::class_<TreeBuilder>(handle, "PyTreeBuilder")
+  //     .def(py::init<py::function, py::function, py::function>());
 }
 
-SleeperC::SleeperC(const std::string &name, const NodeConfig &config,
+SleeperC::SleeperC(const std::string& name, const NodeConfig& config,
                    py::function py_func)
     : StatefulActionNode(name, config), py_func(py_func) {}
 
@@ -84,4 +85,13 @@ void SleeperC::onHalted() {}
 
 BT::PortsList SleeperC::providedPorts() { return {}; }
 
-TreeBuilder::TreeBuilder(py::dict node_actions) {}
+TreeBuilder::TreeBuilder(py::function sleeper, py::function output_dummy,
+                         py::function parameter_sleeper) {
+  BT::BehaviorTreeFactory factory;
+  factory.registerNodeType<SleeperC, py::function>("SleeperC", sleeper);
+  // factory.registerNodeType<OutputDummyC, py::function>("OutputDummyC",
+  //                                                      output_dummy);
+  // factory.registerNodeType<ParameterSleeperC, py::function>("ParameterSleeperC",
+  //                                                           parameter_sleeper);
+  tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
+}

@@ -17,7 +17,7 @@ using std::string;
 
 class ApproachObject : public BT::SyncActionNode {
 public:
-  explicit ApproachObject(const string &name) : BT::SyncActionNode(name, {}) {}
+  explicit ApproachObject(const string &name) : SyncActionNode(name, {}) {}
   BT::NodeStatus tick() override;
 };
 BT::NodeStatus CheckBattery();
@@ -51,7 +51,7 @@ private:
   std::thread py_thread;
 };
 
-class OutputDummyC : BT::StatefulActionNode {
+class OutputDummyC : StatefulActionNode {
 public:
   OutputDummyC(const std::string &name, const NodeConfig &config,
                py::function py_func);
@@ -66,7 +66,7 @@ private:
   std::thread py_thread;
 };
 
-class ParameterSleeperC : BT::StatefulActionNode {
+class ParameterSleeperC : StatefulActionNode {
 public:
   ParameterSleeperC(const std::string &name, const NodeConfig &config,
                     py::function py_func);
@@ -82,7 +82,14 @@ private:
 
 class TreeBuilder {
 public:
-  TreeBuilder(py::dict node_actions);
+  TreeBuilder(py::function sleeper, py::function output_dummy,
+              py::function parameter_sleeper);
 
   Tree GetTree();
+
+private:
+  py::function sleeper;
+  py::function output_dummy;
+  py::function parameter_sleeper;
+  Tree tree;
 };
