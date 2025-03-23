@@ -1,4 +1,5 @@
 #include "simple_bt.h"
+#include <behaviortree_cpp/tree_node.h>
 #include <functional>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
@@ -69,29 +70,36 @@ PYBIND11_MODULE(simple_run_bind, handle) {
   //     .def(py::init<py::function, py::function, py::function>());
 }
 
-SleeperC::SleeperC(const std::string& name, const NodeConfig& config,
-                   py::function py_func)
+SleeperC::SleeperC(const std::string &name, const NodeConfig &config,
+                   const py::function &py_func)
     : StatefulActionNode(name, config), py_func(py_func) {}
 
+SleeperC::SleeperC(const std::string &name, const NodeConfig &config)
+    : StatefulActionNode(name, config) {}
+
+PortsList SleeperC::providedPorts() { return {}; }
 BT::NodeStatus SleeperC::onStart() {
   // py::gil_scoped_release release;
   py_thread = std::thread([&]() { py_func(); });
   return BT::NodeStatus::SUCCESS;
 }
-
 BT::NodeStatus SleeperC::onRunning() { return BT::NodeStatus::SUCCESS; }
-
 void SleeperC::onHalted() {}
+SleeperC::~SleeperC() {
+  // delete py_func;
+  // std::thread py_thread;
+}
 
-BT::PortsList SleeperC::providedPorts() { return {}; }
-
-TreeBuilder::TreeBuilder(py::function sleeper, py::function output_dummy,
-                         py::function parameter_sleeper) {
+TreeBuilder::TreeBuilder(const py::function &py_sleeper,
+                         const py::function &output_dummy,
+                         const py::function &parameter_sleeper) {}
+void TreeBuilder::do_tree_build(const py::function &py_sleeper) {
   BT::BehaviorTreeFactory factory;
-  factory.registerNodeType<SleeperC, py::function>("SleeperC", sleeper);
+  factory.registerNodeType<SleeperC>("SleeperC", py_sleeper);
   // factory.registerNodeType<OutputDummyC, py::function>("OutputDummyC",
   //                                                      output_dummy);
-  // factory.registerNodeType<ParameterSleeperC, py::function>("ParameterSleeperC",
+  // factory.registerNodeType<ParameterSleeperC,
+  // py::function>("ParameterSleeperC",
   //                                                           parameter_sleeper);
   tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
 }

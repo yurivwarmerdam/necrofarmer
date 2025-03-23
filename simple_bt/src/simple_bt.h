@@ -35,26 +35,26 @@ private:
 
 int simple_run();
 
-class SleeperC : BT::StatefulActionNode {
+class SleeperC : public BT::StatefulActionNode {
 public:
-  // SleeperC(py::function py_sleeper);
   SleeperC(const std::string &name, const NodeConfig &config,
-           py::function py_func);
+           const py::function &py_func);
+  SleeperC(const std::string &name, const NodeConfig &config);
+ 
   static BT::PortsList providedPorts();
-
+  ~SleeperC();
   BT::NodeStatus onStart() override;
   BT::NodeStatus onRunning() override;
   void onHalted() override;
-
 private:
   py::function py_func;
   std::thread py_thread;
 };
 
-class OutputDummyC : StatefulActionNode {
+class OutputDummyC : public StatefulActionNode {
 public:
   OutputDummyC(const std::string &name, const NodeConfig &config,
-               py::function py_func);
+               const py::function &py_func);
   static BT::PortsList providedPorts();
 
   BT::NodeStatus onStart() override;
@@ -66,10 +66,10 @@ private:
   std::thread py_thread;
 };
 
-class ParameterSleeperC : StatefulActionNode {
+class ParameterSleeperC : public StatefulActionNode {
 public:
   ParameterSleeperC(const std::string &name, const NodeConfig &config,
-                    py::function py_func);
+                    const py::function &py_func);
   static BT::PortsList providedPorts();
   BT::NodeStatus onStart() override;
   BT::NodeStatus onRunning() override;
@@ -82,11 +82,11 @@ private:
 
 class TreeBuilder {
 public:
-  TreeBuilder(py::function sleeper, py::function output_dummy,
-              py::function parameter_sleeper);
+  TreeBuilder(const py::function &sleeper, const py::function &output_dummy,
+              const py::function &parameter_sleeper);
 
   Tree GetTree();
-
+  void do_tree_build(const py::function &py_sleeper);
 private:
   py::function sleeper;
   py::function output_dummy;
