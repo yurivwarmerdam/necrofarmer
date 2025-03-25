@@ -1,5 +1,6 @@
 #include "behaviortree_cpp/action_node.h"
 #include "behaviortree_cpp/bt_factory.h"
+#include <atomic>
 #include <behaviortree_cpp/basic_types.h>
 #include <behaviortree_cpp/tree_node.h>
 #include <chrono>
@@ -49,6 +50,7 @@ public:
 private:
   py::function py_func;
   std::thread py_thread;
+  std::atomic<bool> done;
 };
 
 class OutputDummyC : public StatefulActionNode {
@@ -86,7 +88,6 @@ public:
               const py::function &parameter_sleeper);
 
   Tree GetTree();
-  void do_tree_build(const py::function &py_sleeper);
 private:
   py::function sleeper;
   py::function output_dummy;

@@ -168,6 +168,26 @@ int main() {
     return 0;  // Worker destructor ensures thread cleanup
 ```
 
+### Interrupting behavior from inside python:
+
+According to the app that shall not be named:
+```
+import signal
+
+def my_function():
+    try:
+        while True:
+            print("Running...")
+    except KeyboardInterrupt:
+        print("Stopped.")
+
+# Call interrupt_python() from C++ to stop the function
+
+```
+
+Perhaps I can have it 
+
+
 ### Relevant vscode extentions:  
 - clangd
 - C/C++

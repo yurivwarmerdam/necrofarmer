@@ -1,9 +1,9 @@
-<root main_tree="MainTree">
+<root main_tree="MainTree" BTCPP_format="4" >
     <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
             <SleeperC name="SleeperC" />
-            <OutputDummyC name="OutputDummyC" />
-            <ParameterSleeperC name="close_gripper" />
+            <!-- <OutputDummyC name="OutputDummyC" />
+            <ParameterSleeperC name="ParameterSleeperC" /> -->
         </Sequence>
     </BehaviorTree>
 </root>

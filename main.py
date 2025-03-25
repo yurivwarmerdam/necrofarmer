@@ -20,14 +20,17 @@ def sleeper():
     sleep(0.5)
     print("ending sleep")
 
-def output_dummy()->int:
+
+def output_dummy() -> int:
     """Simulates returning a value such as a move target"""
     return 1
 
-def parameter_sleeper(value:int):
+
+def parameter_sleeper(value: int):
     print(f"My param is: {value}! Time to sleep")
     sleep(0.5)
     print("ending sleep")
+
 
 class MainClass:
     def __init__(self):
@@ -97,14 +100,16 @@ class MainClass:
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
         # print(self.tilemap.layers["ground"].sprites())
 
-        # my_thing=ctypes.CDLL("/c/dev/c/btrees/simple_bt/build/libsimple_lib.so")
-        # my_thing.c_run()
-        # simple_run_bind.test_func(sleeper)
-        print(dir(simple_run_bind.PyTreeBuilder))
         print("---")
-        thread = Thread(target=simple_run_bind.test_func, args=[sleeper])
-        # # thread=Thread(target=sleeper)
-        thread.start()
+        # thread = Thread(target=simple_run_bind.test_func, args=[sleeper])
+        # thread.start()
+
+        # # simple_run_bind.simple_run()
+        # thread = Thread(target=simple_run_bind.simple_run)
+        # thread.start()
+
+        builder=simple_run_bind.PyTreeBuilder(sleeper,output_dummy,parameter_sleeper)
+        builder
         print("---")
         # print("asddef")
 
