@@ -1,7 +1,7 @@
 #include "simple_bt.h"
+#include <behaviortree_cpp/bt_factory.h>
 #include <behaviortree_cpp/tree_node.h>
 #include <functional>
-#include <future>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
@@ -97,19 +97,21 @@ SleeperC::~SleeperC() {
 TreeBuilder::TreeBuilder(const py::function &py_sleeper,
                          const py::function &output_dummy,
                          const py::function &parameter_sleeper) {
-  BT::BehaviorTreeFactory factory;
+
   factory.registerNodeType<SleeperC>("SleeperC", py_sleeper);
   // factory.registerNodeType<OutputDummyC, py::function>("OutputDummyC",
   //                                                      output_dummy);
   // factory.registerNodeType<ParameterSleeperC,
   // py::function>("ParameterSleeperC",
   //                                                           parameter_sleeper);
-  tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
 }
 
 // TODO: Got dammit. Trees are @brief...! They go out of scope, they are
 // destroyed. Time to think THIS nonsense over
-Tree TreeBuilder::GetTree() { return tree; }
+void TreeBuilder::tick_tree() {
+  Tree tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
+  tree.tickOnce();
+}
 
 PYBIND11_MODULE(simple_run_bind, handle) {
   handle.doc() = "some docstring";
@@ -117,5 +119,6 @@ PYBIND11_MODULE(simple_run_bind, handle) {
   handle.def("test_func", &test_func);
 
   py::class_<TreeBuilder>(handle, "PyTreeBuilder")
-      .def(py::init<py::function, py::function, py::function>());
+      .def(py::init<py::function, py::function, py::function>())
+      .def("tick_tree", &TreeBuilder::tick_tree);
 }

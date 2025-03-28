@@ -87,10 +87,10 @@ public:
   TreeBuilder(const py::function &sleeper, const py::function &output_dummy,
               const py::function &parameter_sleeper);
 
-  Tree GetTree();
+  void tick_tree();
 private:
   py::function sleeper;
   py::function output_dummy;
   py::function parameter_sleeper;
-  Tree tree;
+  BT::BehaviorTreeFactory factory;
 };

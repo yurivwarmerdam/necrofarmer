@@ -108,8 +108,10 @@ class MainClass:
         # thread = Thread(target=simple_run_bind.simple_run)
         # thread.start()
 
-        builder=simple_run_bind.PyTreeBuilder(sleeper,output_dummy,parameter_sleeper)
-        builder
+        builder = simple_run_bind.PyTreeBuilder(
+            sleeper, output_dummy, parameter_sleeper
+        )
+        builder.tick_tree()
         print("---")
         # print("asddef")
 
