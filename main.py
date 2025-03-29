@@ -17,7 +17,7 @@ asd = "asd!"
 
 def sleeper():
     print(f"starting sleep{asd}")
-    1/0
+    1 / 0
     sleep(0.5)
     print("ending sleep")
 
@@ -113,10 +113,9 @@ class MainClass:
             sleeper, output_dummy, parameter_sleeper
         )
         print("---")
-        
+
         builder.tick_tree()
         print("---")
-        # print("asddef")
 
     def main(self):
         while True:

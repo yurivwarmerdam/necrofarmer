@@ -204,3 +204,4 @@ Perhaps I can have it
 - write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
 - integrate actual behaviors. Maybe move to static spot.
 - take it from there. (probably work the three threads draw, tick, and action into execution)
+- boost stuff: https://theboostcpplibraries.com/boost.thread-management

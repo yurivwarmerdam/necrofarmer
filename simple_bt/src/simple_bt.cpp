@@ -8,6 +8,7 @@
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
 #include <thread>
+#include <utility>
 
 namespace py = pybind11;
 
@@ -68,12 +69,10 @@ SleeperC::SleeperC(const std::string &name, const NodeConfig &config,
                    const py::function &py_func)
     : StatefulActionNode(name, config), py_func(py_func) {}
 
-SleeperC::SleeperC(const std::string &name, const NodeConfig &config)
-    : StatefulActionNode(name, config) {}
-
 PortsList SleeperC::providedPorts() { return {}; }
 
 void SleeperC::pyWrapper() {
+  // py::gil_scoped_release release;
   py_func();
   std::cout << "finished sleeper process" << std::endl;
   done = true;
@@ -81,12 +80,10 @@ void SleeperC::pyWrapper() {
 
 BT::NodeStatus SleeperC::onStart() {
   // std::future<void> py_future = std::async(std::launch::async, py_func);
-  std::cout << "starting sleeper node" << std::endl;
+  std::cout << "starting sleeper node. Also concurrenly: "<< boost::thread::hardware_concurrency()  << std::endl;
   done = false;
-
-  py_thread = std::thread({
-
-  });
+  boost::thread thread(&SleeperC::pyWrapper, this);
+  this->py_thread = std::move(thread);
   std::cout << "succesfully started sleeper node" << std::endl;
   return BT::NodeStatus::RUNNING;
 }
@@ -99,10 +96,7 @@ BT::NodeStatus SleeperC::onRunning() {
   }
 }
 void SleeperC::onHalted() {}
-SleeperC::~SleeperC() {
-  // delete py_func;
-  // std::thread py_thread;
-}
+SleeperC::~SleeperC() { this->py_thread.join(); }
 
 TreeBuilder::TreeBuilder(const py::function &py_sleeper,
                          const py::function &output_dummy,
@@ -112,8 +106,7 @@ TreeBuilder::TreeBuilder(const py::function &py_sleeper,
   // factory.registerNodeType<OutputDummyC, py::function>("OutputDummyC",
   //                                                      output_dummy);
   // factory.registerNodeType<ParameterSleeperC,
-  // py::function>("ParameterSleeperC",
-  //                                                           parameter_sleeper);
+  // py::function>("ParameterSleeperC", parameter_sleeper);
 }
 
 void TreeBuilder::tick_tree() {
@@ -121,8 +114,7 @@ void TreeBuilder::tick_tree() {
   auto status = tree.tickOnce();
   std::cout << "start tick done" << std::endl;
   while (status == NodeStatus::RUNNING) {
-    // auto tree = factory.createTreeFromFile("simple_bt/trees/some_tree.xml");
-    std::cout << "more ticks?" << std::endl;
+    tree.sleep(std::chrono::milliseconds(100));
     tree.tickOnce();
   }
 }

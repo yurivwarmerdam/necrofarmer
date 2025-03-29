@@ -3,6 +3,7 @@
 #include <atomic>
 #include <behaviortree_cpp/basic_types.h>
 #include <behaviortree_cpp/tree_node.h>
+#include <boost/thread.hpp>
 #include <chrono>
 #include <iostream>
 #include <pybind11/pybind11.h>
@@ -41,15 +42,16 @@ public:
   SleeperC(const std::string &name, const NodeConfig &config,
            const py::function &py_func);
   SleeperC(const std::string &name, const NodeConfig &config);
- 
+
   static BT::PortsList providedPorts();
   ~SleeperC();
   BT::NodeStatus onStart() override;
   BT::NodeStatus onRunning() override;
   void onHalted() override;
+
 private:
   py::function py_func;
-  std::thread py_thread;
+  boost::thread py_thread;
   std::atomic<bool> done;
   void pyWrapper();
 };
@@ -66,7 +68,7 @@ public:
 
 private:
   py::function py_func;
-  std::thread py_thread;
+  // boost::thread py_thread;
 };
 
 class ParameterSleeperC : public StatefulActionNode {
@@ -80,9 +82,8 @@ public:
 
 private:
   py::function py_func;
-  std::thread py_thread;
+  // boost::thread py_thread;
 };
-
 
 class TreeBuilder {
 public:
@@ -90,6 +91,7 @@ public:
               const py::function &parameter_sleeper);
 
   void tick_tree();
+
 private:
   py::function sleeper;
   py::function output_dummy;
