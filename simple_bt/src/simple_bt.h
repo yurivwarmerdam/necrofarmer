@@ -51,6 +51,7 @@ private:
   py::function py_func;
   std::thread py_thread;
   std::atomic<bool> done;
+  void pyWrapper();
 };
 
 class OutputDummyC : public StatefulActionNode {
@@ -81,6 +82,7 @@ private:
   py::function py_func;
   std::thread py_thread;
 };
+
 
 class TreeBuilder {
 public:

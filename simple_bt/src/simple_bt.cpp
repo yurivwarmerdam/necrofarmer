@@ -2,6 +2,8 @@
 #include <behaviortree_cpp/bt_factory.h>
 #include <behaviortree_cpp/tree_node.h>
 #include <functional>
+#include <iostream>
+#include <ostream>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
@@ -71,17 +73,25 @@ SleeperC::SleeperC(const std::string &name, const NodeConfig &config)
 
 PortsList SleeperC::providedPorts() { return {}; }
 
+void SleeperC::pyWrapper() {
+  py_func();
+  std::cout << "finished sleeper process" << std::endl;
+  done = true;
+}
+
 BT::NodeStatus SleeperC::onStart() {
   // std::future<void> py_future = std::async(std::launch::async, py_func);
+  std::cout << "starting sleeper node" << std::endl;
   done = false;
 
-  py_thread = std::thread([&]() {
-    py_func();
-    done = true;
+  py_thread = std::thread({
+
   });
-  return BT::NodeStatus::SUCCESS;
+  std::cout << "succesfully started sleeper node" << std::endl;
+  return BT::NodeStatus::RUNNING;
 }
 BT::NodeStatus SleeperC::onRunning() {
+  std::cout << "running sleeper node" << std::endl;
   if (done) {
     return BT::NodeStatus::SUCCESS;
   } else {
@@ -106,11 +116,15 @@ TreeBuilder::TreeBuilder(const py::function &py_sleeper,
   //                                                           parameter_sleeper);
 }
 
-// TODO: Got dammit. Trees are @brief...! They go out of scope, they are
-// destroyed. Time to think THIS nonsense over
 void TreeBuilder::tick_tree() {
-  Tree tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
-  tree.tickOnce();
+  auto tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
+  auto status = tree.tickOnce();
+  std::cout << "start tick done" << std::endl;
+  while (status == NodeStatus::RUNNING) {
+    // auto tree = factory.createTreeFromFile("simple_bt/trees/some_tree.xml");
+    std::cout << "more ticks?" << std::endl;
+    tree.tickOnce();
+  }
 }
 
 PYBIND11_MODULE(simple_run_bind, handle) {
