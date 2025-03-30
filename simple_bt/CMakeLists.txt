@@ -17,12 +17,12 @@ SET(BTREEC_LIB ${BIn}/BehaviorTree.CPP "location of .so from external project bu
 find_package(PythonLibs 3.12 REQUIRED)
 find_package(Boost COMPONENTS REQUIRED python)
 find_package(pybind11 REQUIRED)
-
+# find_package(Boost 1.45.0 COMPONENTS thread) 
+find_package(Boost COMPONENTS thread) 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 
 ### Iclude and link stuff ###
-
 
 
 INCLUDE_DIRECTORIES(
@@ -30,6 +30,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src
     ${Boost_INCLUDE_DIR}
     ${PYTHON_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 LINK_DIRECTORIES(
@@ -46,12 +47,14 @@ TARGET_LINK_LIBRARIES(simple_lib
     behaviortree_cpp
     ${Boost_LIBRARIES}
     ${PYTHON_LIBRARIES}
+    ${Boost_LIBRARIES}
 )
 TARGET_LINK_LIBRARIES(simple_run
     simple_lib
     behaviortree_cpp
     ${Boost_LIBRARIES}
     ${PYTHON_LIBRARIES}
+    ${Boost_LIBRARIES}
 )
 
 # target_compile_options(simple_lib PRIVATE -fvisibility=hidden)

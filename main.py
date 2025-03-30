@@ -7,7 +7,7 @@ from scripts.entities import PlayerEntity, Skeleton, Seed
 from scripts.utils import load_image  # , sheet_to_sprite
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-from simple_bt.build import simple_run_bind
+# from simple_bt.build import simple_run_bind
 from threading import Thread
 
 from time import sleep
@@ -73,27 +73,27 @@ class MainClass:
             Skeleton(
                 self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
             ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            # ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
+            ),
         )
 
         self.ui = Group(ManaBar(self))
@@ -109,12 +109,12 @@ class MainClass:
         # thread = Thread(target=simple_run_bind.simple_run)
         # thread.start()
 
-        builder = simple_run_bind.PyTreeBuilder(
-            sleeper, output_dummy, parameter_sleeper
-        )
+        # builder = simple_run_bind.PyTreeBuilder(
+        #     sleeper, output_dummy, parameter_sleeper
+        # )
         print("---")
 
-        builder.tick_tree()
+        # builder.tick_tree()
         print("---")
 
     def main(self):
