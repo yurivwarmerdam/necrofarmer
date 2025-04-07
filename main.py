@@ -7,7 +7,7 @@ from scripts.entities import PlayerEntity, Skeleton, Seed
 from scripts.utils import load_image  # , sheet_to_sprite
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-# from simple_bt.build import simple_run_bind
+from simple_bt.build import simple_run_bind
 from threading import Thread
 
 from time import sleep
@@ -112,10 +112,10 @@ class MainClass:
         # builder = simple_run_bind.PyTreeBuilder(
         #     sleeper, output_dummy, parameter_sleeper
         # )
-        print("---")
+        # print("---")
 
         # builder.tick_tree()
-        print("---")
+        # print("---")
 
     def main(self):
         while True:

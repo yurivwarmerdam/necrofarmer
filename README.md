@@ -205,3 +205,22 @@ Perhaps I can have it
 - integrate actual behaviors. Maybe move to static spot.
 - take it from there. (probably work the three threads draw, tick, and action into execution)
 - boost stuff: https://theboostcpplibraries.com/boost.thread-management
+
+
+bt.py
+- xml
+- ports
+- RemoteActionNode (starts thread. Perhaps puts stuff on ports and/or takes return value for success)
+
+
+bb:
+K1:v1
+
+tr:  <- this part will only become relevant once I build the treebuilder/parser!!
+K1->y1 <- should this be a copy??
+
+
+nd:
+y1:v1
+
+take home here: the TREE makes a mapping from bb key to node key (and probably still refers the same underlying value; so passing the value by reference)

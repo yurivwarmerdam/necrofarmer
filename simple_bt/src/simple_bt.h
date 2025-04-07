@@ -2,6 +2,7 @@
 #include "behaviortree_cpp/bt_factory.h"
 #include <atomic>
 #include <behaviortree_cpp/basic_types.h>
+#include <behaviortree_cpp/blackboard.h>
 #include <behaviortree_cpp/tree_node.h>
 #include <boost/thread.hpp>
 #include <chrono>
@@ -91,6 +92,7 @@ public:
               const py::function &parameter_sleeper);
 
   void tick_tree();
+  void tick_or_create_tree();
 
 private:
   py::function sleeper;

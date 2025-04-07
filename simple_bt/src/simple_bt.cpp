@@ -80,7 +80,8 @@ void SleeperC::pyWrapper() {
 
 BT::NodeStatus SleeperC::onStart() {
   // std::future<void> py_future = std::async(std::launch::async, py_func);
-  std::cout << "starting sleeper node. Also concurrenly: "<< boost::thread::hardware_concurrency()  << std::endl;
+  std::cout << "starting sleeper node. Also concurrenly: "
+            << boost::thread::hardware_concurrency() << std::endl;
   done = false;
   boost::thread thread(&SleeperC::pyWrapper, this);
   this->py_thread = std::move(thread);
@@ -102,7 +103,10 @@ TreeBuilder::TreeBuilder(const py::function &py_sleeper,
                          const py::function &output_dummy,
                          const py::function &parameter_sleeper) {
 
+  // blackboard = BT::Blackboard::create();
+  // blackboard -> set("done", false);
   factory.registerNodeType<SleeperC>("SleeperC", py_sleeper);
+  factory.registerBehaviorTreeFromFile("simple_bt/trees/skeleton.xml");
   // factory.registerNodeType<OutputDummyC, py::function>("OutputDummyC",
   //                                                      output_dummy);
   // factory.registerNodeType<ParameterSleeperC,
@@ -110,7 +114,7 @@ TreeBuilder::TreeBuilder(const py::function &py_sleeper,
 }
 
 void TreeBuilder::tick_tree() {
-  auto tree = factory.createTreeFromFile("simple_bt/trees/skeleton.xml");
+  auto tree=factory.createTree("MainTree");
   auto status = tree.tickOnce();
   std::cout << "start tick done" << std::endl;
   while (status == NodeStatus::RUNNING) {
