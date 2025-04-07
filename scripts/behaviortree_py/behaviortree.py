@@ -143,7 +143,12 @@ class InputPort:
         pass
 
 
-class BBInputPort(InputPort):
+class StaticInputPort(InputPort):
+    """Allows nodes to transparently read input port values.
+
+    Args:
+        value: the value contained within this Port.
+    """
     def __init__(self, value):
         self.value = value
 
@@ -151,8 +156,14 @@ class BBInputPort(InputPort):
         return self.value
 
 
-class StaticInputPort(InputPort):
-    def __init__(self, blackboard, key):
+class BBInputPort(InputPort):
+    """Allows nodes to transparently read input port values from the global blackboard.
+
+    Args:
+        blackboard: the blackboard to real values from.
+        key: the the blackboard key containing the relevant port value.
+    """
+    def __init__(self, blackboard:dict, key:str):
         self.blackboard = blackboard
         self.key = key
 
@@ -161,7 +172,14 @@ class StaticInputPort(InputPort):
 
 
 class OutputPort:
-    def __init__(self, blackboard, key):
+    """Maps global blackboard keys to node internal names for output ports.
+    
+    Args:
+        blackboard: the blackboard to write to.
+        key: the global blackboard key this will write to.
+    
+    """
+    def __init__(self, blackboard:dict, key:str):
         self.blackboard = blackboard
         self.key = key
 

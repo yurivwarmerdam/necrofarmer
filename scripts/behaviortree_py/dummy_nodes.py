@@ -1,4 +1,12 @@
-from behaviortree import SimpleActionNode, NodeStatus, SequenceNode, FallBackNode
+from behaviortree import (
+    SimpleActionNode,
+    NodeStatus,
+    SequenceNode,
+    OutputPort,
+    FallBackNode,
+    StaticInputPort,
+    BBInputPort,
+)
 
 
 class Succeeder(SimpleActionNode):
@@ -12,15 +20,19 @@ class Failer(SimpleActionNode):
         print("Failure")
         return NodeStatus.FAILURE
 
+
 class Outputter(SimpleActionNode):
-    def tick(self):
-        self.set_output("text","hello world!")
+    def tick(self) -> NodeStatus:
+        self.set_output("text", "hello world!")
         return NodeStatus.SUCCESS
 
+
 class Talker(SimpleActionNode):
-    def tick(self):
-        message=self.get_input("text")
+    def tick(self) -> NodeStatus:
+        message = self.get_input("text")
         print(f"I found the message: {message}")
+        return NodeStatus.SUCCESS
+
 
 def main():
     # sequence
@@ -34,7 +46,21 @@ def main():
     # fallabck
     # my_sequence=FallBackNode([failer(),succeeder()])
     # my_sequence=FallBackNode([succeeder(),failer()])
-    my_sequence = FallBackNode([SequenceNode([Succeeder(), Failer()]), Failer()])
+    # my_sequence = FallBackNode([SequenceNode([Succeeder(), Failer()]), Failer()])
+
+    # blackboard
+
+    # my_sequence = SequenceNode(
+    #     [Talker(input_ports={"text":StaticInputPort("a static string")})]
+    # )
+
+    my_sequence = SequenceNode(
+        [
+            Outputter(output_ports={"text": OutputPort(blackboard, key="key_storage")}),
+            Talker(input_ports={"text": BBInputPort(blackboard, "key_storage")}),
+        ]
+    )
+
     print("initial tick")
     tree_status = my_sequence.tick()
     while tree_status == NodeStatus.RUNNING:
