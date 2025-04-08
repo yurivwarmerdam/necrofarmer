@@ -6,6 +6,7 @@ from behaviortree import (
     FallBackNode,
     StaticInputPort,
     BBInputPort,
+    BehaviorTreeFactory,
 )
 
 
@@ -67,6 +68,8 @@ def main():
         print("ticking")
         tree_status = my_sequence.tick()
 
+    factory=BehaviorTreeFactory()
+    factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
 
 if __name__ == "__main__":
     main()

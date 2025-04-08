@@ -185,3 +185,12 @@ class OutputPort:
 
     def set(self, value):
         self.blackboard[self.key] = value
+
+from bs4 import BeautifulSoup
+
+class BehaviorTreeFactory:
+    def load_tree_from_xml(self, file:str):
+        with open(file,"r") as f:
+            data=f.read()
+        b_data=BeautifulSoup(data,"xml")
+        print(dir(b_data))
