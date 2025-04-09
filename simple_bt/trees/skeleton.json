@@ -1,0 +1,14 @@
+{"MainTree":
+{}}
+
+
+
+<root main_tree="MainTree" BTCPP_format="4" >
+    <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <Sleeper name="Sleeper" />
+            <!-- <OutputDummyC name="OutputDummyC" />
+            <ParameterSleeperC name="ParameterSleeperC" /> -->
+        </Sequence>
+    </BehaviorTree>
+</root>

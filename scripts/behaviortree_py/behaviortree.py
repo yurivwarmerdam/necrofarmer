@@ -1,5 +1,5 @@
 from enum import Enum
-
+import abc
 
 class NodeStatus(Enum):
     IDLE = 0
@@ -79,7 +79,7 @@ class SequenceNode(ControlNode):
             child.status = NodeStatus.IDLE
 
 
-class FallBackNode(ControlNode):
+class FallbackNode(ControlNode):
     def tick(self):
         if self.node_status == NodeStatus.IDLE:
             self.node_status = NodeStatus.RUNNING
@@ -190,7 +190,29 @@ from bs4 import BeautifulSoup
 
 class BehaviorTreeFactory:
     def load_tree_from_xml(self, file:str):
+        print("---------")
         with open(file,"r") as f:
             data=f.read()
-        b_data=BeautifulSoup(data,"xml")
-        print(dir(b_data))
+        bs_data=BeautifulSoup(data,"xml")
+        bs_tree=bs_data.find("BehaviorTree")
+        # children = [child for child in behavior_tree.children if child.name]
+
+        for child in bs_tree.children:
+            print("-elem-")
+            print(child)
+
+    def parse_elems(elems,acc)->Node:
+        elem_class=globals()[elems]
+        print(elems)
+        if elem_class is LeafNode:
+            print("leaf!")
+        else:
+            print()
+    
+    def walk_tags(tag, depth=0):
+        """Dumb chatgpt functiont hat doesn't do what I want, but gives me some exmample use of good functions."""
+        indent = "  " * depth
+        print(f"{indent}<{tag.name}> {tag.attrs}")
+
+        for child in tag.find_all(recursive=False):
+            walk_tags(child, depth + 1)

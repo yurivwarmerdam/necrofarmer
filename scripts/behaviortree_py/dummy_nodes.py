@@ -3,7 +3,7 @@ from behaviortree import (
     NodeStatus,
     SequenceNode,
     OutputPort,
-    FallBackNode,
+    FallbackNode,
     StaticInputPort,
     BBInputPort,
     BehaviorTreeFactory,
@@ -36,18 +36,18 @@ class Talker(SimpleActionNode):
 
 
 def main():
-    # sequence
-    # my_sequence = SequenceNode([succeeder(), failer()])
-    my_sequence = SequenceNode(
-        children=[SequenceNode([Succeeder(), Succeeder()]), Failer()]
-    )
-
     blackboard = {}
 
+    # sequence
+    # my_sequence = SequenceNode([succeeder(), failer()])
+    # my_sequence = SequenceNode(
+    #     children=[SequenceNode([Succeeder(), Succeeder()]), Failer()]
+    # )
+
     # fallabck
-    # my_sequence=FallBackNode([failer(),succeeder()])
-    # my_sequence=FallBackNode([succeeder(),failer()])
-    # my_sequence = FallBackNode([SequenceNode([Succeeder(), Failer()]), Failer()])
+    # my_sequence=FallbackNode([failer(),succeeder()])
+    # my_sequence=FallbackNode([succeeder(),failer()])
+    # my_sequence = FallbackNode([SequenceNode([Succeeder(), Failer()]), Failer()])
 
     # blackboard
 
@@ -68,8 +68,9 @@ def main():
         print("ticking")
         tree_status = my_sequence.tick()
 
-    factory=BehaviorTreeFactory()
+    factory = BehaviorTreeFactory()
     factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
+
 
 if __name__ == "__main__":
     main()
