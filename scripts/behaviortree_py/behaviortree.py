@@ -1,6 +1,7 @@
 from enum import Enum
 import abc
 
+
 class NodeStatus(Enum):
     IDLE = 0
     RUNNING = 1
@@ -149,6 +150,7 @@ class StaticInputPort(InputPort):
     Args:
         value: the value contained within this Port.
     """
+
     def __init__(self, value):
         self.value = value
 
@@ -163,7 +165,8 @@ class BBInputPort(InputPort):
         blackboard: the blackboard to real values from.
         key: the the blackboard key containing the relevant port value.
     """
-    def __init__(self, blackboard:dict, key:str):
+
+    def __init__(self, blackboard: dict, key: str):
         self.blackboard = blackboard
         self.key = key
 
@@ -173,46 +176,58 @@ class BBInputPort(InputPort):
 
 class OutputPort:
     """Maps global blackboard keys to node internal names for output ports.
-    
+
     Args:
         blackboard: the blackboard to write to.
         key: the global blackboard key this will write to.
-    
+
     """
-    def __init__(self, blackboard:dict, key:str):
+
+    def __init__(self, blackboard: dict, key: str):
         self.blackboard = blackboard
         self.key = key
 
     def set(self, value):
         self.blackboard[self.key] = value
 
-from bs4 import BeautifulSoup
+
+from bs4 import BeautifulSoup as soup
+
 
 class BehaviorTreeFactory:
-    def load_tree_from_xml(self, file:str):
+    def load_tree_from_xml(self, file: str):
         print("---------")
-        with open(file,"r") as f:
-            data=f.read()
-        bs_data=BeautifulSoup(data,"xml")
-        bs_tree=bs_data.find("BehaviorTree")
+        with open(file, "r") as f:
+            data = f.read()
+        bs_data = soup(data, "xml")
+        bs_tree = bs_data.find("BehaviorTree")
         # children = [child for child in behavior_tree.children if child.name]
+        self.parse_elems(bs_tree)
 
-        for child in bs_tree.children:
-            print("-elem-")
-            print(child)
-
-    def parse_elems(elems,acc)->Node:
-        elem_class=globals()[elems]
-        print(elems)
-        if elem_class is LeafNode:
-            print("leaf!")
+    def parse_elems(self,elems) -> Node:
+        print(globals())
+        1/0
+        print(f"elem name is: {elems.name}")
+        if elems.name=="BehaviorTree":
+            return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
+        if elems.name not in globals():
+            raise Exception(f"Unrcognized elem name: {elems.name} in tree")
+        print(elems.name)
+        elem_class = globals()[elems.name]
+        if issubclass(elem_class, LeafNode):
+            return elem_class()
+        elif issubclass(elem_class, ControlNode):
+            children=[self.parse_elems(child) for child in elems.find_all(recursive=False)]
+            return elem_class(children)
         else:
-            print()
-    
-    def walk_tags(tag, depth=0):
+            # TODO: Am close to properly parsing all this stuff. Need to decide on some way of "registering nodes".
+            # Perhaps pass them through some register_node like cpp?
+            raise Exception(f"Unimplemented behavior for: {elems.name} in tree")
+
+    def walk_tags(self,tag, depth=0):
         """Dumb chatgpt functiont hat doesn't do what I want, but gives me some exmample use of good functions."""
         indent = "  " * depth
         print(f"{indent}<{tag.name}> {tag.attrs}")
 
         for child in tag.find_all(recursive=False):
-            walk_tags(child, depth + 1)
+            self.walk_tags(child, depth + 1)
