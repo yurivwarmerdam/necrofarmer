@@ -37,6 +37,7 @@ class Talker(SimpleActionNode):
 
 def main():
     blackboard = {}
+    nodes = [Succeeder, Failer, Outputter, Talker]
 
     # sequence
     # my_sequence = SequenceNode([succeeder(), failer()])
@@ -55,21 +56,23 @@ def main():
     #     [Talker(input_ports={"text":StaticInputPort("a static string")})]
     # )
 
-    my_sequence = SequenceNode(
-        [
-            Outputter(output_ports={"text": OutputPort(blackboard, key="key_storage")}),
-            Talker(input_ports={"text": BBInputPort(blackboard, "key_storage")}),
-        ]
-    )
+    # my_sequence = SequenceNode(
+    #     [
+    #         Outputter(output_ports={"text": OutputPort(blackboard, key="key_storage")}),
+    #         Talker(input_ports={"text": BBInputPort(blackboard, "key_storage")}),
+    #     ]
+    # )
+
+    factory = BehaviorTreeFactory()
+    factory.register_blackboard(blackboard)
+    factory.register_nodes(nodes)
+    my_sequence = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
 
     print("initial tick")
     tree_status = my_sequence.tick()
     while tree_status == NodeStatus.RUNNING:
         print("ticking")
         tree_status = my_sequence.tick()
-
-    factory = BehaviorTreeFactory()
-    factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
 
 
 if __name__ == "__main__":

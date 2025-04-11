@@ -1,9 +1,11 @@
-<root main_tree="MainTree" BTCPP_format="4" >
+<root main_tree="MainTree" BTCPP_format="4">
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
-            <Succeeder name="Succeederererer" />
-            <!-- <OutputDummyC name="OutputDummyC" />
-            <ParameterSleeperC name="ParameterSleeperC" /> -->
+            <Succeeder name="it succeeds!" />
+            <Outputter>
+                <OutputPort key="" value="" />
+            </Outputter>
+
         </SequenceNode>
     </BehaviorTree>
 </root>

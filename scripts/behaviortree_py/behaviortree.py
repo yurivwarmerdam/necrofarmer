@@ -1,5 +1,7 @@
 from enum import Enum
 import abc
+from typing import Callable
+from bs4 import BeautifulSoup as soup
 
 
 class NodeStatus(Enum):
@@ -191,40 +193,63 @@ class OutputPort:
         self.blackboard[self.key] = value
 
 
-from bs4 import BeautifulSoup as soup
-
-
 class BehaviorTreeFactory:
+    def __init__(self):
+        self.nodes = []
+        self.blackboard = {}
+
+    def register_blackboard(self, blackboard: dict):
+        self.blackboard = blackboard
+
+    def register_node(self, node: Callable):
+        self.nodes.append(node)
+
+    def register_nodes(self, nodes: list[Callable]):
+        self.nodes += nodes
+
     def load_tree_from_xml(self, file: str):
         print("---------")
         with open(file, "r") as f:
             data = f.read()
         bs_data = soup(data, "xml")
         bs_tree = bs_data.find("BehaviorTree")
-        # children = [child for child in behavior_tree.children if child.name]
-        self.parse_elems(bs_tree)
+        tree = self.parse_elems(bs_tree)
+        return tree
 
-    def parse_elems(self,elems) -> Node:
-        print(globals())
-        1/0
+    def have_node(self, node_name: str) -> bool:
+        in_globals = node_name in globals()
+        in_nodes = node_name not in [x.__name__ for x in self.nodes]
+        return in_globals and in_nodes
+
+    def get_node_class(self, node_name: str) -> Callable:
+        if node_name in globals():
+            return globals()[node_name]
+        elif node_name in [x.__name__ for x in self.nodes]:
+            return next(
+                (node for node in self.nodes if node.__name__ == node_name), None
+            )
+        else:
+            raise Exception(f"Unrcognized node name: {node_name} in tree")
+
+    def parse_elems(self, elems) -> Node:
         print(f"elem name is: {elems.name}")
-        if elems.name=="BehaviorTree":
+        if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
-        if elems.name not in globals():
-            raise Exception(f"Unrcognized elem name: {elems.name} in tree")
-        print(elems.name)
-        elem_class = globals()[elems.name]
+        elem_class: Callable = self.get_node_class(elems.name)
         if issubclass(elem_class, LeafNode):
+            ports=iter(elems.find_all(recursive=False))
+            if ports:
+                # TODO: you were here
             return elem_class()
         elif issubclass(elem_class, ControlNode):
-            children=[self.parse_elems(child) for child in elems.find_all(recursive=False)]
+            children = [
+                self.parse_elems(child) for child in elems.find_all(recursive=False)
+            ]
             return elem_class(children)
         else:
-            # TODO: Am close to properly parsing all this stuff. Need to decide on some way of "registering nodes".
-            # Perhaps pass them through some register_node like cpp?
             raise Exception(f"Unimplemented behavior for: {elems.name} in tree")
 
-    def walk_tags(self,tag, depth=0):
+    def walk_tags(self, tag, depth=0):
         """Dumb chatgpt functiont hat doesn't do what I want, but gives me some exmample use of good functions."""
         indent = "  " * depth
         print(f"{indent}<{tag.name}> {tag.attrs}")
