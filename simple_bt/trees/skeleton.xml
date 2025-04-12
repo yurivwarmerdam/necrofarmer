@@ -3,9 +3,14 @@
         <SequenceNode name="root_sequence">
             <Succeeder name="it succeeds!" />
             <Outputter>
-                <OutputPort key="" value="" />
+                <OutputPort local="text" bb="bb_storage" />
             </Outputter>
-
+            <Talker>
+                <InputPort local="text" bb="bb_storage" />
+            </Talker>
+            <Talker>
+                <InputPort local="text" value="static" />
+            </Talker>
         </SequenceNode>
     </BehaviorTree>
 </root>

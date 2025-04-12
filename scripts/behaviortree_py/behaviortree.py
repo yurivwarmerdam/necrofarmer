@@ -1,6 +1,6 @@
 from enum import Enum
 import abc
-from typing import Callable
+from typing import Callable, Type
 from bs4 import BeautifulSoup as soup
 
 
@@ -221,26 +221,47 @@ class BehaviorTreeFactory:
         in_nodes = node_name not in [x.__name__ for x in self.nodes]
         return in_globals and in_nodes
 
-    def get_node_class(self, node_name: str) -> Callable:
-        if node_name in globals():
-            return globals()[node_name]
-        elif node_name in [x.__name__ for x in self.nodes]:
+    def get_elem_class(self, elem_name: str) -> Type:
+        if elem_name in globals():
+            return globals()[elem_name]
+        elif elem_name in [x.__name__ for x in self.nodes]:
             return next(
-                (node for node in self.nodes if node.__name__ == node_name), None
+                (node for node in self.nodes if node.__name__ == elem_name), None
             )
         else:
-            raise Exception(f"Unrcognized node name: {node_name} in tree")
+            raise Exception(f"Unrcognized node name: {elem_name} in tree")
+
+    def make_port(self, elem):
+        # port_class = self.get_elem_class(elem.name)
+        local = elem.get("local")
+        bb_key = elem.get("bb")
+        value = elem.get("value")
+        if value:
+            print(local, StaticInputPort(value))
+            return {local: StaticInputPort(value)}
+        elif elem.name == "InputPort":
+            print(local, BBInputPort(self.blackboard, bb_key))
+            return {local: BBInputPort(self.blackboard, bb_key)}
+        else:
+            print(local, OutputPort(self.blackboard, bb_key))
+            return {local: OutputPort(self.blackboard, bb_key)}
 
     def parse_elems(self, elems) -> Node:
         print(f"elem name is: {elems.name}")
         if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
-        elem_class: Callable = self.get_node_class(elems.name)
+        elem_class: Callable = self.get_elem_class(elems.name)
         if issubclass(elem_class, LeafNode):
-            ports=iter(elems.find_all(recursive=False))
-            if ports:
-                # TODO: you were here
-            return elem_class()
+            input_ports = iter(elems.find_all("InputPort", recursive=False))
+            output_ports = iter(elems.find_all("OutputPort", recursive=False))
+            input_dict = {
+                k: v for port in input_ports for k, v in self.make_port(port).items()
+            }
+
+            output_dict = {
+                k: v for port in output_ports for k, v in self.make_port(port).items()
+            }
+            return elem_class(input_ports=input_dict, output_ports=output_dict)
         elif issubclass(elem_class, ControlNode):
             children = [
                 self.parse_elems(child) for child in elems.find_all(recursive=False)
