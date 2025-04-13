@@ -3,11 +3,12 @@ import pygame as pg
 from pygame import Rect
 from pygame.math import Vector2
 from pygame.sprite import Group
-from scripts.entities import PlayerEntity, Skeleton, Seed
+from scripts.entities import PlayerEntity, Seed
+from scripts.skeleton import Skeleton
 from scripts.utils import load_image  # , sheet_to_sprite
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-from simple_bt.build import simple_run_bind
+# from simple_bt.build import simple_run_bind
 from threading import Thread
 
 from time import sleep

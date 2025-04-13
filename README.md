@@ -224,3 +224,103 @@ nd:
 y1:v1
 
 take home here: the TREE makes a mapping from bb key to node key (and probably still refers the same underlying value; so passing the value by reference)
+
+
+## Thinking baout concurrency:
+
+# parallel stufff
+
+## multiprocessing
+
+from multiprocessing import Process, Queue
+
+def put_square(number, queue):
+	queue.put(number*number)
+
+
+
+## coroutines!
+
+```
+import asyncio
+import time
+
+async def long_function():
+	print("start")
+	await asyncio.sleep(1) # Moment execution can be interrupted. Needs to be an awaitable thing.
+	print("done")
+	return
+
+
+async def main():
+
+batch=asyncio.gather(long_function(),long_function())
+result_a, result_b= await batch # non-optional await the funcitons to finish
+
+# Alternative syntax:
+
+task_a=asyncio.create_task(long_function())
+task_b=asyncio.create_task(long_function())
+
+result_a= await task_a
+result_v= await task_b
+
+if __name__ == "__main__":
+	asyncio.run(main()) # method of running asyncio (async) functions.
+```
+
+
+soo.... something like
+```
+# this stuff is absolutely wrong, but the very general thought is right.
+# Probably have to use something 
+def update_wrapper(self)
+	await self.update_all()
+
+def draw_wrapper()
+	await self.draw_all()
+
+def tree_wrapper()
+	await 
+```
+Some god-awful, and confidently wrong GPT code. It has a point that the await should be there, though.  
+I should combine what is below with call_soon(), call_later(), and call_at(). That should get me on a really good path. [Here are the python docs on call_() behavior (it's called Event loop?) that gets run in asyncio](https://docs.python.org/3/library/asyncio-eventloop.html).
+Maybe I won't need to call this stuff directly, but just understanding it should help a TON. 
+There might still be some need for queues (asyncio works witht he GIL, right?)? I hope not, but we'll see.
+```
+import asyncio
+import time
+
+async def draw_loop():
+    while True:
+        await asyncio.sleep(1 / 60)  # ~16.67ms
+        print("Draw frame")
+
+async def update_loop():
+    while True:
+        await asyncio.sleep(1 / 60)
+        print("Game update")
+
+async def behavior_tree_loop():
+    while True:
+        await asyncio.sleep(0.25)  # Trigger every ~250ms
+        print("Update behavior trees")
+```
+paralellism
+
+
+semi-sidenote:
+- yield! Allows you to repeatedly call a function (called a generator, apparently). It keeps some internal state. It's like a repeatable return. Pauses after yielding, keeps going until its next yield, next time it's called. Can be called with a for loop, of using next().
+Duh. This also applies to the main loop. THat can absolutely be run using yield.
+-> [Reddit discussion/examples on yield](ttps://www.reddit.com/r/pygame/comments/144ihia/asynchronous_event_handling_example/?rdt=63579)
+-> [yield examples brought up in the reddit thtread](https://github.com/rbaltrusch/pygame_examples/blob/master/code/async_events/main.py)
+
+sidenote:
+- learn about command patterns... (relevant when processing things in input loop/events.)
+
+
+
+### links:
+- [Warning! pygame needs t be run in the main loop, and is apparently not thread-safe. This is going to lead to problems, isn't it...?](https://stackoverflow.com/questions/2970612/pygame-in-a-thread)
+- [Some more StackOverflow discussion on "makign the right choice" when doing asynchronous programming](https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio)
+- [conference talk about what coroutines are anyway, looks like it's for those who use them already, so interesting!](https://www.youtube.com/watch?v=GSiZkP7cI80)

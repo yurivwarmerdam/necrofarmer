@@ -269,11 +269,3 @@ class BehaviorTreeFactory:
             return elem_class(children)
         else:
             raise Exception(f"Unimplemented behavior for: {elems.name} in tree")
-
-    def walk_tags(self, tag, depth=0):
-        """Dumb chatgpt functiont hat doesn't do what I want, but gives me some exmample use of good functions."""
-        indent = "  " * depth
-        print(f"{indent}<{tag.name}> {tag.attrs}")
-
-        for child in tag.find_all(recursive=False):
-            self.walk_tags(child, depth + 1)
