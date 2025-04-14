@@ -1,33 +1,27 @@
-import pygame
+import asyncio
 
-# Initialize Pygame
-pygame.init()
 
-# Set up the display
-screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Display Text Example")
 
-# Set up the font
-font = pygame.font.Font(None, 74)  # None uses the default font, 74 is the font size
 
-# Create text surface
-text = font.render("Hello, Pygame!", True, (255, 255, 255))  # White color
+async def draw_loop():
+    while True:
+        await asyncio.sleep(1 / 60)  # ~16.67ms
+        print("Draw frame")
 
-# Game loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+async def update_loop():
+    while True:
+        await asyncio.sleep(1 / 60)
+        print("Game update")
 
-    # Fill the screen with a color (black in this case)
-    screen.fill((0, 0, 0))
+async def behavior_tree_loop():
+    while True:
+        await asyncio.sleep(0.25)  # Trigger every ~250ms
+        print("Update behavior trees")
 
-    # Display the text
-    screen.blit(text, (200, 250))  # (200, 250) is the position
 
-    # Update the display
-    pygame.display.flip()
+def main():
+    pass
 
-# Quit Pygame
-pygame.quit()
+
+if __name__ == "__main__":
+    main()

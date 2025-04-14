@@ -200,7 +200,7 @@ Perhaps I can have it
 
 
 ### TODO:
-- dummy implementation of bt.
+- [x] dummy implementation of bt.
 - write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
 - integrate actual behaviors. Maybe move to static spot.
 - take it from there. (probably work the three threads draw, tick, and action into execution)
@@ -213,22 +213,10 @@ bt.py
 - RemoteActionNode (starts thread. Perhaps puts stuff on ports and/or takes return value for success)
 
 
-bb:
-K1:v1
 
-tr:  <- this part will only become relevant once I build the treebuilder/parser!!
-K1->y1 <- should this be a copy??
+## Thinking about concurrency:
 
-
-nd:
-y1:v1
-
-take home here: the TREE makes a mapping from bb key to node key (and probably still refers the same underlying value; so passing the value by reference)
-
-
-## Thinking baout concurrency:
-
-# parallel stufff
+## parallel stufff
 
 ## multiprocessing
 
@@ -317,6 +305,36 @@ Duh. This also applies to the main loop. THat can absolutely be run using yield.
 
 sidenote:
 - learn about command patterns... (relevant when processing things in input loop/events.)
+
+
+
+## How to get a solid tick rate:
+
+```
+async def fixed_rate_task():
+    while True:
+        start = asyncio.get_event_loop().time()
+        # Do the important work
+        await do_important_work()
+        elapsed = asyncio.get_event_loop().time() - start
+        await asyncio.sleep(max(0, 1/60 - elapsed))  # maintain ~60Hz
+
+async def flexible_task():
+    while True:
+        # Do the less important work
+        await do_flexible_work()
+        await asyncio.sleep(1)  # runs once every second
+
+
+async def main():
+    asyncio.create_task(fixed_rate_task())
+    asyncio.create_task(flexible_task())
+    await asyncio.Event().wait()  # keep the program running
+
+asyncio.run(main())
+
+```
+
 
 
 
