@@ -126,7 +126,6 @@ class MainClass:
 
             self.handle_key_input()
 
-            pg.draw.rect(self.display, (40, 40, 40), self.collision_obstacle)
 
             # update entities
             self.update_all()
