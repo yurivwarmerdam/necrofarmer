@@ -1,8 +1,7 @@
-import pygame as pg
 from pygame import Surface
 from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, Group
 
 
 class PlayerEntity:

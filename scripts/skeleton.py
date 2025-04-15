@@ -62,6 +62,3 @@ class Skeleton(Sprite):
             if self.rect.center == self.walk_goal:
                 self.walking = False
             return
-
-    # def render(self, surface: Surface):
-    #     pg.draw.rect(surface, pg.Color("cyan"), self.rect)

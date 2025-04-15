@@ -123,17 +123,7 @@ class MainClass:
         while True:
             # deltatime
             _delta = self.clock.get_time()
-            # fill bg
-            self.display.fill((14, 64, 128))
-            # Input stuff and quit boilerplate. Consider moving quit to generic outer loop.
-            for event in pg.event.get():
-                if event.type == pg.QUIT or (
-                    event.type == pg.KEYDOWN and event.key == pg.K_F8
-                ):
-                    self.quit()
-                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                    self.player.action()
-            # ----------main body------------#
+
             self.handle_key_input()
 
             pg.draw.rect(self.display, (40, 40, 40), self.collision_obstacle)
@@ -142,10 +132,6 @@ class MainClass:
             self.update_all()
 
             self.draw_all()
-
-            player_collision = pg.Rect(*self.player.pos, *self.player.size)
-            if player_collision.colliderect(self.collision_obstacle):
-                pg.draw.rect(self.display, (150, 20, 20), player_collision, 1)
 
             # ----------/main body------------#
             # redraws frame
@@ -156,6 +142,16 @@ class MainClass:
             self.clock.tick(60)
 
     def handle_key_input(self):
+        # Input stuff and quit boilerplate. Consider moving quit to generic outer loop.
+        for event in pg.event.get():
+            if event.type == pg.QUIT or (
+                event.type == pg.KEYDOWN and event.key == pg.K_F8
+            ):
+                self.quit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                self.player.action()
+        # ----------Alternate way of processing?------------#
+
         self.keys_pressed = pg.key.get_pressed()
         self.movement = Vector2(0, 0)
         self.movement.x = self.keys_pressed[pg.K_RIGHT] - self.keys_pressed[pg.K_LEFT]
@@ -168,8 +164,10 @@ class MainClass:
         self.ui.update()
 
     def draw_all(self):
+        # TODO: What's with those flip thing, anyway?
+        # fill bg
+        self.display.fill((14, 64, 128))
         # draw bg
-        # self.tilemap.render(self.display)
         self.tilemap.get_layer("ground").draw(self.display)
         # draw entities
         self.seeds.draw(self.display)
