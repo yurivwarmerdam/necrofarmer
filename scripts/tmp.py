@@ -1,7 +1,7 @@
 import asyncio
+import pygame as pg
 
-
-
+clock = pg.time.Clock()
 
 async def draw_loop():
     while True:
@@ -20,7 +20,10 @@ async def behavior_tree_loop():
 
 
 def main():
-    pass
+    time=clock.get_time()
+    while True:
+        clock.tick(60)
+    
 
 
 if __name__ == "__main__":
