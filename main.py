@@ -10,7 +10,7 @@ from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
 
 # from simple_bt.build import simple_run_bind
-from threading import Thread
+import asyncio
 
 from time import sleep
 
@@ -118,21 +118,22 @@ class MainClass:
 
         # builder.tick_tree()
         # print("---")
+        self.MY_EVENT = pg.USEREVENT + 1
+        pg.time.set_timer(self.MY_EVENT, 1000)
 
     def main(self):
         while True:
-            # deltatime
+
             _delta = self.clock.get_time()
 
+            self.handle_events()
             self.handle_key_input()
-
 
             # update entities
             self.update_all()
 
             self.draw_all()
 
-            # ----------/main body------------#
             # redraws frame
             self.screen.blit(
                 pg.transform.scale(self.display, self.screen.get_size()), (0, 0)
@@ -140,15 +141,21 @@ class MainClass:
             pg.display.update()
             self.clock.tick(60)
 
-    def handle_key_input(self):
+
+    def handle_events(self):
         # Input stuff and quit boilerplate. Consider moving quit to generic outer loop.
         for event in pg.event.get():
             if event.type == pg.QUIT or (
                 event.type == pg.KEYDOWN and event.key == pg.K_F8
             ):
                 self.quit()
+            if event.type == self.MY_EVENT:
+                print("Custom event triggered!")
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 self.player.action()
+
+
+    def handle_key_input(self):
         # ----------Alternate way of processing?------------#
 
         self.keys_pressed = pg.key.get_pressed()
