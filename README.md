@@ -201,6 +201,7 @@ Perhaps I can have it
 
 ### TODO:
 - [x] dummy implementation of bt.
+- add tcking the btree (in skeleton; inherit, or instantiate?) to main loop, and tick on timer (~250ms).
 - write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
 - integrate actual behaviors. Maybe move to static spot.
 - take it from there. (probably work the three threads draw, tick, and action into execution)
