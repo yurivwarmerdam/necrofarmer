@@ -26,7 +26,7 @@ class BehaviorTreePy:
         pass
 
 
-class Node:
+class Node(abc):
     """Basic node type."""
 
     def __init__(self):
@@ -138,7 +138,25 @@ class SimpleActionNode(LeafNode):
 
 
 class StatefulActionNode(LeafNode):
-    """Stateful action node that keeps track of the process it is responsible for,"""
+    """Stateful action node that monitors the running status of a process it is responsible for,"""
+
+    def on_start(self) -> NodeStatus:
+        self.node_status = NodeStatus.RUNNING
+        return self.node_status
+
+    def on_running(self) -> NodeStatus:
+        return NodeStatus.SUCCESS
+
+    def on_halted(self):
+        self.node_status = NodeStatus.IDLE
+
+    def tick(self) -> NodeStatus:
+        match self.node_status:
+            case NodeStatus.IDLE:
+                return self.on_start()
+            case NodeStatus.RUNNING:
+                self.node_status = self.on_running()
+                return self.node_status
 
 
 class InputPort:

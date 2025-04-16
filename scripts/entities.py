@@ -1,7 +1,16 @@
+from enum import Enum
 from pygame import Surface
 from pygame.key import ScancodeWrapper
 from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
+
+
+class ActionStatus(Enum):
+    IDLE = 0
+    RUNNING = 1
+    SUCCESS = 2
+    FAILURE = 3
+    SKIPPED = 4
 
 
 class BTGroup(Group):
@@ -32,7 +41,7 @@ class PlayerEntity:
         frame_movement = input_movement + self.velocity
         self.pos[0] += frame_movement[0]
         self.pos[1] += frame_movement[1]
-        self.mana += (1 * delta)
+        self.mana += 1 * delta
         self.mana = min(self.mana, 200)
 
     def render(self, surface: Surface):

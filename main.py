@@ -5,7 +5,7 @@ from pygame.math import Vector2
 from pygame.sprite import Group
 from scripts.entities import PlayerEntity, Seed, BTGroup
 from scripts.skeleton import Skeleton
-from scripts.utils import load_image  # , sheet_to_sprite
+from scripts.utils import load_image
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
 
@@ -81,8 +81,8 @@ class MainClass:
 
         print("---")
 
-        self.MY_EVENT = pg.USEREVENT + 1
-        pg.time.set_timer(self.MY_EVENT, 1000)
+        self.TREE_EVENT = pg.USEREVENT + 1
+        pg.time.set_timer(self.TREE_EVENT, 1000)
 
     def main(self):
         while True:
@@ -110,7 +110,7 @@ class MainClass:
                 event.type == pg.KEYDOWN and event.key == pg.K_F8
             ):
                 self.quit()
-            if event.type == self.MY_EVENT:
+            if event.type == self.TREE_EVENT:
                 self.skeletons.tick()
                 print("Custom event triggered!")
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
@@ -127,7 +127,7 @@ class MainClass:
     def update_all(self, delta):
         self.player.update(delta, self.movement, self.keys_pressed)
         self.seeds.update()
-        self.skeletons.update()
+        self.skeletons.update(delta)
         self.ui.update()
 
     def draw_all(self):
