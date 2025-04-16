@@ -1,0 +1,16 @@
+<root main_tree="MainTree" BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <SequenceNode name="root_sequence">
+            <Succeeder name="it succeeds!" />
+            <Outputter>
+                <OutputPort local="text" bb="bb_storage" />
+            </Outputter>
+            <Talker>
+                <InputPort local="text" bb="bb_storage" />
+            </Talker>
+            <Talker>
+                <InputPort local="text" value="static" />
+            </Talker>
+        </SequenceNode>
+    </BehaviorTree>
+</root>

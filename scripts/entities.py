@@ -4,6 +4,20 @@ from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
 
 
+class BTGroup(Group):
+    def tick(self, *args, **kwargs):
+        """call the tick method of every member sprite
+
+        Group.tick(*args, **kwargs): return None
+
+        Calls the update method of every member sprite. All arguments that
+        were passed to this method are passed to the Sprite update function.
+
+        """
+        for sprite in self.sprites():
+            sprite.tick(*args, **kwargs)
+
+
 class PlayerEntity:
     def __init__(self, game, e_type, pos, size, sprite, mana=200):
         self.game = game
@@ -14,10 +28,12 @@ class PlayerEntity:
         self.velocity = Vector2(0, 0)
         self.mana = mana
 
-    def update(self, input_movement: Vector2, keys: ScancodeWrapper):
+    def update(self, delta: float, input_movement: Vector2, keys: ScancodeWrapper):
         frame_movement = input_movement + self.velocity
         self.pos[0] += frame_movement[0]
         self.pos[1] += frame_movement[1]
+        self.mana += (1 * delta)
+        self.mana = min(self.mana, 200)
 
     def render(self, surface: Surface):
         surface.blit(self.sprite, self.pos)

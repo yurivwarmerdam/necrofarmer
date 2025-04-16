@@ -1,11 +1,6 @@
-from behaviortree import (
+from scripts.behaviortree_py.behaviortree import (
     SimpleActionNode,
     NodeStatus,
-    SequenceNode,
-    OutputPort,
-    FallbackNode,
-    StaticInputPort,
-    BBInputPort,
     BehaviorTreeFactory,
 )
 
@@ -66,7 +61,7 @@ def main():
     factory = BehaviorTreeFactory()
     factory.register_blackboard(blackboard)
     factory.register_nodes(nodes)
-    my_sequence = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
+    my_sequence = factory.load_tree_from_xml("simple_bt/trees/dummy_tree.xml")
 
     print("initial tick")
     tree_status = my_sequence.tick()

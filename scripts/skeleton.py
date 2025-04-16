@@ -5,8 +5,14 @@ from pygame import Surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
 
+from scripts.behaviortree_py.dummy_nodes import Succeeder, Failer, Outputter, Talker
 from scripts.entities import PlayerEntity
 from scripts.tilemap import Tilemap
+from scripts.behaviortree_py.behaviortree import (
+    SimpleActionNode,
+    NodeStatus,
+    BehaviorTreeFactory,
+)
 
 
 class Skeleton(Sprite):
@@ -30,6 +36,13 @@ class Skeleton(Sprite):
         self.walk_goal = Vector2(0, 0)
         self.walk_speed = 1.15
         self.sleep_time = 60
+
+        blackboard = {}
+        nodes = [Succeeder, Failer, Outputter, Talker]
+        factory = BehaviorTreeFactory()
+        factory.register_blackboard(blackboard)
+        factory.register_nodes(nodes)
+        self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
 
     def wait(self):
         while True:
@@ -62,3 +75,7 @@ class Skeleton(Sprite):
             if self.rect.center == self.walk_goal:
                 self.walking = False
             return
+
+    def tick(self):
+        self.tree.tick()
+        pass
