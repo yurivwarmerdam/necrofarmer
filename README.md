@@ -307,7 +307,8 @@ Duh. This also applies to the main loop. THat can absolutely be run using yield.
 sidenote:
 - learn about command patterns... (relevant when processing things in input loop/events.)
 
-
+-> [wonderful example of asyncio with pygame](https://blubbervision.neocities.org/asyncio)
+-> [part II](https://blubberquark.tumblr.com/post/177942351040/asyncio-for-the-working-pygame-programmer-part)
 
 ## How to get a solid tick rate:
 

@@ -94,9 +94,9 @@ class MainClass:
             # update entities
             self.update_all(_delta)
 
-            self.draw_all()
 
             # redraws frame
+            self.draw_all()
             self.screen.blit(
                 pg.transform.scale(self.display, self.screen.get_size()), (0, 0)
             )
