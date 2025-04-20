@@ -2,6 +2,11 @@
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
             <RandomWait />
+            <WalkTowardsPos>
+                <InputPort local="pos" value="Vector2(150,150)" />
+                <InputPort local="action_status" bb="action_status"/>
+                <OutputPort local="action_status" bb="action_status" />
+            </WalkTowardsPos>
             <Succeeder name="it succeeds!" />
             <Outputter>
                 <OutputPort local="text" bb="bb_storage" />

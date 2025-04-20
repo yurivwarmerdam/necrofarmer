@@ -65,7 +65,8 @@ def main():
 
     print("initial tick")
     tree_status = my_sequence.tick()
-    while tree_status == NodeStatus.RUNNING:
+    while True:
+    # while tree_status == NodeStatus.RUNNING:
         print("ticking")
         tree_status = my_sequence.tick()
 

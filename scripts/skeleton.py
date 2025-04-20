@@ -1,6 +1,5 @@
-from random import randint, random
+from random import randint
 
-import pygame as pg
 from pygame import Surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
@@ -18,20 +17,28 @@ import asyncio
 from scripts.async_runner import async_runner
 
 
-class RandomWait(StatefulActionNode):
-    pg.time.Clock()
-    pg.time.get_ticks()
-
-    # class Wait(AsyncActionNode):
-    # Make sure action_node on bb is empty,
-    # Do asyncio start_task stuff, await,
-    # and monitor in on_running
-    def on_start(self):
+class WalkTowardsPos(StatefulActionNode):
+    def on_start(self) -> NodeStatus:
         # this is the pattern when delegating actions to actual skeleton behavior
-        # self.set_output("action_status", (ActionStatus.RUNNING, "wait"))
-        self.task = async_runner().create_task(self.random_sleep)
+        pos = self.get_input("pos")
 
-    def on_running(self):
+        self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards", pos))
+        super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        # check if action is done yet
+        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.RUNNING
+
+
+class RandomWait(StatefulActionNode):
+    def on_start(self) -> NodeStatus:
+        self.task = async_runner().create_task(self.random_sleep)
+        super().on_start()
+
+    def on_running(self) -> NodeStatus:
         if self.task.done():
             return NodeStatus.SUCCESS
         else:
@@ -46,6 +53,8 @@ class RandomWait(StatefulActionNode):
 
 
 class PickPlayerWalkGoal(SimpleActionNode):
+    """this is still TODO"""
+
     def tick(self) -> NodeStatus:
         self.get_input("player").position
         self.set_output("text", "hello world!")
@@ -71,11 +80,11 @@ class Skeleton(Sprite):
 
         self.walking = False
         self.walk_goal = Vector2(0, 0)
-        self.walk_speed = 1.15
+        self.walk_speed = 110.5
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "player": self.player}
-        nodes = [Succeeder, Failer, Outputter, Talker,RandomWait]
+        nodes = [Succeeder, Failer, Outputter, Talker, RandomWait, WalkTowardsPos]
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
@@ -91,27 +100,40 @@ class Skeleton(Sprite):
     #     return True
 
     def update(self, delta):
-        if self.blackboard["action_status"] == ActionStatus.IDLE:
+        if self.blackboard["action_status"] in [
+            ActionStatus.IDLE,
+            ActionStatus.SUCCESS,
+        ]:
             return
-
         status, func, params = self.blackboard["action_status"]
+        func = getattr(self, func)  # dirty. May need to look in globals, too.
+        # func = globals()[func]
+        params = eval(params)
+        func(delta, params)
 
-        func(delta, *params)
+    def walk_towards(self, delta, goal: Vector2):
+        print(delta)
+        self.rect.center = Vector2(self.rect.center).move_towards(
+            goal, delta * self.walk_speed
+        )
+        if self.rect.center == goal:
+            print("reached goal!")
+            self.blackboard["action_status"] = ActionStatus.SUCCESS
 
-        if not self.walking and random() < 0.01:
-            self.walk_goal = self.player.pos + Vector2(
-                randint(-50, 50), randint(-50, 50)
-            )
-            self.walk_speed = 0.75 + random() * 0.8
-            self.walking = True
-            return
-        elif self.walking:
-            self.rect.center = Vector2(self.rect.center).move_towards(
-                self.walk_goal, self.walk_speed
-            )
-            if self.rect.center == self.walk_goal:
-                self.walking = False
-            return
+    # if not self.walking and random() < 0.01:
+    #     self.walk_goal = self.player.pos + Vector2(
+    #         randint(-50, 50), randint(-50, 50)
+    #     )
+    #     self.walk_speed = 0.75 + random() * 0.8
+    #     self.walking = True
+    #     return
+    # elif self.walking:
+    #     self.rect.center = Vector2(self.rect.center).move_towards(
+    #         self.walk_goal, self.walk_speed
+    #     )
+    #     if self.rect.center == self.walk_goal:
+    #         self.walking = False
+    #     return
 
     def tick(self):
         self.tree.tick()

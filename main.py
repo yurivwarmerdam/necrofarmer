@@ -10,6 +10,7 @@ from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
 from scripts.async_runner import async_runner
 
+
 class MainClass:
     def __init__(self):
         pass
@@ -79,8 +80,8 @@ class MainClass:
 
         print("---")
 
-        self.TREE_EVENT = pg.USEREVENT + 1
-        pg.time.set_timer(self.TREE_EVENT, 1000)
+        self.BTREE_EVENT = pg.USEREVENT + 1
+        pg.time.set_timer(self.BTREE_EVENT, 250)
 
     def main(self):
         while True:
@@ -108,9 +109,8 @@ class MainClass:
                 event.type == pg.KEYDOWN and event.key == pg.K_F8
             ):
                 self.quit()
-            if event.type == self.TREE_EVENT:
+            if event.type == self.BTREE_EVENT:
                 self.skeletons.tick()
-                print("Custom event triggered!")
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 self.player.action()
 

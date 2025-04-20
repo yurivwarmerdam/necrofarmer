@@ -12,20 +12,6 @@ class NodeStatus(Enum):
     SKIPPED = 4
 
 
-# class BehaviorTreePy:
-#     """Entry point for creating and running trees."""
-
-#     # Perhaps just load tree in constructor?
-#     def load_tree(self):
-#         pass
-
-#     def load_blackboard(self):
-#         pass
-
-#     def tick_tree(selfs):
-#         pass
-
-
 class Node(ABC):
     """Basic node type."""
 
@@ -48,7 +34,9 @@ class ControlNode(Node):
         """Demo-like template behavior. Not really intended to be called."""
         return self.children(self.current_node).tick()
 
-    pass
+    def reset_children(self):
+        for child in self.children:
+            child.status = NodeStatus.IDLE
 
 
 class SequenceNode(ControlNode):
@@ -77,10 +65,6 @@ class SequenceNode(ControlNode):
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.FAILURE
 
-    def reset_children(self):
-        for child in self.children:
-            child.status = NodeStatus.IDLE
-
 
 class FallbackNode(ControlNode):
     def tick(self):
@@ -96,6 +80,7 @@ class FallbackNode(ControlNode):
                 case NodeStatus.FAILURE:
                     if self.current_node + 1 == len(self.children):
                         self.current_node = 0
+                        self.reset_children()
                         self.node_status = NodeStatus.IDLE
                         return NodeStatus.FAILURE
                     else:
@@ -103,6 +88,7 @@ class FallbackNode(ControlNode):
                         return NodeStatus.RUNNING
                 case NodeStatus.SUCCESS:
                     self.current_node = 0
+                    self.reset_children()
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.SUCCESS
 
@@ -265,7 +251,6 @@ class BehaviorTreeFactory:
             return {local: OutputPort(self.blackboard, bb_key)}
 
     def parse_elems(self, elems) -> Node:
-        print(f"elem name is: {elems.name}")
         if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
         elem_class: Callable = self.get_elem_class(elems.name)
