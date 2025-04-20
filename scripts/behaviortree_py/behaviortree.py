@@ -1,5 +1,5 @@
 from enum import Enum
-import abc
+from abc import ABC
 from typing import Callable, Type
 from bs4 import BeautifulSoup as soup
 
@@ -12,21 +12,21 @@ class NodeStatus(Enum):
     SKIPPED = 4
 
 
-class BehaviorTreePy:
-    """Entry point for creating and running trees."""
+# class BehaviorTreePy:
+#     """Entry point for creating and running trees."""
 
-    # Perhaps just load tree in constructor?
-    def load_tree():
-        pass
+#     # Perhaps just load tree in constructor?
+#     def load_tree(self):
+#         pass
 
-    def load_blackboard():
-        pass
+#     def load_blackboard(self):
+#         pass
 
-    def tick_tree():
-        pass
+#     def tick_tree(selfs):
+#         pass
 
 
-class Node(abc):
+class Node(ABC):
     """Basic node type."""
 
     def __init__(self):

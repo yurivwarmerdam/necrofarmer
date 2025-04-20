@@ -1,5 +1,6 @@
 from random import randint, random
 
+import pygame as pg
 from pygame import Surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
@@ -13,13 +14,35 @@ from scripts.behaviortree_py.behaviortree import (
     BehaviorTreeFactory,
     NodeStatus,
 )
+import asyncio
+from scripts.async_runner import async_runner
 
 
-class Wait(StatefulActionNode):
+class RandomWait(StatefulActionNode):
+    pg.time.Clock()
+    pg.time.get_ticks()
+
+    # class Wait(AsyncActionNode):
+    # Make sure action_node on bb is empty,
+    # Do asyncio start_task stuff, await,
+    # and monitor in on_running
     def on_start(self):
-        self.set_output("action_status", (ActionStatus.RUNNING, "wait"))
+        # this is the pattern when delegating actions to actual skeleton behavior
+        # self.set_output("action_status", (ActionStatus.RUNNING, "wait"))
+        self.task = async_runner().create_task(self.random_sleep)
 
-    pass
+    def on_running(self):
+        if self.task.done():
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.RUNNING
+
+    async def random_sleep(self):
+        wait_time = randint(0, 1000)
+        print("starting random sleep")
+        await asyncio.sleep(wait_time / 1000.0)
+        print("ending random sleep")
+        return True
 
 
 class PickPlayerWalkGoal(SimpleActionNode):
@@ -52,14 +75,11 @@ class Skeleton(Sprite):
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "player": self.player}
-        nodes = [Succeeder, Failer, Outputter, Talker]
+        nodes = [Succeeder, Failer, Outputter, Talker,RandomWait]
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
         self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
-
-    def wait(self, delta):
-        pass
 
     # def pick_player_walk_goal(self):
     #     return self.player.pos + Vector2(randint(-50, 50), randint(-50, 50))

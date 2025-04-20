@@ -8,9 +8,7 @@ from scripts.skeleton import Skeleton
 from scripts.utils import load_image
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-
-asd = "asd!"
-
+from scripts.async_runner import async_runner
 
 class MainClass:
     def __init__(self):
@@ -52,27 +50,27 @@ class MainClass:
             Skeleton(
                 self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
             ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
+            # ),
+            # Skeleton(
+            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
+            # ),
         )
 
         self.ui = Group(ManaBar(self))
@@ -94,13 +92,13 @@ class MainClass:
             # update entities
             self.update_all(_delta)
 
-
             # redraws frame
             self.draw_all()
             self.screen.blit(
                 pg.transform.scale(self.display, self.screen.get_size()), (0, 0)
             )
             pg.display.update()
+            async_runner().run_once()
             self.clock.tick(60)
 
     def handle_events(self):
