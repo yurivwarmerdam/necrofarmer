@@ -87,7 +87,15 @@ class Skeleton(Sprite):
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "player": self.player}
-        nodes = [Succeeder, Failer, Outputter, Talker, RandomWait, WalkTowardsPos,StatefulActionNode]
+        nodes = [
+            Succeeder,
+            Failer,
+            Outputter,
+            Talker,
+            RandomWait,
+            WalkTowardsPos,
+            StatefulActionNode,
+        ]
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
