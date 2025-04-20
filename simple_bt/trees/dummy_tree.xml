@@ -1,4 +1,4 @@
-<root main_tree="MainTree" BTCPP_format="4">
+<root main_tree="MainTree" BTPY_format="1">
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
             <Succeeder name="it succeeds!" />

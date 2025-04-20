@@ -64,6 +64,9 @@ class SequenceNode(ControlNode):
                     self.current_node = 0
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.FAILURE
+                case _:
+                    print("This should be an error!")
+                    return NodeStatus.FAILURE
 
 
 class FallbackNode(ControlNode):
@@ -131,7 +134,8 @@ class StatefulActionNode(LeafNode):
         return self.node_status
 
     def on_running(self) -> NodeStatus:
-        return NodeStatus.SUCCESS
+        self.node_status = NodeStatus.SUCCESS
+        return self.node_status
 
     def on_halted(self):
         self.node_status = NodeStatus.IDLE
@@ -142,6 +146,8 @@ class StatefulActionNode(LeafNode):
                 return self.on_start()
             case NodeStatus.RUNNING:
                 self.node_status = self.on_running()
+                return self.node_status
+            case _:
                 return self.node_status
 
 
@@ -212,7 +218,6 @@ class BehaviorTreeFactory:
         self.nodes += nodes
 
     def load_tree_from_xml(self, file: str):
-        print("---------")
         with open(file, "r") as f:
             data = f.read()
         bs_data = soup(data, "xml")
@@ -241,13 +246,10 @@ class BehaviorTreeFactory:
         bb_key = elem.get("bb")
         value = elem.get("value")
         if value:
-            print(local, StaticInputPort(value))
             return {local: StaticInputPort(value)}
         elif elem.name == "InputPort":
-            print(local, BBInputPort(self.blackboard, bb_key))
             return {local: BBInputPort(self.blackboard, bb_key)}
         else:
-            print(local, OutputPort(self.blackboard, bb_key))
             return {local: OutputPort(self.blackboard, bb_key)}
 
     def parse_elems(self, elems) -> Node:

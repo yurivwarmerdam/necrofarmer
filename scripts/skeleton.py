@@ -28,7 +28,8 @@ class WalkTowardsPos(StatefulActionNode):
     def on_running(self) -> NodeStatus:
         # check if action is done yet
         if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
-            return NodeStatus.SUCCESS
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
         else:
             return NodeStatus.RUNNING
 
@@ -40,9 +41,11 @@ class RandomWait(StatefulActionNode):
 
     def on_running(self) -> NodeStatus:
         if self.task.done():
-            return NodeStatus.SUCCESS
+            self
+            self.node_status = NodeStatus.SUCCESS
         else:
-            return NodeStatus.RUNNING
+            self.node_status = NodeStatus.RUNNING
+        return self.node_status
 
     async def random_sleep(self):
         wait_time = randint(0, 1000)
@@ -84,7 +87,7 @@ class Skeleton(Sprite):
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "player": self.player}
-        nodes = [Succeeder, Failer, Outputter, Talker, RandomWait, WalkTowardsPos]
+        nodes = [Succeeder, Failer, Outputter, Talker, RandomWait, WalkTowardsPos,StatefulActionNode]
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
