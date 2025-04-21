@@ -65,7 +65,7 @@ class SequenceNode(ControlNode):
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.FAILURE
                 case _:
-                    print("This should be an error!")
+                    print(f"This should be an error! Child state is: {child_status}")
                     return NodeStatus.FAILURE
 
 

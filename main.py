@@ -3,12 +3,14 @@ import pygame as pg
 from pygame import Rect
 from pygame.math import Vector2
 from pygame.sprite import Group
-from scripts.entities import PlayerEntity, Seed, BTGroup
+from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
 from scripts.utils import load_image
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
 from scripts.async_runner import async_runner
+from scripts.global_blackboard import global_blackboard
+from scripts.player import PlayerEntity
 
 
 class MainClass:
@@ -78,6 +80,7 @@ class MainClass:
 
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
 
+        self.global_blackboard=global_blackboard().player = self.player
         print("---")
 
         self.BTREE_EVENT = pg.USEREVENT + 1

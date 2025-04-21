@@ -3,15 +3,15 @@ import asyncio
 
 class async_runner:
     """
-    This thing's a singleton. Allows me to hav ea single async loop to talk to.
+    This thing's a singleton. Allows me to have a single async loop to talk to.
     """
 
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls.instance = super().__new__(cls)
-        return cls.instance
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.loop = asyncio.get_event_loop()

@@ -5,7 +5,7 @@ from pygame.math import Vector2
 from pygame.sprite import Sprite
 
 from scripts.behaviortree_py.dummy_nodes import Succeeder, Failer, Outputter, Talker
-from scripts.entities import PlayerEntity, ActionStatus
+from scripts.entities import ActionStatus
 from scripts.tilemap import Tilemap
 from scripts.behaviortree_py.behaviortree import (
     SimpleActionNode,
@@ -13,8 +13,10 @@ from scripts.behaviortree_py.behaviortree import (
     BehaviorTreeFactory,
     NodeStatus,
 )
+from scripts.player import PlayerEntity
 import asyncio
 from scripts.async_runner import async_runner
+from scripts.global_blackboard import global_blackboard
 
 
 class WalkTowardsPos(StatefulActionNode):
@@ -26,7 +28,6 @@ class WalkTowardsPos(StatefulActionNode):
         super().on_start()
 
     def on_running(self) -> NodeStatus:
-        # check if action is done yet
         if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
             self.node_status = NodeStatus.SUCCESS
             return self.node_status
@@ -40,18 +41,16 @@ class RandomWait(StatefulActionNode):
         super().on_start()
 
     def on_running(self) -> NodeStatus:
+        print(self.task.done())
         if self.task.done():
-            self
             self.node_status = NodeStatus.SUCCESS
         else:
             self.node_status = NodeStatus.RUNNING
         return self.node_status
 
     async def random_sleep(self):
-        wait_time = randint(0, 1000)
-        print("starting random sleep")
+        wait_time = randint(500, 1500)
         await asyncio.sleep(wait_time / 1000.0)
-        print("ending random sleep")
         return True
 
 
@@ -59,8 +58,10 @@ class PickPlayerWalkGoal(SimpleActionNode):
     """this is still TODO"""
 
     def tick(self) -> NodeStatus:
-        self.get_input("player").position
-        self.set_output("text", "hello world!")
+        goal = global_blackboard().player.pos + Vector2(
+            randint(-50, 50), randint(-50, 50)
+        )
+        self.set_output("goal", goal)
         return NodeStatus.SUCCESS
 
 
@@ -95,6 +96,7 @@ class Skeleton(Sprite):
             RandomWait,
             WalkTowardsPos,
             StatefulActionNode,
+            PickPlayerWalkGoal,
         ]
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -123,7 +125,6 @@ class Skeleton(Sprite):
         func(delta, params)
 
     def walk_towards(self, delta, goal: Vector2):
-        print(delta)
         self.rect.center = Vector2(self.rect.center).move_towards(
             goal, delta * self.walk_speed
         )

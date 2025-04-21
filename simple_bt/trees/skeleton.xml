@@ -2,11 +2,19 @@
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
             <RandomWait />
+            <PickPlayerWalkGoal>
+                <OutputPort local="goal" bb="walk_goal"/>
+            </PickPlayerWalkGoal>
             <WalkTowardsPos>
-                <InputPort local="pos" value="Vector2(150,150)" />
+                <InputPort local="pos" bb="walk_goal" />
                 <InputPort local="action_status" bb="action_status"/>
                 <OutputPort local="action_status" bb="action_status" />
             </WalkTowardsPos>
+            <!-- <WalkTowardsPos>
+                <InputPort local="pos" value="Vector2(150,150)" />
+                <InputPort local="action_status" bb="action_status"/>
+                <OutputPort local="action_status" bb="action_status" />
+            </WalkTowardsPos> -->
             <Succeeder name="it succeeds!" />
             <Outputter>
                 <OutputPort local="text" bb="bb_storage" />
