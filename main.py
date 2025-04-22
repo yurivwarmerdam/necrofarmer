@@ -53,27 +53,27 @@ class MainClass:
             Skeleton(
                 self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
             ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            # ),
-            # Skeleton(
-            #     self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            # ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
+            ),
+            Skeleton(
+                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
+            ),
         )
 
         self.ui = Group(ManaBar(self))

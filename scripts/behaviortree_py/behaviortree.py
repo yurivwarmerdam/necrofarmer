@@ -1,3 +1,5 @@
+import ast
+
 from enum import Enum
 from abc import ABC
 from typing import Callable, Type
@@ -36,7 +38,7 @@ class ControlNode(Node):
 
     def reset_children(self):
         for child in self.children:
-            child.status = NodeStatus.IDLE
+            child.node_status = NodeStatus.IDLE
 
 
 class SequenceNode(ControlNode):
@@ -163,11 +165,21 @@ class StaticInputPort(InputPort):
         value: the value contained within this Port.
     """
 
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, value, conversion_context: dict = {}):
+        self.value = self.parse_value(value, conversion_context)
 
     def get(self) -> any:
         return self.value
+
+    def parse_value(self, value, context: dict):
+        print(context)
+        try:
+            return ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            try:
+                return eval(value, {"__builtins__": {}}, context)
+            except Exception:
+                return value
 
 
 class BBInputPort(InputPort):
@@ -217,6 +229,9 @@ class BehaviorTreeFactory:
     def register_nodes(self, nodes: list[Callable]):
         self.nodes += nodes
 
+    def register_conversion_context(self, conversion_context: dict):
+        self.conversion_context: dict = conversion_context
+
     def load_tree_from_xml(self, file: str):
         with open(file, "r") as f:
             data = f.read()
@@ -246,7 +261,7 @@ class BehaviorTreeFactory:
         bb_key = elem.get("bb")
         value = elem.get("value")
         if value:
-            return {local: StaticInputPort(value)}
+            return {local: StaticInputPort(value, self.conversion_context)}
         elif elem.name == "InputPort":
             return {local: BBInputPort(self.blackboard, bb_key)}
         else:

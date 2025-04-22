@@ -84,7 +84,7 @@ class Skeleton(Sprite):
 
         self.walking = False
         self.walk_goal = Vector2(0, 0)
-        self.walk_speed = 110.5
+        self.walk_speed = 90
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "player": self.player}
@@ -101,6 +101,7 @@ class Skeleton(Sprite):
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
+        factory.register_conversion_context({"Vector2":Vector2})
         self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
 
     # def pick_player_walk_goal(self):
@@ -120,11 +121,10 @@ class Skeleton(Sprite):
             return
         status, func, params = self.blackboard["action_status"]
         func = getattr(self, func)  # dirty. May need to look in globals, too.
-        # func = globals()[func]
-        params = eval(params)
         func(delta, params)
 
     def walk_towards(self, delta, goal: Vector2):
+        print(goal, type(goal))
         self.rect.center = Vector2(self.rect.center).move_towards(
             goal, delta * self.walk_speed
         )
