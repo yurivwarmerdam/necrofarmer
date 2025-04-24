@@ -172,7 +172,6 @@ class StaticInputPort(InputPort):
         return self.value
 
     def parse_value(self, value, context: dict):
-        print(context)
         try:
             return ast.literal_eval(value)
         except (ValueError, SyntaxError):

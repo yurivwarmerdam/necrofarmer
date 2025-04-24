@@ -1,5 +1,7 @@
 import asyncio
 from scripts.player import PlayerEntity
+from pygame.sprite import Group
+
 
 class global_blackboard:
     """
@@ -7,7 +9,9 @@ class global_blackboard:
     """
 
     _instance = None
-    player:PlayerEntity = None
+
+    player: PlayerEntity = None
+    seeds: Group = None
 
     def __new__(cls):
         if cls._instance is None:

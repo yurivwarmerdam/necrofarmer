@@ -50,37 +50,22 @@ class MainClass:
         )
 
         self.skeletons = BTGroup(
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            ),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(300, 300)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 280)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 200)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(200, 300)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(250, 310)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(330, 320)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(310, 340)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(325, 317)),
         )
 
         self.ui = Group(ManaBar(self))
 
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
 
-        self.global_blackboard=global_blackboard().player = self.player
+        global_blackboard().player = self.player
+        global_blackboard().seeds = self.seeds
         print("---")
 
         self.BTREE_EVENT = pg.USEREVENT + 1
