@@ -3,36 +3,14 @@ import pygame as pg
 from pygame import Rect
 from pygame.math import Vector2
 from pygame.sprite import Group
-from scripts.entities import PlayerEntity, Seed
+from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
-from scripts.utils import load_image  # , sheet_to_sprite
+from scripts.utils import load_image
 from scripts.tilemap import Tilemap
 from scripts.ui import ManaBar
-
-# from simple_bt.build import simple_run_bind
-from threading import Thread
-
-from time import sleep
-
-asd = "asd!"
-
-
-def sleeper():
-    print(f"starting sleep{asd}")
-    1 / 0
-    sleep(0.5)
-    print("ending sleep")
-
-
-def output_dummy() -> int:
-    """Simulates returning a value such as a move target"""
-    return 1
-
-
-def parameter_sleeper(value: int):
-    print(f"My param is: {value}! Time to sleep")
-    sleep(0.5)
-    print("ending sleep")
+from scripts.async_runner import async_runner
+from scripts.global_blackboard import global_blackboard
+from scripts.player import PlayerEntity
 
 
 class MainClass:
@@ -71,84 +49,60 @@ class MainClass:
             Seed(self, self.assets["seed"], Vector2(200, 300)),
         )
 
-        self.skeletons = Group(
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(300, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 280)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(280, 200)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(200, 300)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(250, 310)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(330, 320)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(310, 340)
-            ),
-            Skeleton(
-                self, self.assets["skeleton"], self.player, Tilemap, Vector2(325, 317)
-            ),
+        self.skeletons = BTGroup(
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(300, 300)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 280)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 200)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(200, 300)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(250, 310)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(330, 320)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(310, 340)),
+            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(325, 317)),
         )
 
         self.ui = Group(ManaBar(self))
 
         self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
-        # print(self.tilemap.layers["ground"].sprites())
 
+        global_blackboard().player = self.player
+        global_blackboard().seeds = self.seeds
         print("---")
-        # thread = Thread(target=simple_run_bind.test_func, args=[sleeper])
-        # thread.start()
 
-        # # simple_run_bind.simple_run()
-        # thread = Thread(target=simple_run_bind.simple_run)
-        # thread.start()
-
-        # builder = simple_run_bind.PyTreeBuilder(
-        #     sleeper, output_dummy, parameter_sleeper
-        # )
-        # print("---")
-
-        # builder.tick_tree()
-        # print("---")
+        self.BTREE_EVENT = pg.USEREVENT + 1
+        pg.time.set_timer(self.BTREE_EVENT, 250)
 
     def main(self):
         while True:
-            # deltatime
-            _delta = self.clock.get_time()
+            _delta = self.clock.get_time() / 1000.0
 
+            self.handle_events()
             self.handle_key_input()
 
-
             # update entities
-            self.update_all()
+            self.update_all(_delta)
 
-            self.draw_all()
-
-            # ----------/main body------------#
             # redraws frame
+            self.draw_all()
             self.screen.blit(
                 pg.transform.scale(self.display, self.screen.get_size()), (0, 0)
             )
             pg.display.update()
+            async_runner().run_once()
             self.clock.tick(60)
 
-    def handle_key_input(self):
+    def handle_events(self):
         # Input stuff and quit boilerplate. Consider moving quit to generic outer loop.
         for event in pg.event.get():
             if event.type == pg.QUIT or (
                 event.type == pg.KEYDOWN and event.key == pg.K_F8
             ):
                 self.quit()
+            if event.type == self.BTREE_EVENT:
+                self.skeletons.tick()
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 self.player.action()
+
+    def handle_key_input(self):
         # ----------Alternate way of processing?------------#
 
         self.keys_pressed = pg.key.get_pressed()
@@ -156,10 +110,10 @@ class MainClass:
         self.movement.x = self.keys_pressed[pg.K_RIGHT] - self.keys_pressed[pg.K_LEFT]
         self.movement.y = self.keys_pressed[pg.K_DOWN] - self.keys_pressed[pg.K_UP]
 
-    def update_all(self):
-        self.player.update(self.movement, self.keys_pressed)
+    def update_all(self, delta):
+        self.player.update(delta, self.movement, self.keys_pressed)
         self.seeds.update()
-        self.skeletons.update()
+        self.skeletons.update(delta)
         self.ui.update()
 
     def draw_all(self):

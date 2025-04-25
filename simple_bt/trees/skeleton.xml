@@ -1,7 +1,21 @@
-<root main_tree="MainTree" BTCPP_format="4">
+<root main_tree="MainTree" BTPY_format="1">
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
-            <Succeeder name="it succeeds!" />
+            <!-- <WalkTowardsPos>
+                <InputPort local="pos" value="Vector2(150,150)" />
+                <InputPort local="action_status" bb="action_status"/>
+                <OutputPort local="action_status" bb="action_status" />
+            </WalkTowardsPos> -->
+            <RandomWait />
+            <PickPlayerWalkGoal>
+                <OutputPort local="goal" bb="walk_goal"/>
+            </PickPlayerWalkGoal>
+            <WalkTowardsPos>
+                <InputPort local="pos" bb="walk_goal" />
+                <InputPort local="action_status" bb="action_status"/>
+                <OutputPort local="action_status" bb="action_status" />
+            </WalkTowardsPos>
+            <!-- <Succeeder name="it succeeds!" />
             <Outputter>
                 <OutputPort local="text" bb="bb_storage" />
             </Outputter>
@@ -10,7 +24,7 @@
             </Talker>
             <Talker>
                 <InputPort local="text" value="static" />
-            </Talker>
+            </Talker> -->
         </SequenceNode>
     </BehaviorTree>
 </root>

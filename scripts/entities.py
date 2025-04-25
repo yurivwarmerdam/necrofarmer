@@ -1,37 +1,30 @@
-from pygame import Surface
-from pygame.key import ScancodeWrapper
+from enum import Enum
 from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
 
 
-class PlayerEntity:
-    def __init__(self, game, e_type, pos, size, sprite, mana=200):
-        self.game = game
-        self.type = e_type
-        self.pos = pos
-        self.sprite = sprite
-        self.size = size
-        self.velocity = Vector2(0, 0)
-        self.mana = mana
+class ActionStatus(Enum):
+    IDLE = 0
+    RUNNING = 1
+    SUCCESS = 2
+    FAILURE = 3
+    SKIPPED = 4
 
-    def update(self, input_movement: Vector2, keys: ScancodeWrapper):
-        frame_movement = input_movement + self.velocity
-        self.pos[0] += frame_movement[0]
-        self.pos[1] += frame_movement[1]
 
-    def render(self, surface: Surface):
-        surface.blit(self.sprite, self.pos)
+class BTGroup(Group):
+    def tick(self, *args, **kwargs):
+        """call the tick method of every member sprite
 
-    def action(self):
-        if self.mana >= 50:
-            self.spawn_seed()
-            self.mana -= 50
+        Group.tick(*args, **kwargs): return None
 
-    def spawn_seed(self):
-        self.game.seeds.add(
-            Seed(self, self.game.assets["seed"], self.game.player.pos),
-        )
-        pass
+        Calls the update method of every member sprite. All arguments that
+        were passed to this method are passed to the Sprite update function.
+
+        """
+        for sprite in self.sprites():
+            sprite.tick(*args, **kwargs)
+
+
 
 
 class Seed(Sprite):
@@ -42,5 +35,3 @@ class Seed(Sprite):
         self.rect.center = pos
         self.image = sprite
         self.pos = pos
-
-    pass

@@ -1,5 +1,7 @@
+import ast
+
 from enum import Enum
-import abc
+from abc import ABC
 from typing import Callable, Type
 from bs4 import BeautifulSoup as soup
 
@@ -12,21 +14,7 @@ class NodeStatus(Enum):
     SKIPPED = 4
 
 
-class BehaviorTreePy:
-    """Entry point for creating and running trees."""
-
-    # Perhaps just load tree in constructor?
-    def load_tree():
-        pass
-
-    def load_blackboard():
-        pass
-
-    def tick_tree():
-        pass
-
-
-class Node:
+class Node(ABC):
     """Basic node type."""
 
     def __init__(self):
@@ -48,7 +36,9 @@ class ControlNode(Node):
         """Demo-like template behavior. Not really intended to be called."""
         return self.children(self.current_node).tick()
 
-    pass
+    def reset_children(self):
+        for child in self.children:
+            child.node_status = NodeStatus.IDLE
 
 
 class SequenceNode(ControlNode):
@@ -76,10 +66,9 @@ class SequenceNode(ControlNode):
                     self.current_node = 0
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.FAILURE
-
-    def reset_children(self):
-        for child in self.children:
-            child.status = NodeStatus.IDLE
+                case _:
+                    print(f"This should be an error! Child state is: {child_status}")
+                    return NodeStatus.FAILURE
 
 
 class FallbackNode(ControlNode):
@@ -96,6 +85,7 @@ class FallbackNode(ControlNode):
                 case NodeStatus.FAILURE:
                     if self.current_node + 1 == len(self.children):
                         self.current_node = 0
+                        self.reset_children()
                         self.node_status = NodeStatus.IDLE
                         return NodeStatus.FAILURE
                     else:
@@ -103,6 +93,7 @@ class FallbackNode(ControlNode):
                         return NodeStatus.RUNNING
                 case NodeStatus.SUCCESS:
                     self.current_node = 0
+                    self.reset_children()
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.SUCCESS
 
@@ -138,7 +129,28 @@ class SimpleActionNode(LeafNode):
 
 
 class StatefulActionNode(LeafNode):
-    """Stateful action node that keeps track of the process it is responsible for,"""
+    """Stateful action node that monitors the running status of a process it is responsible for,"""
+
+    def on_start(self) -> NodeStatus:
+        self.node_status = NodeStatus.RUNNING
+        return self.node_status
+
+    def on_running(self) -> NodeStatus:
+        self.node_status = NodeStatus.SUCCESS
+        return self.node_status
+
+    def on_halted(self):
+        self.node_status = NodeStatus.IDLE
+
+    def tick(self) -> NodeStatus:
+        match self.node_status:
+            case NodeStatus.IDLE:
+                return self.on_start()
+            case NodeStatus.RUNNING:
+                self.node_status = self.on_running()
+                return self.node_status
+            case _:
+                return self.node_status
 
 
 class InputPort:
@@ -153,11 +165,20 @@ class StaticInputPort(InputPort):
         value: the value contained within this Port.
     """
 
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, value, conversion_context: dict = {}):
+        self.value = self.parse_value(value, conversion_context)
 
     def get(self) -> any:
         return self.value
+
+    def parse_value(self, value, context: dict):
+        try:
+            return ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            try:
+                return eval(value, {"__builtins__": {}}, context)
+            except Exception:
+                return value
 
 
 class BBInputPort(InputPort):
@@ -207,8 +228,10 @@ class BehaviorTreeFactory:
     def register_nodes(self, nodes: list[Callable]):
         self.nodes += nodes
 
+    def register_conversion_context(self, conversion_context: dict):
+        self.conversion_context: dict = conversion_context
+
     def load_tree_from_xml(self, file: str):
-        print("---------")
         with open(file, "r") as f:
             data = f.read()
         bs_data = soup(data, "xml")
@@ -237,17 +260,13 @@ class BehaviorTreeFactory:
         bb_key = elem.get("bb")
         value = elem.get("value")
         if value:
-            print(local, StaticInputPort(value))
-            return {local: StaticInputPort(value)}
+            return {local: StaticInputPort(value, self.conversion_context)}
         elif elem.name == "InputPort":
-            print(local, BBInputPort(self.blackboard, bb_key))
             return {local: BBInputPort(self.blackboard, bb_key)}
         else:
-            print(local, OutputPort(self.blackboard, bb_key))
             return {local: OutputPort(self.blackboard, bb_key)}
 
     def parse_elems(self, elems) -> Node:
-        print(f"elem name is: {elems.name}")
         if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
         elem_class: Callable = self.get_elem_class(elems.name)

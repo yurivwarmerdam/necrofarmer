@@ -301,13 +301,14 @@ paralellism
 semi-sidenote:
 - yield! Allows you to repeatedly call a function (called a generator, apparently). It keeps some internal state. It's like a repeatable return. Pauses after yielding, keeps going until its next yield, next time it's called. Can be called with a for loop, of using next().
 Duh. This also applies to the main loop. THat can absolutely be run using yield.
--> [Reddit discussion/examples on yield](ttps://www.reddit.com/r/pygame/comments/144ihia/asynchronous_event_handling_example/?rdt=63579)
--> [yield examples brought up in the reddit thtread](https://github.com/rbaltrusch/pygame_examples/blob/master/code/async_events/main.py)
+-> [Reddit discussion/examples on yield](ttps://www.reddit.com/r/pygame/comments/144ihia/asynchronous_event_handling_example/?rdt=63579)  
+-> [yield examples brought up in the reddit thtread](https://github.com/rbaltrusch/pygame_examples/blob/master/code/async_events/main.py)  
 
 sidenote:
 - learn about command patterns... (relevant when processing things in input loop/events.)
 
-
+-> [wonderful example of asyncio with pygame](https://blubbervision.neocities.org/asyncio)  
+-> [part II](https://blubberquark.tumblr.com/post/177942351040/  asyncio-for-the-working-pygame-programmer-part)
 
 ## How to get a solid tick rate:
 
