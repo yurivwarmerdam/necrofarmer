@@ -87,6 +87,7 @@ class Skeleton(Sprite):
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "self": self}
+        # uuugh. I'll probbaly have to convert this to a dict of node names, and optionally tupes or just classes.
         nodes = [
             Succeeder,
             Failer,
