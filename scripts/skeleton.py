@@ -18,9 +18,14 @@ from scripts.async_runner import async_runner
 from scripts.global_blackboard import global_blackboard
 
 
-class is_close_to_player(SimpleActionNode):
-    global_blackboard().player.pos
-    pass
+class IsCloseToPlayer(SimpleActionNode):
+    def __init__(self, input_ports, output_ports, skeleton):
+        self.skeleton = skeleton
+        super().__init__(input_ports, output_ports)
+
+    def tick()->NodeStatus:
+        global_blackboard().player.pos()
+        return NodeStatus.SUCCESS
 
 
 class WalkTowardsPos(StatefulActionNode):
@@ -88,16 +93,17 @@ class Skeleton(Sprite):
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "self": self}
         # uuugh. I'll probbaly have to convert this to a dict of node names, and optionally tupes or just classes.
-        nodes = [
-            Succeeder,
-            Failer,
-            Outputter,
-            Talker,
-            RandomWait,
-            WalkTowardsPos,
-            StatefulActionNode,
-            PickPlayerWalkGoal,
-        ]
+        nodes = {
+            "Succeeder": Succeeder,
+            "Failer": Failer,
+            "Outputter": Outputter,
+            "Talker": Talker,
+            "RandomWait": RandomWait,
+            "WalkTowardsPos": WalkTowardsPos,
+            "StatefulActionNode": StatefulActionNode,
+            "PickPlayerWalkGoal": PickPlayerWalkGoal,
+            "IsCloseToPlayer": (IsCloseToPlayer, self),
+        }
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)

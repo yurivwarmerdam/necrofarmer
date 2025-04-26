@@ -216,17 +216,19 @@ class OutputPort:
 
 class BehaviorTreeFactory:
     def __init__(self):
-        self.nodes = []
-        self.blackboard = {}
+        self.nodes: dict = {}
+        self.blackboard: dict = {}
 
     def register_blackboard(self, blackboard: dict):
         self.blackboard = blackboard
 
-    def register_node(self, node: Callable):
-        self.nodes.append(node)
+    def register_node(self, name, node: Callable):
+        self.nodes[name] = node
+        # self.nodes.append(node)
 
-    def register_nodes(self, nodes: list[Callable]):
-        self.nodes += nodes
+    def register_nodes(self, nodes: dict):
+        self.nodes.update(nodes)
+        # self.nodes += nodes
 
     def register_conversion_context(self, conversion_context: dict):
         self.conversion_context: dict = conversion_context
@@ -239,23 +241,20 @@ class BehaviorTreeFactory:
         tree = self.parse_elems(bs_tree)
         return tree
 
-    def have_node(self, node_name: str) -> bool:
-        in_globals = node_name in globals()
-        in_nodes = node_name not in [x.__name__ for x in self.nodes]
-        return in_globals and in_nodes
+    # def have_node(self, node_name: str) -> bool:
+    #     in_globals = node_name in globals()
+    #     in_nodes = node_name not in [x.__name__ for x in self.nodes]
+    #     return in_globals and in_nodes
 
     def get_elem_class(self, elem_name: str) -> Type:
         if elem_name in globals():
             return globals()[elem_name]
-        elif elem_name in [x.__name__ for x in self.nodes]:
-            return next(
-                (node for node in self.nodes if node.__name__ == elem_name), None
-            )
+        elif elem_name in self.nodes:
+            return self.nodes[elem_name]
         else:
             raise Exception(f"Unrcognized node name: {elem_name} in tree")
 
     def make_port(self, elem):
-        # port_class = self.get_elem_class(elem.name)
         local = elem.get("local")
         bb_key = elem.get("bb")
         value = elem.get("value")
@@ -269,7 +268,16 @@ class BehaviorTreeFactory:
     def parse_elems(self, elems) -> Node:
         if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
-        elem_class: Callable = self.get_elem_class(elems.name)
+        # TODO; hier verder.
+        # zoiets als:
+        # result = your_function()
+
+        # Check if result is iterable (but not a string or other non-iterable types)
+        # if isinstance(result, (tuple, list)):
+        #    first, *rest = result
+        # else:
+        #    first, rest = result, ()
+        elem_class, *args = self.get_elem_class(elems.name)
         if issubclass(elem_class, LeafNode):
             input_ports = iter(elems.find_all("InputPort", recursive=False))
             output_ports = iter(elems.find_all("OutputPort", recursive=False))
@@ -280,7 +288,7 @@ class BehaviorTreeFactory:
             output_dict = {
                 k: v for port in output_ports for k, v in self.make_port(port).items()
             }
-            return elem_class(input_ports=input_dict, output_ports=output_dict)
+            return elem_class(input_ports=input_dict, output_ports=output_dict, *args)
         elif issubclass(elem_class, ControlNode):
             children = [
                 self.parse_elems(child) for child in elems.find_all(recursive=False)
