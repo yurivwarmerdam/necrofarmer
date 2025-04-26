@@ -277,7 +277,10 @@ class BehaviorTreeFactory:
         #    first, *rest = result
         # else:
         #    first, rest = result, ()
-        elem_class, *args = self.get_elem_class(elems.name)
+        elem_class = self.get_elem_class(elems.name)
+        args =[]
+        if isinstance(elem_class, tuple):
+            elem_class, *args = elem_class
         if issubclass(elem_class, LeafNode):
             input_ports = iter(elems.find_all("InputPort", recursive=False))
             output_ports = iter(elems.find_all("OutputPort", recursive=False))

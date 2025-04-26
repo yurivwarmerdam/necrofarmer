@@ -23,8 +23,8 @@ class IsCloseToPlayer(SimpleActionNode):
         self.skeleton = skeleton
         super().__init__(input_ports, output_ports)
 
-    def tick()->NodeStatus:
-        global_blackboard().player.pos()
+    def tick(self) -> NodeStatus:
+        dist=global_blackboard().player.pos() - self.skeleton.pos
         return NodeStatus.SUCCESS
 
 
@@ -109,6 +109,10 @@ class Skeleton(Sprite):
         factory.register_nodes(nodes)
         factory.register_conversion_context({"Vector2": Vector2})
         self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
+
+    @property
+    def pos(self):
+        return self.rect.center
 
     def update(self, delta):
         if self.blackboard["action_status"] in [
