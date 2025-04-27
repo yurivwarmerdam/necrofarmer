@@ -6,13 +6,16 @@
                 <InputPort local="action_status" bb="action_status"/>
                 <OutputPort local="action_status" bb="action_status" />
             </WalkTowardsPos> -->
+            <InverterNode>
+                <IsCloseToPlayer />
+            </InverterNode>
             <RandomWait />
             <PickPlayerWalkGoal>
-                <OutputPort local="goal" bb="walk_goal"/>
+                <OutputPort local="goal" bb="walk_goal" />
             </PickPlayerWalkGoal>
             <WalkTowardsPos>
                 <InputPort local="pos" bb="walk_goal" />
-                <InputPort local="action_status" bb="action_status"/>
+                <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </WalkTowardsPos>
             <!-- <Succeeder name="it succeeds!" />

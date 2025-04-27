@@ -1,0 +1,25 @@
+<root main_tree="MainTree" BTPY_format="1">
+    <BehaviorTree ID="claim_behavior">
+        <SequenceNode>
+            <find_free_object>
+                <OutputPort local="object" bb="object" />
+            </find_free_object>
+            <ClaimObject>
+                <InputPort local="object" bb="object" />
+            </ClaimObject>
+            <FallbackNode>
+                <SequenceNode name="happy flow">
+                    <MoveTowards>
+                        <InputPort local="object" bb="object" />
+                    </MoveTowards>
+                    <Pickup>
+                        <InputPort local="object" bb="object" />
+                    </Pickup>
+                </SequenceNode>
+                <UnclaimObject>
+                    <InputPort local="object" bb="object" />
+                </UnclaimObject>
+            </FallbackNode>
+        </SequenceNode>
+    </BehaviorTree>
+</root>

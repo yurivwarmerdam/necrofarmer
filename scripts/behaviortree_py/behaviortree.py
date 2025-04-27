@@ -24,8 +24,39 @@ class Node(ABC):
         pass
 
 
+class DecoratorNode(Node):
+    """Template class for decorators."""
+
+    def __init__(self, child: Node):
+        super().__init__()
+        self.child = child
+        pass
+
+
+class InverterNode(DecoratorNode):
+    """Inverter node. Returns failure when child succeds, and the reverse.
+    Otherwise passes the child's status"""
+
+    def tick(self) -> NodeStatus:
+        self.node_status = self.child.tick()
+        match self.node_status:
+            case NodeStatus.SUCCESS:
+                self.node_status = NodeStatus.FAILURE
+                self.reset_child()
+                return self.node_status
+            case NodeStatus.FAILURE:
+                self.node_status = NodeStatus.SUCCESS
+                self.reset_child()
+                return self.node_status
+            case _:
+                return self.node_status
+
+    def reset_child(self):
+        self.child.node_status = NodeStatus.IDLE
+
+
 class ControlNode(Node):
-    """Template class for any non-leaf nodes."""
+    """Template class for control nodes."""
 
     def __init__(self, children):
         super().__init__()
@@ -67,7 +98,9 @@ class SequenceNode(ControlNode):
                     self.node_status = NodeStatus.IDLE
                     return NodeStatus.FAILURE
                 case _:
-                    print(f"This should be an error! Child state is: {child_status}")
+                    print(
+                        f"This should be an error! Child  {self.children[self.current_node]} state is: {child_status}"
+                    )
                     return NodeStatus.FAILURE
 
 
@@ -268,17 +301,8 @@ class BehaviorTreeFactory:
     def parse_elems(self, elems) -> Node:
         if elems.name == "BehaviorTree":
             return self.parse_elems(next(iter(elems.find_all(recursive=False)), None))
-        # TODO; hier verder.
-        # zoiets als:
-        # result = your_function()
-
-        # Check if result is iterable (but not a string or other non-iterable types)
-        # if isinstance(result, (tuple, list)):
-        #    first, *rest = result
-        # else:
-        #    first, rest = result, ()
         elem_class = self.get_elem_class(elems.name)
-        args =[]
+        args = []
         if isinstance(elem_class, tuple):
             elem_class, *args = elem_class
         if issubclass(elem_class, LeafNode):
@@ -291,11 +315,14 @@ class BehaviorTreeFactory:
             output_dict = {
                 k: v for port in output_ports for k, v in self.make_port(port).items()
             }
-            return elem_class(input_ports=input_dict, output_ports=output_dict, *args)
+            return elem_class(input_dict, output_dict, *args)
         elif issubclass(elem_class, ControlNode):
             children = [
                 self.parse_elems(child) for child in elems.find_all(recursive=False)
             ]
             return elem_class(children)
+        elif issubclass(elem_class, DecoratorNode):
+            child = self.parse_elems(elems.find())
+            return elem_class(child)
         else:
             raise Exception(f"Unimplemented behavior for: {elems.name} in tree")

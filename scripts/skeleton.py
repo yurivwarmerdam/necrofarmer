@@ -21,11 +21,14 @@ from scripts.global_blackboard import global_blackboard
 class IsCloseToPlayer(SimpleActionNode):
     def __init__(self, input_ports, output_ports, skeleton):
         self.skeleton = skeleton
-        super().__init__(input_ports, output_ports)
+        super().__init__(input_ports=input_ports, output_ports=output_ports)
 
     def tick(self) -> NodeStatus:
-        dist=global_blackboard().player.pos() - self.skeleton.pos
-        return NodeStatus.SUCCESS
+        dist: Vector2 = global_blackboard().player.pos - self.skeleton.pos
+        if dist.magnitude() <= 50:
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE
 
 
 class WalkTowardsPos(StatefulActionNode):
@@ -34,7 +37,7 @@ class WalkTowardsPos(StatefulActionNode):
         pos = self.get_input("pos")
 
         self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards", pos))
-        super().on_start()
+        return super().on_start()
 
     def on_running(self) -> NodeStatus:
         if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
@@ -47,7 +50,7 @@ class WalkTowardsPos(StatefulActionNode):
 class RandomWait(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         self.task = async_runner().create_task(self.random_sleep)
-        super().on_start()
+        return super().on_start()
 
     def on_running(self) -> NodeStatus:
         if self.task.done():

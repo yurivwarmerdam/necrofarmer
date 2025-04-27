@@ -33,3 +33,8 @@ class PlayerEntity:
         self.game.seeds.add(
             Seed(self, self.game.assets["seed"], self.game.player.pos),
         )
+
+
+class JobCoordinator():
+    
+    pass

@@ -3,16 +3,20 @@ asd = (1, 2, 3)
 print(isinstance(asd, tuple))
 
 
-class AClass():
-    pass
-
-def thing():
-    # return (AClass)
-    return ("asd")
+class AClass:
+    def __init__(self, thing):
+        self.thing = thing
+        pass
 
 
-a, *b = thing()
+class BClass(AClass):
+    def __init__(self, thing, thang):
+        self.thang = thang
+        super().__init__(thing)
 
-print(a)
 
-print(b)
+a_class = AClass("asd")
+b_class = BClass("asd", "def")
+
+
+print(a_class.thing, b_class.thang)
