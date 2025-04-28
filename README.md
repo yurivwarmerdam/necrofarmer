@@ -46,10 +46,10 @@ possible solutions:
 - claim action + unclaim action will have to be implemented neatly
 	- if any fail: unclaimNode
 	- see demo xml in claim_behavior.xml
-
-Book (AI for games pg. ~568) says you will want decision making to "trickle down", higher levels do higher decision making.
-Can I make this some kind of FSM thing? Or should I assign tasks, with skeletons accepting or rejecting the job?
-Perhaps skeletons can signal to player when they're busy or idle, and they get assigned tasks through some message?
+  
+Book (AI for games pg. ~568) says you will want decision making to "trickle down", higher levels do higher decision making.  
+Can I make this some kind of FSM thing? Or should I assign tasks, with skeletons accepting or rejecting the job?  
+Perhaps skeletons can signal to player when they're busy or idle, and they get assigned tasks through some message?  
 It would be the coordinator AI's responsibility to (temporarily?) blacklist items, or mark them as "handled", until a skeleton says it's handled or rejected.
 
 
