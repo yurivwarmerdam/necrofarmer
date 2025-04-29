@@ -42,7 +42,10 @@ possible solutions:
 - never cancel actions? Failure is not a option!
 - ask all siblings: are you going there?
 - use some signal setup? Signall all who are capable of picking up?
-
+- message queue based on objects in range, where skeletons get queue items of types they are interested in. (for whatever branch the BT is in)
+    - Time out objects when adding to queue. Periodically scan for objects in range, subtracting objects in timeout list. Re-add objects to queue 
+    - Alternatively, queue can be a set. Unordered, though.
+    - complicating factor is that the queue will have to be recreated on player movement.
 - claim action + unclaim action will have to be implemented neatly
 	- if any fail: unclaimNode
 	- see demo xml in claim_behavior.xml
@@ -87,10 +90,6 @@ coordinate calculation?
 - CMake
 - CMake IntelliSense
 - CMake Tools
-
-
-
-
 
 ## unsorted links:
 - [Warning! pygame needs t be run in the main loop, and is apparently not thread-safe. This is going to lead to problems, isn't it...?](https://stackoverflow.com/questions/2970612/pygame-in-a-thread)
