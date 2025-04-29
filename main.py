@@ -117,8 +117,8 @@ class MainClass:
         self.ui.update()
 
     def draw_all(self):
-        # TODO: What's with those flip thing, anyway?
-        # fill bg
+            # TODO: What's with those flip thing, anyway?
+            # fill bg
         self.display.fill((14, 64, 128))
         # draw bg
         self.tilemap.get_layer("ground").draw(self.display)

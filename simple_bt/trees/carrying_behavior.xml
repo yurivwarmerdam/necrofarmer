@@ -1,0 +1,12 @@
+<root main_tree="MainTree" BTPY_format="1">
+    <BehaviorTree ID="claim_behavior">
+        <SequenceNode>
+            <IsCarrying>
+                <OutputPort local="object" bb="carried_object" />
+            </IsCarrying>
+            <FallbackNode>
+
+            </FallbackNode>
+        </SequenceNode>
+    </BehaviorTree>
+</root>

@@ -1,4 +1,5 @@
 from random import randint
+import pygame as pg
 
 from pygame import Surface
 from pygame.math import Vector2
@@ -16,6 +17,88 @@ from scripts.behaviortree_py.behaviortree import (
 import asyncio
 from scripts.async_runner import async_runner
 from scripts.global_blackboard import global_blackboard
+
+
+class Skeleton(Sprite):
+    def __init__(
+        self,
+        game,
+        image: Surface,
+        tilemap: Tilemap,
+        pos=Vector2(0, 0),
+    ):
+        Sprite.__init__(self)
+        self.game = game
+        self.rect = image.get_rect()
+        self.rect.center = pos
+        self.image = image.copy()
+        self.tilemap = tilemap
+
+        self.walk_speed = 90
+        self.sleep_time = 60
+
+        self.blackboard = {"action_status": ActionStatus.IDLE, "self": self}
+        # uuugh. I'll probbaly have to convert this to a dict of node names, and optionally tupes or just classes.
+        nodes = {
+            "Succeeder": Succeeder,
+            "Failer": Failer,
+            "Outputter": Outputter,
+            "Talker": Talker,
+            "RandomWait": RandomWait,
+            "WalkTowardsPos": WalkTowardsPos,
+            "StatefulActionNode": StatefulActionNode,
+            "PickPlayerWalkGoal": PickPlayerWalkGoal,
+            "IsCloseToPlayer": (IsCloseToPlayer, self),
+        }
+        factory = BehaviorTreeFactory()
+        factory.register_blackboard(self.blackboard)
+        factory.register_nodes(nodes)
+        factory.register_conversion_context({"Vector2": Vector2})
+        self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
+        self.inventory = []
+
+    @property
+    def pos(self):
+        return self.rect.center
+
+    def update(self, delta):
+        print("updating")
+        if self.blackboard["action_status"] in [
+            ActionStatus.IDLE,
+            ActionStatus.SUCCESS,
+        ]:
+            return
+        status, func, params = self.blackboard["action_status"]
+        func = getattr(self, func)  # Only class funcs. May need to look in globals.
+        func(delta, params)
+
+        # debug:
+        if self == self.game.skeletons.sprites()[1]:
+            pg.draw.rect(self.image, (255, 0, 0), self.image.get_rect(), width=1)
+        else:
+            pg.draw.rect(self.image, (0, 255, 0), self.image.get_rect(), width=1)
+        # if self.blackboard["action_status"] == ActionStatus.IDLE:
+        #     pg.draw.rect(self.image, (255, 0, 0), self.image.get_rect(), width=1)
+        # elif self.blackboard["action_status"] == ActionStatus.SUCCESS:
+        #     pg.draw.rect(self.image, (0, 255, 0), self.image.get_rect(), width=1)
+        # elif self.blackboard["action_status"][0] == ActionStatus.RUNNING:
+        #     pg.draw.rect(self.image, (0, 0, 255), self.image.get_rect(), width=1)
+        # else:
+        #     pg.draw.rect(self.image, (255, 255, 255), self.image.get_rect(), width=1)
+
+    def walk_towards(self, delta, goal: Vector2):
+        self.rect.center = Vector2(self.rect.center).move_towards(
+            goal, delta * self.walk_speed
+        )
+        if self.rect.center == goal:
+            self.blackboard["action_status"] = ActionStatus.SUCCESS
+
+    def tick(self):
+        self.tree.tick()
+        pass
+
+
+# --------------------- Behaviors ---------------------#
 
 
 class IsCloseToPlayer(SimpleActionNode):
@@ -74,66 +157,3 @@ class PickPlayerWalkGoal(SimpleActionNode):
         )
         self.set_output("goal", goal)
         return NodeStatus.SUCCESS
-
-
-class Skeleton(Sprite):
-    def __init__(
-        self,
-        game,
-        sprite: Surface,
-        tilemap: Tilemap,
-        pos=Vector2(0, 0),
-    ):
-        Sprite.__init__(self)
-        self.game = game
-        self.rect = sprite.get_rect()
-        self.rect.center = pos
-        self.image = sprite
-        self.tilemap = tilemap
-
-        self.walk_speed = 90
-        self.sleep_time = 60
-
-        self.blackboard = {"action_status": ActionStatus.IDLE, "self": self}
-        # uuugh. I'll probbaly have to convert this to a dict of node names, and optionally tupes or just classes.
-        nodes = {
-            "Succeeder": Succeeder,
-            "Failer": Failer,
-            "Outputter": Outputter,
-            "Talker": Talker,
-            "RandomWait": RandomWait,
-            "WalkTowardsPos": WalkTowardsPos,
-            "StatefulActionNode": StatefulActionNode,
-            "PickPlayerWalkGoal": PickPlayerWalkGoal,
-            "IsCloseToPlayer": (IsCloseToPlayer, self),
-        }
-        factory = BehaviorTreeFactory()
-        factory.register_blackboard(self.blackboard)
-        factory.register_nodes(nodes)
-        factory.register_conversion_context({"Vector2": Vector2})
-        self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml")
-
-    @property
-    def pos(self):
-        return self.rect.center
-
-    def update(self, delta):
-        if self.blackboard["action_status"] in [
-            ActionStatus.IDLE,
-            ActionStatus.SUCCESS,
-        ]:
-            return
-        status, func, params = self.blackboard["action_status"]
-        func = getattr(self, func)  # Only class funcs. May need to look in globals.
-        func(delta, params)
-
-    def walk_towards(self, delta, goal: Vector2):
-        self.rect.center = Vector2(self.rect.center).move_towards(
-            goal, delta * self.walk_speed
-        )
-        if self.rect.center == goal:
-            self.blackboard["action_status"] = ActionStatus.SUCCESS
-
-    def tick(self):
-        self.tree.tick()
-        pass

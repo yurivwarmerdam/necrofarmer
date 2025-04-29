@@ -66,3 +66,5 @@ class JobCoordinator:
         self.handled_jobs.append(interactible)
 
     def handle_cancelled_task(task):
+        # this should be considered in the future, probably.
+        pass
