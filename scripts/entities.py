@@ -1,6 +1,8 @@
 from enum import Enum
 from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
+from pygame.time import get_ticks
+import pygame as pg
 
 
 class ActionStatus(Enum):
@@ -25,11 +27,26 @@ class BTGroup(Group):
             sprite.tick(*args, **kwargs)
 
 
+class Passive(Sprite):
+    def claim(self) -> bool:
+        if self.is_claimed():
+            return False
+        else:
+            self.claimed_tick = get_ticks()
+            return True
+
+    def is_claimed(self) -> bool:
+        """return False if node hasn't been claimed in the last 5 ticks."""
+        if not self.claimed_tick:
+            return False
+        else:
+            delta = get_ticks() - self.claimed_tick
+            return not delta > 5
 
 
-class Seed(Sprite):
+class Seed(Passive):
     def __init__(self, game, sprite, pos=Vector2(0, 0)):
-        Sprite.__init__(self)
+        super().__init__(self)
         self.game = game
         self.rect = sprite.get_rect()
         self.rect.center = pos
