@@ -131,6 +131,32 @@ class FallbackNode(ControlNode):
                     return NodeStatus.SUCCESS
 
 
+class ReactiveSequenceNode(SequenceNode):
+    """Ticks first child every tick. Behaves like a regular Sequence for the other children.
+    First child should always return success or failure. This node will log en error if it returns something else."""
+
+    def tick(self):
+        if self.current_node == 0:
+            self.current_node += 1
+
+        reactive_status = self.children[0].tick()
+        match reactive_status:
+            case NodeStatus.FAILURE:
+                self.reset_children()
+                self.current_node = 0
+                self.node_status = NodeStatus.IDLE
+                return NodeStatus.FAILURE
+            case NodeStatus.SUCCESS:
+                return super().tick()
+            case _:
+                print(
+                    f"This should be an error! Reactive child state is: {reactive_status}"
+                )
+                return NodeStatus.FAILURE
+
+    pass
+
+
 class LeafNode(Node):
     """
     Template node for leaf nodes.
@@ -273,11 +299,6 @@ class BehaviorTreeFactory:
         bs_tree = bs_data.find("BehaviorTree")
         tree = self.parse_elems(bs_tree)
         return tree
-
-    # def have_node(self, node_name: str) -> bool:
-    #     in_globals = node_name in globals()
-    #     in_nodes = node_name not in [x.__name__ for x in self.nodes]
-    #     return in_globals and in_nodes
 
     def get_elem_class(self, elem_name: str) -> Type:
         if elem_name in globals():
