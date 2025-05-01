@@ -28,20 +28,31 @@ class BTGroup(Group):
 
 
 class Passive(Sprite):
-    def claim(self) -> bool:
-        if self.is_claimed():
-            return False
-        else:
-            self.claimed_tick = get_ticks()
+    """Define base class for Sprite that can have their ownership claimed.
+    Ownership should be periodically reclaimed, since the claim will time out after 1 second."""
+
+    def __init__(self):
+        self.claim_time: int = -1000
+        self.timeout = 1000
+        super().__init__(self)
+
+    @property
+    def claim_age(self) -> int:
+        return get_ticks() - self.claim_time
+
+    def claim(self, owner) -> bool:
+        if not self.owner or self.claim_age >= self.timeout or self.owner == owner:
+            self.owner = owner
+            self.claim_time = get_ticks()
             return True
+        else:
+            return False
 
     def is_claimed(self) -> bool:
-        """return False if node hasn't been claimed in the last 5 ticks."""
-        if not self.claimed_tick:
-            return False
+        if self.owner and self.claim_age <= self.timeout:
+            return True
         else:
-            delta = get_ticks() - self.claimed_tick
-            return not delta > 5
+            return False
 
 
 class Seed(Passive):
