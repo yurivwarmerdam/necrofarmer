@@ -34,14 +34,22 @@ class Passive(Sprite):
     def __init__(self):
         self.claim_time: int = -1000
         self.timeout = 1000
-        super().__init__(self)
+        super().__init__()
+
+    @property
+    def pos(self):
+        return self.rect.center
+
+    @pos.setter
+    def pos(self, value):
+        self.rect.center = value
 
     @property
     def claim_age(self) -> int:
         return get_ticks() - self.claim_time
 
     def claim(self, owner) -> bool:
-        if not self.owner or self.claim_age >= self.timeout or self.owner == owner:
+        if not hasattr(self,"owner") or self.claim_age >= self.timeout or self.owner == owner:
             self.owner = owner
             self.claim_time = get_ticks()
             return True
@@ -57,9 +65,9 @@ class Passive(Sprite):
 
 class Seed(Passive):
     def __init__(self, game, sprite, pos=Vector2(0, 0)):
-        super().__init__(self)
+        super().__init__()
         self.game = game
         self.rect = sprite.get_rect()
-        self.rect.center = pos
+        self.pos = pos
         self.image = sprite
         self.pos = pos

@@ -30,7 +30,7 @@ class Skeleton(Sprite):
         Sprite.__init__(self)
         self.game = game
         self.rect = image.get_rect()
-        self.rect.center = pos
+        self.pos = pos
         self.image = image.copy()
         self.tilemap = tilemap
 
@@ -38,7 +38,7 @@ class Skeleton(Sprite):
         self.sleep_time = 60
 
         self.blackboard = {"action_status": ActionStatus.IDLE, "self": self}
-        # uuugh. I'll probbaly have to convert this to a dict of node names, and optionally tupes or just classes.
+
         nodes = {
             "Succeeder": Succeeder,
             "Failer": Failer,
@@ -49,6 +49,9 @@ class Skeleton(Sprite):
             "StatefulActionNode": StatefulActionNode,
             "PickPlayerWalkGoal": PickPlayerWalkGoal,
             "IsCloseToPlayer": (IsCloseToPlayer, self),
+            "GetFreeSeed": (GetFreeSeed, self),
+            "ClaimObject": (ClaimObject, self),
+            "WalkTowardsObject": WalkTowardsObject,
         }
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -61,8 +64,11 @@ class Skeleton(Sprite):
     def pos(self):
         return self.rect.center
 
+    @pos.setter
+    def pos(self, value):
+        self.rect.center = value
+
     def update(self, delta):
-        print("updating")
         if self.blackboard["action_status"] in [
             ActionStatus.IDLE,
             ActionStatus.SUCCESS,
@@ -72,11 +78,11 @@ class Skeleton(Sprite):
         func = getattr(self, func)  # Only class funcs. May need to look in globals.
         func(delta, params)
 
-        # debug:
-        if self == self.game.skeletons.sprites()[1]:
-            pg.draw.rect(self.image, (255, 0, 0), self.image.get_rect(), width=1)
-        else:
-            pg.draw.rect(self.image, (0, 255, 0), self.image.get_rect(), width=1)
+        # -------debug viz ----------:
+        # if self == self.game.skeletons.sprites()[1]:
+        #     pg.draw.rect(self.image, (255, 0, 0), self.image.get_rect(), width=1)
+        # else:
+        #     pg.draw.rect(self.image, (0, 255, 0), self.image.get_rect(), width=1)
         # if self.blackboard["action_status"] == ActionStatus.IDLE:
         #     pg.draw.rect(self.image, (255, 0, 0), self.image.get_rect(), width=1)
         # elif self.blackboard["action_status"] == ActionStatus.SUCCESS:
@@ -85,13 +91,20 @@ class Skeleton(Sprite):
         #     pg.draw.rect(self.image, (0, 0, 255), self.image.get_rect(), width=1)
         # else:
         #     pg.draw.rect(self.image, (255, 255, 255), self.image.get_rect(), width=1)
+        # -------/debug viz ----------
 
     def walk_towards(self, delta, goal: Vector2):
-        self.rect.center = Vector2(self.rect.center).move_towards(
-            goal, delta * self.walk_speed
-        )
-        if self.rect.center == goal:
+        self.pos = Vector2(self.pos).move_towards(goal, delta * self.walk_speed)
+        if self.pos == goal:
             self.blackboard["action_status"] = ActionStatus.SUCCESS
+
+    def walk_towards_object(self, delta, object: Sprite):
+        if hasattr(object, "pos"):
+            self.pos = Vector2(self.pos).move_towards(
+                object.pos, delta * self.walk_speed
+            )
+            if self.pos == object.pos:
+                self.blackboard["action_status"] = ActionStatus.SUCCESS
 
     def tick(self):
         self.tree.tick()
@@ -130,6 +143,20 @@ class WalkTowardsPos(StatefulActionNode):
             return NodeStatus.RUNNING
 
 
+class WalkTowardsObject(StatefulActionNode):
+    def on_start(self) -> NodeStatus:
+        object = self.get_input("object")
+        self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards_object", object))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        else:
+            return NodeStatus.RUNNING
+
+
 class RandomWait(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         self.task = async_runner().create_task(self.random_sleep)
@@ -149,11 +176,35 @@ class RandomWait(StatefulActionNode):
 
 
 class PickPlayerWalkGoal(SimpleActionNode):
-    """this is still TODO"""
-
     def tick(self) -> NodeStatus:
         goal = global_blackboard().player.pos + Vector2(
             randint(-50, 50), randint(-50, 50)
         )
         self.set_output("goal", goal)
         return NodeStatus.SUCCESS
+
+
+class GetFreeSeed(SimpleActionNode):
+    def __init__(self, input_ports, output_ports, skeleton):
+        self.skeleton = skeleton
+        super().__init__(input_ports=input_ports, output_ports=output_ports)
+
+    def tick(self):
+        for seed in global_blackboard().seeds:
+            if seed.claim(self.skeleton):
+                self.set_output("seed", seed)
+                self.node_status = NodeStatus.SUCCESS
+                return self.node_status
+        return NodeStatus.FAILURE
+
+
+class ClaimObject(SimpleActionNode):
+    def __init__(self, input_ports, output_ports, skeleton):
+        self.skeleton = skeleton
+        super().__init__(input_ports=input_ports, output_ports=output_ports)
+
+    def tick(self):
+        if self.get_input("object").claim(self.skeleton):
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE

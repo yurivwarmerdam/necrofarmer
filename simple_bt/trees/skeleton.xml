@@ -1,23 +1,22 @@
 <root main_tree="MainTree" BTPY_format="1">
     <BehaviorTree ID="MainTree">
         <SequenceNode name="root_sequence">
-            <!-- <WalkTowardsPos>
-                <InputPort local="pos" value="Vector2(150,150)" />
-                <InputPort local="action_status" bb="action_status"/>
-                <OutputPort local="action_status" bb="action_status" />
-            </WalkTowardsPos> -->
-            <InverterNode>
-                <IsCloseToPlayer />
-            </InverterNode>
-            <RandomWait />
-            <PickPlayerWalkGoal>
-                <OutputPort local="goal" bb="walk_goal" />
-            </PickPlayerWalkGoal>
-            <WalkTowardsPos>
-                <InputPort local="pos" bb="walk_goal" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </WalkTowardsPos>
+
+            <SequenceNode name="walk to player">
+                <!-- TODO: Make this incorporate better with other "behavior modalities"-->
+                <InverterNode>
+                    <IsCloseToPlayer />
+                </InverterNode>
+                <RandomWait />
+                <PickPlayerWalkGoal>
+                    <OutputPort local="goal" bb="walk_goal" />
+                </PickPlayerWalkGoal>
+                <WalkTowardsPos>
+                    <InputPort local="pos" bb="walk_goal" />
+                    <InputPort local="action_status" bb="action_status" />
+                    <OutputPort local="action_status" bb="action_status" />
+                </WalkTowardsPos>
+            </SequenceNode>
             <!-- <Succeeder name="it succeeds!" />
             <Outputter>
                 <OutputPort local="text" bb="bb_storage" />
@@ -28,6 +27,22 @@
             <Talker>
                 <InputPort local="text" value="static" />
             </Talker> -->
+
+            <SequenceNode name="gather seeds">
+                <GetFreeSeed>
+                    <OutputPort local="seed" bb="seed" />
+                </GetFreeSeed>
+                <ReactiveSequenceNode name="happy flow">
+                    <ClaimObject>
+                        <InputPort local="object" bb="seed" />
+                    </ClaimObject>
+                    <WalkTowardsObject>
+                        <InputPort local="object" bb="seed" />
+                        <InputPort local="action_status" bb="action_status" />
+                        <OutputPort local="action_status" bb="action_status" />
+                    </WalkTowardsObject>
+                </ReactiveSequenceNode>
+            </SequenceNode>
         </SequenceNode>
     </BehaviorTree>
 </root>
