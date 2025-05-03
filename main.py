@@ -6,7 +6,7 @@ from pygame.sprite import Group
 from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
 from scripts.utils import load_image
-from scripts.tilemap import Tilemap
+from scripts.tilemap import world_tilemap
 from scripts.ui import ManaBar
 from scripts.async_runner import async_runner
 from scripts.global_blackboard import global_blackboard
@@ -50,19 +50,19 @@ class MainClass:
         )
 
         self.skeletons = BTGroup(
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(300, 300)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 280)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(280, 200)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(200, 300)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(250, 310)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(330, 320)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(310, 340)),
-            Skeleton(self, self.assets["skeleton"], Tilemap, Vector2(325, 317)),
+            Skeleton(self, self.assets["skeleton"], Vector2(300, 300)),
+            Skeleton(self, self.assets["skeleton"], Vector2(280, 280)),
+            Skeleton(self, self.assets["skeleton"], Vector2(280, 200)),
+            Skeleton(self, self.assets["skeleton"], Vector2(200, 300)),
+            Skeleton(self, self.assets["skeleton"], Vector2(250, 310)),
+            Skeleton(self, self.assets["skeleton"], Vector2(330, 320)),
+            Skeleton(self, self.assets["skeleton"], Vector2(310, 340)),
+            Skeleton(self, self.assets["skeleton"], Vector2(325, 317)),
         )
 
         self.ui = Group(ManaBar(self))
 
-        self.tilemap = Tilemap("art/tmx/field.tmx", ["ground", "plants and graves"])
+        self.tilemap:world_tilemap = world_tilemap("art/tmx/field.tmx")
 
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
@@ -70,6 +70,8 @@ class MainClass:
 
         self.BTREE_EVENT = pg.USEREVENT + 1
         pg.time.set_timer(self.BTREE_EVENT, 250)
+
+        print(self.tilemap.get_layer("ground"))
 
     def main(self):
         while True:
@@ -117,8 +119,8 @@ class MainClass:
         self.ui.update()
 
     def draw_all(self):
-            # TODO: What's with those flip thing, anyway?
-            # fill bg
+        # TODO: What's with those flip thing, anyway?
+        # fill bg
         self.display.fill((14, 64, 128))
         # draw bg
         self.tilemap.get_layer("ground").draw(self.display)

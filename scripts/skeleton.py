@@ -7,7 +7,6 @@ from pygame.sprite import Sprite
 
 from scripts.behaviortree_py.dummy_nodes import Succeeder, Failer, Outputter, Talker
 from scripts.entities import ActionStatus
-from scripts.tilemap import Tilemap
 from scripts.behaviortree_py.behaviortree import (
     SimpleActionNode,
     StatefulActionNode,
@@ -24,7 +23,6 @@ class Skeleton(Sprite):
         self,
         game,
         image: Surface,
-        tilemap: Tilemap,
         pos=Vector2(0, 0),
     ):
         Sprite.__init__(self)
@@ -32,7 +30,6 @@ class Skeleton(Sprite):
         self.rect = image.get_rect()
         self.pos = pos
         self.image = image.copy()
-        self.tilemap = tilemap
 
         self.walk_speed = 90
         self.sleep_time = 60
@@ -52,6 +49,7 @@ class Skeleton(Sprite):
             "GetFreeSeed": (GetFreeSeed, self),
             "ClaimObject": (ClaimObject, self),
             "WalkTowardsObject": WalkTowardsObject,
+            "PickupObject": (PickupObject, self),
         }
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -114,11 +112,15 @@ class Skeleton(Sprite):
 # --------------------- Behaviors ---------------------#
 
 
-class IsCloseToPlayer(SimpleActionNode):
+class SimpleSkeletonAction(SimpleActionNode):
+    """SimpleActionNode that has a reference to skeleton. Don't forget to register with self."""
+
     def __init__(self, input_ports, output_ports, skeleton):
-        self.skeleton = skeleton
+        self.skeleton: Skeleton = skeleton
         super().__init__(input_ports=input_ports, output_ports=output_ports)
 
+
+class IsCloseToPlayer(SimpleSkeletonAction):
     def tick(self) -> NodeStatus:
         dist: Vector2 = global_blackboard().player.pos - self.skeleton.pos
         if dist.magnitude() <= 50:
@@ -146,7 +148,9 @@ class WalkTowardsPos(StatefulActionNode):
 class WalkTowardsObject(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         object = self.get_input("object")
-        self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards_object", object))
+        self.set_output(
+            "action_status", (ActionStatus.RUNNING, "walk_towards_object", object)
+        )
         return super().on_start()
 
     def on_running(self) -> NodeStatus:
@@ -184,11 +188,7 @@ class PickPlayerWalkGoal(SimpleActionNode):
         return NodeStatus.SUCCESS
 
 
-class GetFreeSeed(SimpleActionNode):
-    def __init__(self, input_ports, output_ports, skeleton):
-        self.skeleton = skeleton
-        super().__init__(input_ports=input_ports, output_ports=output_ports)
-
+class GetFreeSeed(SimpleSkeletonAction):
     def tick(self):
         for seed in global_blackboard().seeds:
             if seed.claim(self.skeleton):
@@ -198,13 +198,25 @@ class GetFreeSeed(SimpleActionNode):
         return NodeStatus.FAILURE
 
 
-class ClaimObject(SimpleActionNode):
-    def __init__(self, input_ports, output_ports, skeleton):
-        self.skeleton = skeleton
-        super().__init__(input_ports=input_ports, output_ports=output_ports)
-
+class ClaimObject(SimpleSkeletonAction):
     def tick(self):
         if self.get_input("object").claim(self.skeleton):
             return NodeStatus.SUCCESS
         else:
             return NodeStatus.FAILURE
+
+
+class PickupObject(SimpleSkeletonAction):
+    def tick(self) -> NodeStatus:
+        if len(self.skeleton.inventory) == 0:
+            object: Sprite = self.get_input("object")
+            self.skeleton.inventory.append(object)
+            object.kill()
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE
+
+
+class EmptyInventory(SimpleSkeletonAction):
+    def tick(self) -> NodeStatus:
+        pass

@@ -19,13 +19,7 @@ pip install -r requirements.txt
 
 
 ## TODO:
-- [x] dummy implementation of bt.
-- add tcking the btree (in skeleton; inherit, or instantiate?) to main loop, and tick on timer (~250ms).
-- write bt_tick into skeleton, make work for only a single skeleton. start with only simple printouts.
-- integrate actual behaviors. Maybe move to static spot.
-- take it from there. (probably work the three threads draw, tick, and action into execution)
-- boost stuff: https://theboostcpplibraries.com/boost.thread-management
-
+- [ ] steal from stardew how he did the diggable logic
 
 bt.py
 - xml
@@ -54,6 +48,29 @@ Book (AI for games pg. ~568) says you will want decision making to "trickle down
 Can I make this some kind of FSM thing? Or should I assign tasks, with skeletons accepting or rejecting the job?  
 Perhaps skeletons can signal to player when they're busy or idle, and they get assigned tasks through some message?  
 It would be the coordinator AI's responsibility to (temporarily?) blacklist items, or mark them as "handled", until a skeleton says it's handled or rejected.
+
+I settled on what I remembered from discussions with triplefox and Jim Stormdancer; Claim and reclaim. Have object time out claiming. This is SO much easier than it was in godot.
+
+## What I learned from Stardew Valley:
+Objects are constructed in several layers:
+- AlwaysFront
+- Front
+- Paths
+- Buildings
+- Back
+
+Each layer can have different "sublayers". Sublayers are drawn on top of each other.
+
+- Ground is on back layer.
+- Tiles that can be turned into soil are tagged as Diggable=True
+- Grass, weeds, and other interactibles are placed on Paths layer (makes sense since grass and rocks destroy placed paths)
+- multitile objects, like trees, and more customized object like grass (unlike weeds; I htink because you can walk "through them", and that requires some custom behavior?), are placed on Paths layer, but they have placeholder tiles in Tiled, and are replaced with (probably) object instances at runtime. I am assuming these are classes with a little bit more logic to them (tree hp, for example).
+- Tiles can have custom tags like Diggable, and Type (although TYpe seems somewhatt inconsistent, and perhaps not used very consistently??)
+- front and AlwaysFront are mostly used for environmental objects.
+- Buildings is used for things like river edges, cliffs, and actual buildings (outside the farm; In the farm the buildings are actually spawned at runtime. Probably still into a layer, Though.)
+- Buildins is also for the "footprint" of buildings, and usually denotes impassability.
+- Trees tend to be grouped in Buildings, Front, and AlwaysFront pieces. I believe this is subdivided using PaintMasks.
+
 
 
 ## pygame

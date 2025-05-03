@@ -41,6 +41,9 @@
                         <InputPort local="action_status" bb="action_status" />
                         <OutputPort local="action_status" bb="action_status" />
                     </WalkTowardsObject>
+                    <PickupObject>
+                        <InputPort local="object" bb="seed" />
+                    </PickupObject>
                 </ReactiveSequenceNode>
             </SequenceNode>
         </SequenceNode>
