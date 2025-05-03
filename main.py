@@ -62,7 +62,7 @@ class MainClass:
 
         self.ui = Group(ManaBar(self))
 
-        self.tilemap:world_tilemap = world_tilemap("art/tmx/field.tmx")
+        self.tilemap: world_tilemap = world_tilemap("art/tmx/field.tmx")
 
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
@@ -70,8 +70,6 @@ class MainClass:
 
         self.BTREE_EVENT = pg.USEREVENT + 1
         pg.time.set_timer(self.BTREE_EVENT, 250)
-
-        print(dir(self.tilemap))
 
     def main(self):
         while True:

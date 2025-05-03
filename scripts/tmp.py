@@ -1,8 +1,14 @@
-from pygame.time import get_ticks, Clock
+import pygame as pg
+from pytmx.util_pygame import load_pygame
+
+pg.init()
 
 
-clock = Clock()
+pg.display.set_mode((1280, 960))
+pg.Surface((640, 480))
 
-while True:
-    print(f"ticking!{get_ticks()}")
-    clock.tick(60)
+txmdata=load_pygame("art/tmx/field.tmx")
+
+# print(dir(my_tmx.tilesets[0]))
+print(txmdata.tile_properties) # all tile properties
+print(txmdata.get_tile_properties(14,8,1)) # get an indivitual tiles' properties, if any.

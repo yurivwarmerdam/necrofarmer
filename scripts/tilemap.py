@@ -18,16 +18,20 @@ class Tilemap:
     def __init__(self, tmx_file, groups):
         self.tmx_data = load_pygame(tmx_file)
         self.layers = {}
-        
-        print(dir(self.tmx_data))
-        
+
         for group in groups:
             self.layers[group] = Group()
         for layer in self.tmx_data.visible_layers:
             if layer.name in groups and hasattr(layer, "data"):
+                print(layer.tiles())
                 for x, y, surf in layer.tiles():
                     pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
                     Tile(pos, surf, self.layers[layer.name])
+
+        object_layer = self.tmx_data.get_layer_by_name("plants and graves")
+        # for obj in object_layer:
+        #     print(obj)
+        # print(self.tmx_data.layernames)
 
     def get_layer(self, layer):
         return self.layers[layer]
