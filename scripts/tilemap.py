@@ -18,6 +18,9 @@ class Tilemap:
     def __init__(self, tmx_file, groups):
         self.tmx_data = load_pygame(tmx_file)
         self.layers = {}
+        
+        print(dir(self.tmx_data))
+        
         for group in groups:
             self.layers[group] = Group()
         for layer in self.tmx_data.visible_layers:
