@@ -23,15 +23,12 @@ class Tilemap:
             self.layers[group] = Group()
         for layer in self.tmx_data.visible_layers:
             if layer.name in groups and hasattr(layer, "data"):
-                print(layer.tiles())
                 for x, y, surf in layer.tiles():
                     pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
+                    gid = layer.data[y][x]  # Warning: y x != x y
+                    props = self.tmx_data.get_tile_properties_by_gid(gid)
+                    print(props)
                     Tile(pos, surf, self.layers[layer.name])
-
-        object_layer = self.tmx_data.get_layer_by_name("plants and graves")
-        # for obj in object_layer:
-        #     print(obj)
-        # print(self.tmx_data.layernames)
 
     def get_layer(self, layer):
         return self.layers[layer]
