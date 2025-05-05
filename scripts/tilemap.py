@@ -6,10 +6,14 @@ from pytmx.util_pygame import load_pygame
 
 
 class Tile(Sprite):
-    def __init__(self, pos, surf, *groups):
+    def __init__(self, pos, surf, tile_properties: dict, *groups):
         super().__init__(*groups)
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
+        self.properties: dict = tile_properties
+
+    def has(self, attribute):
+        return attribute in self.properties
 
 
 class Tilemap:
@@ -26,9 +30,10 @@ class Tilemap:
                 for x, y, surf in layer.tiles():
                     pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
                     gid = layer.data[y][x]  # Warning: y x != x y
-                    props = self.tmx_data.get_tile_properties_by_gid(gid)
-                    print(props)
-                    Tile(pos, surf, self.layers[layer.name])
+                    tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
+                    if tile_properties:
+                        print(tile_properties)
+                    Tile(pos, surf, tile_properties, self.layers[layer.name])
 
     def get_layer(self, layer):
         return self.layers[layer]
@@ -43,9 +48,12 @@ class Tilemap:
         return result
 
     def set_tile(self, tile_pos, layer, tile_id=0):
-        if tile_id == 0:
-            self.layers[layer]
+        # TODO
         pass
+
+    def get_tiles_by_attr(self, attribute, layer) -> list:
+        tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
+        return tiles
 
 
 class world_tilemap(Tilemap):
