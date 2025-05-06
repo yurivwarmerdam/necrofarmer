@@ -1,7 +1,5 @@
 import pygame as pg
 from pygame.sprite import Sprite, Group
-
-# from pygame import Surface, sprite
 from pytmx.util_pygame import load_pygame
 
 
@@ -10,7 +8,7 @@ class Tile(Sprite):
         super().__init__(*groups)
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
-        self.properties: dict = tile_properties
+        self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):
         return attribute in self.properties
@@ -31,8 +29,8 @@ class Tilemap:
                     pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
                     gid = layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    if tile_properties:
-                        print(tile_properties)
+                    # if tile_properties:
+                    #     print(tile_properties)
                     Tile(pos, surf, tile_properties, self.layers[layer.name])
 
     def get_layer(self, layer):
@@ -47,7 +45,7 @@ class Tilemap:
                 result.append((x, y))
         return result
 
-    def set_tile(self, tile_pos, layer, tile_id=0):
+    def set_tile(self, tile_pos, layer: str, tile_id=0):
         # TODO
         pass
 
@@ -63,5 +61,5 @@ class world_tilemap(Tilemap):
         groups = ["ground", "plants and graves"]
         super().__init__(tmx_file, groups)
 
-    def get_tilled_soil():
-        pass
+    def get_tilled_soil(self):
+        return self.get_tiles_by_attr("Plantable", "ground")

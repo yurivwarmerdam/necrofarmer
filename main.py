@@ -70,6 +70,7 @@ class MainClass:
 
         self.BTREE_EVENT = pg.USEREVENT + 1
         pg.time.set_timer(self.BTREE_EVENT, 250)
+        print(self.tilemap.get_tilled_soil())
 
     def main(self):
         while True:
