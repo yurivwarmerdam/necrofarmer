@@ -29,8 +29,6 @@ class Tilemap:
                     pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
                     gid = layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    # if tile_properties:
-                    #     print(tile_properties)
                     Tile(pos, surf, tile_properties, self.layers[layer.name])
 
     def get_layer(self, layer):
@@ -52,6 +50,9 @@ class Tilemap:
     def get_tiles_by_attr(self, attribute, layer) -> list:
         tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
         return tiles
+
+    def get_tile_attrs(self, tile, layer) -> dict:
+        return self.layers[layer][tile].properties
 
 
 class world_tilemap(Tilemap):
