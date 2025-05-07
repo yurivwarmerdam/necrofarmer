@@ -53,11 +53,17 @@ class Tilemap:
         tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
         return tiles
 
+<<<<<<< HEAD
     def world_to_map(self, world_pos) -> Vector2:
         return Vector2(
             floor(world_pos.x / self.tmx_data.tilewidth),
             floor(world_pos.y / self.tmx_data.tileheight),
         )
+=======
+    def get_tile_attrs(self, tile, layer) -> dict:
+        return self.layers[layer][tile].properties
+
+>>>>>>> refs/remotes/origin/main
 
     def map_to_world(self, x, y) -> Vector2:
         return Vector2(
