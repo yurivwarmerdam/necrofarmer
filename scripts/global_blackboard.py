@@ -1,6 +1,7 @@
 import asyncio
 from scripts.player import PlayerEntity
 from pygame.sprite import Group
+from scripts.tilemap import WorldTilemap
 
 
 class global_blackboard:
@@ -11,6 +12,7 @@ class global_blackboard:
     _instance = None
 
     player: PlayerEntity = None
+    tilemap: WorldTilemap = None
     seeds: Group = None
 
     def __new__(cls):

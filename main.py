@@ -6,7 +6,7 @@ from pygame.sprite import Group
 from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
 from scripts.utils import load_image
-from scripts.tilemap import world_tilemap
+from scripts.tilemap import WorldTilemap
 from scripts.ui import ManaBar
 from scripts.async_runner import async_runner
 from scripts.global_blackboard import global_blackboard
@@ -41,7 +41,6 @@ class MainClass:
             self,
             "player",
             Vector2(50, 50),
-            self.assets["wizard"].get_size(),
             self.assets["wizard"],
         )
 
@@ -62,10 +61,11 @@ class MainClass:
 
         self.ui = Group(ManaBar(self))
 
-        self.tilemap: world_tilemap = world_tilemap("art/tmx/field.tmx")
+        self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx")
 
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
+        global_blackboard().tilemap = self.tilemap
         print("---")
 
         self.BTREE_EVENT = pg.USEREVENT + 1
@@ -100,8 +100,12 @@ class MainClass:
                 self.quit()
             if event.type == self.BTREE_EVENT:
                 self.skeletons.tick()
-            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                self.player.action()
+            if event.type == pg.KEYDOWN:
+                match event.key:
+                    case pg.K_SPACE:
+                        self.player.action1()
+                    case pg.K_z:
+                        self.player.action2()
 
     def handle_key_input(self):
         # ----------Alternate way of processing?------------#
@@ -129,6 +133,11 @@ class MainClass:
         self.tilemap.get_layer("plants and graves").draw(self.display)
         self.player.render(self.display)
         self.ui.draw(self.display)
+
+        # Debug Analytics
+        rect=self.player.sprite.get_rect().copy()
+        rect.center=self.player.pos
+        pg.draw.rect(self.display, "green", rect, 5)
 
     def quit(self):
         pg.quit()

@@ -1,6 +1,8 @@
 import pygame as pg
 from pygame.sprite import Sprite, Group
 from pytmx.util_pygame import load_pygame
+from pygame import Vector2
+from math import floor
 
 
 class Tile(Sprite):
@@ -26,11 +28,9 @@ class Tilemap:
         for layer in self.tmx_data.visible_layers:
             if layer.name in groups and hasattr(layer, "data"):
                 for x, y, surf in layer.tiles():
-                    pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
+                    pos = self.map_to_world(x, y)
                     gid = layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    # if tile_properties:
-                    #     print(tile_properties)
                     Tile(pos, surf, tile_properties, self.layers[layer.name])
 
     def get_layer(self, layer):
@@ -53,8 +53,26 @@ class Tilemap:
         tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
         return tiles
 
+    def world_to_map(self, world_pos) -> Vector2:
+        return Vector2(
+            floor(world_pos.x / self.tmx_data.tilewidth),
+            floor(world_pos.y / self.tmx_data.tileheight),
+        )
 
-class world_tilemap(Tilemap):
+    def map_to_world(self, x, y) -> Vector2:
+        return Vector2(
+            x * self.tmx_data.tilewidth,
+            y * self.tmx_data.tileheight,
+        )
+
+    def map_to_worldv(self, map_pos: Vector2) -> Vector2:
+        return Vector2(
+            map_pos.x * self.tmx_data.tilewidth,
+            map_pos.y * self.tmx_data.tileheight,
+        )
+
+
+class WorldTilemap(Tilemap):
     """Game-specific Tilemap. Holds layers spectific to this game, and game-specific convenience functions."""
 
     def __init__(self, tmx_file):
