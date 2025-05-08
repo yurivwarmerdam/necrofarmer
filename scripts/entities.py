@@ -27,7 +27,17 @@ class BTGroup(Group):
             sprite.tick(*args, **kwargs)
 
 
-class Passive(Sprite):
+class CustomSprite(Sprite):
+    @property
+    def pos(self):
+        return Vector2(self.rect.center)
+
+    @pos.setter
+    def pos(self, value):
+        self.rect.center = value
+
+
+class Passive(CustomSprite):
     """Define base class for Sprite that can have their ownership claimed.
     Ownership should be periodically reclaimed, since the claim will time out after 1 second."""
 
@@ -37,19 +47,15 @@ class Passive(Sprite):
         super().__init__()
 
     @property
-    def pos(self):
-        return self.rect.center
-
-    @pos.setter
-    def pos(self, value):
-        self.rect.center = value
-
-    @property
     def claim_age(self) -> int:
         return get_ticks() - self.claim_time
 
     def claim(self, owner) -> bool:
-        if not hasattr(self,"owner") or self.claim_age >= self.timeout or self.owner == owner:
+        if (
+            not hasattr(self, "owner")
+            or self.claim_age >= self.timeout
+            or self.owner == owner
+        ):
             self.owner = owner
             self.claim_time = get_ticks()
             return True
@@ -64,10 +70,10 @@ class Passive(Sprite):
 
 
 class Seed(Passive):
-    def __init__(self, game, sprite, pos=Vector2(0, 0)):
+    def __init__(self, game, image, pos=Vector2(0, 0)):
         super().__init__()
         self.game = game
-        self.rect = sprite.get_rect()
+        self.rect = image.get_rect()
         self.pos = pos
-        self.image = sprite
+        self.image = image
         self.pos = pos

@@ -66,11 +66,9 @@ class MainClass:
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
         global_blackboard().tilemap = self.tilemap
-        print("---")
 
         self.BTREE_EVENT = pg.USEREVENT + 1
         pg.time.set_timer(self.BTREE_EVENT, 250)
-        print(self.tilemap.get_tilled_soil())
 
     def main(self):
         while True:
@@ -131,13 +129,19 @@ class MainClass:
         self.seeds.draw(self.display)
         self.skeletons.draw(self.display)
         self.tilemap.get_layer("plants and graves").draw(self.display)
-        self.player.render(self.display)
+        self.player.draw(self.display)
         self.ui.draw(self.display)
 
         # Debug Analytics
-        rect=self.player.sprite.get_rect().copy()
-        rect.center=self.player.pos
-        pg.draw.rect(self.display, "green", rect, 5)
+        rect = self.player.sprite.get_rect().copy()
+        rect.topleft = self.player.pos
+        pg.draw.rect(self.display, "green", rect, 1)
+        tile=self.tilemap.world_to_map(self.player.pos)
+        tile_pos=self.tilemap.map_to_worldv(tile)
+        debug_rect=pg.rect.Rect(0,0,16,16)
+        debug_rect.topleft=tile_pos
+        pg.draw.rect(self.display, "yellow", debug_rect, 1)
+        print(self.player.pos)
 
     def quit(self):
         pg.quit()

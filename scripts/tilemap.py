@@ -21,20 +21,27 @@ class Tilemap:
 
     def __init__(self, tmx_file, groups):
         self.tmx_data = load_pygame(tmx_file)
-        self.layers = {}
+        self.groups = {}
+        self.map = {}
 
         for group in groups:
-            self.layers[group] = Group()
+            self.groups[group] = Group()
+            self.map[group] = [
+                [None for _ in range(self.tmx_data.height)]
+                for _ in range(self.tmx_data.width)
+            ]
         for layer in self.tmx_data.visible_layers:
             if layer.name in groups and hasattr(layer, "data"):
                 for x, y, surf in layer.tiles():
                     pos = self.map_to_world(x, y)
                     gid = layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    Tile(pos, surf, tile_properties, self.layers[layer.name])
+                    self.map[group][x][y] = Tile(
+                        pos, surf, tile_properties, self.groups[layer.name]
+                    )
 
     def get_layer(self, layer):
-        return self.layers[layer]
+        return self.groups[layer]
 
     def get_neigbors(pos, distance=1):
         result = []
@@ -45,25 +52,28 @@ class Tilemap:
                 result.append((x, y))
         return result
 
+    def tile(self, layer: str, pos: Vector2):
+        return self.map[layer][pos.x][pos.y]
+
+    def tile_properties(self, layer: str, pos: Vector2):
+        return self.tile(layer, pos).properties
+
+    def get_tiles_by_attr(self, attribute, layer) -> list:
+        tiles = [tile for tile in iter(self.groups[layer]) if tile.has(attribute)]
+        return tiles
+
+    def get_tile_attrs(self, tile, layer) -> dict:
+        return self.maps[layer][tile].properties
+
     def set_tile(self, tile_pos, layer: str, tile_id=0):
         # TODO
         pass
 
-    def get_tiles_by_attr(self, attribute, layer) -> list:
-        tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
-        return tiles
-
-<<<<<<< HEAD
-    def world_to_map(self, world_pos) -> Vector2:
+    def world_to_map(self, world_pos: Vector2) -> Vector2:
         return Vector2(
             floor(world_pos.x / self.tmx_data.tilewidth),
             floor(world_pos.y / self.tmx_data.tileheight),
         )
-=======
-    def get_tile_attrs(self, tile, layer) -> dict:
-        return self.layers[layer][tile].properties
-
->>>>>>> refs/remotes/origin/main
 
     def map_to_world(self, x, y) -> Vector2:
         return Vector2(
