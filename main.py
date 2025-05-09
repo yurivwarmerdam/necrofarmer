@@ -133,15 +133,15 @@ class MainClass:
         self.ui.draw(self.display)
 
         # Debug Analytics
-        rect = self.player.sprite.get_rect().copy()
-        rect.topleft = self.player.pos
-        pg.draw.rect(self.display, "green", rect, 1)
+        player_rect = self.player.sprite.get_rect().copy()
+        # player_rect.topleft = self.player.pos
+        pg.draw.rect(self.display, "green", player_rect, 1)
         tile=self.tilemap.world_to_map(self.player.pos)
         tile_pos=self.tilemap.map_to_worldv(tile)
         debug_rect=pg.rect.Rect(0,0,16,16)
         debug_rect.topleft=tile_pos
         pg.draw.rect(self.display, "yellow", debug_rect, 1)
-        print(self.player.pos)
+        # print(self.player.pos)
 
     def quit(self):
         pg.quit()
