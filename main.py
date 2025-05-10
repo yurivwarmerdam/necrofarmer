@@ -38,10 +38,8 @@ class MainClass:
             "seed": load_image("art/seed.png"),
         }
         self.player = PlayerEntity(
-            self,
-            "player",
-            Vector2(50, 50),
             self.assets["wizard"],
+            Vector2(50, 50),
         )
 
         self.seeds = Group(
@@ -120,7 +118,6 @@ class MainClass:
         self.ui.update()
 
     def draw_all(self):
-        # TODO: What's with those flip thing, anyway?
         # fill bg
         self.display.fill((14, 64, 128))
         # draw bg
@@ -133,15 +130,12 @@ class MainClass:
         self.ui.draw(self.display)
 
         # Debug Analytics
-        player_rect = self.player.sprite.get_rect().copy()
-        # player_rect.topleft = self.player.pos
-        pg.draw.rect(self.display, "green", player_rect, 1)
-        tile=self.tilemap.world_to_map(self.player.pos)
-        tile_pos=self.tilemap.map_to_worldv(tile)
-        debug_rect=pg.rect.Rect(0,0,16,16)
-        debug_rect.topleft=tile_pos
+        pg.draw.rect(self.display, "lightblue", self.player.rect, 1)
+        tile = self.tilemap.world_to_map(self.player.pos)
+        tile_pos = self.tilemap.map_to_worldv(tile)
+        debug_rect = pg.rect.Rect(0, 0, 16, 16)
+        debug_rect.topleft = tile_pos
         pg.draw.rect(self.display, "yellow", debug_rect, 1)
-        # print(self.player.pos)
 
     def quit(self):
         pg.quit()

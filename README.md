@@ -19,7 +19,11 @@ pip install -r requirements.txt
 
 
 ## TODO:
+- [ ] High-level: Think about how tassk sequencing should work. If seeds ar epicked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
 - [ ] steal from stardew how he did the diggable logic
+    - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
+- [ ] Only allow casting of seed spell at summong circle?
+- [ ] allow skeleton summoning at graves
 
 bt.py
 - xml

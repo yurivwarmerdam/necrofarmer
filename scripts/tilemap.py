@@ -6,9 +6,9 @@ from math import floor
 
 
 class Tile(Sprite):
-    def __init__(self, pos, surf, tile_properties: dict, *groups):
+    def __init__(self, pos, image, tile_properties: dict, *groups):
         super().__init__(*groups)
-        self.image = surf
+        self.image = image
         self.rect = self.image.get_rect(topleft=pos)
         self.properties: dict = tile_properties if tile_properties else {}
 
