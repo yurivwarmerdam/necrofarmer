@@ -24,30 +24,36 @@ class Tilemap:
         self.groups = {}
         self.map = {}
 
+        if self.tmx_data.orientation == "isometric":
+            self.isometric = True
+        else:
+            self.isometric = False
+
         for group in groups:
             self.groups[group] = Group()
             self.map[group] = [
                 [None for _ in range(self.tmx_data.height)]
                 for _ in range(self.tmx_data.width)
             ]
+
         for layer in self.tmx_data.visible_layers:
             if layer.name in groups and hasattr(layer, "data"):
                 for x, y, surf in layer.tiles():
-                    pos = self.map_to_world(x, y)
+                    world_pos = self.map_to_world(x, y)
                     gid = layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
                     self.map[group][x][y] = Tile(
-                        pos, surf, tile_properties, self.groups[layer.name]
+                        world_pos, surf, tile_properties, self.groups[layer.name]
                     )
 
     def get_layer(self, layer):
         return self.groups[layer]
 
-    def get_neigbors(pos, distance=1):
+    def get_neigbors(self, tile_pos, distance=1):
         result = []
         for x in range(-distance, distance):
             for y in range(-distance, distance):
-                if (x, y) == pos:
+                if (x, y) == tile_pos:
                     continue
                 result.append((x, y))
         return result
@@ -63,29 +69,66 @@ class Tilemap:
         return tiles
 
     def get_tile_attrs(self, tile, layer) -> dict:
-        return self.maps[layer][tile].properties
+        return self.map[layer][tile].properties
 
     def set_tile(self, tile_pos, layer: str, tile_id=0):
         # TODO
         pass
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
-        return Vector2(
-            floor(world_pos.x / self.tmx_data.tilewidth),
-            floor(world_pos.y / self.tmx_data.tileheight),
-        )
+        if self.isometric:
+            return Vector2(
+                    floor((world_pos.x / (self.tmx_data.tilewidth / 2) + world_pos.y / (self.tmx_data.tileheight / 2)) / 2)-1,
+                    floor((world_pos.y / (self.tmx_data.tileheight / 2) - world_pos.x / (self.tmx_data.tilewidth / 2)) / 2)
+            )
+        else:
+            return Vector2(
+                floor(world_pos.x / self.tmx_data.tilewidth),
+                floor(world_pos.y / self.tmx_data.tileheight),
+            )
 
     def map_to_world(self, x, y) -> Vector2:
-        return Vector2(
-            x * self.tmx_data.tilewidth,
-            y * self.tmx_data.tileheight,
-        )
+        if self.isometric:
+            return Vector2(
+                self.tmx_data.tilewidth / 2 * (x - y),
+                self.tmx_data.tileheight / 2 * (x + y),
+            )
+        else:
+            return Vector2(
+                x * self.tmx_data.tilewidth,
+                y * self.tmx_data.tileheight,
+            )
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
-        return Vector2(
-            map_pos.x * self.tmx_data.tilewidth,
-            map_pos.y * self.tmx_data.tileheight,
-        )
+        # print(f"--posx: {map_pos.x},posy: {map_pos.y}")
+        return self.map_to_world(map_pos.x, map_pos.y)
+
+
+# class IsometricTilemap(Tilemap):
+#     """Isometric Tilemap. Holds several layers of Sprite Groups."""
+
+#     def __init__(self, tmx_file, groups):
+#         self.tmx_data = load_pygame(tmx_file)
+#         self.groups = {}
+#         self.map = {}
+
+#         for group in groups:
+#             self.groups[group] = Group()
+#             self.map[group] = [
+#                 [None for _ in range(self.tmx_data.height)]
+#                 for _ in range(self.tmx_data.width)
+#             ]
+#         for layer in self.tmx_data.visible_layers:
+#             if layer.name in groups and hasattr(layer, "data"):
+#                 for x, y, surf in layer.tiles():
+#                     pos = self.map_to_world(x, y)
+#                     gid = layer.data[y][x]  # Warning: y x != x y
+#                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
+#                     self.map[group][x][y] = Tile(
+#                         pos, surf, tile_properties, self.groups[layer.name]
+#                     )
+
+#     pass
 
 
 class WorldTilemap(Tilemap):

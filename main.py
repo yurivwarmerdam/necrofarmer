@@ -1,8 +1,9 @@
+from typing import Iterable, override, Optional, List
 import sys
 import pygame as pg
-from pygame import Rect
+from pygame import Rect, Surface
 from pygame.math import Vector2
-from pygame.sprite import Group
+from pygame.sprite import AbstractGroup, Group
 from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
 from scripts.utils import load_image
@@ -13,9 +14,28 @@ from scripts.global_blackboard import global_blackboard
 from scripts.player import PlayerEntity
 
 
+class CameraGroup(Group):
+    # relevant source:
+    # https://github.com/clear-code-projects/Pygame-Cameras/blob/main/camera.py
+    def __init__(self, *sprites: Any | AbstractGroup | Iterable) -> None:
+        super().__init__(*sprites)
+
+    @override
+    def draw(
+        self, surface: Surface, bgsurf: Optional[Surface] = None, special_flags: int = 0
+    ) -> List[Rect]:
+        pass
+
+    def custom_draw():
+        # for group in groups:
+        # ground.draw(self.surface)
+        # (player + active_items).draw(self.surface)
+        # ui.draw(self.surface)
+        pass
+
+
 class MainClass:
     def __init__(self):
-        pass
         # initialize
         pg.init()
         # enable screen
@@ -59,7 +79,10 @@ class MainClass:
 
         self.ui = Group(ManaBar(self))
 
-        self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx")
+        # self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx")
+        self.tilemap: WorldTilemap = WorldTilemap(
+            "/c/dev/pygame/necrofarmer/art/tmx/floating_island.tmx"
+        )
 
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
@@ -133,9 +156,10 @@ class MainClass:
         pg.draw.rect(self.display, "lightblue", self.player.rect, 1)
         tile = self.tilemap.world_to_map(self.player.pos)
         tile_pos = self.tilemap.map_to_worldv(tile)
-        debug_rect = pg.rect.Rect(0, 0, 16, 16)
+        debug_rect = pg.rect.Rect(0, 0, 24, 16)
         debug_rect.topleft = tile_pos
         pg.draw.rect(self.display, "yellow", debug_rect, 1)
+        pg.draw.circle(self.display, "darkblue", self.player.pos, 4, 2)
 
     def quit(self):
         pg.quit()

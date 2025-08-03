@@ -19,17 +19,35 @@ pip install -r requirements.txt
 
 
 ## TODO:
-- [ ] High-level: Think about how tassk sequencing should work. If seeds ar epicked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
+- [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
 - [ ] steal from stardew how he did the diggable logic
     - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
+- camera logic
+    - move camera position
+    - correct mouse pos in a global-to-local function
+    - figure out a good standardized way of interacing there.
+    - Godot does this by:
+        - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
 - [ ] Only allow casting of seed spell at summong circle?
 - [ ] allow skeleton summoning at graves
+
 
 bt.py
 - xml
 - ports
 - RemoteActionNode (starts thread. Perhaps puts stuff on ports and/or takes return value for success)
 
+## Camera notes:
+- Clear Code's solution is to have a camera group. Feels appropriate and pg-style, but he's specifically solving ysort issues (I will have to deal witht hese too, at some point, so it might be good anyway)
+- correction: he also does camera mouse movement.
+- does not, however, do a get_global_mouse_pos or whatever.
+
+Ok, so after some thinking and video watching, I think I need some object (group?) that is the "primary camera".
+Or maybe just a camera object that's assigned to whatever surface is my screen (screen is a singleton in button, but I am getting convinced that this is a bad idea).
+> Is the main screen accessible in some way??
+What I _want_ is a globally accesible function that allows me to get_global_mouse_pos. Godot has it as a function all Node2Ds have. It goes through the CanvasLayer it belongs to. Perhaps I can do a similar thing through the groups it belongs to??
+Do I want to include layers into this camera object? How about zsorting?
+And multitile objects?
 
 ## Python btree notes
 
