@@ -19,13 +19,8 @@ from scripts.global_blackboard import global_blackboard
 
 
 class Skeleton(Sprite):
-    def __init__(
-        self,
-        game,
-        image: Surface,
-        pos=Vector2(0, 0),
-    ):
-        Sprite.__init__(self)
+    def __init__(self, game, image: Surface, pos=Vector2(0, 0), *groups):
+        super().__init__(*groups)
         self.game = game
         self.rect = image.get_rect()
         self.pos = pos

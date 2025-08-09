@@ -7,8 +7,16 @@ FACINGS = [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]
 
 
 class PlayerEntity(NodeSprite):
-    def __init__(self, image, pos, anchor="midbottom", offset=Vector2(0, -5), mana=200):
-        super().__init__(image, pos, anchor, offset)
+    def __init__(
+        self,
+        image,
+        pos,
+        *groups,
+        anchor="midbottom",
+        offset=Vector2(0, -5),
+        mana=200,
+    ):
+        super().__init__(image, pos, anchor, offset, *groups)
         self.mana = mana
         self.facing = Vector2(0, -15)
 

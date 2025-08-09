@@ -71,8 +71,8 @@ class Passive(CustomSprite):
 
 
 class Seed(Passive):
-    def __init__(self, game, image, pos=Vector2(0, 0)):
-        super().__init__()
+    def __init__(self, game, image, pos=Vector2(0, 0), *groups):
+        super().__init__(*groups)
         self.game = game
         self.rect = image.get_rect()
         self.pos = pos
