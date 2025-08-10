@@ -22,14 +22,22 @@ pip install -r requirements.txt
 - [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
 - [ ] steal from stardew how he did the diggable logic
     - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
-- camera logic
+- [ ] Only allow casting of seed spell at summong circle?
+- [ ] allow skeleton summoning at graves
+
+- [v] camera logic
     - move camera position
     - correct mouse pos in a global-to-local function
     - figure out a good standardized way of interacing there.
     - Godot does this by:
         - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
-- [ ] Only allow casting of seed spell at summong circle?
-- [ ] allow skeleton summoning at graves
+- [ ] do thurough testing on validity of world to map logic
+    - make project with big tiles
+    - have smallish (cursor??) entity moving around
+    - perhaps just display several objects, have them print their loc
+- [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
+- [ ] merge button project stuff where relvant
+
 
 
 bt.py

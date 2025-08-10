@@ -1,75 +1,18 @@
 from typing import Iterable, override, Optional, List, Any
 import sys
 import pygame as pg
-from pygame import Rect, Surface
-from pygame.color import Color
+from pygame import Rect
 from pygame.math import Vector2
-from pygame.sprite import AbstractGroup, Group
+from pygame.sprite import Group
+from scripts.camera import Camera
 from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
 from scripts.utils import load_image
-from scripts.tilemap import WorldTilemap
+from game_scripts.world_tilemap import WorldTilemap
 from scripts.ui import ManaBar
 from scripts.async_runner import async_runner
 from scripts.global_blackboard import global_blackboard
 from scripts.player import PlayerEntity
-
-
-class Camera:
-    # relevant source:
-    # https://github.com/clear-code-projects/Pygame-Cameras/blob/main/camera.py
-    def __init__(
-        self,
-        layers: dict[str, Group],
-        ui: List[Group],
-        display: Surface,
-        pos=Vector2(0, 0),
-        bg_color: Color = Color("blue1"),
-    ) -> None:
-        self.pos = pos
-        self.layers = layers
-        self.ui = ui
-        self.display = display
-        self.bg_color = bg_color
-
-    def get_global_mouse_pos(self):
-        return Vector2(pg.mouse.get_pos()) + self.pos
-
-    def draw_all(self):
-        self.display.fill(self.bg_color)
-        for group in self.layers:
-            self.layers[group].draw(self.display)
-
-    def draw_layer(self, layer: Group):
-        """Adapted from pygame's cannonical draw logic:
-        draw all sprites onto the surface
-
-        Group.draw(surface, special_flags=0): return Rect_list
-
-        Draws all of the member sprites onto the given surface.
-
-        """
-
-        sprites = layer.sprites()
-        if hasattr(self.display, "blits"):
-            layer.spritedict.update(
-                zip(
-                    sprites,
-                    self.display.blits(
-                        (spr.image, spr.rect.move(-self.pos.x, -self.pos.y), None, 0)
-                        for spr in sprites  # type: ignore
-                    ),
-                )
-            )
-        else:
-            for spr in sprites:
-                layer.spritedict[spr] = self.display.blit(
-                    spr.image, spr.rect.move(-self.pos.x, -self.pos.y), None, 0
-                )
-        self.lostsprites = []
-        dirty = self.lostsprites
-
-        return dirty
 
 
 class MainClass:
@@ -83,13 +26,18 @@ class MainClass:
         pg.display.set_caption("test")
         self.clock = pg.time.Clock()
 
-        layers = {
+        render_layers = {
             "ground": Group(),
             "paths": Group(),
             "active": Group(),
             "sky": Group(),
             "always_front": Group(),
         }
+
+        self.ui = Group()
+
+        self.camera = Camera(render_layers, Group(), self.display, Vector2(0,0))
+        # self.camera = Camera(render_layers, self.ui, self.display, Vector2(-200, 0))
 
         self.movement = Vector2(0, 0)
         self.movement_speed = 3
@@ -104,12 +52,13 @@ class MainClass:
             "seed": load_image("art/seed.png"),
         }
         self.player = PlayerEntity(
-            self.assets["wizard"], Vector2(50, 50), layers["active"]
+            self.assets["wizard"], Vector2(50, 50), render_layers["active"]
         )
 
         self.seeds = Group()
-        Seed(self, self.assets["seed"], Vector2(200, 300),self.seeds,layers["active"])
-        
+        Seed(
+            self.assets["seed"], Vector2(200, 300), self.seeds, render_layers["active"]
+        )
 
         self.skeletons = BTGroup()
         Skeleton(
@@ -117,66 +66,63 @@ class MainClass:
             self.assets["skeleton"],
             Vector2(300, 300),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(280, 280),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(280, 200),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(200, 300),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(250, 310),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(330, 320),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(310, 340),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
         Skeleton(
             self,
             self.assets["skeleton"],
             Vector2(325, 317),
             self.skeletons,
-            layers["active"],
+            render_layers["active"],
         )
-
-        # self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx")
+        # self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx",render_layers)
         self.tilemap: WorldTilemap = WorldTilemap(
-            "/c/dev/pygame/necrofarmer/art/tmx/floating_island.tmx"
+            "/c/dev/pygame/necrofarmer/art/tmx/floating_island.tmx", render_layers
         )
 
-        self.ui = Group(ManaBar(self))
-
-        self.camera = Camera(layers, [], self.display, Vector2(-200, 0))
+        ManaBar(self, Vector2(0, 0), self.ui)
 
         global_blackboard().player = self.player
         global_blackboard().seeds = self.seeds
@@ -235,17 +181,7 @@ class MainClass:
         self.ui.update()
 
     def draw_all(self):
-        # fill bg
-        self.display.fill((14, 64, 128))
-        # draw bg
-        # self.tilemap.get_layer("ground").draw(self.display)
-        self.camera.draw_layer(self.tilemap.get_layer("ground"))
-        # draw entities
-        self.seeds.draw(self.display)
-        self.skeletons.draw(self.display)
-        self.tilemap.get_layer("plants and graves").draw(self.display)
-        self.player.draw(self.display)
-        self.ui.draw(self.display)
+        self.camera.draw_all()
 
         # Debug Analytics
         pg.draw.rect(self.display, "lightblue", self.player.rect, 1)

@@ -42,10 +42,10 @@ class Passive(CustomSprite):
     """Define base class for Sprite that can have their ownership claimed.
     Ownership should be periodically reclaimed, since the claim will time out after 1 second."""
 
-    def __init__(self):
+    def __init__(self, *groups):
+        super().__init__(*groups)
         self.claim_time: int = -1000
         self.timeout = 1000
-        super().__init__()
 
     @property
     def claim_age(self) -> int:
@@ -71,9 +71,8 @@ class Passive(CustomSprite):
 
 
 class Seed(Passive):
-    def __init__(self, game, image, pos=Vector2(0, 0), *groups):
+    def __init__(self, image, pos, *groups):
         super().__init__(*groups)
-        self.game = game
         self.rect = image.get_rect()
         self.pos = pos
         self.image = image

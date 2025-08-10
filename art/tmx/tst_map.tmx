@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.1" orientation="isometric" renderorder="right-down" width="15" height="15" tilewidth="92" tileheight="46" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="../tsx/tst_tiles.tsx"/>
+ <tileset firstgid="4" source="../tsx/tst_squares.tsx"/>
+ <layer id="1" name="ground" width="15" height="15">
+  <data encoding="csv">
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+</data>
+ </layer>
+</map>

@@ -6,8 +6,8 @@ from pygame.math import Vector2
 
 
 class ManaBar(Sprite):
-    def __init__(self, game, pos=Vector2(0, 0)):
-        Sprite.__init__(self)
+    def __init__(self, game, pos,*groups):
+        super().__init__(*groups)
         self.game = game
 
         self.image = Surface((64, 16))

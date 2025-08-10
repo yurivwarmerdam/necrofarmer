@@ -16,37 +16,49 @@ class Tile(Sprite):
 
 
 class Tilemap:
-    """Generic Tilemap. Holds several layers of Sprite Groups."""
+    """
+    Generic Tilemap. Holds several layers of Sprite Groups.
+    Args:
+        tmx_file: filename to load tilemap from
+        group_mappings: dict containing layer names ot load from the tilemaps (keys), paired with their corresponding render group
+    """
 
-    def __init__(self, tmx_file, groups):
+    def __init__(self, tmx_file, group_mappings: dict[str, Group]):
         self.tmx_data = load_pygame(tmx_file)
-        self.groups = {}
+        self.map_layers = {}
         self.map = {}
 
-        if self.tmx_data.orientation == "isometric":
-            self.isometric = True
-        else:
-            self.isometric = False
+        self.isometric = self.tmx_data.orientation == "isometric"
 
-        for group in groups:
-            self.groups[group] = Group()
-            self.map[group] = [
+        tmx_layers = list(self.tmx_data.visible_layers)
+
+        # iterate all groups
+        for group_name in group_mappings:
+            self.map_layers[group_name] = Group()
+
+            # instantiate empty map for layer
+            self.map[group_name] = [
                 [None for _ in range(self.tmx_data.height)]
                 for _ in range(self.tmx_data.width)
             ]
-
-        for layer in self.tmx_data.visible_layers:
-            if layer.name in groups and hasattr(layer, "data"):
-                for x, y, surf in layer.tiles():
+            tmx_layer = next(
+                (layer for layer in tmx_layers if layer.name == group_name), None
+            )
+            if tmx_layer and hasattr(tmx_layer, "data"):
+                for x, y, surf in tmx_layer.tiles():
                     world_pos = self.map_to_world(x, y)
-                    gid = layer.data[y][x]  # Warning: y x != x y
+                    gid = tmx_layer.data[y][x]  # Warning: y x != x y
                     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    self.map[group][x][y] = Tile(
-                        world_pos, surf, tile_properties, self.groups[layer.name]
+                    self.map[group_name][x][y] = Tile(
+                        world_pos,
+                        surf,
+                        tile_properties,
+                        self.map_layers[group_name],
+                        group_mappings[group_name],
                     )
 
     def get_layer(self, layer):
-        return self.groups[layer]
+        return self.map_layers[layer]
 
     def get_neigbors(self, tile_pos, distance=1):
         result = []
@@ -64,7 +76,7 @@ class Tilemap:
         return self.tile(layer, pos).properties
 
     def get_tiles_by_attr(self, attribute, layer) -> list:
-        tiles = [tile for tile in iter(self.groups[layer]) if tile.has(attribute)]
+        tiles = [tile for tile in iter(self.map_layers[layer]) if tile.has(attribute)]
         return tiles
 
     def get_tile_attrs(self, tile, layer) -> dict:
@@ -114,14 +126,3 @@ class Tilemap:
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
         # print(f"--posx: {map_pos.x},posy: {map_pos.y}")
         return self.map_to_world(map_pos.x, map_pos.y)
-
-
-class WorldTilemap(Tilemap):
-    """Game-specific Tilemap. Holds layers spectific to this game, and game-specific convenience functions."""
-
-    def __init__(self, tmx_file):
-        groups = ["ground", "plants and graves"]
-        super().__init__(tmx_file, groups)
-
-    def get_tilled_soil(self):
-        return self.get_tiles_by_attr("Plantable", "ground")
