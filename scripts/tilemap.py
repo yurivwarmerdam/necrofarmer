@@ -129,5 +129,4 @@ class Tilemap:
             )
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
-        # print(f"--posx: {map_pos.x},posy: {map_pos.y}")
         return self.map_to_world(map_pos.x, map_pos.y)

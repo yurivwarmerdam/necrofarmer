@@ -36,8 +36,7 @@ class MainClass:
 
         self.ui = Group()
 
-        self.camera = Camera(render_layers, Group(), self.display, Vector2(0,0))
-        # self.camera = Camera(render_layers, self.ui, self.display, Vector2(-200, 0))
+        self.camera = Camera(render_layers, self.ui, self.display, Vector2(-200, 0))
 
         self.movement = Vector2(0, 0)
         self.movement_speed = 3

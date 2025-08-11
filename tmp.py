@@ -1,38 +1,54 @@
 import pygame as pg
-from pygame import Vector2
-from pygame.sprite import Group
+from pygame import Vector2, Surface
+from pygame.sprite import Group, Sprite
 import sys
 from scripts.tilemap import Tilemap
 from math import floor
+from scripts.utils import sheet_to_sprites, load_image
+from random import randint
+
+
+class AnimatedSprite(Sprite):
+    def __init__(
+        self,
+        images: list[Surface],
+        animations: dict[str, list[int]],
+        pos: Vector2,
+        *groups,
+    ) -> None:
+        super().__init__(*groups)
+        self.active_sprite = 0
+        self.active_animation = next(iter(animations.items()))
+        self.images = images
+        self.image = images[self.active_sprite]
+        self.animations = animations
+        self.rect = self.image.get_rect()
+        self.pos = pos
+
+    def set_image(self, image_idx):
+        self.active_sprite = image_idx
+        self.image = self.images[image_idx]
+        pass
+
 
 pg.init()
 
 display = pg.display.set_mode((800, 400), pg.SCALED, pg.RESIZABLE)
-
 clock = pg.time.Clock()
 
+# tilemap
+tile_layer = Group()
+tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
+anim_layer = Group()
 
-# debug_rect = pg.rect.Rect(0, 0, 50, 50)
-# tst_surf = pg.surface.Surface((50, 50))
-# tst_surf.fill("lightblue")
-# pg.draw.rect(tst_surf, "yellow", debug_rect, 1)
-
-
-# for i in range(5):
-#     display.blit(tst_surf, (i * 10, i * 10))
-
-render_layer=Group()
-
-tilemap=Tilemap("art/tmx/tst_square_map.tmx",{"ground":render_layer})
-
-pg.display.update()
-
-print(render_layer)
-
+# animated sprite
+images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
+print(images_d)
+images_l = list(images_d.values())
+sprite = AnimatedSprite(images_l, {"0": [0, 1, 2, 3]}, Vector2(100, 100), anim_layer)
 
 # ---- ticking ----
 while True:
-    
     # --- event loop ---
     for event in pg.event.get():
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
@@ -42,12 +58,15 @@ while True:
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             # TODO: Offsetting does not quite work. Let's keep iterating.
-            tile=tilemap.world_to_map(mouse_pos)
+            tile = tilemap.world_to_map(mouse_pos)
 
             print(f"click: {mouse_pos} : {tile} : [{floor(tile.x)},{floor(tile.y)}]")
-    
+
+    sprite.set_image(randint(0, len(sprite.images) - 1))
+
     # --- render loop ---
     display.fill("darkblue")
-    render_layer.draw(display)
+    tile_layer.draw(display)
+    anim_layer.draw(display)
     pg.display.update()
     clock.tick(60)

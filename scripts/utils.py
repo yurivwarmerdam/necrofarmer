@@ -19,6 +19,7 @@ def sheet_to_sprites(surface: Surface, size: Vector2) -> dict:
         for row in range(rows):
             rect = pg.Rect(col * size.x, row * size.y, size.x, size.y)
             sprite = Surface(size).convert()
+            sprite.set_colorkey((0, 0, 0, 0))
             sprite.blit(surface, (0, 0), rect)
             sprites[(col, row)] = sprite
     return sprites

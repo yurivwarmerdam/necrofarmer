@@ -28,7 +28,6 @@ class Camera:
     def draw_all(self):
         self.display.fill(self.bg_color)
         for group in self.render_layers:
-            print(group)
             self.draw_layer(self.render_layers[group])
             # self.render_layers[group].draw(self.display)
         self.ui.draw(self.display)
