@@ -3,7 +3,7 @@ from pygame import Vector2
 from pygame.sprite import Group
 import sys
 from scripts.tilemap import Tilemap
-
+from math import floor
 
 pg.init()
 
@@ -42,7 +42,9 @@ while True:
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             # TODO: Offsetting does not quite work. Let's keep iterating.
-            print(f"click: {mouse_pos} : {tilemap.world_to_map(mouse_pos)}")
+            tile=tilemap.world_to_map(mouse_pos)
+
+            print(f"click: {mouse_pos} : {tile} : [{floor(tile.x)},{floor(tile.y)}]")
     
     # --- render loop ---
     display.fill("darkblue")

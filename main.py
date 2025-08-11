@@ -119,7 +119,7 @@ class MainClass:
         )
         # self.tilemap: WorldTilemap = WorldTilemap("art/tmx/field.tmx",render_layers)
         self.tilemap: WorldTilemap = WorldTilemap(
-            "/c/dev/pygame/necrofarmer/art/tmx/floating_island.tmx", render_layers
+            "art/tmx/floating_island.tmx", render_layers
         )
 
         ManaBar(self, Vector2(0, 0), self.ui)
