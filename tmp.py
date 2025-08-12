@@ -8,11 +8,22 @@ from scripts.utils import sheet_to_sprites, load_image
 from random import randint
 
 
+class AnimationSequence:
+    def __init__(self, sequence: list[Surface]) -> None:
+        self.sequence = sequence
+        self.reset()
+
+    def play(self):
+        pass
+
+    def reset(self):
+        self.active_sprite = 0
+
+
 class AnimatedSprite(Sprite):
     def __init__(
         self,
-        images: list[Surface],
-        animations: dict[str, list[int]],
+        images: list[AnimationSequence],
         pos: Vector2,
         *groups,
     ) -> None:
@@ -21,7 +32,6 @@ class AnimatedSprite(Sprite):
         self.active_animation = next(iter(animations.items()))
         self.images = images
         self.image = images[self.active_sprite]
-        self.animations = animations
         self.rect = self.image.get_rect()
         self.pos = pos
 
@@ -45,7 +55,7 @@ anim_layer = Group()
 images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
 print(images_d)
 images_l = list(images_d.values())
-sprite = AnimatedSprite(images_l, {"0": [0, 1, 2, 3]}, Vector2(100, 100), anim_layer)
+sprite = AnimatedSprite(images_l, Vector2(100, 100), anim_layer)
 
 # ---- ticking ----
 while True:
