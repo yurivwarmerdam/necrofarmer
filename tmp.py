@@ -9,7 +9,7 @@ from random import randint
 
 
 class AnimationSequence:
-    def __init__(self, sequence: list[Surface]) -> None:
+    def __init__(self, sequence: list[Surface],frame_time=100) -> None:
         self.sequence = sequence
         self.reset()
 
@@ -54,6 +54,10 @@ anim_layer = Group()
 # animated sprite
 images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
 print(images_d)
+
+AnimationSequence(
+    images_d[(0, 0)], images_d[(1, 0)], images_d[(2, 0)], images_d[(3, 0)]
+)
 images_l = list(images_d.values())
 sprite = AnimatedSprite(images_l, Vector2(100, 100), anim_layer)
 
