@@ -31,13 +31,24 @@ pip install -r requirements.txt
     - figure out a good standardized way of interacing there.
     - Godot does this by:
         - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
-- [ ] do thurough testing on validity of world to map logic
+- [v] do thurough testing on validity of world to map logic
     - make project with big tiles
     - have smallish (cursor??) entity moving around
     - perhaps just display several objects, have them print their loc
+
+- [ ] generic tiledata loading feature
+- [ ] clean up project
+    - spritesheets
+    - tilemaps
+    - tilesets
+    - util scripts
+    - game(-specific) scripts
+- [ ] collision
+- [ ] multitile tiles
+- [ ] zsort
 - [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
 - [ ] merge button project stuff where relvant
-
+- [ ] create a shorter game class
 
 
 bt.py

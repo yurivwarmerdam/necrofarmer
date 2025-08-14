@@ -6,6 +6,7 @@ from scripts.tilemap import Tilemap
 from math import floor
 from scripts.utils import sheet_to_sprites, load_image
 from random import randint
+from pygame import transform
 
 
 class AnimationSequence:
@@ -41,6 +42,7 @@ class AnimatedSprite(Sprite):
         animations: dict[str, AnimationSequence],
         pos: Vector2,
         *groups,
+        flip_h=False,
     ) -> None:
         super().__init__(*groups)
         self.animations = animations
@@ -48,8 +50,9 @@ class AnimatedSprite(Sprite):
         self.image = self.active_animation.image
         self.rect = self.image.get_rect()
         self.pos = pos
+        self.flip_h = flip_h
 
-    def set_animation(self, name):
+    def set_animation(self, name: str):
         self.active_animation = self.animations[name]
         self.image = self.active_animation.image
         pass
@@ -57,7 +60,7 @@ class AnimatedSprite(Sprite):
     def update(self, delta) -> None:
         result = self.active_animation.tick(delta)
         if result:
-            self.image = result
+            self.image = transform.flip(result, True, False) if self.flip_h else result
 
 
 pg.init()
@@ -122,8 +125,9 @@ while True:
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 
-    if randint(0,100)>99:
-        
+    if randint(0, 100) > 99:
+        sprite.set_animation(str(randint(0, 3)))
+        sprite.flip_h = bool(randint(0, 1))
 
     # --- update loop ---
     anim_layer.update(_delta)
