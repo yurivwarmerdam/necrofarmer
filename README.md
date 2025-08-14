@@ -47,6 +47,7 @@ pip install -r requirements.txt
 - [ ] multitile tiles
 - [ ] zsort
 - [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
+- [ ] investigate issue with larger-than-integer scaled screens
 - [ ] merge button project stuff where relvant
 - [ ] create a shorter game class
 
