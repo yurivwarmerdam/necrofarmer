@@ -171,7 +171,7 @@ class LeafNode(Node):
         self.input_ports = input_ports
         self.output_ports = output_ports
 
-    def tick() -> NodeStatus:
+    def tick(self) -> NodeStatus:
         pass
 
     def get_input(self, name):

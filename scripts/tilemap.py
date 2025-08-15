@@ -93,23 +93,6 @@ class Tilemap:
             x = (((world_pos.x / half_w) + (world_pos.y / half_h)) / 2) - 0.5
             y = (((world_pos.y / half_h) - (world_pos.x / half_w)) / 2) + 0.5
             return Vector2(floor(x), floor(y))
-            # return Vector2(
-            #     floor(
-            #         (
-            #             world_pos.x / (self.tmx_data.tilewidth / 2)
-            #             + world_pos.y / (self.tmx_data.tileheight / 2)
-            #         )
-            #         / 2
-            #     )
-            #     - 1,
-            #     floor(
-            #         (
-            #             world_pos.y / (self.tmx_data.tileheight / 2)
-            #             - world_pos.x / (self.tmx_data.tilewidth / 2)
-            #         )
-            #         / 2
-            #     ),
-            # )
         else:
             return Vector2(
                 floor(world_pos.x / self.tmx_data.tilewidth),
