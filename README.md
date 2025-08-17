@@ -36,7 +36,6 @@ pip install -r requirements.txt
     - have smallish (cursor??) entity moving around
     - perhaps just display several objects, have them print their loc
 
-- [ ] generic tiledata loading feature
 - [ ] clean up project
     - spritesheets
     - tilemaps
@@ -49,6 +48,36 @@ pip install -r requirements.txt
 - [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
 - [ ] merge button project stuff where relvant
 - [ ] create a shorter game class
+
+- [ ] generic tiledata loading
+    - what tile data do I want to include?
+        - walkable (collision)
+        - buildable (ground)
+        - specific buildable (mine_buildable)
+        - walk_speed
+        - this _may_ also link up with click areas for selecting things
+- [ ] multitile integration
+    - slice to ribbons
+    - block tiles
+    - check if other tiles get overridden
+        - perhaps just throw an error/warning, reporting conflicting tiles?
+        - alternatively, jsut destroy everything conflicting instead.
+
+- Stardew does this through spawning entties when they are "tile entities", using the transparent tiles. I _believe_ concernedape adds tile data to supply/override tile properties. I do not need this FOR NOW. I do not think he uses any tiled-specific features to ensure something like a building will not overlap with path objects or somesuch.
+
+- This makes me think that I can split this work up into:
+    - tile entity spawning logic (can also include units!)
+        - This is also fine since there shouldn't be too many cases where you want an uninstantiated object already spawned on the map.
+        - after instantiating map: go over existing tile, and replace any privileged entity-specific tiles with thier respective object. 
+        - Run their instantiate logic, that overrides surrounding tiles where needed, registers to navmesh, etc.
+        - THis makes the entity spawning logic a nice, separate extra step.
+    - ribbon cutting logic
+        - this sohuld be programmatic
+        - this should include some dict or somesuch for knowing the template of the building, and writing this to a navmesh layer (navmesh can be placeholder for now.)
+        - should probably be relatively generically available so entities can be spawned at runtime.
+        - _might_ be useful to have the tile origin be wherever makes the most sense when hovering using a cursor.
+
+
 
 
 bt.py

@@ -118,7 +118,6 @@ while True:
 
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
-            # TODO: Offsetting does not quite work. Let's keep iterating.
             tile = tilemap.world_to_map(mouse_pos)
 
             print(f"click: {mouse_pos} : {tile} : [{floor(tile.x)},{floor(tile.y)}]")
