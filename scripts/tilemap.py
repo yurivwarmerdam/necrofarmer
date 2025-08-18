@@ -25,7 +25,7 @@ class Tilemap:
 
     def __init__(self, tmx_file, group_mappings: dict[str, Group]):
         self.tmx_data = load_pygame(tmx_file)
-        self.map_layers = {}
+        self.layers = {}
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
@@ -34,7 +34,7 @@ class Tilemap:
 
         # iterate all groups
         for group_name in group_mappings:
-            self.map_layers[group_name] = Group()
+            self.layers[group_name] = Group()
 
             # instantiate empty map for layer
             self.map[group_name] = [
@@ -45,20 +45,41 @@ class Tilemap:
                 (layer for layer in tmx_layers if layer.name == group_name), None
             )
             if tmx_layer and hasattr(tmx_layer, "data"):
-                for x, y, surf in tmx_layer.tiles():
-                    world_pos = self.map_to_world(x, y)
-                    gid = tmx_layer.data[y][x]  # Warning: y x != x y
-                    tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                    self.map[group_name][x][y] = Tile(
-                        world_pos,
-                        surf,
-                        tile_properties,
-                        self.map_layers[group_name],
-                        group_mappings[group_name],
-                    )
+                self.make_layer_tiles(tmx_layer,group_name,group_mappings[group_name])
+                # for x, y, surf in tmx_layer.tiles():
+                #     world_pos = self.map_to_world(x, y)
+                #     gid = tmx_layer.data[y][x]  # Warning: y x != x y
+                #     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
+                #     self.map[group_name][x][y] = Tile(
+                #         world_pos,
+                #         surf,
+                #         tile_properties,
+                #         self.layers[group_name],
+                #         group_mappings[group_name],
+                #     )
+
+    def make_layer_tiles(self, tmx_layer, group_name,group):
+        for x, y, surf in tmx_layer.tiles():
+            print(x,y,tmx_layer.id)
+            print(tmx_layer.name)
+            print(self.tmx_data.tilesets)
+            1/0
+            print(gid)
+            tileset=self.tmx_data.get_tileset_from_gid(gid)
+            print(tileset)
+            world_pos = self.map_to_world(x, y)
+            gid = tmx_layer.data[y][x]  # Warning: y x != x y
+            tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
+            self.map[group_name][x][y] = Tile(
+                world_pos,
+                surf,
+                tile_properties,
+                self.layers[group_name],
+                group
+            )
 
     def get_layer(self, layer):
-        return self.map_layers[layer]
+        return self.layers[layer]
 
     def get_neigbors(self, tile_pos, distance=1):
         result = []
@@ -76,7 +97,7 @@ class Tilemap:
         return self.tile(layer, pos).properties
 
     def get_tiles_by_attr(self, attribute, layer) -> list:
-        tiles = [tile for tile in iter(self.map_layers[layer]) if tile.has(attribute)]
+        tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
         return tiles
 
     def get_tile_attrs(self, tile, layer) -> dict:
