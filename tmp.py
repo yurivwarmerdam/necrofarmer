@@ -70,7 +70,10 @@ clock = pg.time.Clock()
 
 # tilemap
 tile_layer = Group()
-tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
+paths_layer=Group()
+active_layer=Group()
+# tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
+tilemap = Tilemap("tilemaps/another_island.tmx", {"ground": tile_layer, "paths":paths_layer,"active":active_layer})
 anim_layer = Group()
 
 # animated sprite
