@@ -8,7 +8,7 @@ class Tile(Sprite):
     def __init__(self, pos, image, tile_properties: dict, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.gettrm_rect(topleft=pos)
         self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):

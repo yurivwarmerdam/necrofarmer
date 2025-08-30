@@ -67,15 +67,27 @@ pip install -r requirements.txt
 
 - This makes me think that I can split this work up into:
     - tile entity spawning logic (can also include units!)
-        - This is also fine since there shouldn't be too many cases where you want an uninstantiated object already spawned on the map.
         - after instantiating map: go over existing tile, and replace any privileged entity-specific tiles with thier respective object. 
         - Run their instantiate logic, that overrides surrounding tiles where needed, registers to navmesh, etc.
         - THis makes the entity spawning logic a nice, separate extra step.
+        - This is also fine since there shouldn't be too many cases where you want an uninstantiated object already spawned on the map.
     - ribbon cutting logic
         - this sohuld be programmatic
         - this should include some dict or somesuch for knowing the template of the building, and writing this to a navmesh layer (navmesh can be placeholder for now.)
         - should probably be relatively generically available so entities can be spawned at runtime.
         - _might_ be useful to have the tile origin be wherever makes the most sense when hovering using a cursor.
+        - pay some consideration for removing ribbon tiles from the tilemap (delete behavior)
+    
+- Notes on what I learned studying [pyscroll](https://pyscroll.readthedocs.io/en/latest/)
+    - keep an index of tiles on screen (rect)
+    - keep a buffer that contains a slightly overdrawn surface that has all tiles currently on screen, plus one or two more over the edge
+    - when the camera gets close enough to the edge, trigger an edge_queue and redraw
+    - edge_queue registers which edges should be appended to the buffer
+    - redraw blits all the tiles in the buffer to appropriate positions on the buffer surface
+    - evey frame the buffer gets blitter onto the main surface. It is repositioned somewhat to make sure it shows up ok.
+    - except, none of this cleverness happens! Every frame the entire buffer is remade and all tiles are redrawn! This is mostly fine since at 1080p fullscreen this gives me an fps of 60 (with one layer). 1440p is ~30 fps.
+    - Lesson: there is definitely a LOT os performance to gain here, but it requires thinking nobody has done for pygame as far as I can find.
+    - Fun diversion trying to understand another person's code, though!
 
 
 

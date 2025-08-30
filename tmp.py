@@ -6,62 +6,8 @@ from scripts.tilemap import Tilemap
 from math import floor
 from scripts.utils import sheet_to_sprites, load_image
 from random import randint
-from pygame import transform
-
-
-class AnimationSequence:
-    def __init__(self, *frames: Surface, frame_time=200) -> None:
-        self.frames = frames
-        self.frame_time = frame_time
-        self.reset()
-
-    def play(self):
-        self.playing = True
-        # TODO... now what?
-
-    def reset(self):
-        self.current_frame_time = 0
-        self.idx = 0
-
-    @property
-    def image(self):
-        return self.frames[self.idx]
-
-    def tick(self, delta):
-        self.current_frame_time += delta
-        if self.current_frame_time > self.frame_time:
-            self.current_frame_time = self.current_frame_time % self.frame_time
-            self.idx = (self.idx + 1) % len(self.frames)
-            # print(self.idx)
-            return self.image
-
-
-class AnimatedSprite(Sprite):
-    def __init__(
-        self,
-        animations: dict[str, AnimationSequence],
-        pos: Vector2,
-        *groups,
-        flip_h=False,
-    ) -> None:
-        super().__init__(*groups)
-        self.animations = animations
-        self.active_animation = next(iter(animations.values()))
-        self.image = self.active_animation.image
-        self.rect = self.image.get_rect()
-        self.pos = pos
-        self.flip_h = flip_h
-
-    def set_animation(self, name: str):
-        self.active_animation = self.animations[name]
-        self.image = self.active_animation.image
-        pass
-
-    def update(self, delta) -> None:
-        result = self.active_animation.tick(delta)
-        if result:
-            self.image = transform.flip(result, True, False) if self.flip_h else result
-
+import pyscroll
+import pytmx
 
 pg.init()
 
@@ -69,46 +15,15 @@ display = pg.display.set_mode((800, 400), pg.SCALED, pg.RESIZABLE)
 clock = pg.time.Clock()
 
 # tilemap
-tile_layer = Group()
-paths_layer=Group()
-active_layer=Group()
-# tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
-tilemap = Tilemap("tilemaps/another_island.tmx", {"ground": tile_layer, "paths":paths_layer,"active":active_layer})
-anim_layer = Group()
 
-# animated sprite
-images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
-
-seq0 = AnimationSequence(
-    images_d[(0, 0)],
-    images_d[(1, 0)],
-    images_d[(2, 0)],
-    images_d[(3, 0)],
+tmx_data = pytmx.load_pygame(
+    "tilemaps/another_island.tmx",
 )
-seq1 = AnimationSequence(
-    images_d[(0, 1)],
-    images_d[(1, 1)],
-    images_d[(2, 1)],
-    images_d[(3, 1)],
+map_layer = pyscroll.IsometricBufferedRenderer(
+    pyscroll.TiledMapData(tmx_data), display.get_size()
 )
-seq2 = AnimationSequence(
-    images_d[(0, 2)],
-    images_d[(1, 2)],
-    images_d[(2, 2)],
-    images_d[(3, 2)],
-)
-seq3 = AnimationSequence(
-    images_d[(0, 3)],
-    images_d[(1, 3)],
-    images_d[(2, 3)],
-    images_d[(3, 3)],
-)
-
-sprite = AnimatedSprite(
-    {"0": seq0, "1": seq1, "2": seq2, "3": seq3}, Vector2(100, 100), anim_layer
-)
-
-clock = pg.time.Clock()
+group = pyscroll.PyscrollGroup(map_layer)
+print(group)
 
 # ---- ticking ----
 while True:
@@ -120,23 +35,9 @@ while True:
             sys.exit()
 
         if event.type == pg.MOUSEBUTTONDOWN:
-            mouse_pos = Vector2(pg.mouse.get_pos())
-            tile = tilemap.world_to_map(mouse_pos)
-
-            print(f"click: {mouse_pos} : {tile} : [{floor(tile.x)},{floor(tile.y)}]")
-
-    # sprite.set_animation(randint(0, len(sprite.animations) - 1))
-
-    if randint(0, 100) > 99:
-        sprite.set_animation(str(randint(0, 3)))
-        sprite.flip_h = bool(randint(0, 1))
+            pass
 
     # --- update loop ---
-    anim_layer.update(_delta)
-
-    # --- render loop ---
-    display.fill("darkblue")
-    tile_layer.draw(display)
-    anim_layer.draw(display)
+    group.draw(display)
     pg.display.update()
     clock.tick(60)
