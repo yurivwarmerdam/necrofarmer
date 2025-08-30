@@ -8,7 +8,7 @@ class Tile(Sprite):
     def __init__(self, pos, image, tile_properties: dict, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = self.image.gettrm_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=pos)
         self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):
@@ -45,7 +45,7 @@ class Tilemap:
                 (layer for layer in tmx_layers if layer.name == group_name), None
             )
             if tmx_layer and hasattr(tmx_layer, "data"):
-                self.make_layer_tiles(tmx_layer,group_name,group_mappings[group_name])
+                self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
                 # for x, y, surf in tmx_layer.tiles():
                 #     world_pos = self.map_to_world(x, y)
                 #     gid = tmx_layer.data[y][x]  # Warning: y x != x y
@@ -58,24 +58,23 @@ class Tilemap:
                 #         group_mappings[group_name],
                 #     )
 
-    def make_layer_tiles(self, tmx_layer, group_name,group):
+    def make_layer_tiles(self, tmx_layer, group_name, group):
         for x, y, surf in tmx_layer.tiles():
-            print(x,y,tmx_layer.id)
-            print(tmx_layer.name)
-            print(self.tmx_data.tilesets)
-            1/0
-            print(gid)
-            tileset=self.tmx_data.get_tileset_from_gid(gid)
-            print(tileset)
             world_pos = self.map_to_world(x, y)
-            gid = tmx_layer.data[y][x]  # Warning: y x != x y
-            tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
+            pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
+            # tiled_gid = self.tmx_data.tiledgidmap[pytmx_gid]
+            tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
+            x_offset, y_offset=tileset.offset
+            print(tileset.offset)
+            offset_pos=world_pos# + tileset.offset
+            print(world_pos, offset_pos)
+            # 1/0
+            tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
+            # TODO: Now start thinking deeply about 
+            # where you want your tile origins to live.
+            tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             self.map[group_name][x][y] = Tile(
-                world_pos,
-                surf,
-                tile_properties,
-                self.layers[group_name],
-                group
+                offset_pos, surf, tile_properties, self.layers[group_name], group
             )
 
     def get_layer(self, layer):

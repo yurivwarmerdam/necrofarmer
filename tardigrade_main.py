@@ -22,7 +22,7 @@ clock = pg.time.Clock()
 
 render_layers = {
     "ground": Group(),
-    "paths": Group(), 
+    "paths": Group(),
     "active": Group(),
     "sky": Group(),
     "always_front": Group(),
@@ -31,11 +31,22 @@ render_layers = {
 # tile_layer = Group()
 # paths_layer = Group()
 units = Group()
-camera = Camera(render_layers, Group(), display,Vector2(-350,0))
+
+camera = Camera(
+    render_layers,
+    Group(),
+    display,
+    # Vector2(-350, 0),    
+    Vector2(0,0),
+)
 # tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
 tilemap = Tilemap(
     "tilemaps/another_island.tmx",
-    {"ground": render_layers["ground"], "paths": render_layers["paths"], "active": render_layers["active"]},
+    {
+        "ground": render_layers["ground"],
+        "paths": render_layers["paths"],
+        "active": render_layers["active"],
+    },
 )
 # anim_layer = Group()
 
@@ -68,7 +79,10 @@ seq3 = AnimationSequence(
 )
 
 sprite = AnimatedSprite(
-    {"0": seq0, "1": seq1, "2": seq2, "3": seq3}, Vector2(100, 100), units,render_layers["active"]
+    {"0": seq0, "1": seq1, "2": seq2, "3": seq3},
+    Vector2(100, 100),
+    units,
+    render_layers["active"],
 )
 
 clock = pg.time.Clock()
