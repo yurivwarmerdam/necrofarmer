@@ -8,7 +8,7 @@ class Tile(Sprite):
     def __init__(self, pos, image, tile_properties: dict, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(center=pos)
         self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):
@@ -65,9 +65,9 @@ class Tilemap:
             # tiled_gid = self.tmx_data.tiledgidmap[pytmx_gid]
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
             x_offset, y_offset=tileset.offset
-            print(tileset.offset)
-            offset_pos=world_pos# + tileset.offset
-            print(world_pos, offset_pos)
+            # print(tileset.offset)
+            offset_pos=world_pos + (0,2)
+            # print(world_pos, offset_pos)
             # 1/0
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             # TODO: Now start thinking deeply about 
