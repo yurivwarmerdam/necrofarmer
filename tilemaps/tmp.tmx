@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.1" orientation="isometric" renderorder="right-down" width="2" height="2" tilewidth="32" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="1">
+ <tileset firstgid="1" source="1_1_flat.tsx"/>
+ <tileset firstgid="2" source="up.tsx"/>
+ <tileset firstgid="3" source="down.tsx"/>
+ <tileset firstgid="4" source="right.tsx"/>
+ <tileset firstgid="5" source="left.tsx"/>
+ <layer id="1" name="flat" width="2" height="2">
+  <data encoding="csv">
+1,0,
+0,0
+</data>
+ </layer>
+ <layer id="2" name="up" width="2" height="2">
+  <data encoding="csv">
+2,0,
+0,0
+</data>
+ </layer>
+ <layer id="3" name="down" width="2" height="2">
+  <data encoding="csv">
+3,0,
+0,0
+</data>
+ </layer>
+ <layer id="4" name="right" width="2" height="2">
+  <data encoding="csv">
+4,0,
+0,0
+</data>
+ </layer>
+ <layer id="5" name="left" width="2" height="2">
+  <data encoding="csv">
+5,0,
+0,0
+</data>
+ </layer>
+</map>
