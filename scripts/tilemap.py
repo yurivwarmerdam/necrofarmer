@@ -1,5 +1,6 @@
 from pygame.sprite import Sprite, Group
 from pytmx.util_pygame import load_pygame
+from pytmx import TiledTileLayer
 from pygame import Vector2
 from math import floor
 
@@ -8,7 +9,7 @@ class Tile(Sprite):
     def __init__(self, pos, image, tile_properties: dict, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = self.image.get_rect(center=pos)
+        self.rect = self.image.get_rect(bottomleft=pos)
         self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):
@@ -46,32 +47,18 @@ class Tilemap:
             )
             if tmx_layer and hasattr(tmx_layer, "data"):
                 self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
-                # for x, y, surf in tmx_layer.tiles():
-                #     world_pos = self.map_to_world(x, y)
-                #     gid = tmx_layer.data[y][x]  # Warning: y x != x y
-                #     tile_properties = self.tmx_data.get_tile_properties_by_gid(gid)
-                #     self.map[group_name][x][y] = Tile(
-                #         world_pos,
-                #         surf,
-                #         tile_properties,
-                #         self.layers[group_name],
-                #         group_mappings[group_name],
-                #     )
 
     def make_layer_tiles(self, tmx_layer, group_name, group):
+        #TODO: the layers are not reporting their w/h correctly. Sounds like a pytmx issue.
+        half_w = floor(tmx_layer.width / 2)
+        half_h = floor(tmx_layer.height / 2)
+        print(half_w,half_h)
         for x, y, surf in tmx_layer.tiles():
             world_pos = self.map_to_world(x, y)
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
-            # tiled_gid = self.tmx_data.tiledgidmap[pytmx_gid]
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
-            x_offset, y_offset=tileset.offset
-            # print(tileset.offset)
-            offset_pos=world_pos + (0,2)
-            # print(world_pos, offset_pos)
-            # 1/0
+            offset_pos = world_pos + tileset.offset + (-half_w, half_h)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
-            # TODO: Now start thinking deeply about 
-            # where you want your tile origins to live.
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             self.map[group_name][x][y] = Tile(
                 offset_pos, surf, tile_properties, self.layers[group_name], group

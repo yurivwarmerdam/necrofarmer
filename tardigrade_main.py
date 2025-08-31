@@ -14,7 +14,7 @@ from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 
 pg.init()
 
-display = pg.display.set_mode((80, 60), pg.SCALED, pg.RESIZABLE)
+display = pg.display.set_mode((250 , 150), pg.SCALED, pg.RESIZABLE)
 
 clock = pg.time.Clock()
 
