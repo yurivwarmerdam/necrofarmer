@@ -49,9 +49,8 @@ class Tilemap:
                 self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
 
     def make_layer_tiles(self, tmx_layer, group_name, group):
-        #TODO: the layers are not reporting their w/h correctly. Sounds like a pytmx issue.
-        half_w = floor(tmx_layer.width / 2)
-        half_h = floor(tmx_layer.height / 2)
+        half_w = floor(self.tmx_data.tilewidth / 2)
+        half_h = floor(self.tmx_data.tileheight / 2)
         print(half_w,half_h)
         for x, y, surf in tmx_layer.tiles():
             world_pos = self.map_to_world(x, y)
