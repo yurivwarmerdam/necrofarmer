@@ -14,7 +14,7 @@ from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 
 pg.init()
 
-display = pg.display.set_mode((250 , 150), pg.SCALED, pg.RESIZABLE)
+display = pg.display.set_mode((250, 150), pg.SCALED, pg.RESIZABLE)
 
 clock = pg.time.Clock()
 
@@ -36,8 +36,8 @@ camera = Camera(
     render_layers,
     Group(),
     display,
-    # Vector2(-350, 0),    
-    Vector2(0,0),
+    # Vector2(-350, 0),
+    Vector2(0, 0),
 )
 # tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
 tilemap = Tilemap(
@@ -99,8 +99,7 @@ while True:
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             tile = tilemap.world_to_map(mouse_pos)
-
-            print(f"click: {mouse_pos} : {tile} : [{floor(tile.x)},{floor(tile.y)}]")
+            print(f"click: {mouse_pos} : {tile}")
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 

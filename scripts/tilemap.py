@@ -51,7 +51,6 @@ class Tilemap:
     def make_layer_tiles(self, tmx_layer, group_name, group):
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
-        print(half_w,half_h)
         for x, y, surf in tmx_layer.tiles():
             world_pos = self.map_to_world(x, y)
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
@@ -96,7 +95,7 @@ class Tilemap:
         if self.isometric:
             half_w = self.tmx_data.tilewidth / 2
             half_h = self.tmx_data.tileheight / 2
-            x = (((world_pos.x / half_w) + (world_pos.y / half_h)) / 2) - 0.5
+            x = (((world_pos.x / half_w) + (world_pos.y / half_h)) / 2) + 0.5
             y = (((world_pos.y / half_h) - (world_pos.x / half_w)) / 2) + 0.5
             return Vector2(floor(x), floor(y))
         else:
