@@ -89,8 +89,28 @@ pip install -r requirements.txt
     - Lesson: there is definitely a LOT os performance to gain here, but it requires thinking nobody has done for pygame as far as I can find.
     - Fun diversion trying to understand another person's code, though!
 
-
-
+- Multitile tiles and/or tile entities
+    - approches:
+        - tile entities
+        - multitile tiles as a core feature
+    - tile entities: 
+        - make a placeholder tile in tiled
+        - load map regularly in tilemap
+        - for each placeholder tile: 
+            - replace each instance with the active entity.
+        - tilemap should delegate processing
+        - Should collision be handled through the tilemap? Or independently? (probably the latter)
+        - entities should be able to occupy multiple tiles in the map
+        - deleting an inetity should empty all tiles it occupies (should be easy if correctly using groups, and making the entity a Sprite?)
+    - multitile tiles
+        - add some kind of multitile array attribute to a BigTile
+        - BigTile should be able to occupy multiple tiles on load time.
+        - slice up the tile's sprite into discrete chunks for each of its component tiles
+        - for each pos in its array (assuming the tile's origin is 0,0):
+            - replace that location with a (regular tile?) sprite.
+            - make sure to do this in both plocations what with teh oduble bookkeeping in a tilemap
+        - alternatively: have the Sprites' draw() function behave differently? (probably a bad idea, since I intend to zsort tilemaps)
+        - deletion should be easy, since we can delete tiles, and that immediately removes them from a group, since that's how they're rendered.
 
 bt.py
 - xml
