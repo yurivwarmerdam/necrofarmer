@@ -1,6 +1,5 @@
 from pygame.sprite import Sprite, Group
 from pytmx.util_pygame import load_pygame
-from pytmx import TiledTileLayer
 from pygame import Vector2
 from math import floor
 
@@ -24,7 +23,10 @@ class Tilemap:
         group_mappings: dict containing layer names ot load from the tilemaps (keys), paired with their corresponding render group
     """
 
-    def __init__(self, tmx_file, group_mappings: dict[str, Group]):
+    def __init__(self, tmx_file,
+                 # TODO: Group mappings should probably be removed
+                 # and instead be handled by wiring together outside of this class
+                  group_mappings: dict[str, Group]):
         self.tmx_data = load_pygame(tmx_file)
         self.layers = {}
         self.map = {}
