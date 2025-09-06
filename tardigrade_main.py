@@ -87,6 +87,17 @@ sprite = AnimatedSprite(
 
 clock = pg.time.Clock()
 
+
+def move_towards(source: Vector2, target: Vector2, by: float):
+    delta = target - source
+    dist = delta.length()
+    if dist <= by or dist == 0:
+        return target
+    return source + delta.normalize() * by
+
+
+move_goal = None
+
 # ---- ticking ----
 while True:
     _delta = clock.get_time()
@@ -100,6 +111,10 @@ while True:
             mouse_pos = Vector2(pg.mouse.get_pos())
             tile = tilemap.world_to_map(mouse_pos)
             print(f"click: {mouse_pos} : {tile}")
+            move_goal = mouse_pos
+    if move_goal:
+        print(sprite.pos, move_towards(sprite.pos, move_goal, _delta))
+        sprite.pos = move_towards(sprite.pos, move_goal, _delta)
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 

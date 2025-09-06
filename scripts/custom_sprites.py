@@ -80,6 +80,8 @@ class AnimatedSprite(Sprite):
         self.active_animation = next(iter(animations.values()))
         self.image = self.active_animation.image
         self.rect = self.image.get_rect()
+        self.anchor="topleft"
+        self.offset=Vector2(0,0)
         self.pos = pos
         self.flip_h = flip_h
 
@@ -92,3 +94,13 @@ class AnimatedSprite(Sprite):
         result = self.active_animation.tick(delta)
         if result:
             self.image = transform.flip(result, True, False) if self.flip_h else result
+
+    @property
+    def pos(self):
+        return self._pos
+
+    @pos.setter
+    def pos(self, value: Vector2):
+        self._pos = value
+        setattr(self.rect, self.anchor, self.pos - self.offset)
+        

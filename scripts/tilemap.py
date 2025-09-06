@@ -1,5 +1,6 @@
 from pygame.sprite import Sprite, Group
-from pytmx.util_pygame import load_pygame, TiledMap
+from pytmx.util_pygame import load_pygame
+from pytmx import TiledMap
 from pygame import Vector2
 from math import floor
 
@@ -30,7 +31,7 @@ class Tilemap:
         # and instead be handled by wiring together outside of this class
         group_mappings: dict[str, Group],
     ):
-        self.tmx_data:TiledMap = load_pygame(tmx_file)
+        self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.layers = {}
         self.map = {}
 
@@ -60,7 +61,7 @@ class Tilemap:
             world_pos = self.map_to_world(x, y)
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
-            offset_pos = world_pos + tileset.offset + (-half_w, half_h)
+            offset_pos = world_pos + Vector2(tileset.offset) + (-half_w, half_h)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             self.map[group_name][x][y] = Tile(
