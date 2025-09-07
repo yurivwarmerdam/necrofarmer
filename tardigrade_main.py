@@ -28,18 +28,14 @@ render_layers = {
     "always_front": Group(),
 }
 
-# tile_layer = Group()
-# paths_layer = Group()
 units = Group()
 
 camera = Camera(
     render_layers,
     Group(),
     display,
-    # Vector2(-350, 0),
-    Vector2(0, 0),
+    Vector2(-125, 0),
 )
-# tilemap = Tilemap("art/tmx/tst_square_map.tmx", {"ground": tile_layer})
 tilemap = Tilemap(
     "tilemaps/another_island.tmx",
     {
@@ -48,7 +44,6 @@ tilemap = Tilemap(
         "active": render_layers["active"],
     },
 )
-# anim_layer = Group()
 
 # animated sprite
 images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
@@ -83,6 +78,8 @@ sprite = AnimatedSprite(
     Vector2(100, 100),
     units,
     render_layers["active"],
+    anchor="center",
+    offset=Vector2(0, 10),
 )
 
 clock = pg.time.Clock()
@@ -113,8 +110,7 @@ while True:
             print(f"click: {mouse_pos} : {tile}")
             move_goal = camera.get_global_mouse_pos()
     if move_goal:
-        print(sprite.pos, move_towards(sprite.pos, move_goal, _delta/10))
-        sprite.pos = move_towards(sprite.pos, move_goal, _delta/10)
+        sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 

@@ -17,16 +17,14 @@ class NodeSprite(Sprite):
         offset: Vector2 = Vector2(0, 0),
         *groups,
     ):
+        super().__init__(*groups)
         self.anchor = anchor
         self.image: Surface = image
         self.rect: Rect = image.get_rect()
-        print(self.rect)
         self.offset = offset
         self.pos = pos
 
-        super().__init__(*groups)
-
-    def draw(self,surface):
+    def draw(self, surface):
         surface.blit(self.image, self.rect)
 
     @property
@@ -37,7 +35,6 @@ class NodeSprite(Sprite):
     def pos(self, value: Vector2):
         self._pos = value
         setattr(self.rect, self.anchor, self._pos - self.offset)
-        
 
 
 class AnimationSequence:
@@ -63,7 +60,6 @@ class AnimationSequence:
         if self.current_frame_time > self.frame_time:
             self.current_frame_time = self.current_frame_time % self.frame_time
             self.idx = (self.idx + 1) % len(self.frames)
-            # print(self.idx)
             return self.image
 
 
@@ -73,16 +69,13 @@ class AnimatedSprite(NodeSprite):
         animations: dict[str, AnimationSequence],
         pos: Vector2,
         *groups,
+        anchor="midbottom",
+        offset=Vector2(0, 0),
         flip_h=False,
     ) -> None:
-        super().__init__(*groups)
         self.animations = animations
         self.active_animation = next(iter(animations.values()))
-        self.image = self.active_animation.image
-        self.rect = self.image.get_rect()
-        self.anchor="topleft"
-        self.offset=Vector2(0,0)
-        self.pos = pos
+        super().__init__(self.active_animation.image, pos, anchor, offset, *groups)
         self.flip_h = flip_h
 
     def set_animation(self, name: str):
@@ -95,12 +88,11 @@ class AnimatedSprite(NodeSprite):
         if result:
             self.image = transform.flip(result, True, False) if self.flip_h else result
 
-    @property
-    def pos(self):
-        return self._pos
+    # @property
+    # def pos(self):
+    #     return self._pos
 
-    @pos.setter
-    def pos(self, value: Vector2):
-        self._pos = value
-        setattr(self.rect, self.anchor, self.pos - self.offset)
-        
+    # @pos.setter
+    # def pos(self, value: Vector2):
+    #     self._pos = value
+    #     setattr(self.rect, self.anchor, self.pos - self.offset)
