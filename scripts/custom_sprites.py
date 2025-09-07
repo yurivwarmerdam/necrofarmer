@@ -20,10 +20,10 @@ class NodeSprite(Sprite):
         self.anchor = anchor
         self.image: Surface = image
         self.rect: Rect = image.get_rect()
+        print(self.rect)
         self.offset = offset
         self.pos = pos
 
-        self.facing = Vector2(0, -15)
         super().__init__(*groups)
 
     def draw(self,surface):
@@ -36,7 +36,7 @@ class NodeSprite(Sprite):
     @pos.setter
     def pos(self, value: Vector2):
         self._pos = value
-        setattr(self.rect, self.anchor, self.pos - self.offset)
+        setattr(self.rect, self.anchor, self._pos - self.offset)
         
 
 
@@ -67,7 +67,7 @@ class AnimationSequence:
             return self.image
 
 
-class AnimatedSprite(Sprite):
+class AnimatedSprite(NodeSprite):
     def __init__(
         self,
         animations: dict[str, AnimationSequence],

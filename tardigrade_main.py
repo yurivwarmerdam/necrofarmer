@@ -111,10 +111,10 @@ while True:
             mouse_pos = Vector2(pg.mouse.get_pos())
             tile = tilemap.world_to_map(mouse_pos)
             print(f"click: {mouse_pos} : {tile}")
-            move_goal = mouse_pos
+            move_goal = camera.get_global_mouse_pos()
     if move_goal:
-        print(sprite.pos, move_towards(sprite.pos, move_goal, _delta))
-        sprite.pos = move_towards(sprite.pos, move_goal, _delta)
+        print(sprite.pos, move_towards(sprite.pos, move_goal, _delta/10))
+        sprite.pos = move_towards(sprite.pos, move_goal, _delta/10)
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 

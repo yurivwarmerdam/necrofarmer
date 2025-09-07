@@ -18,7 +18,7 @@ class PlayerEntity(NodeSprite):
     ):
         super().__init__(image, pos, anchor, offset, *groups)
         self.mana = mana
-        self.facing = Vector2(0, -15)
+        self.facing = Vector2(0, -1)
 
     def update(self, delta: float, input_movement: Vector2, keys: ScancodeWrapper):
         frame_movement = input_movement
