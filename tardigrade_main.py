@@ -95,22 +95,42 @@ def move_towards(source: Vector2, target: Vector2, by: float):
 
 move_goal = None
 
+
+def handle_key_input():
+    # ----------Alternate way of processing?------------#
+    keys_pressed = pg.key.get_pressed()
+    camera_move = Vector2(0, 0)
+    camera_move.x = keys_pressed[pg.K_RIGHT] - keys_pressed[pg.K_LEFT]
+    camera_move.y = keys_pressed[pg.K_DOWN] - keys_pressed[pg.K_UP]
+    return camera_move
+
+
 # ---- ticking ----
 while True:
     _delta = clock.get_time()
+
     # --- event loop ---
     for event in pg.event.get():
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
 
-        if event.type == pg.MOUSEBUTTONDOWN:
+        elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             tile = tilemap.world_to_map(mouse_pos)
-            print(f"click: {mouse_pos} : {tile}")
             move_goal = camera.get_global_mouse_pos()
+        elif event.type == pg.KEYDOWN:
+            if event.key == pg.K_LEFT:
+                camera_move.x -= 1
+            elif event.key == pg.K_RIGHT:
+                camera_move.x += 1
+
     if move_goal:
         sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
+
+    camera_move = handle_key_input()
+    if camera_move != Vector2(0, 0):
+        camera.pos += camera_move
 
     # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 
