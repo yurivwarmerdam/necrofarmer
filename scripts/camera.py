@@ -28,6 +28,7 @@ class Camera:
     def draw_all(self):
         self.display.fill(self.bg_color)
         for group in self.render_layers:
+            # TODO: I done broke shit here.
             if group == "active":
                 sorted(self.render_layers[group].sprites(), key= lambda sprite: sprite.pos)
             self.draw_layer(self.render_layers[group])
