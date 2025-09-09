@@ -28,6 +28,8 @@ class Camera:
     def draw_all(self):
         self.display.fill(self.bg_color)
         for group in self.render_layers:
+            if group == "active":
+                sorted(self.render_layers[group].sprites(), key= lambda sprite: sprite.pos)
             self.draw_layer(self.render_layers[group])
         self.ui.draw(self.display)
 
@@ -41,6 +43,7 @@ class Camera:
 
         """
         sprites = layer.sprites()
+
         if hasattr(self.display, "blits"):
             layer.spritedict.update(
                 zip(
