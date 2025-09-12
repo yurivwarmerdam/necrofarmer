@@ -21,6 +21,8 @@ class Camera:
         self.ui = ui
         self.display = display
         self.bg_color = bg_color
+        # not using this yet. Goal is to use it for scale operations, prolly
+        self.buffer=Surface(self.display.size)
 
     def get_global_mouse_pos(self):
         return Vector2(pg.mouse.get_pos()) + self.pos
@@ -29,8 +31,8 @@ class Camera:
         self.display.fill(self.bg_color)
         for group in self.render_layers:
             # TODO: I done broke shit here.
-            if group == "active":
-                sorted(self.render_layers[group].sprites(), key= lambda sprite: sprite.pos)
+            # if group == "active":
+            #     sorted(self.render_layers[group].sprites(), key= lambda sprite: sprite.pos)
             self.draw_layer(self.render_layers[group])
         self.ui.draw(self.display)
 

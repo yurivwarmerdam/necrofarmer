@@ -3,13 +3,20 @@ from pytmx.util_pygame import load_pygame
 from pytmx import TiledMap
 from pygame import Vector2
 from math import floor
+from scripts.custom_sprites import NodeSprite
 
 
-class Tile(Sprite):
-    def __init__(self, pos, image, tile_properties: dict, *groups):
-        super().__init__(*groups)
-        self.image = image
-        self.rect = self.image.get_rect(bottomleft=pos)
+class Tile(NodeSprite):
+    def __init__(
+        self,
+        pos,
+        image,
+        tile_properties: dict,
+        *groups,
+        anchor="bottomleft",
+        offset=Vector2(0, 0),
+    ):
+        super().__init__(image, pos, anchor, offset, *groups)
         self.properties: dict = tile_properties if tile_properties else {}
 
     def has(self, attribute):

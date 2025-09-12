@@ -34,7 +34,8 @@ camera = Camera(
     render_layers,
     Group(),
     display,
-    Vector2(-125, 0),
+    # Vector2(-125, 0),
+    Vector2(0, 0),
 )
 tilemap = Tilemap(
     "tilemaps/another_island.tmx",

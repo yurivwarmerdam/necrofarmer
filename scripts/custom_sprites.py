@@ -24,7 +24,9 @@ class NodeSprite(Sprite):
         self.offset = offset
         self.pos = pos
 
+    # TODO: this even need to be here...?
     def draw(self, surface):
+        print("Am I even being called?")
         surface.blit(self.image, self.rect)
 
     @property
