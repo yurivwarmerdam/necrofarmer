@@ -3,7 +3,7 @@ import sys
 import pygame as pg
 from pygame import Rect
 from pygame.math import Vector2
-from pygame.sprite import Group
+from pygame.sprite import Group, LayeredUpdates
 from scripts.camera import Camera
 from scripts.entities import Seed, BTGroup
 from scripts.skeleton import Skeleton
@@ -29,7 +29,7 @@ class MainClass:
         render_layers = {
             "ground": Group(),
             "paths": Group(),
-            "active": Group(),
+            "active": LayeredUpdates(),
             "sky": Group(),
             "always_front": Group(),
         }

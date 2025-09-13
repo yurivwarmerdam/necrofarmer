@@ -1,4 +1,4 @@
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, LayeredUpdates
 from pygame import Vector2
 from pygame.surface import Surface
 from pygame.rect import Rect
@@ -23,6 +23,9 @@ class NodeSprite(Sprite):
         self.rect: Rect = image.get_rect()
         self.offset = offset
         self.pos = pos
+        for g in groups:
+            if isinstance(g, LayeredUpdates):
+                g.change_layer(self, self.pos.y)  # add with chosen layer
 
     # TODO: this even need to be here...?
     def draw(self, surface):
@@ -89,12 +92,9 @@ class AnimatedSprite(NodeSprite):
         result = self.active_animation.tick(delta)
         if result:
             self.image = transform.flip(result, True, False) if self.flip_h else result
-
-    # @property
-    # def pos(self):
-    #     return self._pos
-
-    # @pos.setter
-    # def pos(self, value: Vector2):
-    #     self._pos = value
-    #     setattr(self.rect, self.anchor, self.pos - self.offset)
+        # TODO: the following is bad and will break down the line.
+        for group in self.groups():
+            if isinstance(group, LayeredUpdates):
+                # print("layering")
+                # print(self.layer)
+                group.change_layer(self, self.pos.y)

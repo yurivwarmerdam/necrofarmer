@@ -2,7 +2,7 @@ import pygame as pg
 from pygame import Surface
 from pygame.color import Color
 from pygame.math import Vector2
-from pygame.sprite import Group
+from pygame.sprite import Group, LayeredUpdates
 
 
 class Camera:
@@ -22,7 +22,7 @@ class Camera:
         self.display = display
         self.bg_color = bg_color
         # not using this yet. Goal is to use it for scale operations, prolly
-        self.buffer=Surface(self.display.size)
+        self.buffer = Surface(self.display.size)
 
     def get_global_mouse_pos(self):
         return Vector2(pg.mouse.get_pos()) + self.pos
@@ -30,9 +30,6 @@ class Camera:
     def draw_all(self):
         self.display.fill(self.bg_color)
         for group in self.render_layers:
-            # TODO: I done broke shit here.
-            # if group == "active":
-            #     sorted(self.render_layers[group].sprites(), key= lambda sprite: sprite.pos)
             self.draw_layer(self.render_layers[group])
         self.ui.draw(self.display)
 
@@ -45,7 +42,10 @@ class Camera:
         Draws all of the member sprites onto the given surface.
 
         """
-        sprites = layer.sprites()
+        if layer is LayeredUpdates:
+            sprites = sorted(layer.sprites(), key=lambda sprite: sprite.pos.y)
+        else:
+            sprites = layer.sprites()
 
         if hasattr(self.display, "blits"):
             layer.spritedict.update(

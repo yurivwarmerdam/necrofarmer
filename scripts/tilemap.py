@@ -1,4 +1,4 @@
-from pygame.sprite import Sprite, Group
+from pygame.sprite import Sprite, Group, LayeredUpdates
 from pytmx.util_pygame import load_pygame
 from pytmx import TiledMap
 from pygame import Vector2
@@ -18,6 +18,7 @@ class Tile(NodeSprite):
     ):
         super().__init__(image, pos, anchor, offset, *groups)
         self.properties: dict = tile_properties if tile_properties else {}
+
 
     def has(self, attribute):
         return attribute in self.properties
@@ -62,6 +63,10 @@ class Tilemap:
                 self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
 
     def make_layer_tiles(self, tmx_layer, group_name, group):
+        """
+        group name is internal tilemap layer, group is render group, I think?
+        """
+        print(self.layers[group_name], group)
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
         for x, y, surf in tmx_layer.tiles():
@@ -71,6 +76,7 @@ class Tilemap:
             offset_pos = world_pos + Vector2(tileset.offset) + (-half_w, half_h)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
+
             self.map[group_name][x][y] = Tile(
                 offset_pos, surf, tile_properties, self.layers[group_name], group
             )

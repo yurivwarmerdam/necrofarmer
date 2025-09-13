@@ -25,10 +25,10 @@ pip install -r requirements.txt
 - [ ] Only allow casting of seed spell at summong circle?
 - [ ] allow skeleton summoning at graves
 
-- [v] camera logic
-    - move camera position
-    - correct mouse pos in a global-to-local function
-    - figure out a good standardized way of interacing there.
+- [v] camera logic  
+    v move camera position  
+    v correct mouse pos in a global-to-local function  
+    v figure out a good standardized way of interacing there.
     - Godot does this by:
         - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
 - [v] do thurough testing on validity of world to map logic
@@ -43,8 +43,8 @@ pip install -r requirements.txt
     - util scripts
     - game(-specific) scripts
 - [ ] collision
-- [ ] multitile tiles
 - [ ] zsort
+- [ ] multitile tiles
 - [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
 - [ ] merge button project stuff where relvant
 - [ ] create a shorter game class

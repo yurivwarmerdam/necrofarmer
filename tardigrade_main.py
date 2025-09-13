@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame import Vector2
-from pygame.sprite import Group
+from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
 from math import floor
@@ -23,7 +23,7 @@ clock = pg.time.Clock()
 render_layers = {
     "ground": Group(),
     "paths": Group(),
-    "active": Group(),
+    "active": LayeredUpdates(),
     "sky": Group(),
     "always_front": Group(),
 }
@@ -109,7 +109,7 @@ def handle_key_input():
 # ---- ticking ----
 while True:
     _delta = clock.get_time()
-
+    camera_move = Vector2(0, 0)
     # --- event loop ---
     for event in pg.event.get():
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
