@@ -19,7 +19,6 @@ class Tile(NodeSprite):
         super().__init__(image, pos, anchor, offset, *groups)
         self.properties: dict = tile_properties if tile_properties else {}
 
-
     def has(self, attribute):
         return attribute in self.properties
 
@@ -73,12 +72,18 @@ class Tilemap:
             world_pos = self.map_to_world(x, y)
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
-            offset_pos = world_pos + Vector2(tileset.offset) + (-half_w, half_h)
+            offset = -(Vector2(tileset.offset) + (-half_w, half_h))
+            # offset=Vector2(0,0)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
 
             self.map[group_name][x][y] = Tile(
-                offset_pos, surf, tile_properties, self.layers[group_name], group
+                world_pos,
+                surf,
+                tile_properties,
+                self.layers[group_name],
+                group,
+                offset=offset,
             )
 
     def get_layer(self, layer):

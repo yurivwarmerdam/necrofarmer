@@ -143,10 +143,6 @@ while True:
     units.update(_delta)
 
     # --- render loop ---
-    # display.fill("darkblue")
-    # tile_layer.draw(display)
-    # anim_layer.draw(display)
-
     camera.draw_all()
 
     pg.display.update()
