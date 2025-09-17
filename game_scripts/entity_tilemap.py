@@ -32,7 +32,7 @@ class BigTile:
 
         for tile in tile_idxs:
             ## naive tile height
-            tile_image=Surface((tile_size.x,image.get_rect().height))
+            tile_image = Surface((tile_size.x, image.get_rect().height))
             pass
 
         left_overdraw = 0
@@ -66,6 +66,9 @@ class EntityTilemap(Tilemap):
         self,
         tmx_file,
         group_mappings: dict[str, Group],
-        tile_entity_mapping: dict[str, type],
+        # tile_entity_mapping: dict[str, type],
     ):
         super().__init__(tmx_file, group_mappings)
+        for layer in self.layers:
+            bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
+            print(bigtiles)

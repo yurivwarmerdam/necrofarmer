@@ -1,4 +1,4 @@
-from pygame.sprite import Sprite, Group, LayeredUpdates
+from pygame.sprite import Group
 from pytmx.util_pygame import load_pygame
 from pytmx import TiledMap
 from pygame import Vector2
@@ -11,13 +11,13 @@ class Tile(NodeSprite):
         self,
         pos,
         image,
-        tile_properties: dict,
+        properties: dict,
         *groups,
         anchor="bottomleft",
         offset=Vector2(0, 0),
     ):
         super().__init__(image, pos, anchor, offset, *groups)
-        self.properties: dict = tile_properties if tile_properties else {}
+        self.properties: dict = properties if properties else {}
 
     def has(self, attribute):
         return attribute in self.properties
@@ -28,7 +28,8 @@ class Tilemap:
     Generic Tilemap. Holds several layers of Sprite Groups.
     Args:
         tmx_file: filename to load tilemap from
-        group_mappings: dict containing layer names ot load from the tilemaps (keys), paired with their corresponding render group
+        group_mappings: dict containing layer names to load from the tilemaps (keys),
+        paired with their corresponding render group
     """
 
     def __init__(
@@ -104,16 +105,24 @@ class Tilemap:
     def tile_properties(self, layer: str, pos: Vector2):
         return self.tile(layer, pos).properties
 
-    def get_tiles_by_attr(self, attribute, layer) -> list:
-        tiles = [tile for tile in iter(self.layers[layer]) if tile.has(attribute)]
+    def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
+        return [
+            Vector2(x, y)
+            for x, y in enumerate(self.get_layer(layer))
+            if property in tile.properties
+        ]
+
+    def get_tiles_by_property(self, property, layer) -> list:
+        tiles = [
+            tile for tile in iter(self.layers[layer]) if property in tile.properties
+        ]
         return tiles
 
     def get_tile_attrs(self, tile, layer) -> dict:
         return self.map[layer][tile].properties
 
-    def set_tile(self, tile_pos, layer: str, tile_id=0):
-        # TODO
-        pass
+    def set_tile(self, pos: Vector2, layer: str, tile: Tile):
+        self.layers[layer][pos.x][pos.y] = tile
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:

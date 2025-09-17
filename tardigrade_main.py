@@ -3,7 +3,7 @@ from pygame import Vector2
 from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
-from math import floor
+from game_scripts.entity_tilemap import EntityTilemap
 from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
 
@@ -37,7 +37,7 @@ camera = Camera(
     # Vector2(-125, 0),
     Vector2(0, 0),
 )
-tilemap = Tilemap(
+tilemap = EntityTilemap(
     "tilemaps/another_island.tmx",
     {
         "ground": render_layers["ground"],
@@ -101,8 +101,12 @@ def handle_key_input():
     # ----------Alternate way of processing?------------#
     keys_pressed = pg.key.get_pressed()
     camera_move = Vector2(0, 0)
-    camera_move.x = keys_pressed[pg.K_RIGHT] - keys_pressed[pg.K_LEFT]
-    camera_move.y = keys_pressed[pg.K_DOWN] - keys_pressed[pg.K_UP]
+    camera_move.x = (keys_pressed[pg.K_RIGHT] | keys_pressed[pg.K_d]) - (
+        keys_pressed[pg.K_LEFT] | keys_pressed[pg.K_a]
+    )
+    camera_move.y = (keys_pressed[pg.K_DOWN] | keys_pressed[pg.K_s]) - (
+        keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
+    )
     return camera_move
 
 
@@ -120,11 +124,6 @@ while True:
             mouse_pos = Vector2(pg.mouse.get_pos())
             tile = tilemap.world_to_map(mouse_pos)
             move_goal = camera.get_global_mouse_pos()
-        elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_LEFT:
-                camera_move.x -= 1
-            elif event.key == pg.K_RIGHT:
-                camera_move.x += 1
 
     if move_goal:
         sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
