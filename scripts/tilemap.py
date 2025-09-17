@@ -66,7 +66,6 @@ class Tilemap:
         """
         group name is internal tilemap layer, group is render group, I think?
         """
-        print(self.layers[group_name], group)
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
         for x, y, surf in tmx_layer.tiles():
@@ -108,8 +107,9 @@ class Tilemap:
     def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
         return [
             Vector2(x, y)
-            for x, y in enumerate(self.get_layer(layer))
-            if property in tile.properties
+            for x, row in enumerate(self.map[layer])
+            for y, cell in enumerate(row)
+            if cell is not None and property in cell.properties
         ]
 
     def get_tiles_by_property(self, property, layer) -> list:
