@@ -22,7 +22,7 @@ class Camera:
         self.display = display
         self.bg_color = bg_color
         # not using this yet. Goal is to use it for scale operations, prolly
-        self.buffer = Surface(self.display.size)
+        self.buffer = Surface(self.display.get_size())
 
     def get_global_mouse_pos(self):
         return Vector2(pg.mouse.get_pos()) + self.pos
