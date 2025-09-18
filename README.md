@@ -1,6 +1,8 @@
 # pygame_tst
+===================
 
 ## Cheat sheet:
+====================
 ```
 # Clone:
 git clone --recurse-submodules git@github.com:yurivwarmerdam/simple_bt.git
@@ -19,6 +21,13 @@ pip install -r requirements.txt
 
 
 ## TODO:
+====================
+- current:
+    - remove predefines layers from tilemap (also test in ortho actual necro game)
+    - This allows me to remove layers from tilemap (can still get a flat layer through itertools)
+    - this makes addressing purely through map the way to go
+    - I can then start deleting tiles after instancing, and create tiles more consistently.
+
 - [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
 - [ ] steal from stardew how he did the diggable logic
     - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
@@ -118,6 +127,7 @@ bt.py
 - RemoteActionNode (starts thread. Perhaps puts stuff on ports and/or takes return value for success)
 
 ## Camera notes:
+========================
 - Clear Code's solution is to have a camera group. Feels appropriate and pg-style, but he's specifically solving ysort issues (I will have to deal witht hese too, at some point, so it might be good anyway)
 - correction: he also does camera mouse movement.
 - does not, however, do a get_global_mouse_pos or whatever.
@@ -130,7 +140,7 @@ Do I want to include layers into this camera object? How about zsorting?
 And multitile objects?
 
 ## Python btree notes
-
+=========================
 possible solutions:
 - player queues up a list of possible tasks (when they get "popped", how do we make sure a new scan of the environment does not immediately pick them back up again?)
 - global_bb keeps track of claimed objects
@@ -154,6 +164,7 @@ It would be the coordinator AI's responsibility to (temporarily?) blacklist item
 I settled on what I remembered from discussions with triplefox and Jim Stormdancer; Claim and reclaim. Have object time out claiming. This is SO much easier than it was in godot.
 
 ## What I learned from Stardew Valley:
+================================
 Objects are constructed in several layers:
 - AlwaysFront
 - Front
@@ -194,6 +205,7 @@ print(txmdata.get_tile_properties(14,8,1)) # get an indivitual tiles' properties
 
 
 ## pygame
+==================
 Sprite class has an inbuilt update and draw method
 
 Can also be added to a Group, which has an update and draw method, both of which will delegate to their contents.
@@ -212,6 +224,7 @@ tilemap...
 coordinate calculation?
 
 ### Pygame Links
+====================
 
 
 - The BT paper: https://arxiv.org/pdf/1709.00084  
@@ -220,6 +233,7 @@ coordinate calculation?
 - [pydew valley](https://www.youtube.com/watch?v=T4IX36sP_0c) Steal this liberally
 
 ## Relevant vscode extentions:  
+====================
 - clangd
 - C/C++
 - C/C++ Themes
@@ -229,11 +243,13 @@ coordinate calculation?
 - CMake Tools
 
 ## unsorted links:
+====================
 - [Warning! pygame needs to be run in the main loop, and is apparently not thread-safe. This is going to lead to problems, isn't it...?](https://stackoverflow.com/questions/2970612/pygame-in-a-thread)
 - [Some more StackOverflow discussion on "making the right choice" when doing asynchronous programming](https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio)
 - [conference talk about what coroutines are anyway, looks like it's for those who use them already, so interesting!](https://www.youtube.com/watch?v=GSiZkP7cI80)
 
 ## BehaviorTree.cpp
+====================
 ### install notes:
 - [behaviorTrees.cpp website](https://www.behaviortree.dev/)  
 - [BehaviorTree.cpp github repo](https://github.com/BehaviorTree/BehaviorTree.CPP?tab=readme-ov-file)  

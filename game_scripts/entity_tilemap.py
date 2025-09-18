@@ -69,7 +69,7 @@ class EntityTilemap(Tilemap):
         # tile_entity_mapping: dict[str, type],
     ):
         super().__init__(tmx_file, group_mappings)
-        for layer in self.layers:
+        for layer in self.old_layers:
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
             print(bigtiles)
             for tile in bigtiles:

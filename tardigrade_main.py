@@ -47,6 +47,7 @@ tilemap = EntityTilemap(
 )
 
 # animated sprite
+
 images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
 
 seq0 = AnimationSequence(
@@ -110,7 +111,7 @@ def handle_key_input():
     return camera_move
 
 
-# ---- ticking ----
+# ---- core loop ----
 while True:
     _delta = clock.get_time()
     camera_move = Vector2(0, 0)

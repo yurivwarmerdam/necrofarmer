@@ -40,6 +40,7 @@ class Tilemap:
         group_mappings: dict[str, Group],
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
+        self.old_layers = {}
         self.layers = {}
         self.map = {}
 
@@ -47,9 +48,13 @@ class Tilemap:
 
         tmx_layers = list(self.tmx_data.visible_layers)
 
+        # TODO: we are here atm:
+        for layer in self.tmx_data.visible_layers:
+            self.layers[layer.name] = Group()
+
         # iterate all groups
         for group_name in group_mappings:
-            self.layers[group_name] = Group()
+            self.old_layers[group_name] = Group()
 
             # instantiate empty map for layer
             self.map[group_name] = [
@@ -81,13 +86,13 @@ class Tilemap:
                 world_pos,
                 surf,
                 tile_properties,
-                self.layers[group_name],
+                self.old_layers[group_name],
                 group,
                 offset=offset,
             )
 
     def get_layer(self, layer):
-        return self.layers[layer]
+        return self.old_layers[layer]
 
     def get_neigbors(self, tile_pos, distance=1):
         result = []
@@ -100,6 +105,9 @@ class Tilemap:
 
     def tile(self, layer: str, pos: Vector2):
         return self.map[layer][floor(pos.x)][floor(pos.y)]
+
+    def kill_tile(self, layer: str, pos: Vector2):
+        pass
 
     def tile_properties(self, layer: str, pos: Vector2):
         return self.tile(layer, pos).properties
@@ -114,7 +122,7 @@ class Tilemap:
 
     def get_tiles_by_property(self, property, layer) -> list:
         tiles = [
-            tile for tile in iter(self.layers[layer]) if property in tile.properties
+            tile for tile in iter(self.old_layers[layer]) if property in tile.properties
         ]
         return tiles
 
@@ -122,7 +130,7 @@ class Tilemap:
         return self.map[layer][tile].properties
 
     def set_tile(self, pos: Vector2, layer: str, tile: Tile):
-        self.layers[layer][pos.x][pos.y] = tile
+        self.old_layers[layer][pos.x][pos.y] = tile
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:
