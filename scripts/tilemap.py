@@ -99,7 +99,7 @@ class Tilemap:
         return result
 
     def tile(self, layer: str, pos: Vector2):
-        return self.map[layer][pos.x][pos.y]
+        return self.map[layer][floor(pos.x)][floor(pos.y)]
 
     def tile_properties(self, layer: str, pos: Vector2):
         return self.tile(layer, pos).properties

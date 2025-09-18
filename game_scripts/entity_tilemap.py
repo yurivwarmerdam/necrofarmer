@@ -72,3 +72,5 @@ class EntityTilemap(Tilemap):
         for layer in self.layers:
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
             print(bigtiles)
+            for tile in bigtiles:
+                print(self.tile(layer,tile))
