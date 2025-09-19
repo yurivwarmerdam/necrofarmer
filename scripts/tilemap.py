@@ -41,7 +41,7 @@ class Tilemap:
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.old_layers = {}
-        self.layers = {}
+        self.layer_groups = {}
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
@@ -50,7 +50,17 @@ class Tilemap:
 
         # TODO: we are here atm:
         for layer in self.tmx_data.visible_layers:
-            self.layers[layer.name] = Group()
+            name = layer.name
+            layer_groups[name] = Group()
+            # TODO: is height//width correct?
+            self.map[name] = [
+                [None for _ in range(self.tmx_data.height)]
+                for _ in range(self.tmx_data.width)
+            ]
+            if hasattr(layer, "data"):
+                self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
+
+            pass
 
         # iterate all groups
         for group_name in group_mappings:
