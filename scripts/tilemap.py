@@ -1,4 +1,4 @@
-from pygame.sprite import Group
+from pygame.sprite import Group, LayeredUpdates
 from pytmx.util_pygame import load_pygame
 from pytmx import TiledMap
 from pygame import Vector2
@@ -51,8 +51,6 @@ class Tilemap:
         # TODO: we are here atm:
         for layer in self.tmx_data.visible_layers:
             name = layer.name
-            # self.layer_groups[name] = Group()
-            # TODO: is height//width correct?
             self.map[name] = [
                 [None for _ in range(self.tmx_data.height)]
                 for _ in range(self.tmx_data.width)
@@ -60,28 +58,17 @@ class Tilemap:
             if hasattr(layer, "data"):
                 self.make_layer(layer, name)
 
-            pass
-
-        # iterate all groups
-        for group_name in group_mappings:
-            self.old_layers[group_name] = Group()
-
-            # instantiate empty map for layer
-            self.map[group_name] = [
-                [None for _ in range(self.tmx_data.height)]
-                for _ in range(self.tmx_data.width)
-            ]
-            tmx_layer = next(
-                (layer for layer in tmx_layers if layer.name == group_name), None
-            )
-            if tmx_layer and hasattr(tmx_layer, "data"):
-                self.make_layer(tmx_layer, group_name)
-
     def make_layer(self, tmx_layer, name):
         """
         group name is internal tilemap layer, group is render group, I think?
         """
-        group = Group()
+
+        if tmx_layer.properties.get("LayeredUpdates", False):
+            group = LayeredUpdates()
+        else:
+            group = Group()
+        # group = Group()
+
         self.groups[name] = group
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)

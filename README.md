@@ -32,6 +32,19 @@ pip install -r requirements.txt
 I am currently struggling to think of a reason why I wanted to keep these two sets distinct.
 I _suppose_ it's a separation of concern thing, but it might be a lot.
 Ok, now it's up to me to figure out when how to label a layer as a layeredupdates. That is really annoying....
+Options:
+- get sprites for active layer(s)
+    - make new (render)group
+    - iterate active layer sprites
+    - feed that to camera
+    - this makes adding things at runtime hard
+- add layeredupdates//true to layer properties in tiled
+- give tilemap constructor list of layer names to make as layeredupdates
+last 2 seem better. I need to decide where I want to put this.
+Currently tempted put this in tiled. Downside is that it requires knowledge outside of the python world when addin new objects at runtime. Either way's a convention. Downside of the supply in constructor approach is that it requires knowledge of what layers will exist in the tmx. Either way this depends on some cross-env knowldge. Guess it's unavoidable.
+constructor feels a little more generic "public package".
+tiles is just a "my convention." Might be fine to have conventions I like. (it's what ConcernedApe would do!)
+
 
 
 - [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
