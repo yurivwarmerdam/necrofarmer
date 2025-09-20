@@ -29,14 +29,6 @@ render_layers = {
 }
 
 units = Group()
-
-camera = Camera(
-    render_layers,
-    Group(),
-    display,
-    # Vector2(-125, 0),
-    Vector2(0, 0),
-)
 tilemap = EntityTilemap(
     "tilemaps/another_island.tmx",
     {
@@ -44,6 +36,16 @@ tilemap = EntityTilemap(
         "paths": render_layers["paths"],
         "active": render_layers["active"],
     },
+)
+
+layers=tilemap.groups
+
+camera = Camera(
+    layers,
+    Group(),
+    display,
+    # Vector2(-125, 0),
+    Vector2(0, 0),
 )
 
 # animated sprite
@@ -79,7 +81,7 @@ sprite = AnimatedSprite(
     {"0": seq0, "1": seq1, "2": seq2, "3": seq3},
     Vector2(100, 100),
     units,
-    render_layers["active"],
+    layers["active"],
     anchor="center",
     offset=Vector2(0, 10),
 )

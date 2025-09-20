@@ -41,7 +41,7 @@ class Tilemap:
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.old_layers = {}
-        self.layer_groups = {}
+        self.groups = {}
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
@@ -51,14 +51,14 @@ class Tilemap:
         # TODO: we are here atm:
         for layer in self.tmx_data.visible_layers:
             name = layer.name
-            layer_groups[name] = Group()
+            # self.layer_groups[name] = Group()
             # TODO: is height//width correct?
             self.map[name] = [
                 [None for _ in range(self.tmx_data.height)]
                 for _ in range(self.tmx_data.width)
             ]
             if hasattr(layer, "data"):
-                self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
+                self.make_layer(layer, name)
 
             pass
 
@@ -75,12 +75,14 @@ class Tilemap:
                 (layer for layer in tmx_layers if layer.name == group_name), None
             )
             if tmx_layer and hasattr(tmx_layer, "data"):
-                self.make_layer_tiles(tmx_layer, group_name, group_mappings[group_name])
+                self.make_layer(tmx_layer, group_name)
 
-    def make_layer_tiles(self, tmx_layer, group_name, group):
+    def make_layer(self, tmx_layer, name):
         """
         group name is internal tilemap layer, group is render group, I think?
         """
+        group = Group()
+        self.groups[name] = group
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
         for x, y, surf in tmx_layer.tiles():
@@ -92,11 +94,10 @@ class Tilemap:
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
 
-            self.map[group_name][x][y] = Tile(
+            self.map[name][x][y] = Tile(
                 world_pos,
                 surf,
                 tile_properties,
-                self.old_layers[group_name],
                 group,
                 offset=offset,
             )

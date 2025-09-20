@@ -28,6 +28,12 @@ pip install -r requirements.txt
     - this makes addressing purely through map the way to go
     - I can then start deleting tiles after instancing, and create tiles more consistently.
 
+- Ok, so previous me thought it was a good idea to separate render layers and internal layers (=groups), to make them very distinct things.
+I am currently struggling to think of a reason why I wanted to keep these two sets distinct.
+I _suppose_ it's a separation of concern thing, but it might be a lot.
+Ok, now it's up to me to figure out when how to label a layer as a layeredupdates. That is really annoying....
+
+
 - [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
 - [ ] steal from stardew how he did the diggable logic
     - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
