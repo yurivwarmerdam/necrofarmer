@@ -38,13 +38,10 @@ class Tilemap:
         # group_mappings: dict[str, Group],
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
-        self.old_layers = {}
-        self.groups = {}
+        self.layers = {}
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
-
-        tmx_layers = list(self.tmx_data.visible_layers)
 
         # TODO: we are here atm:
         for layer in self.tmx_data.visible_layers:
@@ -57,17 +54,14 @@ class Tilemap:
                 self.make_layer(layer, name)
 
     def make_layer(self, tmx_layer, name):
-        """
-        group name is internal tilemap layer, group is render group, I think?
-        """
-
+        
         if tmx_layer.properties.get("LayeredUpdates", False):
-            group = LayeredUpdates()
+            layer = LayeredUpdates()
         else:
-            group = Group()
+            layer = Group()
         # group = Group()
 
-        self.groups[name] = group
+        self.layers[name] = layer
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
         for x, y, surf in tmx_layer.tiles():
@@ -75,7 +69,6 @@ class Tilemap:
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
-            # offset=Vector2(0,0)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
 
@@ -83,12 +76,12 @@ class Tilemap:
                 world_pos,
                 surf,
                 tile_properties,
-                group,
+                layer,
                 offset=offset,
             )
 
     def get_layer(self, layer):
-        return self.old_layers[layer]
+        return self.layers[layer]
 
     def get_neigbors(self, tile_pos, distance=1):
         result = []
@@ -99,14 +92,21 @@ class Tilemap:
                 result.append((x, y))
         return result
 
-    def tile(self, layer: str, pos: Vector2):
+    def get_tile(self, layer: str, pos: Vector2):
         return self.map[layer][floor(pos.x)][floor(pos.y)]
 
     def kill_tile(self, layer: str, pos: Vector2):
+        tile = self.map[layer][floor(pos.x)][floor(pos.y)]
+        tile.kill
+        self.map[layer][floor(pos.x)][floor(pos.y)] = None
+        self.layers[layer].remove(tile)
+
+    def add_tile(self, layer:str, map_pos:Vector2):
+        
         pass
 
     def tile_properties(self, layer: str, pos: Vector2):
-        return self.tile(layer, pos).properties
+        return self.get_tile(layer, pos).properties
 
     def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
         return [

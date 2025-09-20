@@ -22,7 +22,7 @@ class BigTile:
             image: image to be sliced into subtiles
             tile_properties: will be passed to all subtiles
             tiles: positions of subtiles
-            tile_size: size of a single tilear
+            tile_size: size of a single tile
             tile_origin: vector pointing to the bottomleft corner of the tile with idx 0,0
         """
         self.pos = pos
@@ -39,6 +39,7 @@ class BigTile:
         right_overdraw = 0
 
         self.tiles = tile_idxs
+
         # Should reutrn ALL leftmost tiles.
         def find_left_overdraw_tile_idx(tiles: list[Vector2]):
             left_tile = tiles[0]
@@ -67,8 +68,12 @@ class EntityTilemap(Tilemap):
         tmx_file,
     ):
         super().__init__(tmx_file)
-        for layer in self.old_layers:
+        for layer in self.layers:
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
-            print(bigtiles)
-            for tile in bigtiles:
-                print(self.tile(layer, tile))
+
+            for tile_pos in bigtiles:
+                print(self.get_tile(layer, tile_pos))
+                tile=self.get_tile(layer, tile_pos)
+                self.kill_tile(layer, tile_pos)
+                
+                

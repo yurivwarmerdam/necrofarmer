@@ -11,7 +11,8 @@ from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 
 
 pg.init()
-display = pg.display.set_mode((250, 150), pg.SCALED, pg.RESIZABLE)
+
+display = pg.display.set_mode((250, 150), pg.SCALED)  # , pg.RESIZABLE)
 clock = pg.time.Clock()
 
 # tilemap
@@ -20,7 +21,7 @@ tilemap = EntityTilemap(
     "tilemaps/another_island.tmx",
 )
 
-render_layers = tilemap.groups
+render_layers = tilemap.layers
 units = Group()
 
 camera = Camera(
