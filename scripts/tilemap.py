@@ -1,4 +1,4 @@
-from pygame.sprite import Group, LayeredUpdates
+from pygame.sprite import Group, LayeredUpdates, AbstractGroup
 from pytmx.util_pygame import load_pygame
 from pytmx import TiledMap
 from pygame import Vector2
@@ -30,15 +30,9 @@ class Tilemap:
         tmx_file: filename to load tilemap from
     """
 
-    def __init__(
-        self,
-        tmx_file,
-        # TODO: Group mappings should probably be removed
-        # and instead be handled by wiring together outside of this class
-        # group_mappings: dict[str, Group],
-    ):
+    def __init__(self, tmx_file):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
-        self.layers = {}
+        self.layers: dict[str, AbstractGroup] = {}
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
@@ -54,7 +48,6 @@ class Tilemap:
                 self.make_layer(layer, name)
 
     def make_layer(self, tmx_layer, name):
-        
         if tmx_layer.properties.get("LayeredUpdates", False):
             layer = LayeredUpdates()
         else:
@@ -72,13 +65,22 @@ class Tilemap:
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
 
-            self.map[name][x][y] = Tile(
-                world_pos,
+            tile = Tile(
+                Vector2(0, 0),
                 surf,
                 tile_properties,
-                layer,
                 offset=offset,
             )
+
+            self.set_tile(tile, name, Vector2(x, y))
+
+            # self.map[name][x][y] = Tile(
+            #     world_pos,
+            #     surf,
+            #     tile_properties,
+            #     layer,
+            #     offset=offset,
+            # )
 
     def get_layer(self, layer):
         return self.layers[layer]
@@ -95,15 +97,19 @@ class Tilemap:
     def get_tile(self, layer: str, pos: Vector2):
         return self.map[layer][floor(pos.x)][floor(pos.y)]
 
+    def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
+        """TODO: This function does not yet reposition tiles where they should be.
+        It merely puts it in the correct map slot, and adds it to the layer."""
+        # tile.pos = self.map_to_worldv(map_pos)
+        self.layers[layer].add(tile)
+        tile.pos = self.map_to_worldv(map_pos)
+        self.map[layer][floor(map_pos.x)][floor(map_pos.y)] = tile
+
     def kill_tile(self, layer: str, pos: Vector2):
         tile = self.map[layer][floor(pos.x)][floor(pos.y)]
         tile.kill
         self.map[layer][floor(pos.x)][floor(pos.y)] = None
         self.layers[layer].remove(tile)
-
-    def add_tile(self, layer:str, map_pos:Vector2):
-        
-        pass
 
     def tile_properties(self, layer: str, pos: Vector2):
         return self.get_tile(layer, pos).properties
@@ -124,9 +130,6 @@ class Tilemap:
 
     def get_tile_attrs(self, tile, layer) -> dict:
         return self.map[layer][tile].properties
-
-    def set_tile(self, pos: Vector2, layer: str, tile: Tile):
-        self.old_layers[layer][pos.x][pos.y] = tile
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:
@@ -154,4 +157,4 @@ class Tilemap:
             )
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
-        return self.map_to_world(map_pos.x, map_pos.y)
+        return self.map_to_world(floor(map_pos.x), floor(map_pos.y))

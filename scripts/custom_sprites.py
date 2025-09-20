@@ -23,9 +23,7 @@ class NodeSprite(Sprite):
         self.rect: Rect = image.get_rect()
         self.offset = offset
         self.pos = pos
-        for g in groups:
-            if isinstance(g, LayeredUpdates):
-                g.change_layer(self, self.pos.y)  # add with chosen layer
+
 
     # TODO: this even need to be here...?
     def draw(self, surface):
@@ -40,6 +38,9 @@ class NodeSprite(Sprite):
     def pos(self, value: Vector2):
         self._pos = value
         setattr(self.rect, self.anchor, self._pos - self.offset)
+        for g in self.groups():
+            if isinstance(g, LayeredUpdates):
+                g.change_layer(self, self.pos.y)  # add with chosen layer
 
 
 class AnimationSequence:

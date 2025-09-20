@@ -22,6 +22,7 @@ tilemap = EntityTilemap(
 )
 
 render_layers = tilemap.layers
+print(render_layers)
 units = Group()
 
 camera = Camera(
