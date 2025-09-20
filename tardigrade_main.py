@@ -6,42 +6,25 @@ from scripts.tilemap import Tilemap
 from game_scripts.entity_tilemap import EntityTilemap
 from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
-
 from random import randint
-
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 
 
 pg.init()
-
 display = pg.display.set_mode((250, 150), pg.SCALED, pg.RESIZABLE)
-
 clock = pg.time.Clock()
 
 # tilemap
 
-render_layers = {
-    "ground": Group(),
-    "paths": Group(),
-    "active": LayeredUpdates(),
-    "sky": Group(),
-    "always_front": Group(),
-}
-
-units = Group()
 tilemap = EntityTilemap(
     "tilemaps/another_island.tmx",
-    {
-        "ground": render_layers["ground"],
-        "paths": render_layers["paths"],
-        "active": render_layers["active"],
-    },
 )
 
-layers=tilemap.groups
+render_layers = tilemap.groups
+units = Group()
 
 camera = Camera(
-    layers,
+    render_layers,
     Group(),
     display,
     # Vector2(-125, 0),
@@ -81,7 +64,7 @@ sprite = AnimatedSprite(
     {"0": seq0, "1": seq1, "2": seq2, "3": seq3},
     Vector2(100, 100),
     units,
-    layers["active"],
+    render_layers["active"],
     anchor="center",
     offset=Vector2(0, 10),
 )

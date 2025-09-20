@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 - current:
-    - remove predefines layers from tilemap (also test in ortho actual necro game)
+    v remove predefines layers from tilemap (also test in ortho actual necro game)
     - This allows me to remove layers from tilemap (can still get a flat layer through itertools)
     - this makes addressing purely through map the way to go
     - I can then start deleting tiles after instancing, and create tiles more consistently.

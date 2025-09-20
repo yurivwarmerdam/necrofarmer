@@ -39,7 +39,7 @@ class BigTile:
         right_overdraw = 0
 
         self.tiles = tile_idxs
-
+        # Should reutrn ALL leftmost tiles.
         def find_left_overdraw_tile_idx(tiles: list[Vector2]):
             left_tile = tiles[0]
             for tile in tiles:
@@ -65,12 +65,10 @@ class EntityTilemap(Tilemap):
     def __init__(
         self,
         tmx_file,
-        group_mappings: dict[str, Group],
-        # tile_entity_mapping: dict[str, type],
     ):
-        super().__init__(tmx_file, group_mappings)
+        super().__init__(tmx_file)
         for layer in self.old_layers:
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
             print(bigtiles)
             for tile in bigtiles:
-                print(self.tile(layer,tile))
+                print(self.tile(layer, tile))

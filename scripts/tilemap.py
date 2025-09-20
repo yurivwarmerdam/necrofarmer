@@ -28,8 +28,6 @@ class Tilemap:
     Generic Tilemap. Holds several layers of Sprite Groups.
     Args:
         tmx_file: filename to load tilemap from
-        group_mappings: dict containing layer names to load from the tilemaps (keys),
-        paired with their corresponding render group
     """
 
     def __init__(
@@ -37,7 +35,7 @@ class Tilemap:
         tmx_file,
         # TODO: Group mappings should probably be removed
         # and instead be handled by wiring together outside of this class
-        group_mappings: dict[str, Group],
+        # group_mappings: dict[str, Group],
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.old_layers = {}
