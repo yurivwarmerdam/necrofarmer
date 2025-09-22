@@ -37,7 +37,6 @@ class Tilemap:
 
         self.isometric = self.tmx_data.orientation == "isometric"
 
-        # TODO: we are here atm:
         for layer in self.tmx_data.visible_layers:
             name = layer.name
             self.map[name] = [
