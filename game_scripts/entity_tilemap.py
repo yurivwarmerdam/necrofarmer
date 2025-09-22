@@ -1,6 +1,7 @@
 from pygame.sprite import Group
 from scripts.tilemap import Tilemap, Tile
 from pygame import Vector2, Surface
+import json
 
 
 class BigTile:
@@ -9,10 +10,10 @@ class BigTile:
         pos,
         image: Surface,
         tile_properties: dict,
-        tile_idxs: list[Vector2],
-        tile_size: Vector2,
-        tile_origin: Vector2,
-        *groups,
+        # still need the following, prolly
+        # tile_size: Vector2,
+        # tile_origin: Vector2,
+        # *groups,
     ):
         """
         Currently only suports isometric tiles.
@@ -27,39 +28,30 @@ class BigTile:
         """
         self.pos = pos
         self.sprites = {}
-        left_tile_idx = find_left_overdraw_tile_idx(tile_idxs)
-        right_tile_idx = find_right_overdraw_tile_idx(tile_idxs)
+        tile_idxs = self.bigtile_prop_to_vectors(tile_properties["bigtile"])
+        left_idxs = self.find_left_overdraw_tile_idxs(tile_idxs)
+        right_idxs = self.find_right_overdraw_tile_idxs(tile_idxs)
+        
+
+        print(left_idxs, right_idxs)
 
         for tile in tile_idxs:
             ## naive tile height
             tile_image = Surface((tile_size.x, image.get_rect().height))
             pass
 
-        left_overdraw = 0
-        right_overdraw = 0
-
         self.tiles = tile_idxs
 
-        # Should reutrn ALL leftmost tiles.
-        def find_left_overdraw_tile_idx(tiles: list[Vector2]):
-            left_tile = tiles[0]
-            for tile in tiles:
-                # is tile more left
-                if tile.x - tile.y <= left_tile.x - left_tile.y:
-                    # is tile further down
-                    if tile.x + tile.y > left_tile.x + left_tile.y:
-                        left_tile = tile
-            return left_tile
+    def bigtile_prop_to_vectors(self, property):
+        return [Vector2(*p) for p in json.loads(property)]
 
-        def find_right_overdraw_tile_idx(tiles: list[Vector2]):
-            right_tile = tiles[0]
-            for tile in tiles:
-                # is tile more right
-                if tile.x - tile.y >= right_tile.x - right_tile.y:
-                    # is tile further down
-                    if tile.x + tile.y > right_tile.x + right_tile.y:
-                        right_tile = tile
-            return right_tile
+    def find_left_overdraw_tile_idxs(self, tiles: list[Vector2]):
+        left_tilesum = min([tile.x - tile.y for tile in tiles])
+        return [tile for tile in tiles if tile.x - tile.y == left_tilesum]
+
+    def find_right_overdraw_tile_idxs(self, tiles: list[Vector2]):
+        right_tilesum = max([tile.x - tile.y for tile in tiles])
+        return [tile for tile in tiles if tile.x - tile.y == right_tilesum]
 
 
 class EntityTilemap(Tilemap):
@@ -72,8 +64,11 @@ class EntityTilemap(Tilemap):
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
 
             for tile_pos in bigtiles:
-                print(self.get_tile(layer, tile_pos))
-                tile=self.get_tile(layer, tile_pos)
+                # print(self.get_tile(layer, tile_pos))
+                tile: Tile = self.get_tile(layer, tile_pos)
                 self.kill_tile(layer, tile_pos)
-                
-                
+                bigtile = BigTile(tile_pos, tile.image, tile.properties)
+                #something like:
+                # sub_poses=[Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
+                # for sub_pos in sub_poses:
+                #   self.map_to_world(sub_pos+tile_pos)
