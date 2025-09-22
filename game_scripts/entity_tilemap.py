@@ -72,3 +72,11 @@ class EntityTilemap(Tilemap):
                 # sub_poses=[Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
                 # for sub_pos in sub_poses:
                 #   self.map_to_world(sub_pos+tile_pos)
+
+        # Ok, so I can make tiles.
+        # Now, how do I want to address it as more of an entity?
+        # expected access patterns:
+        # - click (+find its corresponding UI elements)
+        # - feed into UI element
+        # - find back the entity from some child process 
+        #       (unit creation, replacement by upgrade, perhaps more)
