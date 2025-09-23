@@ -73,10 +73,15 @@ class EntityTilemap(Tilemap):
                 # for sub_pos in sub_poses:
                 #   self.map_to_world(sub_pos+tile_pos)
 
-        # Ok, so I can make tiles.
-        # Now, how do I want to address it as more of an entity?
-        # expected access patterns:
-        # - click (+find its corresponding UI elements)
-        # - feed into UI element
-        # - find back the entity from some child process 
-        #       (unit creation, replacement by upgrade, perhaps more)
+    # Ok, so I can make tiles.
+    # Now, how do I want to address it as more of an entity?
+    # expected access patterns:
+    # - click (+find its corresponding UI elements)
+    # - feed into UI element
+    # - find back the entity from some child process 
+    #       (unit creation, replacement by upgrade, perhaps more)
+    # since Groups have a 2-way dependence (tiles know theeir groups, and groups know their tiles)
+    # So it's acceptible to do a similar thing for this type of tilemap
+    # possibly using BigTile as an n:m decoupling thing.
+    
+    # First, let's look at the way this works for Groups and Sprites
