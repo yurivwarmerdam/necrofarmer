@@ -33,6 +33,7 @@ class Tilemap:
     def __init__(self, tmx_file):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.layers: dict[str, AbstractGroup] = {}
+        # TODO: Map currently breaks when building a map with negative indexes. Fix this.
         self.map = {}
 
         self.isometric = self.tmx_data.orientation == "isometric"
@@ -93,13 +94,10 @@ class Tilemap:
                 result.append((x, y))
         return result
 
-    def get_tile(self, layer: str, pos: Vector2):
+    def get_tilev(self, layer: str, pos: Vector2):
         return self.map[layer][floor(pos.x)][floor(pos.y)]
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
-        """TODO: This function does not yet reposition tiles where they should be.
-        It merely puts it in the correct map slot, and adds it to the layer."""
-        # tile.pos = self.map_to_worldv(map_pos)
         self.layers[layer].add(tile)
         tile.pos = self.map_to_worldv(map_pos)
         self.map[layer][floor(map_pos.x)][floor(map_pos.y)] = tile
@@ -111,7 +109,7 @@ class Tilemap:
         self.layers[layer].remove(tile)
 
     def tile_properties(self, layer: str, pos: Vector2):
-        return self.get_tile(layer, pos).properties
+        return self.get_tilev(layer, pos).properties
 
     def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
         return [

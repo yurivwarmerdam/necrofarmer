@@ -4,16 +4,16 @@ from pygame import Vector2, Surface
 import json
 
 
-class BigTile:
+class BigTile(Tile):
     def __init__(
         self,
         pos,
-        image: Surface,
-        tile_properties: dict,
-        # still need the following, prolly
-        # tile_size: Vector2,
-        # tile_origin: Vector2,
-        # *groups,
+        image,
+        properties: dict,
+        *groups,
+        anchor="bottomleft",
+        offset=Vector2(0, 0),
+        tiles: list = [Vector2(0, 0)],
     ):
         """
         Currently only suports isometric tiles.
@@ -21,34 +21,26 @@ class BigTile:
         Args:
             pos: position of tile
             image: image to be sliced into subtiles
-            tile_properties: will be passed to all subtiles
-            tiles: positions of subtiles
-            tile_size: size of a single tile
-            tile_origin: vector pointing to the bottomleft corner of the tile with idx 0,0
+            properties: tile properties
+            groups: groups this sprite will belong to
+            anchor: Sprite anchor
+            offset: vector pointing from anchor intended origin of the tile.
+            tiles: map_idxs of all subtiles within this bigtile
         """
-        self.pos = pos
-        self.sprites = {}
-        tile_idxs = self.bigtile_prop_to_vectors(tile_properties["bigtile"])
-        left_idxs = self.find_left_overdraw_tile_idxs(tile_idxs)
-        right_idxs = self.find_right_overdraw_tile_idxs(tile_idxs)
-
-        print(left_idxs, right_idxs)
-
-        for tile in tile_idxs:
-            ## naive tile height
-            tile_image = Surface((tile_size.x, image.get_rect().height))
-            pass
-
-        self.tiles = tile_idxs
+        print("in bigtile:", groups)
+        super().__init__(pos, image, properties, *groups, anchor=anchor, offset=offset)
+        self.tiles = tiles
 
     def bigtile_prop_to_vectors(self, property):
         return [Vector2(*p) for p in json.loads(property)]
 
     def find_left_overdraw_tile_idxs(self, tiles: list[Vector2]):
+        """Deprecated"""
         left_tilesum = min([tile.x - tile.y for tile in tiles])
         return [tile for tile in tiles if tile.x - tile.y == left_tilesum]
 
     def find_right_overdraw_tile_idxs(self, tiles: list[Vector2]):
+        """Deprecated"""
         right_tilesum = max([tile.x - tile.y for tile in tiles])
         return [tile for tile in tiles if tile.x - tile.y == right_tilesum]
 
@@ -61,20 +53,38 @@ class EntityTilemap(Tilemap):
         super().__init__(tmx_file)
         # bigtiles:
         # bigtiles[Vector2(x,y)]=entity
-        self.bigtiles:dict[Vector2,BigTile]={}
+        self.bigtiles: dict[Vector2, BigTile] = {}
         for layer in self.layers:
-            bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
+            bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
 
-            for tile_pos in bigtiles:
-                # print(self.get_tile(layer, tile_pos))
-                tile: Tile = self.get_tile(layer, tile_pos)
-                self.kill_tile(layer, tile_pos)
-                # bigtile = BigTile(tile_pos, tile.image, tile.properties)
-                # something like:
-                sub_poses=[Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
-                for sub_pos in sub_poses:
-                    world_pos=self.map_to_world(sub_pos+tile_pos)
-                    print(world_pos)
+            # TODO: naming is hard
+            for big_idx in bigtile_map_idxs:
+                tile: Tile = self.get_tilev(layer, big_idx)
+                print(tile.groups())
+                # 1/0
+                self.kill_tile(layer, big_idx)
+                sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
+                sub_idxs = [idx + big_idx for idx in sub_idxs]
+                if not self.is_valid_placement_idxs(sub_idxs, layer):
+                    raise Exception(
+                        "invalid BigTile Placement in EntityTilemap init! Aborting."
+                    )
+                print(sub_idxs)
+                new_tile = BigTile(
+                    Vector2(0, 0),
+                    tile.image,
+                    tile.properties,
+                    tile.groups(),
+                    anchor=tile.anchor,
+                    offset=tile.offset,
+                    tiles=sub_idxs,
+                )
+                self.bigtiles[new_tile] = sub_idxs
+                for sub_idx in sub_idxs:
+                    self.set_tile(new_tile, layer, sub_idx)
+
+    def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
+        return all(self.get_tilev(layer, x) is None for x in idxs)
 
     # Ok, so I can make tiles.
     # Now, how do I want to address it as more of an entity?
@@ -89,4 +99,3 @@ class EntityTilemap(Tilemap):
 
     # First, let's look at the way this works for Groups and Sprites
     # Ok, done. Both just have references to each other. Fine.
-    

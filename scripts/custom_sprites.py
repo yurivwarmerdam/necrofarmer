@@ -17,13 +17,14 @@ class NodeSprite(Sprite):
         offset: Vector2 = Vector2(0, 0),
         *groups,
     ):
+        print("Goobier!", image, pos, anchor, groups)
+        # 1/0
         super().__init__(*groups)
         self.anchor = anchor
         self.image: Surface = image
         self.rect: Rect = image.get_rect()
         self.offset = offset
         self.pos = pos
-
 
     # TODO: this even need to be here...?
     def draw(self, surface):
