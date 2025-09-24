@@ -1,4 +1,4 @@
-from pygame.sprite import Group
+from pygame.sprite import Group, Sprite
 from scripts.tilemap import Tilemap, Tile
 from pygame import Vector2, Surface
 import json
@@ -31,7 +31,6 @@ class BigTile:
         tile_idxs = self.bigtile_prop_to_vectors(tile_properties["bigtile"])
         left_idxs = self.find_left_overdraw_tile_idxs(tile_idxs)
         right_idxs = self.find_right_overdraw_tile_idxs(tile_idxs)
-        
 
         print(left_idxs, right_idxs)
 
@@ -60,6 +59,9 @@ class EntityTilemap(Tilemap):
         tmx_file,
     ):
         super().__init__(tmx_file)
+        # bigtiles:
+        # bigtiles[Vector2(x,y)]=entity
+        self.bigtiles:dict[Vector2,BigTile]={}
         for layer in self.layers:
             bigtiles = self.get_tile_idxs_by_property("bigtile", layer)
 
@@ -67,21 +69,24 @@ class EntityTilemap(Tilemap):
                 # print(self.get_tile(layer, tile_pos))
                 tile: Tile = self.get_tile(layer, tile_pos)
                 self.kill_tile(layer, tile_pos)
-                bigtile = BigTile(tile_pos, tile.image, tile.properties)
-                #something like:
-                # sub_poses=[Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
-                # for sub_pos in sub_poses:
-                #   self.map_to_world(sub_pos+tile_pos)
+                # bigtile = BigTile(tile_pos, tile.image, tile.properties)
+                # something like:
+                sub_poses=[Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
+                for sub_pos in sub_poses:
+                    world_pos=self.map_to_world(sub_pos+tile_pos)
+                    print(world_pos)
 
     # Ok, so I can make tiles.
     # Now, how do I want to address it as more of an entity?
     # expected access patterns:
     # - click (+find its corresponding UI elements)
     # - feed into UI element
-    # - find back the entity from some child process 
+    # - find back the entity from some child process
     #       (unit creation, replacement by upgrade, perhaps more)
     # since Groups have a 2-way dependence (tiles know theeir groups, and groups know their tiles)
     # So it's acceptible to do a similar thing for this type of tilemap
     # possibly using BigTile as an n:m decoupling thing.
-    
+
     # First, let's look at the way this works for Groups and Sprites
+    # Ok, done. Both just have references to each other. Fine.
+    
