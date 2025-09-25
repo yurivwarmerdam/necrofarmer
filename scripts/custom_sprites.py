@@ -17,8 +17,6 @@ class NodeSprite(Sprite):
         offset: Vector2 = Vector2(0, 0),
         *groups,
     ):
-        print("Goobier!", image, pos, anchor, groups)
-        # 1/0
         super().__init__(*groups)
         self.anchor = anchor
         self.image: Surface = image
@@ -97,6 +95,4 @@ class AnimatedSprite(NodeSprite):
         # TODO: the following is bad and will break down the line.
         for group in self.groups():
             if isinstance(group, LayeredUpdates):
-                # print("layering")
-                # print(self.layer)
                 group.change_layer(self, self.pos.y)

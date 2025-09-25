@@ -22,15 +22,14 @@ tilemap = EntityTilemap(
 )
 
 render_layers = tilemap.layers
-print(render_layers)
 units = Group()
 
 camera = Camera(
     render_layers,
     Group(),
     display,
-    # Vector2(-125, 0),
-    Vector2(0, 0),
+    Vector2(-125, 0),
+    # Vector2(0, 0),
 )
 
 # animated sprite
