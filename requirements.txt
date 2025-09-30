@@ -2,3 +2,4 @@ pygame-ce
 pytmx-ng
 beautifulsoup4
 lxml
+astar
