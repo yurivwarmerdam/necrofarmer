@@ -8,7 +8,7 @@ from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence
-
+from game_scripts.star import WalkPath
 
 pg.init()
 
@@ -96,6 +96,9 @@ def handle_key_input():
     )
     return camera_move
 
+
+path_planner = WalkPath(tilemap)
+print("path stuff: ",path_planner.neighbors(Vector2(6, 12)))
 
 # ---- core loop ----
 while True:

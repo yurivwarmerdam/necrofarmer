@@ -58,7 +58,6 @@ class Tilemap:
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
         for x, y, surf in tmx_layer.tiles():
-            world_pos = self.map_to_world(x, y)
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
@@ -74,24 +73,16 @@ class Tilemap:
 
             self.set_tile(tile, name, Vector2(x, y))
 
-            # self.map[name][x][y] = Tile(
-            #     world_pos,
-            #     surf,
-            #     tile_properties,
-            #     layer,
-            #     offset=offset,
-            # )
-
     def get_layer(self, layer):
         return self.layers[layer]
 
-    def get_neigbors(self, tile_pos, distance=1):
+    def get_neigbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
         result = []
-        for x in range(-distance, distance):
-            for y in range(-distance, distance):
-                if (x, y) == tile_pos:
+        for x in range(-distance, distance + 1):
+            for y in range(-distance, distance + 1):
+                if x == 0 and y == 0:
                     continue
-                result.append((x, y))
+                result.append(tile_pos + Vector2(x, y))
         return result
 
     def get_tilev(self, layer: str, pos: Vector2):
@@ -108,8 +99,8 @@ class Tilemap:
         self.map[layer][floor(pos.x)][floor(pos.y)] = None
         self.layers[layer].remove(tile)
 
-    def tile_properties(self, layer: str, pos: Vector2):
-        return self.get_tilev(layer, pos).properties
+    # def tile_properties(self, layer: str, pos: Vector2):
+    #     return self.get_tilev(layer, pos).properties
 
     def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
         return [
@@ -121,12 +112,18 @@ class Tilemap:
 
     def get_tiles_by_property(self, property, layer) -> list:
         tiles = [
-            tile for tile in iter(self.old_layers[layer]) if property in tile.properties
+            tile
+            for tile in iter(self.layers[layer])
+            if property in getattr(tile, "properties", {})
         ]
         return tiles
 
-    def get_tile_attrs(self, tile, layer) -> dict:
-        return self.map[layer][tile].properties
+    def get_tilev_properties(self, tile: Vector2, layer: str) -> dict:
+        """
+        Returns a dict containing all custom properties for a tile.
+        Returns an empty dict for unpopulated tiles.
+        """
+        return getattr(self.map[layer][floor(tile.x)][floor(tile.y)], "properties", {})
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:
