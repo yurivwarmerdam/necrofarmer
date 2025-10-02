@@ -2,6 +2,7 @@ from typing import Iterable
 from astar import AStar
 from scripts.tilemap import Tilemap
 from pygame import Vector2
+from math import hypot
 
 
 class WalkPath(AStar):
@@ -25,5 +26,13 @@ class WalkPath(AStar):
         # Might be equal to heuristic, I think.
         return 1
 
-    def heuristic_cost_estimate(self, current: Vector2, goal: Vector2) -> float:
-        return (goal - current).length()
+    def heuristic_cost_estimate(self, current: tuple, goal: tuple) -> float:
+        (x1, y1) = current
+        (x2, y2) = goal
+        return hypot(x2 - x1, y2 - y1)
+
+    def astar_map(self, start, goal):
+        pass
+
+    def astar_world(self, start, goal):
+        pass

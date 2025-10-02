@@ -98,7 +98,8 @@ def handle_key_input():
 
 
 path_planner = WalkPath(tilemap)
-print("path stuff: ",path_planner.neighbors(Vector2(6, 12)))
+print("path stuff: ", path_planner.neighbors(Vector2(6, 12)))
+
 
 # ---- core loop ----
 while True:
@@ -112,7 +113,10 @@ while True:
 
         elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
-            tile = tilemap.world_to_map(mouse_pos)
+            start = tuple(tilemap.world_to_map(sprite.pos))
+            goal = tuple(tilemap.world_to_map(mouse_pos))
+            path = path_planner.astar(start, goal)
+            print(start, goal, " : ", path)
             move_goal = camera.get_global_mouse_pos()
 
     if move_goal:
