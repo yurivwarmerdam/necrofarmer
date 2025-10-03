@@ -9,6 +9,7 @@ from scripts.camera import Camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 from game_scripts.star import WalkPath
+from typing import Iterator
 
 pg.init()
 
@@ -80,6 +81,9 @@ def move_towards(source: Vector2, target: Vector2, by: float):
         return target
     return source + delta.normalize() * by
 
+def move_along_path(source: Vector2, path:Iterator, by:float):
+    
+    pass
 
 move_goal = None
 
@@ -114,10 +118,10 @@ while True:
         elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             start = tuple(tilemap.world_to_map(sprite.pos))
-            goal = tuple(tilemap.world_to_map(mouse_pos))
-            path = path_planner.astar(start, goal)
-            print(start, goal, " : ", path)
             move_goal = camera.get_global_mouse_pos()
+            goal = tuple(tilemap.world_to_map(move_goal))
+            path = path_planner.astar(start, goal)
+            print(start, goal, " : ", list(path))
 
     if move_goal:
         sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
