@@ -9,7 +9,8 @@ from scripts.camera import Camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 from game_scripts.star import WalkPath
-from typing import Iterator
+from collections import deque
+
 
 pg.init()
 
@@ -74,18 +75,29 @@ sprite = AnimatedSprite(
 clock = pg.time.Clock()
 
 
-def move_towards(source: Vector2, target: Vector2, by: float):
+def move_towards(source: Vector2, target: Vector2, by: float) -> Vector2:
     delta = target - source
     dist = delta.length()
     if dist <= by or dist == 0:
         return target
     return source + delta.normalize() * by
 
-def move_along_path(source: Vector2, path:Iterator, by:float):
-    
-    pass
+
+def move_along_path(source: Vector2, path: deque[Vector2], by: float) -> Vector2:
+    """Note: this consumes path when waypoints are reached."""
+    EPS = 1e-9
+    result = source.copy()
+    while by > EPS and path:
+        intermediate = move_towards(result, path[0], by)
+        by -= (intermediate - result).length()
+        result = intermediate
+        if path[0] == result:
+            path.popleft()
+    return result
+
 
 move_goal = None
+path = []
 
 
 def handle_key_input():
@@ -102,7 +114,10 @@ def handle_key_input():
 
 
 path_planner = WalkPath(tilemap)
-print("path stuff: ", path_planner.neighbors(Vector2(6, 12)))
+# print("path stuff: ", path_planner.neighbors(Vector2(5, 7)))
+print("properties ",tilemap.get_tilev_properties(Vector2(3, 6), "active"))
+print("properties ",tilemap.get_tilev_properties(Vector2(3, 5), "active"))
+print(tilemap.get_tilev("ground", Vector2(25, 24)))
 
 
 # ---- core loop ----
@@ -120,11 +135,12 @@ while True:
             start = tuple(tilemap.world_to_map(sprite.pos))
             move_goal = camera.get_global_mouse_pos()
             goal = tuple(tilemap.world_to_map(move_goal))
-            path = path_planner.astar(start, goal)
-            print(start, goal, " : ", list(path))
+            path = path_planner.astar(start, goal) or []
+            path = deque([tilemap.map_to_world(*pos) for pos in path])
 
-    if move_goal:
-        sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
+    if path:
+        sprite.pos = move_along_path(sprite.pos, path, _delta / 10)
+        # sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
 
     camera_move = handle_key_input()
     if camera_move != Vector2(0, 0):

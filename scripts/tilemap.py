@@ -82,11 +82,21 @@ class Tilemap:
             for y in range(-distance, distance + 1):
                 if x == 0 and y == 0:
                     continue
-                result.append(tile_pos + Vector2(x, y))
+                candidate = tile_pos + Vector2(x, y)
+                try:
+                    next(iter(self.map.values()))[floor(candidate.x)][
+                        floor(candidate.y)
+                    ]
+                    result.append(candidate)
+                except IndexError:
+                    continue
         return result
 
     def get_tilev(self, layer: str, pos: Vector2):
-        return self.map[layer][floor(pos.x)][floor(pos.y)]
+        try:
+            return self.map[layer][floor(pos.x)][floor(pos.y)]
+        except IndexError:
+            pass
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
         self.layers[layer].add(tile)
@@ -98,9 +108,6 @@ class Tilemap:
         tile.kill
         self.map[layer][floor(pos.x)][floor(pos.y)] = None
         self.layers[layer].remove(tile)
-
-    # def tile_properties(self, layer: str, pos: Vector2):
-    #     return self.get_tilev(layer, pos).properties
 
     def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
         return [
