@@ -10,12 +10,18 @@ from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence
 from game_scripts.star import WalkPath
 from collections import deque
-
+import pygame_gui
 
 pg.init()
 
 display = pg.display.set_mode((250, 150), pg.SCALED)  # , pg.RESIZABLE)
 clock = pg.time.Clock()
+
+# -- UI experiments --
+manager = pygame_gui.UIManager((250, 150))
+ui_image = load_image("art/tst_ui.png")
+image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
+
 
 # tilemap
 
@@ -115,8 +121,8 @@ def handle_key_input():
 
 path_planner = WalkPath(tilemap)
 # print("path stuff: ", path_planner.neighbors(Vector2(5, 7)))
-print("properties ",tilemap.get_tilev_properties(Vector2(3, 6), "active"))
-print("properties ",tilemap.get_tilev_properties(Vector2(3, 5), "active"))
+print("properties ", tilemap.get_tilev_properties(Vector2(3, 6), "active"))
+print("properties ", tilemap.get_tilev_properties(Vector2(3, 5), "active"))
 print(tilemap.get_tilev("ground", Vector2(25, 24)))
 
 
@@ -138,6 +144,9 @@ while True:
             path = path_planner.astar(start, goal) or []
             path = deque([tilemap.map_to_world(*pos) for pos in path])
 
+        # TODO: needs to be processed first, probably
+        manager.process_events(event)
+
     if path:
         sprite.pos = move_along_path(sprite.pos, path, _delta / 10)
         # sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
@@ -157,6 +166,9 @@ while True:
 
     # --- render loop ---
     camera.draw_all()
+
+    manager.update(_delta / 1000)
+    manager.draw_ui(display)
 
     pg.display.update()
     clock.tick(60)

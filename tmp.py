@@ -1,42 +1,43 @@
-import pygame as pg
-from pygame import Vector2, Surface
-from pygame.sprite import Group, Sprite
+import pygame
+import pygame_gui
+from scripts.utils import load_image
+
+pygame.init()
+
+pygame.display.set_caption("Quick Start")
+window_surface = pygame.display.set_mode((800, 600))
+
+background = pygame.Surface((800, 600))
+background.fill(pygame.Color("#000000"))
+
+manager = pygame_gui.UIManager((800, 600))
+
+ui_image = load_image("art/tst_ui.png")
+
+hello_button = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect((350, 275), (100, 50)), text="Say Hello", manager=manager
+)
+image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
 
 
-class holder:
-    def __init__(self, group: Group) -> None:
-        self.group = group
+clock = pygame.time.Clock()
+is_running = True
 
-    def add(self):
-        Sprite(self.group)
+while is_running:
+    time_delta = clock.tick(60) / 1000.0
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            is_running = False
 
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == hello_button:
+                print("Hello World!")
 
-group = Group()
+        manager.process_events(event)
 
-sprite = Sprite(group)
+    manager.update(time_delta)
 
-print(group)
+    window_surface.blit(background, (0, 0))
+    manager.draw_ui(window_surface)
 
-h=holder(group)
-
-h.add()
-
-print(group)
-
-group.update()
-
-# sprite.kill()
-
-print(group)
-
-ls=[sprite]
-
-print(len(ls))
-
-print(ls[0])
-
-del sprite
-
-print(len(ls))
-
-print("A",ls[0])
+    pygame.display.update()
