@@ -14,11 +14,15 @@ import pygame_gui
 
 pg.init()
 
-display = pg.display.set_mode((250, 150), pg.SCALED)  # , pg.RESIZABLE)
+# TODO: Investigate resolutions as per:
+# https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fwsa3qmxrmcm71.png%3Fwidth%3D2468%26format%3Dpng%26auto%3Dwebp%26s%3D6eb4a82822907902e380f2df8c066046a99d7392
+resolution = (960, 540)
+
+display = pg.display.set_mode(resolution, pg.SCALED)  # , pg.RESIZABLE)
 clock = pg.time.Clock()
 
 # -- UI experiments --
-manager = pygame_gui.UIManager((250, 150))
+manager = pygame_gui.UIManager(resolution)
 ui_image = load_image("art/tst_ui.png")
 image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
 
