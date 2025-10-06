@@ -19,7 +19,10 @@ pg.init()
 # https://www.mwum.com/en/how-to-set-retro-game-resolution-correctly/
 # https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpreview.redd.it%2Fvvchz8eyl9371.png%3Fauto%3Dwebp%26s%3D004fd6ef601e3bf843e180e5dd35315893854800&f=1&nofb=1&ipt=54b6ee20bc2fd3b146b6acdf8822f95f0c0521d2fad91546a1749f755325d735
 
-resolution = (960, 540)
+# 1080: 999 v pixels
+# 1440: 1359 v pixels
+
+resolution = (636, 333)
 
 display = pg.display.set_mode(resolution, pg.SCALED)  # , pg.RESIZABLE)
 clock = pg.time.Clock()
