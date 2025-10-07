@@ -17,7 +17,9 @@ ui_image = load_image("art/tst_ui.png")
 hello_button = pygame_gui.elements.UIButton(
     relative_rect=pygame.Rect((350, 275), (100, 50)), text="Say Hello", manager=manager
 )
-image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
+# image_elem = pygame_gui.elements.UIImage(hello_button.get_abs_rect(), ui_image, manager)
+# hello_button.normal_images=[ui_image]
+print(hello_button.drawable_shape)
 
 
 clock = pygame.time.Clock()
@@ -31,7 +33,7 @@ while is_running:
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == hello_button:
-                print("Hello World!")
+                print(hello_button.normal_images)
 
         manager.process_events(event)
 
