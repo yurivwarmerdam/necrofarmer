@@ -15,10 +15,15 @@ manager = pygame_gui.UIManager((800, 600))
 ui_image = load_image("art/tst_ui.png")
 
 hello_button = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((350, 275), (100, 50)), text="Say Hello", manager=manager
+    relative_rect=ui_image.get_rect(), text="Say Hello", manager=manager
 )
 # image_elem = pygame_gui.elements.UIImage(hello_button.get_abs_rect(), ui_image, manager)
-# hello_button.normal_images=[ui_image]
+hello_button.normal_images = [ui_image]
+hello_button.hovered_images = [ui_image]
+hello_button.selected_images = [ui_image]
+hello_button.disabled_images = [ui_image]
+hello_button.rebuild()
+
 print(hello_button.drawable_shape)
 
 
