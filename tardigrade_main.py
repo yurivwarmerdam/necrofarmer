@@ -145,6 +145,17 @@ while True:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
+        if event.type in (
+            pg.MOUSEBUTTONDOWN,
+            pg.MOUSEBUTTONUP,
+            pg.MOUSEWHEEL,
+            pg.KEYDOWN,
+            pg.KEYUP,
+        ):
+            print("keys!")
+
+            res = manager.process_events(event)
+            print(res)
 
         elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
@@ -154,18 +165,12 @@ while True:
             path = path_planner.astar(start, goal) or []
             path = deque([tilemap.map_to_world(*pos) for pos in path])
 
-        # TODO: needs to be processed first, probably
-        manager.process_events(event)
-
     if path:
         sprite.pos = move_along_path(sprite.pos, path, _delta / 10)
-        # sprite.pos = move_towards(sprite.pos, move_goal, _delta / 10)
 
     camera_move = handle_key_input()
     if camera_move != Vector2(0, 0):
         camera.pos += camera_move
-
-    # sprite.set_animation(randint(0, len(sprite.animations) - 1))
 
     if randint(0, 100) > 99:
         sprite.set_animation(str(randint(0, 3)))
