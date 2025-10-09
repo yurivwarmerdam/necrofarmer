@@ -22,60 +22,37 @@ pip install -r requirements.txt
 
 ## TODO:
 ====================
-- current:
-    v remove predefines layers from tilemap (also test in ortho actual necro game)
-    - This allows me to remove layers from tilemap (can still get a flat layer through itertools)
-    - this makes addressing purely through map the way to go
-    - I can then start deleting tiles after instancing, and create tiles more consistently.
-
-- Ok, so previous me thought it was a good idea to separate render layers and internal layers (=groups), to make them very distinct things.
-I am currently struggling to think of a reason why I wanted to keep these two sets distinct.
-I _suppose_ it's a separation of concern thing, but it might be a lot.
-Ok, now it's up to me to figure out when how to label a layer as a layeredupdates. That is really annoying....
-Options:
-- get sprites for active layer(s)
-    - make new (render)group
-    - iterate active layer sprites
-    - feed that to camera
-    - this makes adding things at runtime hard
-- add layeredupdates//true to layer properties in tiled
-- give tilemap constructor list of layer names to make as layeredupdates
-last 2 seem better. I need to decide where I want to put this.
-Currently tempted put this in tiled. Downside is that it requires knowledge outside of the python world when addin new objects at runtime. Either way's a convention. Downside of the supply in constructor approach is that it requires knowledge of what layers will exist in the tmx. Either way this depends on some cross-env knowldge. Guess it's unavoidable.
-constructor feels a little more generic "public package".
-tiles is just a "my convention." Might be fine to have conventions I like. (it's what ConcernedApe would do!)
+### current:
+    - 
+### Tilemap
+v remove predefines layers from tilemap (also test in ortho actual necro game)
+- Map should become dict. This fixes negative key access bug, and then we can remove layers (layers is almost already this??)
+- this makes addressing purely through map the way to go
+- I can then start deleting tiles after instancing, and create tiles more consistently.
 
 
-
-- [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
-- [ ] steal from stardew how he did the diggable logic
-    - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
-- [ ] Only allow casting of seed spell at summong circle?
-- [ ] allow skeleton summoning at graves
-
-- [v] camera logic  
-    v move camera position  
-    v correct mouse pos in a global-to-local function  
-    v figure out a good standardized way of interacing there.
-    - Godot does this by:
-        - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
-- [v] do thurough testing on validity of world to map logic
-    - make project with big tiles
-    - have smallish (cursor??) entity moving around
-    - perhaps just display several objects, have them print their loc
-
-- [ ] clean up project
-    - spritesheets
-    - tilemaps
-    - tilesets
-    - util scripts
-    - game(-specific) scripts
-- [ ] collision
-- [ ] zsort
-- [ ] multitile tiles
-- [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
-- [ ] merge button project stuff where relvant
-- [ ] create a shorter game class
+- Multitile tiles and/or tile entities
+    - approches:
+        - tile entities
+        - multitile tiles as a core feature
+    - tile entities: 
+        - make a placeholder tile in tiled
+        - load map regularly in tilemap
+        - for each placeholder tile: 
+            - replace each instance with the active entity.
+        - tilemap should delegate processing
+        - Should collision be handled through the tilemap? Or independently? (probably the latter)
+        - entities should be able to occupy multiple tiles in the map
+        - deleting an inetity should empty all tiles it occupies (should be easy if correctly using groups, and making the entity a Sprite?)
+    - multitile tiles
+        - add some kind of multitile array attribute to a BigTile
+        - BigTile should be able to occupy multiple tiles on load time.
+        - slice up the tile's sprite into discrete chunks for each of its component tiles
+        - for each pos in its array (assuming the tile's origin is 0,0):
+            - replace that location with a (regular tile?) sprite.
+            - make sure to do this in both plocations what with teh oduble bookkeeping in a tilemap
+        - alternatively: have the Sprites' draw() function behave differently? (probably a bad idea, since I intend to zsort tilemaps)
+        - deletion should be easy, since we can delete tiles, and that immediately removes them from a group, since that's how they're rendered.
 
 - [ ] generic tiledata loading
     - what tile data do I want to include?
@@ -117,33 +94,41 @@ tiles is just a "my convention." Might be fine to have conventions I like. (it's
     - Lesson: there is definitely a LOT os performance to gain here, but it requires thinking nobody has done for pygame as far as I can find.
     - Fun diversion trying to understand another person's code, though!
 
-- Multitile tiles and/or tile entities
-    - approches:
-        - tile entities
-        - multitile tiles as a core feature
-    - tile entities: 
-        - make a placeholder tile in tiled
-        - load map regularly in tilemap
-        - for each placeholder tile: 
-            - replace each instance with the active entity.
-        - tilemap should delegate processing
-        - Should collision be handled through the tilemap? Or independently? (probably the latter)
-        - entities should be able to occupy multiple tiles in the map
-        - deleting an inetity should empty all tiles it occupies (should be easy if correctly using groups, and making the entity a Sprite?)
-    - multitile tiles
-        - add some kind of multitile array attribute to a BigTile
-        - BigTile should be able to occupy multiple tiles on load time.
-        - slice up the tile's sprite into discrete chunks for each of its component tiles
-        - for each pos in its array (assuming the tile's origin is 0,0):
-            - replace that location with a (regular tile?) sprite.
-            - make sure to do this in both plocations what with teh oduble bookkeeping in a tilemap
-        - alternatively: have the Sprites' draw() function behave differently? (probably a bad idea, since I intend to zsort tilemaps)
-        - deletion should be easy, since we can delete tiles, and that immediately removes them from a group, since that's how they're rendered.
 
-bt.py
-- xml
-- ports
-- RemoteActionNode (starts thread. Perhaps puts stuff on ports and/or takes return value for success)
+### Camera
+
+- [v] camera logic  
+    v move camera position  
+    v correct mouse pos in a global-to-local function  
+    v figure out a good standardized way of interacing there.
+    - Godot does this by:
+        - giving vector2 a global_position function. Requires it knowing its canvasitem. THis is worldspace gobal, though.
+- [v] do thurough testing on validity of world to map logic
+    - make project with big tiles
+    - have smallish (cursor??) entity moving around
+    - perhaps just display several objects, have them print their loc
+
+### Cleanup
+- spritesheets
+- tilemaps
+- tilesets
+- do yet another pass at separating util scripts and game(-specific) scripts
+
+
+- [ ] collision
+- [ ] multitile tiles
+- [ ] build debug (draw rect/circle/etc in worldspace. Probably pass to camera? Basically pass these commands. Maybe a call()-type construction would be nice.)
+- [ ] merge button project stuff where relvant
+- [ ] create a shorter game class
+
+### actual necrofarmer (not tardigrade)
+- [ ] High-level: Think about how tassk sequencing should work. If seeds are picked up, but no plant spot is available, how long should you hold on? What if a seed is dropped? Should it get picked up again immediately?
+- [ ] steal from stardew how he did the diggable logic
+    - [ ] Answer: layers & good tilemaps. PLus some entities that get spawned if you need "tile entities"
+- [ ] Only allow casting of seed spell at summong circle?
+- [ ] allow skeleton summoning at graves
+
+
 
 ## Camera notes:
 ========================
@@ -189,9 +174,9 @@ Objects are constructed in several layers:
 - Front
 - Paths
 - Buildings
-- Back
+- Back  
 
-Each layer can have different "sublayers". Sublayers are drawn on top of each other.
+Each layer can have different "sublayers". Sublayers are drawn on top of each other.  
 
 - Ground is on back layer.
 - Tiles that can be turned into soil are tagged as Diggable=True
@@ -203,26 +188,6 @@ Each layer can have different "sublayers". Sublayers are drawn on top of each ot
 - Buildins is also for the "footprint" of buildings, and usually denotes impassability.
 - Trees tend to be grouped in Buildings, Front, and AlwaysFront pieces. I believe this is subdivided using PaintMasks.
 
-
-Loading from pytmx:
-```
-import pygame as pg
-from pytmx.util_pygame import load_pygame
-
-pg.init()
-
-
-pg.display.set_mode((1280, 960))
-pg.Surface((640, 480))
-
-txmdata=load_pygame("art/tmx/field.tmx")
-
-# print(dir(my_tmx.tilesets[0]))
-print(txmdata.tile_properties) # all tile properties
-print(txmdata.get_tile_properties(14,8,1)) # get an indivitual tiles' properties, if any.
-```
-
-
 ## pygame
 ==================
 Sprite class has an inbuilt update and draw method
@@ -232,24 +197,19 @@ Groups (sprites?) also have a kill() funciton that allows the object to destroy 
 There's also the spritecollide() function, allowing for a bunch of sprites to check collision with another sprite all at once.
 
 make everything out of boxes first:
-https://www.youtube.com/watch?v=bZeHah4eg-E
+
 (boxes are easy in this framework!)
 
 
-tilemap...
-
-3D array
-
-coordinate calculation?
 
 ### Pygame Links
 ====================
 
 
-- The BT paper: https://arxiv.org/pdf/1709.00084  
-- Indian demo P3 github: https://github.com/thehummingbird/robotics_demos/blob/main/behavior_trees/grasp_place_robot_demo/bt_demo.cpp
-- [pytmx](https://pytmx.readthedocs.io/en/latest/). Allows loading of tilemaps into pygame. [code snippet at this video timestamp](https://youtu.be/N6xqCwblyiw?t=4793)
+- [The BT paper](https://arxiv.org/pdf/1709.00084)
+- [code snippet for pytmx at this video timestamp](https://youtu.be/N6xqCwblyiw?t=4793)
 - [pydew valley](https://www.youtube.com/watch?v=T4IX36sP_0c) Steal this liberally
+- [reminder to define everything as boxes, first. Add graphics later.](https://www.youtube.com/watch?v=bZeHah4eg-E)
 
 ## Relevant vscode extentions:  
 ====================
@@ -261,7 +221,7 @@ coordinate calculation?
 - CMake IntelliSense
 - CMake Tools
 
-## unsorted links:
+## links:
 ====================
 - [Warning! pygame needs to be run in the main loop, and is apparently not thread-safe. This is going to lead to problems, isn't it...?](https://stackoverflow.com/questions/2970612/pygame-in-a-thread)
 - [Some more StackOverflow discussion on "making the right choice" when doing asynchronous programming](https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio)
@@ -273,8 +233,6 @@ coordinate calculation?
 - [behaviorTrees.cpp website](https://www.behaviortree.dev/)  
 - [BehaviorTree.cpp github repo](https://github.com/BehaviorTree/BehaviorTree.CPP?tab=readme-ov-file)  
 all installs have been done from source.  
-
-### BTree.cpp Links:
 
 [The Hummingbird tutorial P2](https://www.youtube.com/watch?v=4PUiDmD5dkg)  
 [The Hummingbird tutorial P3](https://www.youtube.com/watch?v=T_Q57-audMk)  
