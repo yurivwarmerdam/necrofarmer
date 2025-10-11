@@ -4,6 +4,12 @@ from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
 
+
+class myPanel(pygame_gui.elements.UIPanel):
+    def process_event(self, event: pg.Event) -> bool:
+        return super().process_event(event)
+
+
 pg.init()
 
 pg.display.set_caption("Quick Start")
@@ -60,7 +66,7 @@ while True:
 
         processed = manager.process_events(event)
 
-        if event.type == pg.MOUSEBUTTONUP or event.type == pygame_gui.UI_BUTTON_PRESSED:
+        if event.type in [pg.MOUSEBUTTONUP, pygame_gui.UI_BUTTON_PRESSED,pg.MOUSEBUTTONDOWN]:
             print(processed, pg.event.event_name(event.type))
 
     manager.update(time_delta)
