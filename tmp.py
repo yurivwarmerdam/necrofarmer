@@ -2,6 +2,7 @@ import pygame as pg
 import pygame_gui
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
+import sys
 
 pg.init()
 
@@ -9,7 +10,7 @@ pg.display.set_caption("Quick Start")
 
 resolution = (400, 300)
 
-window_surface = pg.display.set_mode(resolution,pg.SCALED)
+display = pg.display.set_mode(resolution, pg.SCALED)
 
 background = pg.Surface(resolution)
 background.fill(pg.Color("#000000"))
@@ -24,37 +25,56 @@ outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 4
 hello_button = pygame_gui.elements.UIButton(
     relative_rect=outline_sprites[(0, 0)].get_rect(), text="", manager=manager
 )
-# image_elem = pygame_gui.elements.UIImage(hello_button.get_abs_rect(), ui_image, manager)
 hello_button.normal_images = [outline_sprites[(0, 0)], button_sprites[(0, 0)]]
 hello_button.hovered_images = [outline_sprites[(0, 0)], button_sprites[(0, 0)]]
 hello_button.selected_images = [outline_sprites[(1, 0)], button_sprites[(0, 0)]]
 hello_button.disabled_images = [outline_sprites[(2, 0)], button_sprites[(0, 0)]]
 
-hello_button.set_position(Vector2(60,50))
+hello_button.set_position((60, 50))
 
 hello_button.rebuild()
 
-print(hello_button.drawable_shape)
+somethin_else = pygame_gui.elements.UIPanel(
+    outline_sprites[0, 0].get_rect(), manager=manager
+)
+somethin_else.set_position((60, 100))
 
+third = pygame_gui.elements.UIWindow(outline_sprites[0, 0].get_rect(),manager=manager, draggable=False)
+
+third.set_position((60,150))
 
 clock = pg.time.Clock()
-is_running = True
 
-while is_running:
+print(pg.MOUSEBUTTONUP, pygame_gui.UI_BUTTON_PRESSED)
+
+while True:
     time_delta = clock.tick(60) / 1000.0
     for event in pg.event.get():
-        if event.type == pg.QUIT:
-            is_running = False
+        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
+            pg.quit()
+            sys.exit()
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == hello_button:
-                print(hello_button.normal_images)
+                print("image pressed")
 
-        manager.process_events(event)
+        processed = manager.process_events(event)
+
+        if event.type == pg.MOUSEBUTTONUP or event.type == pygame_gui.UI_BUTTON_PRESSED:
+            print(processed, pg.event.event_name(event.type))
 
     manager.update(time_delta)
 
-    window_surface.blit(background, (0, 0))
-    manager.draw_ui(window_surface)
+    display.blit(background, (0, 0))
+    manager.draw_ui(display)
 
     pg.display.update()
+
+# Ok, so mouse events get consumed. That's good.
+# Now to figure out if that also happens when dealingw ith other ui elems.
+# Start ehre: https://github.com/MyreMylar/pygame_gui_examples
+# FOUND IT: https://github.com/MyreMylar/tower_defence
+# Thought: Have my own UIPanel element that serves to:
+#   - draw a picture
+#   - consume clicks if the mouse pos overlaps
+# Another thought: Maybe only draw a subset of the world the should actually be visile?

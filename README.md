@@ -23,6 +23,11 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 ### current:
+    - game mainclass
+        - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
+        - process (rest of the fucking owl. Think about how to abstract inputevents)
+    -  learn how to consume input in pygame ui.
+
     - 
 ### Tilemap
 v remove predefines layers from tilemap (also test in ortho actual necro game)
