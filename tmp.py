@@ -1,25 +1,59 @@
+from typing import Dict
 import pygame as pg
 import pygame_gui
+from pygame_gui.core import ObjectID, UIElement
+from pygame_gui.core.interfaces import (
+    IContainerLikeInterface,
+    IUIElementInterface,
+    IUIManagerInterface,
+)
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
+from typing import Tuple
+
+from scripts.ui_shim import UIPanel
 
 
-class myPanel(pygame_gui.elements.UIPanel):
-    def process_event(self, event: pg.Event) -> bool:
-        return super().process_event(event)
+class contect_panel(UIPanel):
+    def __init__(
+        self,
+        relative_rect: pg.Rect | pg.FRect | Tuple[float, float, float, float],
+        starting_height: int = 1,
+        manager: IUIManagerInterface | None = None,
+        *,
+        element_id: str = "panel",
+        margins: Dict[str, int] | None = None,
+        container: IContainerLikeInterface | None = None,
+        parent_element: UIElement | None = None,
+        object_id: ObjectID | str | None = None,
+        anchors: Dict[str, str | IUIElementInterface] | None = None,
+        visible: int = 1,
+    ):
+        super().__init__(
+            relative_rect,
+            starting_height,
+            manager,
+            element_id=element_id,
+            margins=margins,
+            container=container,
+            parent_element=parent_element,
+            object_id=object_id,
+            anchors=anchors,
+            visible=visible,
+        )
 
 
 pg.init()
 
 pg.display.set_caption("Quick Start")
 
-resolution = (400, 300)
+resolution = (636, 333)
 
 display = pg.display.set_mode(resolution, pg.SCALED)
 
 background = pg.Surface(resolution)
-background.fill(pg.Color("#000000"))
+background.fill(pg.Color("springgreen3"))
 
 manager = pygame_gui.UIManager(resolution)
 
@@ -40,14 +74,14 @@ hello_button.set_position((60, 50))
 
 hello_button.rebuild()
 
-somethin_else = pygame_gui.elements.UIPanel(
-    outline_sprites[0, 0].get_rect(), manager=manager
-)
+somethin_else = UIPanel(outline_sprites[0, 0].get_rect(), manager=manager)
 somethin_else.set_position((60, 100))
 
-third = pygame_gui.elements.UIWindow(outline_sprites[0, 0].get_rect(),manager=manager, draggable=False)
+third = pygame_gui.elements.UIWindow(
+    outline_sprites[0, 0].get_rect(), manager=manager, draggable=False
+)
 
-third.set_position((60,150))
+third.set_position((60, 150))
 
 clock = pg.time.Clock()
 
@@ -66,7 +100,11 @@ while True:
 
         processed = manager.process_events(event)
 
-        if event.type in [pg.MOUSEBUTTONUP, pygame_gui.UI_BUTTON_PRESSED,pg.MOUSEBUTTONDOWN]:
+        if event.type in [
+            pg.MOUSEBUTTONUP,
+            pygame_gui.UI_BUTTON_PRESSED,
+            pg.MOUSEBUTTONDOWN,
+        ]:
             print(processed, pg.event.event_name(event.type))
 
     manager.update(time_delta)
