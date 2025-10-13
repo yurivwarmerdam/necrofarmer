@@ -15,7 +15,7 @@ from typing import Tuple
 from scripts.ui_shim import UIPanel
 
 
-class contect_panel(UIPanel):
+class context_panel(UIPanel):
     def __init__(
         self,
         relative_rect: pg.Rect | pg.FRect | Tuple[float, float, float, float],
@@ -42,6 +42,7 @@ class contect_panel(UIPanel):
             anchors=anchors,
             visible=visible,
         )
+        self.buton = None
 
 
 pg.init()
@@ -74,14 +75,33 @@ hello_button.set_position((60, 50))
 
 hello_button.rebuild()
 
-somethin_else = UIPanel(outline_sprites[0, 0].get_rect(), manager=manager)
-somethin_else.set_position((60, 100))
+a_rect=outline_sprites[0, 0].get_rect()
+print(a_rect)
+b_rect=pg.Rect(0, 0, 54, 46)
+ui_panel = UIPanel(
+    b_rect,
+    manager=manager,
+    anchors={"left": "left", "bottom": "bottom"},
+)
+ui_panel.set_relative_position((0,-10))
 
-third = pygame_gui.elements.UIWindow(
-    outline_sprites[0, 0].get_rect(), manager=manager, draggable=False
+# button_layout_rect = pg.Rect(0, 0, 100, 20)
+button_layout_rect = pg.Rect(0, -30, 150, 20)
+
+shadow = UIPanel(
+    button_layout_rect,
+    manager=manager,
+    anchors={"left": "left", "bottom": "bottom"},
 )
 
-third.set_position((60, 150))
+another_button=pygame_gui.elements.UIButton(
+    button_layout_rect,
+    text="Hello",
+    manager=manager,
+    anchors={"centerx": "centerx", "bottom": "bottom"},
+)
+another_button.set_relative_position((0,-10))
+# Oh crickey. It tunrs out that the relative position is only kind of relative...
 
 clock = pg.time.Clock()
 
