@@ -1,5 +1,6 @@
 from typing import Dict
 import pygame as pg
+from pygame import Surface
 import pygame_gui
 from pygame_gui.core import ObjectID, UIElement
 from pygame_gui.core.interfaces import (
@@ -15,32 +16,15 @@ from typing import Tuple
 from scripts.ui_shim import UIPanel
 
 
-class context_panel(UIPanel):
-    def __init__(
-        self,
-        relative_rect: pg.Rect | pg.FRect | Tuple[float, float, float, float],
-        starting_height: int = 1,
-        manager: IUIManagerInterface | None = None,
-        *,
-        element_id: str = "panel",
-        margins: Dict[str, int] | None = None,
-        container: IContainerLikeInterface | None = None,
-        parent_element: UIElement | None = None,
-        object_id: ObjectID | str | None = None,
-        anchors: Dict[str, str | IUIElementInterface] | None = None,
-        visible: int = 1,
-    ):
+class ContextPanel(UIPanel):
+    def __init__(self, display: Surface):
+        screen_size = display.get_size()
+        own_size = [450, 80]
+        own_rect = pg.Rect(80, screen_size[1] - own_size[1], *own_size)
         super().__init__(
-            relative_rect,
-            starting_height,
-            manager,
-            element_id=element_id,
-            margins=margins,
-            container=container,
-            parent_element=parent_element,
-            object_id=object_id,
-            anchors=anchors,
-            visible=visible,
+            own_rect,
+            element_id="context_panel",
+            # anchors=anchors,
         )
         self.buton = None
 
@@ -51,12 +35,14 @@ pg.display.set_caption("Quick Start")
 
 resolution = (636, 333)
 
-display = pg.display.set_mode(resolution, pg.SCALED)
+display: Surface = pg.display.set_mode(resolution, pg.SCALED)
 
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
 manager = pygame_gui.UIManager(resolution)
+
+ContextPanel(display)
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
@@ -75,15 +61,15 @@ hello_button.set_position((60, 50))
 
 hello_button.rebuild()
 
-a_rect=outline_sprites[0, 0].get_rect()
+a_rect = outline_sprites[0, 0].get_rect()
 print(a_rect)
-b_rect=pg.Rect(0, 0, 54, 46)
+b_rect = pg.Rect(0, 0, 54, 46)
 ui_panel = UIPanel(
     b_rect,
     manager=manager,
     anchors={"left": "left", "bottom": "bottom"},
 )
-ui_panel.set_relative_position((0,-10))
+
 
 # button_layout_rect = pg.Rect(0, 0, 100, 20)
 button_layout_rect = pg.Rect(0, -30, 150, 20)
@@ -94,13 +80,13 @@ shadow = UIPanel(
     anchors={"left": "left", "bottom": "bottom"},
 )
 
-another_button=pygame_gui.elements.UIButton(
+another_button = pygame_gui.elements.UIButton(
     button_layout_rect,
     text="Hello",
     manager=manager,
     anchors={"centerx": "centerx", "bottom": "bottom"},
 )
-another_button.set_relative_position((0,-10))
+# another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
 
 clock = pg.time.Clock()
