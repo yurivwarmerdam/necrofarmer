@@ -154,10 +154,9 @@ while True:
         ):
             print("keys!")
 
-            res = manager.process_events(event)
-            print(res)
+        processed = manager.process_events(event)
 
-        elif event.type == pg.MOUSEBUTTONDOWN:
+        if not processed and  event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             start = tuple(tilemap.world_to_map(sprite.pos))
             move_goal = camera.get_global_mouse_pos()
