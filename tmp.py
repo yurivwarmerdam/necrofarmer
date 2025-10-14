@@ -26,6 +26,9 @@ class ContextPanel(UIPanel):
             element_id="context_panel",
             # anchors=anchors,
         )
+        self.image = pg.Surface(self.relative_rect.size)
+        self.image.fill(pg.Color("darkgray"))
+        
         self.buton = None
 
 
