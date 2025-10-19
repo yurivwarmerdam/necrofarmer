@@ -20,7 +20,9 @@ from scripts.ui_shim import UIPanel
 class MyButton(pygame_gui.elements.UIButton):
     def __init__(
         self,
+        pos,
         outline_sprites,
+        fill_sprite,
         container: IContainerLikeInterface | None = None,
     ):
         super().__init__(
@@ -29,11 +31,11 @@ class MyButton(pygame_gui.elements.UIButton):
             object_id="hello_button",
             container=container,
         )
-        self.normal_images = [outline_sprites[(0, 0)], button_sprites[(0, 0)]]
-        self.hovered_images = [outline_sprites[(0, 0)], button_sprites[(0, 0)]]
-        self.disabled_images = [outline_sprites[(2, 0)], button_sprites[(0, 0)]]
-        self.selected_images = [outline_sprites[(1, 0)], button_sprites[(0, 0)]]
-        self.set_relative_position((4, 4))
+        self.normal_images = [outline_sprites[(0, 0)], fill_sprite]
+        self.hovered_images = [outline_sprites[(0, 0)], fill_sprite]
+        self.disabled_images = [outline_sprites[(2, 0)], fill_sprite]
+        self.selected_images = [outline_sprites[(1, 0)], fill_sprite]
+        self.set_relative_position(pos)
         self.rebuild()
 
 
@@ -51,7 +53,15 @@ class ContextPanel(UIPanel):
         self.image.fill(pg.Color("darkgray"))
 
         self.hello_button = MyButton(
+            (2,2),
             outline_sprites,
+            button_sprites[(0, 0)],
+            container=self.get_container(),
+        )
+        self.other_button = MyButton(
+            (58,2),
+            outline_sprites,
+            button_sprites[(1, 0)],
             container=self.get_container(),
         )
 
