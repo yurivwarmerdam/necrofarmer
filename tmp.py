@@ -33,14 +33,14 @@ class MyButton(pygame_gui.elements.UIButton):
         self.hovered_images = [outline_sprites[(0, 0)], button_sprites[(0, 0)]]
         self.disabled_images = [outline_sprites[(2, 0)], button_sprites[(0, 0)]]
         self.selected_images = [outline_sprites[(1, 0)], button_sprites[(0, 0)]]
-        self.set_relative_position((10, 10))
+        self.set_relative_position((4, 4))
         self.rebuild()
 
 
 class ContextPanel(UIPanel):
     def __init__(self, display: Surface, outline_sprites):
         screen_size = display.get_size()
-        own_size = [450, 80]
+        own_size = [450, 100]
         own_rect = pg.Rect(80, screen_size[1] - own_size[1], *own_size)
         super().__init__(
             own_rect,
