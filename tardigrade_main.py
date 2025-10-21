@@ -152,7 +152,8 @@ while True:
             pg.KEYDOWN,
             pg.KEYUP,
         ):
-            print("keys!")
+            pass
+            # print("keys!")
 
         processed = manager.process_events(event)
 

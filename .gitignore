@@ -2,4 +2,5 @@ build/
 btcpp_sample/
 venv/
 .vscode/
+.idea
 **/__pycache__/

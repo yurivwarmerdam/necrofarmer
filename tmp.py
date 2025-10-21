@@ -17,13 +17,18 @@ from typing import Tuple
 from scripts.ui_shim import UIPanel
 
 
+class Thing:
+    def do_stuff(self):
+        print("Goober")
+
+
 class MyButton(pygame_gui.elements.UIButton):
     def __init__(
-        self,
-        pos,
-        outline_sprites,
-        fill_sprite,
-        container: IContainerLikeInterface | None = None,
+            self,
+            pos,
+            outline_sprites,
+            fill_sprite,
+            container: IContainerLikeInterface | None = None,
     ):
         super().__init__(
             relative_rect=outline_sprites[(0, 0)].get_rect(),
@@ -40,7 +45,7 @@ class MyButton(pygame_gui.elements.UIButton):
 
 
 class ContextPanel(UIPanel):
-    def __init__(self, display: Surface, outline_sprites):
+    def __init__(self, display: Surface, outline_sprites, my_object):
         screen_size = display.get_size()
         own_size = [450, 100]
         own_rect = pg.Rect(80, screen_size[1] - own_size[1], *own_size)
@@ -53,13 +58,14 @@ class ContextPanel(UIPanel):
         self.image.fill(pg.Color("darkgray"))
 
         self.hello_button = MyButton(
-            (2,2),
+            (2, 2),
             outline_sprites,
             button_sprites[(0, 0)],
             container=self.get_container(),
         )
+        self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED,my_object.do_stuff)
         self.other_button = MyButton(
-            (58,2),
+            (58, 2),
             outline_sprites,
             button_sprites[(1, 0)],
             container=self.get_container(),
@@ -79,13 +85,13 @@ background.fill(pg.Color("springgreen3"))
 
 manager = pygame_gui.UIManager(resolution)
 
-
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
 
-ContextPanel(display, outline_sprites)
 
+thing=Thing()
+ContextPanel(display, outline_sprites,thing)
 
 a_rect = outline_sprites[0, 0].get_rect()
 b_rect = pg.Rect(0, 0, 54, 46)
@@ -95,10 +101,8 @@ ui_panel = UIPanel(
     anchors={"left": "left", "bottom": "bottom"},
 )
 
-
 # button_layout_rect = pg.Rect(0, 0, 100, 20)
 button_layout_rect = pg.Rect(0, -30, 150, 20)
-
 
 another_button = pygame_gui.elements.UIButton(
     button_layout_rect,
@@ -112,7 +116,6 @@ another_button = pygame_gui.elements.UIButton(
 
 clock = pg.time.Clock()
 
-
 while True:
     time_delta = clock.tick(60) / 1000.0
     for event in pg.event.get():
@@ -120,10 +123,10 @@ while True:
             pg.quit()
             sys.exit()
 
-        if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            print(event.ui_object_id)
-            if event.ui_object_id == "hello_button":
-                print("image pressed")
+        # if event.type == pygame_gui.UI_BUTTON_PRESSED:
+        #     print(event.ui_object_id)
+        #     if event.ui_object_id == "hello_button":
+        #         print("image pressed")
 
         processed = manager.process_events(event)
 
