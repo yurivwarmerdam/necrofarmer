@@ -1,5 +1,5 @@
 import pygame as pg
-from pygame import Vector2, Rect
+from pygame import Vector2, Rect, Surface
 from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
@@ -15,7 +15,8 @@ import pygame_gui
 
 class Collider:
     """Allows collision to be added to anything with a pos. Generally useful to add to NodeSprites."""
-    def __init__(self, collider: Rect, pos:Vector2=Vector2(0, 0)):
+
+    def __init__(self, collider: Rect, pos: Vector2 = Vector2(0, 0)):
         self.collider = collider
         self.pos = pos
 
@@ -29,8 +30,25 @@ class Collider:
 
 
 class Clickable(NodeSprite):
+    def __init__(
+            self,
+            image: Surface,
+            pos: Vector2 = Vector2(0, 0),
+            anchor="topleft",
+            offset: Vector2 = Vector2(0, 0),
+            collide_rect: Rect = Rect(0, 0,0,0),
+            collide_groups,
+            *groups,
+    ):
+        super().__init__(
+            image,
+            pos,
+            anchor,
+            offset,
+            *groups)
 
-    pass
+
+
 
 pg.init()
 

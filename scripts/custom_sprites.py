@@ -10,12 +10,12 @@ class NodeSprite(Sprite):
     Intended to be interacted mostly through pos."""
 
     def __init__(
-        self,
-        image: Surface,
-        pos: Vector2 = Vector2(0, 0),
-        anchor="topleft",
-        offset: Vector2 = Vector2(0, 0),
-        *groups,
+            self,
+            image: Surface,
+            pos: Vector2 = Vector2(0, 0),
+            anchor="topleft",
+            offset: Vector2 = Vector2(0, 0),
+            *groups,
     ):
         super().__init__(*groups)
         self.anchor = anchor
@@ -70,13 +70,13 @@ class AnimationSequence:
 
 class AnimatedSprite(NodeSprite):
     def __init__(
-        self,
-        animations: dict[str, AnimationSequence],
-        pos: Vector2,
-        *groups,
-        anchor="midbottom",
-        offset=Vector2(0, 0),
-        flip_h=False,
+            self,
+            animations: dict[str, AnimationSequence],
+            pos: Vector2,
+            *groups,
+            anchor="midbottom",
+            offset=Vector2(0, 0),
+            flip_h=False,
     ) -> None:
         self.animations = animations
         self.active_animation = next(iter(animations.values()))
