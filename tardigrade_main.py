@@ -1,5 +1,5 @@
 import pygame as pg
-from pygame import Vector2
+from pygame import Vector2, Rect
 from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
@@ -7,10 +7,30 @@ from game_scripts.entity_tilemap import EntityTilemap
 from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
 from random import randint
-from scripts.custom_sprites import AnimatedSprite, AnimationSequence
+from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
 from game_scripts.star import WalkPath
 from collections import deque
 import pygame_gui
+
+
+class Collider:
+    """Allows collision to be added to anything with a pos. Generally useful to add to NodeSprites."""
+    def __init__(self, collider: Rect, pos:Vector2=Vector2(0, 0)):
+        self.collider = collider
+        self.pos = pos
+
+    @property
+    def collider(self):
+        return self._collision_rect.move(self.pos)
+
+    @collider.setter
+    def collider(self, value: Rect):
+        self._collision_rect = value
+
+
+class Clickable(NodeSprite):
+
+    pass
 
 pg.init()
 
@@ -31,7 +51,6 @@ clock = pg.time.Clock()
 manager = pygame_gui.UIManager(resolution)
 ui_image = load_image("art/tst_ui.png")
 image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
-
 
 # tilemap
 
@@ -121,20 +140,15 @@ def handle_key_input():
     keys_pressed = pg.key.get_pressed()
     camera_move = Vector2(0, 0)
     camera_move.x = (keys_pressed[pg.K_RIGHT] | keys_pressed[pg.K_d]) - (
-        keys_pressed[pg.K_LEFT] | keys_pressed[pg.K_a]
+            keys_pressed[pg.K_LEFT] | keys_pressed[pg.K_a]
     )
     camera_move.y = (keys_pressed[pg.K_DOWN] | keys_pressed[pg.K_s]) - (
-        keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
+            keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
     )
     return camera_move
 
 
 path_planner = WalkPath(tilemap)
-# print("path stuff: ", path_planner.neighbors(Vector2(5, 7)))
-print("properties ", tilemap.get_tilev_properties(Vector2(3, 6), "active"))
-print("properties ", tilemap.get_tilev_properties(Vector2(3, 5), "active"))
-print(tilemap.get_tilev("ground", Vector2(25, 24)))
-
 
 # ---- core loop ----
 while True:
@@ -146,18 +160,18 @@ while True:
             pg.quit()
             sys.exit()
         if event.type in (
-            pg.MOUSEBUTTONDOWN,
-            pg.MOUSEBUTTONUP,
-            pg.MOUSEWHEEL,
-            pg.KEYDOWN,
-            pg.KEYUP,
+                pg.MOUSEBUTTONDOWN,
+                pg.MOUSEBUTTONUP,
+                pg.MOUSEWHEEL,
+                pg.KEYDOWN,
+                pg.KEYUP,
         ):
             pass
             # print("keys!")
 
         processed = manager.process_events(event)
 
-        if not processed and  event.type == pg.MOUSEBUTTONDOWN:
+        if not processed and event.type == pg.MOUSEBUTTONDOWN:
             mouse_pos = Vector2(pg.mouse.get_pos())
             start = tuple(tilemap.world_to_map(sprite.pos))
             move_goal = camera.get_global_mouse_pos()

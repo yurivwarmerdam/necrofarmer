@@ -7,14 +7,14 @@ from math import floor
 
 class BigTile(Tile):
     def __init__(
-        self,
-        pos,
-        image,
-        properties: dict,
-        *groups,
-        anchor="bottomleft",
-        offset=Vector2(0, 0),
-        tiles: list = [Vector2(0, 0)],
+            self,
+            pos,
+            image,
+            properties: dict,
+            *groups,
+            anchor="bottomleft",
+            offset=Vector2(0, 0),
+            tiles: list = [Vector2(0, 0)],
     ):
         """
         Currently only suports isometric tiles.
@@ -30,25 +30,15 @@ class BigTile(Tile):
         """
         super().__init__(pos, image, properties, *groups, anchor=anchor, offset=offset)
         self.tiles = tiles
+        print(self.pos, self.tiles)
 
     def bigtile_prop_to_vectors(self, property):
         return [Vector2(*p) for p in json.loads(property)]
 
-    # def find_left_overdraw_tile_idxs(self, tiles: list[Vector2]):
-    #     """Deprecated"""
-    #     left_tilesum = min([tile.x - tile.y for tile in tiles])
-    #     return [tile for tile in tiles if tile.x - tile.y == left_tilesum]
-
-    # def find_right_overdraw_tile_idxs(self, tiles: list[Vector2]):
-    #     """Deprecated"""
-    #     right_tilesum = max([tile.x - tile.y for tile in tiles])
-    #     return [tile for tile in tiles if tile.x - tile.y == right_tilesum]
-
-
 class EntityTilemap(Tilemap):
     def __init__(
-        self,
-        tmx_file,
+            self,
+            tmx_file,
     ):
         super().__init__(tmx_file)
         self.bigtiles: dict[Vector2, BigTile] = {}
@@ -65,7 +55,7 @@ class EntityTilemap(Tilemap):
                         "invalid BigTile Placement in EntityTilemap init! Aborting."
                     )
                 new_tile = BigTile(
-                    Vector2(0, 0),
+                    tile.pos,
                     tile.image,
                     tile.properties,
                     tile.groups(),
