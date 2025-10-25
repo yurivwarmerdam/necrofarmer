@@ -26,9 +26,21 @@ pip install -r requirements.txt
     - game mainclass
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
         - process (rest of the fucking owl. Think about how to abstract inputevents)
-    -  learn how to consume input in pygame ui.
+    ~  learn how to consume input in pygame ui.
+    - collision
 
-    - 
+
+### Collision
+Where will I be using collision? (and how often will it be checked?)
+- on clicks (rarely)
+- perhaps overlaps when doing things at a location? Like when testing if located in a place where work needs to happen (could become more often with many units)
+Are there going to be things in active layer that I would not want to be able to click?
+
+options as to how to handle collision
+- Out of the box: set a mask attribute, use some rect for this
+- Use the existing mask. It's pixel perfect after all
+
+    
 ### Tilemap
 v remove predefines layers from tilemap (also test in ortho actual necro game)
 - Map should become dict. This fixes negative key access bug, and then we can remove layers (layers is almost already this??)
