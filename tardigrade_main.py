@@ -69,6 +69,12 @@ sprite = AnimatedSprite(
     offset=Vector2(0, 10),
 )
 
+trd = Tardigrade(
+    Vector2(150, 150),
+    units,
+    render_layers["active"],
+)
+
 clock = pg.time.Clock()
 
 
@@ -110,6 +116,8 @@ def handle_key_input():
     return camera_move
 
 
+path_planner = star.get_server(tilemap)
+
 # ---- core loop ----
 while True:
     _delta = clock.get_time()
@@ -132,7 +140,6 @@ while True:
         processed = manager.process_events(event)
 
         if not processed and event.type == pg.MOUSEBUTTONDOWN:
-            mouse_pos = Vector2(pg.mouse.get_pos())
             start = tuple(tilemap.world_to_map(sprite.pos))
             move_goal = camera.get_global_mouse_pos()
             goal = tuple(tilemap.world_to_map(move_goal))
