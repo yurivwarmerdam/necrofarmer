@@ -37,3 +37,15 @@ class WalkPath(AStar):
 
     def astar_world(self, start, goal):
         pass
+
+
+_instance = None
+
+
+def get_server(map: Tilemap | None = None) -> WalkPath:
+    global _instance
+    if _instance is None and map is None:
+        raise Exception("Star server not yet initiated with a map.")
+    elif _instance is None:
+        _instance = WalkPath(map)  # type: ignore
+    return _instance

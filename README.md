@@ -40,6 +40,8 @@ options as to how to handle collision
 - Out of the box: set a mask attribute, use some rect for this
 - Use the existing mask. It's pixel perfect after all
 
+I want:
+- anything I click to be returned (so anything that's in the Group) to be addressible directly. So no get_parent shenenigans on the Sprite. The Sprite in the Group should have relevant components like select() to show/hide a select_sprite, open relevant ui panels, etc.
     
 ### Tilemap
 v remove predefines layers from tilemap (also test in ortho actual necro game)

@@ -4,50 +4,15 @@ from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
 from game_scripts.entity_tilemap import EntityTilemap
+from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
-from game_scripts.star import WalkPath
+from game_scripts import star
 from collections import deque
 import pygame_gui
-
-
-class Collider:
-    """Allows collision to be added to anything with a pos. Generally useful to add to NodeSprites."""
-
-    def __init__(self, collider: Rect, pos: Vector2 = Vector2(0, 0)):
-        self.collider = collider
-        self.pos = pos
-
-    @property
-    def collider(self):
-        return self._collision_rect.move(self.pos)
-
-    @collider.setter
-    def collider(self, value: Rect):
-        self._collision_rect = value
-
-
-class Clickable(NodeSprite):
-    def __init__(
-            self,
-            image: Surface,
-            pos: Vector2 = Vector2(0, 0),
-            anchor="topleft",
-            offset: Vector2 = Vector2(0, 0),
-            collide_rect: Rect = Rect(0, 0,0,0),
-            collide_groups,
-            *groups,
-    ):
-        super().__init__(
-            image,
-            pos,
-            anchor,
-            offset,
-            *groups)
-
-
+from scripts import image_server
 
 
 pg.init()
@@ -75,6 +40,7 @@ image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
 tilemap = EntityTilemap(
     "tilemaps/another_island.tmx",
 )
+star.get_server(tilemap)
 
 render_layers = tilemap.layers
 units = Group()
@@ -87,37 +53,15 @@ camera = Camera(
     # Vector2(0, 0),
 )
 
-# animated sprite
-
-images_d = sheet_to_sprites(load_image("art/tardigrade.png"), Vector2(80, 80))
-
-seq0 = AnimationSequence(
-    images_d[(0, 0)],
-    images_d[(1, 0)],
-    images_d[(2, 0)],
-    images_d[(3, 0)],
-)
-seq1 = AnimationSequence(
-    images_d[(0, 1)],
-    images_d[(1, 1)],
-    images_d[(2, 1)],
-    images_d[(3, 1)],
-)
-seq2 = AnimationSequence(
-    images_d[(0, 2)],
-    images_d[(1, 2)],
-    images_d[(2, 2)],
-    images_d[(3, 2)],
-)
-seq3 = AnimationSequence(
-    images_d[(0, 3)],
-    images_d[(1, 3)],
-    images_d[(2, 3)],
-    images_d[(3, 3)],
-)
+img_server = image_server.get_server()
 
 sprite = AnimatedSprite(
-    {"0": seq0, "1": seq1, "2": seq2, "3": seq3},
+    {
+        "0": img_server.animations["tardigrade_0"],
+        "1": img_server.animations["tardigrade_1"],
+        "2": img_server.animations["tardigrade_2"],
+        "3": img_server.animations["tardigrade_3"],
+    },
     Vector2(100, 100),
     units,
     render_layers["active"],
@@ -158,15 +102,13 @@ def handle_key_input():
     keys_pressed = pg.key.get_pressed()
     camera_move = Vector2(0, 0)
     camera_move.x = (keys_pressed[pg.K_RIGHT] | keys_pressed[pg.K_d]) - (
-            keys_pressed[pg.K_LEFT] | keys_pressed[pg.K_a]
+        keys_pressed[pg.K_LEFT] | keys_pressed[pg.K_a]
     )
     camera_move.y = (keys_pressed[pg.K_DOWN] | keys_pressed[pg.K_s]) - (
-            keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
+        keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
     )
     return camera_move
 
-
-path_planner = WalkPath(tilemap)
 
 # ---- core loop ----
 while True:
@@ -178,11 +120,11 @@ while True:
             pg.quit()
             sys.exit()
         if event.type in (
-                pg.MOUSEBUTTONDOWN,
-                pg.MOUSEBUTTONUP,
-                pg.MOUSEWHEEL,
-                pg.KEYDOWN,
-                pg.KEYUP,
+            pg.MOUSEBUTTONDOWN,
+            pg.MOUSEBUTTONUP,
+            pg.MOUSEWHEEL,
+            pg.KEYDOWN,
+            pg.KEYUP,
         ):
             pass
             # print("keys!")
