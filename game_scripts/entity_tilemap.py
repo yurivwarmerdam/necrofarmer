@@ -7,14 +7,14 @@ from math import floor
 
 class BigTile(Tile):
     def __init__(
-            self,
-            pos,
-            image,
-            properties: dict,
-            *groups,
-            anchor="bottomleft",
-            offset=Vector2(0, 0),
-            tiles: list = [Vector2(0, 0)],
+        self,
+        pos,
+        image,
+        properties: dict,
+        *groups,
+        anchor="bottomleft",
+        offset=Vector2(0, 0),
+        tiles: list = [Vector2(0, 0)],
     ):
         """
         Currently only suports isometric tiles.
@@ -35,10 +35,11 @@ class BigTile(Tile):
     def bigtile_prop_to_vectors(self, property):
         return [Vector2(*p) for p in json.loads(property)]
 
+
 class EntityTilemap(Tilemap):
     def __init__(
-            self,
-            tmx_file,
+        self,
+        tmx_file,
     ):
         super().__init__(tmx_file)
         self.bigtiles: dict[Vector2, BigTile] = {}
