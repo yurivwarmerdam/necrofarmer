@@ -39,9 +39,9 @@ class BigTile(Tile):
 class EntityTilemap(Tilemap):
     def __init__(
         self,
-        tmx_file,
+        tmx_path,
     ):
-        super().__init__(tmx_file)
+        super().__init__(tmx_path)
         self.bigtiles: dict[Vector2, BigTile] = {}
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
@@ -75,3 +75,14 @@ class EntityTilemap(Tilemap):
 
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
         return all(self.get_tilev(layer, x) is None for x in idxs)
+
+
+_instance = None
+
+def get_server(tmx_path: str | None = None) -> EntityTilemap:
+    global _instance
+    if _instance is None and tmx_path is None:
+        raise Exception("Star server not yet initiated with a map.")
+    elif _instance is None:
+        _instance = EntityTilemap(tmx_path)
+    return _instance
