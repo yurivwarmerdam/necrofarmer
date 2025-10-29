@@ -68,27 +68,28 @@ class Camera:
         return dirty
 
 
-_instance = None
+#do I want/need this? Maybe for mouse pos math?
+# _instance = None
 
 
-def instantiate(
-    render_layers: dict[str, Group],
-    ui: Group,
-    display: Surface,
-    pos=Vector2(0, 0),
-    bg_color: Color = Color("blue1"),
-):
-    _instance = Camera(
-        render_layers,
-        ui,
-        display,
-        pos,
-        bg_color,
-    )
+# def instantiate(
+#     render_layers: dict[str, Group],
+#     ui: Group,
+#     display: Surface,
+#     pos=Vector2(0, 0),
+#     bg_color: Color = Color("blue1"),
+# ):
+#     _instance = Camera(
+#         render_layers,
+#         ui,
+#         display,
+#         pos,
+#         bg_color,
+#     )
 
 
-def get_server() -> Camera:
-    global _instance
-    if _instance is None:
-        raise Exception("Camera server not yet initiated.")
-    return _instance
+# def get_server() -> Camera:
+#     global _instance
+#     if _instance is None:
+#         raise Exception("Camera server not yet initiated.")
+#     return _instance

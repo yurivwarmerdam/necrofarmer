@@ -30,7 +30,6 @@ class BigTile(Tile):
         """
         super().__init__(pos, image, properties, *groups, anchor=anchor, offset=offset)
         self.tiles = tiles
-        print(self.pos, self.tiles)
 
     def bigtile_prop_to_vectors(self, property):
         return [Vector2(*p) for p in json.loads(property)]
@@ -79,6 +78,8 @@ class EntityTilemap(Tilemap):
 
 _instance = None
 
+
+# TODO: how to deal with re-instantiating tilemap on load, level change, map expansion, whatever.
 def get_server(tmx_path: str | None = None) -> EntityTilemap:
     global _instance
     if _instance is None and tmx_path is None:

@@ -3,7 +3,8 @@ from pygame import Vector2, Rect, Surface
 from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
-from game_scripts.entity_tilemap import EntityTilemap
+from game_scripts import entity_tilemap
+# import game_scripts.entity_tilemap import EntityTilemap
 from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
 from scripts.camera import Camera
@@ -37,7 +38,7 @@ image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
 
 # tilemap
 
-tilemap = EntityTilemap(
+tilemap = entity_tilemap.get_server(
     "tilemaps/another_island.tmx",
 )
 star.get_server(tilemap)

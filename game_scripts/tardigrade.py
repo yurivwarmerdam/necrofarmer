@@ -28,6 +28,5 @@ class Tardigrade(AnimatedSprite):
         self.move_goal = None
         self.path = []
 
-    def set_path(self,goal:Vector2):
-
+    def set_path(self, goal: Vector2):
         pass

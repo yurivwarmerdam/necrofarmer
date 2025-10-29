@@ -30,7 +30,6 @@ class BTGroup(Group):
 class CustomSprite(Sprite):
     @property
     def pos(self):
-        # print(self.rect.center)
         return Vector2(self.rect.center)
 
     @pos.setter
