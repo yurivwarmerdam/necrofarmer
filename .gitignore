@@ -3,4 +3,4 @@ btcpp_sample/
 venv/
 .vscode/
 .idea
-**/__pycache__/
+__pycache__/

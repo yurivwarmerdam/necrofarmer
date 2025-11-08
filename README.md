@@ -29,12 +29,24 @@ pip install -r requirements.txt
     ~  learn how to consume input in pygame ui.
     - collision
 
+    I am currently considering using Groups for a few different uses:
+    - collision
+    - rendering
+    - updates
+    I could have a Groups singleton, with a corresponding dataclass that holds groups along with some (bitmask/attributes) that identifies a group as having a specific function.
+
+    Group creation:
+    a bunch of grtoups are returned from the tilemap generator from pytmx. I want to keep using that, so it's good to conform.
+    Alternatively, I could just hold the groups in ready-made collections (based on some grouping parameters passed when the group is added ot teh singelton)
+
 
 ### Collision
 Where will I be using collision? (and how often will it be checked?)
 - on clicks (rarely)
 - perhaps overlaps when doing things at a location? Like when testing if located in a place where work needs to happen (could become more often with many units)
+    - I probably want to do this through the tilemap (=what tile am I on?)
 Are there going to be things in active layer that I would not want to be able to click?
+For now it's probably easiest to do this the "pygaming" way, since it's fairly rare. So pixel-perfect seems like a good solution.
 
 options as to how to handle collision
 - Out of the box: set a mask attribute, use some rect for this

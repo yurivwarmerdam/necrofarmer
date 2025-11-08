@@ -7,7 +7,7 @@ from pygame.sprite import Group
 # Needs access to:
 # - groups
 # v tilemap
-# - star (already has a server)
+# v star (already has a server)
 class Tardigrade(AnimatedSprite):
     def __init__(self, pos: Vector2, *groups):
         self.img_server = image_server.get_server()
