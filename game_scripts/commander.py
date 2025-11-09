@@ -3,7 +3,7 @@ from pygame.sprite import Sprite
 
 
 class SelectBox(Sprite):
-    
+    pass
 
 class Commander():
     """
