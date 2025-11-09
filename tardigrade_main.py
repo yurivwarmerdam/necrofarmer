@@ -4,6 +4,7 @@ from pygame.sprite import Group, LayeredUpdates
 import sys
 from scripts.tilemap import Tilemap
 from game_scripts import entity_tilemap
+
 # import game_scripts.entity_tilemap import EntityTilemap
 from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
@@ -122,6 +123,7 @@ path_planner = star.get_server(tilemap)
 # ---- core loop ----
 while True:
     _delta = clock.get_time()
+
     camera_move = Vector2(0, 0)
     # --- event loop ---
     for event in pg.event.get():
