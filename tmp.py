@@ -13,108 +13,43 @@ from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
 from typing import Tuple
-
-from scripts.ui_shim import UIPanel
-
-
-class Thing:
-    def do_stuff(self):
-        print("Goober")
+from pygame import Rect
+from pygame.sprite import Sprite
 
 
-class MyButton(pygame_gui.elements.UIButton):
-    def __init__(
-            self,
-            pos,
-            outline_sprites,
-            fill_sprite,
-            container: IContainerLikeInterface | None = None,
-    ):
-        super().__init__(
-            relative_rect=outline_sprites[(0, 0)].get_rect(),
-            text="",
-            object_id="hello_button",
-            container=container,
-        )
-        self.normal_images = [outline_sprites[(0, 0)], fill_sprite]
-        self.hovered_images = [outline_sprites[(0, 0)], fill_sprite]
-        self.disabled_images = [outline_sprites[(2, 0)], fill_sprite]
-        self.selected_images = [outline_sprites[(1, 0)], fill_sprite]
-        self.set_relative_position(pos)
-        self.rebuild()
+class SelectBox(Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.draging:bool = False
+        self.drag_start:Vector2|None = None
+        self.rect:Rect = Rect()
 
+    def update(self, _delta=0.0):
+        self.rect.bottomright =  pg.mouse.get_pos()
+        pass
 
-class ContextPanel(UIPanel):
-    def __init__(self, display: Surface, outline_sprites, my_object):
-        screen_size = display.get_size()
-        own_size = [450, 100]
-        own_rect = pg.Rect(80, screen_size[1] - own_size[1], *own_size)
-        super().__init__(
-            own_rect,
-            element_id="context_panel",
-            # anchors=anchors,
-        )
-        self.image = pg.Surface(self.relative_rect.size)
-        self.image.fill(pg.Color("darkgray"))
-
-        self.hello_button = MyButton(
-            (2, 2),
-            outline_sprites,
-            button_sprites[(0, 0)],
-            container=self.get_container(),
-        )
-        self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED,my_object.do_stuff)
-        self.other_button = MyButton(
-            (58, 2),
-            outline_sprites,
-            button_sprites[(1, 0)],
-            container=self.get_container(),
-        )
+    def start_drag(self):
+        self.draging=True
+        self.rect.topleft=pg.mouse.get_pos()
 
 
 pg.init()
-
-pg.display.set_caption("Quick Start")
 
 resolution = (636, 333)
 
 display: Surface = pg.display.set_mode(resolution, pg.SCALED)
 
 background = pg.Surface(resolution)
-background.fill(pg.Color("springgreen3"))
-
-manager = pygame_gui.UIManager(resolution)
+background.fill(pg.Color("lightblue"))
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
-
-
-thing=Thing()
-ContextPanel(display, outline_sprites,thing)
-
-a_rect = outline_sprites[0, 0].get_rect()
-b_rect = pg.Rect(0, 0, 54, 46)
-ui_panel = UIPanel(
-    b_rect,
-    manager=manager,
-    anchors={"left": "left", "bottom": "bottom"},
-)
-
-# button_layout_rect = pg.Rect(0, 0, 100, 20)
-button_layout_rect = pg.Rect(0, -30, 150, 20)
-
-another_button = pygame_gui.elements.UIButton(
-    button_layout_rect,
-    text="Hello",
-    manager=manager,
-    object_id="moar",
-    anchors={"centerx": "centerx", "bottom": "bottom"},
-)
-# another_button.set_relative_position((0, -10))
-# Oh crickey. It tunrs out that the relative position is only kind of relative...
-
 clock = pg.time.Clock()
+
+a_rect=pg.Rect(50,50,50,50)
+
+start=(50,50)
 
 while True:
     time_delta = clock.tick(60) / 1000.0
@@ -122,13 +57,8 @@ while True:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
-
-        # if event.type == pygame_gui.UI_BUTTON_PRESSED:
-        #     print(event.ui_object_id)
-        #     if event.ui_object_id == "hello_button":
-        #         print("image pressed")
-
-        processed = manager.process_events(event)
+        else:
+            pass
 
         if event.type in [
             pg.MOUSEBUTTONUP,
@@ -137,11 +67,21 @@ while True:
         ]:
             pass
             # print(processed, pg.event.event_name(event.type))
-
-    manager.update(time_delta)
-
     display.blit(background, (0, 0))
-    manager.draw_ui(display)
+
+    tl = start
+    br = pg.mouse.get_pos()
+
+
+    #ok, either: sort x coords, and y coords, and redistribute
+    #or: take the union of 2 rects of size 0 at pos start and mouse_pos
+    # How do I speeds test this?? Just fps counter, maybe.
+    a_rect.update(*tl,br[0]-tl[0],br[1]-tl[0])
+
+
+    # a_rect.bottomright=pg.mouse.get_pos()
+
+    pg.draw.rect(display,"darkgreen",a_rect,1)
 
     pg.display.update()
 
