@@ -20,22 +20,23 @@ from pygame.sprite import Sprite
 class SelectBox(Sprite):
     def __init__(self) -> None:
         super().__init__()
-        self.draging:bool = False
-        self.drag_start:Vector2|None = None
-        self.rect:Rect = Rect()
+        self.draging: bool = False
+        self.drag_start: Vector2 | None = None
+        self.rect: Rect = Rect()
 
     def update(self, _delta=0.0):
-        self.rect.bottomright =  pg.mouse.get_pos()
+        self.rect.bottomright = pg.mouse.get_pos()
         pass
 
     def start_drag(self):
-        self.draging=True
-        self.rect.topleft=pg.mouse.get_pos()
+        self.draging = True
+        self.rect.topleft = pg.mouse.get_pos()
 
 
 pg.init()
 
 resolution = (636, 333)
+manager = pygame_gui.UIManager(resolution)
 
 display: Surface = pg.display.set_mode(resolution, pg.SCALED)
 
@@ -47,18 +48,24 @@ button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
 clock = pg.time.Clock()
 
-a_rect=pg.Rect(50,50,50,50)
+a_rect = pg.Rect(0, 0, 0, 0)
 
-start=(50,50)
+start = Rect(50, 50, 0, 0)
+
+fps_list = list(range(60))
+fps_counter = pygame_gui.elements.UITextBox("text", Rect(5, 5, 100, 30))
+
 
 while True:
-    time_delta = clock.tick(60) / 1000.0
+    time_delta = clock.tick() / 1000.0
     for event in pg.event.get():
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
         else:
             pass
+
+        processed = manager.process_events(event)
 
         if event.type in [
             pg.MOUSEBUTTONUP,
@@ -67,22 +74,31 @@ while True:
         ]:
             pass
             # print(processed, pg.event.event_name(event.type))
-    display.blit(background, (0, 0))
 
-    tl = start
-    br = pg.mouse.get_pos()
+    manager.update(time_delta)
 
+    # mouse_pos_r = pg.Rect(pg.mouse.get_pos(), (0, 0))
+    # a_rect = start.union(mouse_pos_r)
 
-    #ok, either: sort x coords, and y coords, and redistribute
-    #or: take the union of 2 rects of size 0 at pos start and mouse_pos
+    fps_list.pop(0)
+    fps_list.append(time_delta)
+    asd = [1 / i for i in fps_list]
+    fps_counter.set_text(str(round(sum(asd) / len(asd))))
+
+    # ok, either: sort x coords, and y coords, and redistribute
+    # or: take the union of 2 rects of size 0 at pos start and mouse_pos
     # How do I speeds test this?? Just fps counter, maybe.
-    a_rect.update(*tl,br[0]-tl[0],br[1]-tl[0])
-
+    mo = pg.mouse.get_pos()
+    tl = sorted((start[0], mo[0]))
+    br = sorted((start[1], mo[1]))
+    a_rect.update(*tl, br[0] - tl[0], br[1] - tl[0])
 
     # a_rect.bottomright=pg.mouse.get_pos()
 
-    pg.draw.rect(display,"darkgreen",a_rect,1)
+    display.blit(background, (0, 0))
+    pg.draw.rect(display, "darkgreen", a_rect, 1)
 
+    manager.draw_ui(display)
     pg.display.update()
 
 # Ok, so mouse events get consumed. That's good.
