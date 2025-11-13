@@ -21,7 +21,7 @@ class BigTile(Tile):
         Should also be compatible with orthogonal tiles with comparatively little effort.
         Args:
             pos: position of tile
-            image: image to be sliced into subtiles
+            image: image
             properties: tile properties
             groups: groups this sprite will belong to
             anchor: Sprite anchor

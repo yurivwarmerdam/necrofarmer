@@ -67,6 +67,9 @@ class Camera:
 
         return dirty
 
+    def draw_to_screen(self):
+        
+        pass
 
 _instance = None
 
@@ -88,7 +91,6 @@ def get_camera() -> Camera:
     if _instance is None:
         raise Exception("Camera server not yet initiated.")
     return _instance
-
 
 # do I want/need this? Maybe for mouse pos math?
 # _instance = None

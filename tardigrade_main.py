@@ -2,13 +2,14 @@ import pygame as pg
 from pygame import Vector2, Rect, Surface
 from pygame.sprite import Group, LayeredUpdates
 import sys
+from game_scripts.commander import Commander
 from scripts.tilemap import Tilemap
 from game_scripts import entity_tilemap
 
 # import game_scripts.entity_tilemap import EntityTilemap
 from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
-from scripts.camera import Camera, get_camera,initialize_camera
+from scripts.camera import Camera, get_camera, initialize_camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
 from game_scripts import star
@@ -54,6 +55,8 @@ camera = initialize_camera(
     Vector2(-125, 0),
     # Vector2(0, 0),
 )
+
+commander = Commander()
 
 img_server = image_server.get_server()
 
@@ -139,9 +142,10 @@ while True:
         ):
             pass
             # print("keys!")
-
+        processed = False
         processed = manager.process_events(event)
-
+        if not processed:
+            processed = commander.process_events(event)
         if not processed and event.type == pg.MOUSEBUTTONDOWN:
             start = tuple(tilemap.world_to_map(sprite.pos))
             move_goal = camera.get_global_mouse_pos()
@@ -165,7 +169,7 @@ while True:
 
     # --- render loop ---
     camera.draw_all()
-
+    commander.select_box.draw(display)
     manager.update(_delta / 1000)
     manager.draw_ui(display)
 
