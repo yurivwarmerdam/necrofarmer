@@ -75,37 +75,35 @@ while True:
             pass
             # print(processed, pg.event.event_name(event.type))
 
-    manager.update(time_delta)
+    # ok, either: sort x coords, and y coords, and redistribute
+    # or: take the union of 2 rects of size 0 at pos start and mouse_pos
 
-    # mouse_pos_r = pg.Rect(pg.mouse.get_pos(), (0, 0))
-    # a_rect = start.union(mouse_pos_r)
+    # not doing anything: ~47 fps
+
+    # solid 45 fps on battery
+    mouse_pos_r = pg.Rect(pg.mouse.get_pos(), (0, 0))
+    a_rect = start.union(mouse_pos_r)
+
+    # 45~46 fps on battery
+    # mo = pg.mouse.get_pos()
+    # tl = Vector2(min((start[0], mo[0])),min((start[1], mo[1])))
+    # br = Vector2(max((start[0], mo[0])),max((start[1], mo[1])))
+    # a_rect.update(tl,br-tl)
+
+    display.blit(background, (0, 0))
+    pg.draw.rect(display, "darkgreen", a_rect, 1)
+
+    # --- fps stuff ---
+
+    manager.update(time_delta)
 
     fps_list.pop(0)
     fps_list.append(time_delta)
     asd = [1 / i for i in fps_list]
     fps_counter.set_text(str(round(sum(asd) / len(asd))))
 
-    # ok, either: sort x coords, and y coords, and redistribute
-    # or: take the union of 2 rects of size 0 at pos start and mouse_pos
-    # How do I speeds test this?? Just fps counter, maybe.
-    mo = pg.mouse.get_pos()
-    tl = sorted((start[0], mo[0]))
-    br = sorted((start[1], mo[1]))
-    a_rect.update(*tl, br[0] - tl[0], br[1] - tl[0])
-
-    # a_rect.bottomright=pg.mouse.get_pos()
-
-    display.blit(background, (0, 0))
-    pg.draw.rect(display, "darkgreen", a_rect, 1)
-
     manager.draw_ui(display)
-    pg.display.update()
 
-# Ok, so mouse events get consumed. That's good.
-# Now to figure out if that also happens when dealingw ith other ui elems.
-# Start ehre: https://github.com/MyreMylar/pygame_gui_examples
-# FOUND IT: https://github.com/MyreMylar/tower_defence
-# Thought: Have my own UIPanel element that serves to:
-#   - draw a picture
-#   - consume clicks if the mouse pos overlaps
-# Another thought: Maybe only draw a subset of the world the should actually be visile?
+    # --- /fps stuff ---
+
+    pg.display.update()

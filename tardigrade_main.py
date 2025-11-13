@@ -8,7 +8,7 @@ from game_scripts import entity_tilemap
 # import game_scripts.entity_tilemap import EntityTilemap
 from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
-from scripts.camera import Camera
+from scripts.camera import Camera, get_camera,initialize_camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
 from game_scripts import star
@@ -47,7 +47,7 @@ star.get_server(tilemap)
 render_layers = tilemap.layers
 units = Group()
 
-camera = Camera(
+camera = initialize_camera(
     render_layers,
     Group(),
     display,

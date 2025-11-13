@@ -68,7 +68,29 @@ class Camera:
         return dirty
 
 
-#do I want/need this? Maybe for mouse pos math?
+_instance = None
+
+
+def initialize_camera(
+    render_layers: dict[str, Group],
+    ui: Group,
+    display: Surface,
+    pos=Vector2(0, 0),
+    bg_color: Color = Color("blue1"),
+) -> Camera:
+    global _instance
+    _instance = Camera(render_layers, ui, display, pos, bg_color)
+    return _instance
+
+
+def get_camera() -> Camera:
+    global _instance
+    if _instance is None:
+        raise Exception("Camera server not yet initiated.")
+    return _instance
+
+
+# do I want/need this? Maybe for mouse pos math?
 # _instance = None
 
 
