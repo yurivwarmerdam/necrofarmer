@@ -15,13 +15,14 @@ import sys
 from typing import Tuple
 from pygame import Rect
 from pygame.sprite import Sprite
-from scripts.custom_sprites import NodeSprite
 
-class SelectBox(NodeSprite):
+
+class SelectBox(Sprite):
     def __init__(self) -> None:
-        super().__init__(Surface((0,0)))
-        self.image.fill(pg.Color(34,135,34,128))
+        super().__init__()
         self.draging: bool = False
+        self.drag_start: Vector2 | None = None
+        self.rect: Rect = Rect()
 
     def update(self, _delta=0.0):
         self.rect.bottomright = pg.mouse.get_pos()
