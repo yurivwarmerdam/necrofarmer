@@ -34,8 +34,11 @@ class NodeSprite(Sprite):
         return self._pos
 
     @pos.setter
-    def pos(self, value: Vector2):
-        self._pos = value
+    def pos(self, value: Vector2|tuple[int,int]):
+        if value is Vector2:
+            self._pos = value
+        else:
+            self._pos = Vector2(value)
         setattr(self.rect, self.anchor, self._pos - self.offset)
         for g in self.groups():
             if isinstance(g, LayeredUpdates):

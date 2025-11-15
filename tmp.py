@@ -14,26 +14,46 @@ from pygame.math import Vector2
 import sys
 from typing import Tuple
 from pygame import Rect
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, Group
 from scripts.custom_sprites import NodeSprite
+# from scripts import camera
+
 
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
-        super().__init__(Surface((0,0)))
-        self.image.fill(pg.Color(34,135,34,128))
-        self.draging: bool = False
-
-    def update(self, _delta=0.0):
-        self.rect.bottomright = pg.mouse.get_pos()
-        pass
+        super().__init__(Surface((0, 0)))
+        self.color = pg.Color(34, 135, 34, 128)
+        self.image.fill(self.color)
+        self.dragging: bool = False
+        # self.camera = camera.get_camera()
 
     def start_drag(self):
-        self.draging = True
-        self.rect.topleft = pg.mouse.get_pos()
+        print(pg.mouse.get_pos())
+        self.pos = pg.mouse.get_pos()
+        self.dragging = True
+
+    def stop_drag(self):
+        self.image = pg.Surface((0, 0))
+        self.dragging = False
+
+    def update(self, _delta=0.0):
+        if self.dragging:
+            point = (
+                abs(self.pos[0] - pg.mouse.get_pos()[0]),
+                abs(self.pos[1] - pg.mouse.get_pos()[1]),
+            )
+            print(f"dragging: {[point]}")
+
+            self.image = Surface(point)
+            self.rect = self.image.get_rect()
+            self.image.fill(self.color)
+        else:
+            self.rect = Rect(50, 50, 0, 0)
 
 
 pg.init()
 
+my_group = Group()
 resolution = (636, 333)
 manager = pygame_gui.UIManager(resolution)
 
@@ -47,13 +67,17 @@ button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
 clock = pg.time.Clock()
 
-a_rect = pg.Rect(0, 0, 0, 0)
+# a_rect = pg.Rect(0, 0, 0, 0)
 
-start = Rect(50, 50, 0, 0)
+# start = Rect(50, 50, 0, 0)
 
 fps_list = list(range(60))
 fps_counter = pygame_gui.elements.UITextBox("text", Rect(5, 5, 100, 30))
 
+box = SelectBox()
+
+box_group = Group()
+box_group.add(box)
 
 while True:
     time_delta = clock.tick() / 1000.0
@@ -66,32 +90,15 @@ while True:
 
         processed = manager.process_events(event)
 
-        if event.type in [
-            pg.MOUSEBUTTONUP,
-            pygame_gui.UI_BUTTON_PRESSED,
-            pg.MOUSEBUTTONDOWN,
-        ]:
-            pass
-            # print(processed, pg.event.event_name(event.type))
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            box.start_drag()
+        elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+            box.stop_drag()
 
-    # ok, either: sort x coords, and y coords, and redistribute
-    # or: take the union of 2 rects of size 0 at pos start and mouse_pos
-
-    # not doing anything: ~47 fps
-
-    # solid 45 fps on battery
-    mouse_pos_r = pg.Rect(pg.mouse.get_pos(), (0, 0))
-    a_rect = start.union(mouse_pos_r)
-
-    # 45~46 fps on battery
-    # mo = pg.mouse.get_pos()
-    # tl = Vector2(min((start[0], mo[0])),min((start[1], mo[1])))
-    # br = Vector2(max((start[0], mo[0])),max((start[1], mo[1])))
-    # a_rect.update(tl,br-tl)
+    box.update()
 
     display.blit(background, (0, 0))
-    pg.draw.rect(display, "darkgreen", a_rect, 1)
-
+    box_group.draw(display)
     # --- fps stuff ---
 
     manager.update(time_delta)
