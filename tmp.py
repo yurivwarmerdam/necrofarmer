@@ -22,10 +22,11 @@ from scripts.custom_sprites import NodeSprite
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
         super().__init__(Surface((0, 0)))
-        self.color = pg.Color(34, 135, 34, 128)
+        self.color = pg.Color(34, 135, 34)
         self.image.fill(self.color)
+        self.image.set_alpha(128)
         self.dragging: bool = False
-        self.start=Vector2()
+        self.start = Vector2()
         # self.camera = camera.get_camera()
 
     def start_drag(self):
@@ -46,9 +47,13 @@ class SelectBox(NodeSprite):
             )
             # print(f"dragging: {size}")
             self.image = Surface(size)
+            self.image.set_alpha(128)
             self.rect = self.image.get_rect()
             self.pos = tl
             self.image.fill(self.color)
+            pg.draw.rect(
+                self.image, "darkgreen", self.rect.move(-self.rect.x, -self.rect.y), 1
+            )
         else:
             self.rect = Rect(50, 50, 0, 0)
 
