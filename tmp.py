@@ -25,11 +25,11 @@ class SelectBox(NodeSprite):
         self.color = pg.Color(34, 135, 34, 128)
         self.image.fill(self.color)
         self.dragging: bool = False
+        self.start=Vector2()
         # self.camera = camera.get_camera()
 
     def start_drag(self):
-        print(pg.mouse.get_pos())
-        self.pos = pg.mouse.get_pos()
+        self.start = pg.mouse.get_pos()
         self.dragging = True
 
     def stop_drag(self):
@@ -38,14 +38,16 @@ class SelectBox(NodeSprite):
 
     def update(self, _delta=0.0):
         if self.dragging:
-            point = (
-                abs(self.pos[0] - pg.mouse.get_pos()[0]),
-                abs(self.pos[1] - pg.mouse.get_pos()[1]),
+            mouse = pg.mouse.get_pos()
+            tl = (min(self.start[0], mouse[0]), min(self.start[1], mouse[1]))
+            size = (
+                abs(self.start[0] - pg.mouse.get_pos()[0]),
+                abs(self.start[1] - pg.mouse.get_pos()[1]),
             )
-            print(f"dragging: {[point]}")
-
-            self.image = Surface(point)
+            # print(f"dragging: {size}")
+            self.image = Surface(size)
             self.rect = self.image.get_rect()
+            self.pos = tl
             self.image.fill(self.color)
         else:
             self.rect = Rect(50, 50, 0, 0)
