@@ -45,7 +45,6 @@ class SelectBox(NodeSprite):
                 abs(self.start[0] - pg.mouse.get_pos()[0]),
                 abs(self.start[1] - pg.mouse.get_pos()[1]),
             )
-            # print(f"dragging: {size}")
             self.image = Surface(size)
             self.image.set_alpha(128)
             self.rect = self.image.get_rect()
@@ -55,7 +54,7 @@ class SelectBox(NodeSprite):
                 self.image, "darkgreen", self.rect.move(-self.rect.x, -self.rect.y), 1
             )
         else:
-            self.rect = Rect(50, 50, 0, 0)
+            self.rect = Rect(0, 0, 0, 0)
 
 
 pg.init()
@@ -82,7 +81,6 @@ fps_list = list(range(60))
 fps_counter = pygame_gui.elements.UITextBox("text", Rect(5, 5, 100, 30))
 
 box = SelectBox()
-
 box_group = Group()
 box_group.add(box)
 
