@@ -72,6 +72,9 @@ class SelectBox(NodeSprite):
         else:
             self.rect = Rect(0, 0, 0, 0)
 
+    def get_overlaps(self):
+        pass
+
 
 class Commander:
     """
@@ -89,7 +92,17 @@ class Commander:
     def process_events(self, event: pg.event.Event) -> bool:
         is_processed = False
         if self.selected:
-            is_processed = self.selected.process_events(event)
+            if len(self.selected) == 1:
+                is_processed = self.selected[0].process_events(event)
+            else:
+                # group select. Dunno.
+                pass
+        if not is_processed and hasattr(event, "button"):
+            if event.button == 1:
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    self.box.start_drag()
+                elif event.type == pg.MOUSEBUTTONUP:
+                    self.box.stop_drag()
         if not is_processed:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self.box.start_drag()

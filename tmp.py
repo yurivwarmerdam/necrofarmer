@@ -55,6 +55,8 @@ class SelectBox(NodeSprite):
             )
         else:
             self.rect = Rect(0, 0, 0, 0)
+    def get_overlaps(self):
+        pass
 
 
 pg.init()

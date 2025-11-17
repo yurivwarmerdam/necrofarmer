@@ -45,8 +45,9 @@ tilemap = entity_tilemap.get_server(
 )
 star.get_server(tilemap)
 
-render_layers = tilemap.layers
 units = Group()
+render_layers = tilemap.layers.copy()
+render_layers["draw"] = Group()
 
 camera = initialize_camera(
     render_layers,
@@ -57,6 +58,7 @@ camera = initialize_camera(
 )
 
 commander = Commander()
+commander.box.add(render_layers["draw"])
 
 img_server = image_server.get_server()
 
@@ -133,15 +135,6 @@ while True:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
-        if event.type in (
-            pg.MOUSEBUTTONDOWN,
-            pg.MOUSEBUTTONUP,
-            pg.MOUSEWHEEL,
-            pg.KEYDOWN,
-            pg.KEYUP,
-        ):
-            pass
-            # print("keys!")
         processed = False
         processed = manager.process_events(event)
         if not processed:
@@ -165,11 +158,11 @@ while True:
         sprite.flip_h = bool(randint(0, 1))
 
     # --- update loop ---
+    camera.render_layers["draw"].update()
     units.update(_delta)
 
     # --- render loop ---
     camera.draw_all()
-    commander.select_box.draw(display)
     manager.update(_delta / 1000)
     manager.draw_ui(display)
 
