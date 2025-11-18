@@ -37,7 +37,7 @@ pip install -r requirements.txt
 
     Group creation:
     a bunch of grtoups are returned from the tilemap generator from pytmx. I want to keep using that, so it's good to conform.
-    Alternatively, I could just hold the groups in ready-made collections (based on some grouping parameters passed when the group is added ot teh singelton)
+    Alternatively, I could just hold the groups in ready-made collections (based on some grouping parameters passed when the group is added to the singelton)
 
 
 ### Collision

@@ -5,17 +5,29 @@ import sys
 from game_scripts.commander import Commander
 from scripts.tilemap import Tilemap
 from game_scripts import entity_tilemap
-
-# import game_scripts.entity_tilemap import EntityTilemap
 from game_scripts.tardigrade import Tardigrade
 from scripts.utils import sheet_to_sprites, load_image
-from scripts.camera import Camera, get_camera, initialize_camera
+from scripts.camera import Camera, initialize_camera
 from random import randint
 from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
 from game_scripts import star
 from collections import deque
 import pygame_gui
 from scripts import image_server
+from game_scripts import group_server
+from game_scripts.group_server import GroupServer
+
+
+# Server architecture:
+# spin up and have global access to the following:
+# - image_server
+# - camera
+# - star
+# - entity_tilemap
+# - groups
+# in addition, there's also singletons associated with Behavior trees:
+# - async_runner
+# - global_blackboard
 
 
 pg.init()
@@ -38,13 +50,16 @@ manager = pygame_gui.UIManager(resolution)
 ui_image = load_image("art/tst_ui.png")
 image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
 
-# tilemap
+# -- group initialization --
+
+groups = group_server.get_server()
 
 tilemap = entity_tilemap.get_server(
     "tilemaps/another_island.tmx",
 )
 star.get_server(tilemap)
 
+groups.add_render(tilemap.layers)
 units = Group()
 render_layers = tilemap.layers.copy()
 render_layers["draw"] = Group()

@@ -6,35 +6,6 @@ from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
 
 
-# @dataclass
-# class SelectBox:
-#     start: Vector2 | None = None
-#     rect = Rect(0, 0, 0, 0)
-
-#     def set_start(self):
-#         self.camera = get_camera()
-#         self.start = self.camera.get_global_mouse_pos()
-
-#     @property
-#     def dragging(self) -> bool:
-#         if not self.start:
-#             return False
-#         travel: Vector2 = self.start - self.camera.get_global_mouse_pos()
-#         return travel.length() > 0
-
-#     def draw(self, surface):
-#         if self.dragging and self.start:
-#             mo = self.camera.get_global_mouse_pos()
-#             tl = Vector2(min((self.start.x, mo[0])), min((self.start.y, mo[1]))) - self.camera.pos
-#             br = Vector2(max((self.start.x, mo[0])), max((self.start.y, mo[1]))) - self.camera.pos
-#             self.rect.update(tl, br)
-#             # Could potentially be replaced by surface.fill() in the future.
-#             pg.draw.rect(surface, "darkgreen", self.rect, 1)
-
-#     def get_intersects(self):
-#         pass
-
-
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
         super().__init__(Surface((0, 0)))
@@ -43,7 +14,7 @@ class SelectBox(NodeSprite):
         self.image.set_alpha(128)
         self.dragging: bool = False
         self.start = Vector2()
-        self.camera = get_camera()
+        self.camera: Camera = get_camera()
 
     def start_drag(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -86,7 +57,6 @@ class Commander:
         self.selected = []
         self.dragging = False
         self.select_box = SelectBox()
-        self.camera = get_camera()
         self.box = SelectBox()
 
     def process_events(self, event: pg.event.Event) -> bool:
@@ -107,18 +77,11 @@ class Commander:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self.box.start_drag()
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                self.box.stop_drag()
                 # do box select
+                self.box.stop_drag()
             else:
-                self.camera.get_global_mouse_pos()
-                # use that to check for overlaps
+                # check for overlaps
                 # unselect/select based on rules
+                pass
 
-        # right click:
-        # if selected:
-        #
-        # left click:
-        # find everything in the selectable Group
-        #   if any: select()
-        #
         return is_processed

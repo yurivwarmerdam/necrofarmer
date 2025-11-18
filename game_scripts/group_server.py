@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from pygame.sprite import Group, Sprite
+from pygame.sprite import AbstractGroup, Group, Sprite
 
 
 @dataclass
@@ -8,6 +8,11 @@ class GroupServer:
     COLLISION = 2
     UPDATE = 4
 
+    # --------------
+    # Render groups
+    # --------------
+    #
+    # only dict group, since rendering happens in layers.
     render_groups: dict[str, Group]
 
     # --------------
@@ -15,21 +20,17 @@ class GroupServer:
     # --------------
     #
     # Could be edited to be collision groups by making a dict,
-    # and adding collision layers if needed
+    # and adding collision layers if needed.
     collision: Group = Group()
     update: Group = Group()
 
-    def init_render_groups(self, groups: dict[str, Group]):
-        self.render_groups = groups
-        pass
+    def add_render(self, groups: dict[str, Group]|dict[str, AbstractGroup]):
+        self.render_groups = self.render_groups | groups.copy()
 
-    def add_to_render_group(self, entity: Sprite, layer_name: str):
-        self.render_groups[layer_name].add(Sprite)
-
-    def add_to_collision(self, entity: Sprite):
+    def add_collision(self, entity: Sprite):
         self.collision.add(entity)
 
-    def add_to_update(self, entity: Sprite):
+    def add_update(self, entity: Sprite):
         self.update.add(entity)
 
 
