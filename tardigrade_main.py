@@ -48,6 +48,8 @@ display = pg.display.set_mode(
 )  # , pg.RESIZABLE)
 clock = pg.time.Clock()
 
+clock = pg.time.Clock()
+
 # -- UI experiments --
 manager = pygame_gui.UIManager(resolution)
 ui_image = load_image("art/tst_ui.png")
@@ -63,12 +65,13 @@ tilemap = entity_tilemap.get_server(
 star.get_server(tilemap)
 
 groups.add_render(tilemap.layers)
-units = Group()
-render_layers = tilemap.layers.copy()
-render_layers["draw"] = Group()
+groups.add_render({"draw": Group()})
+# units = Group()
+# render_layers = tilemap.layers.copy()
+# render_layers["draw"] = Group()
 
 camera = initialize_camera(
-    render_layers,
+    groups.render_groups,
     Group(),
     display,
     Vector2(-125, 0),
@@ -76,7 +79,7 @@ camera = initialize_camera(
 )
 
 commander = Commander()
-commander.box.add(render_layers["draw"])
+commander.box.add(groups.render_groups["draw"])
 
 img_server = image_server.get_server()
 
@@ -88,19 +91,19 @@ sprite = AnimatedSprite(
         "3": img_server.animations["tardigrade_3"],
     },
     Vector2(100, 100),
-    units,
-    render_layers["active"],
+    # groups.colliders,
+    groups.update,
+    groups.render_groups["active"],
     anchor="center",
     offset=Vector2(0, 10),
 )
 
 trd = Tardigrade(
     Vector2(150, 150),
-    units,
-    render_layers["active"],
+    groups.update,
+    groups.colliders,
+    groups.render_groups["active"],
 )
-
-clock = pg.time.Clock()
 
 
 def move_towards(source: Vector2, target: Vector2, by: float) -> Vector2:
@@ -177,7 +180,7 @@ while True:
 
     # --- update loop ---
     camera.render_layers["draw"].update()
-    units.update(_delta)
+    groups.update.update(_delta)
 
     # --- render loop ---
     camera.draw_all()

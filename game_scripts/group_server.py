@@ -28,10 +28,10 @@ class GroupServer:
         print(type(self.render_groups))
         self.render_groups = self.render_groups | groups.copy()
 
-    def add_collision(self, entity: Sprite):
+    def add_collider_sprite(self, entity: Sprite):
         self.colliders.add(entity)
 
-    def add_update(self, entity: Sprite):
+    def add_update_sprite(self, entity: Sprite):
         self.update.add(entity)
 
 

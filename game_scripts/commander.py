@@ -53,7 +53,6 @@ class SelectBox(NodeSprite):
             dokill=False,
             collided=pg.sprite.collide_mask,
         )
-        print(self.group_server.colliders)
         print(collides)
         pass
 
@@ -83,14 +82,8 @@ class Commander:
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.box.start_drag()
                 elif event.type == pg.MOUSEBUTTONUP:
+                    self.box.get_overlaps()
                     self.box.stop_drag()
-        if not is_processed:
-            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-                self.box.start_drag()
-            elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                # do box select
-                self.box.get_overlaps()
-                self.box.stop_drag()
             else:
                 # check for overlaps
                 # unselect/select based on rules
