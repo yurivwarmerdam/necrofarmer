@@ -44,6 +44,7 @@ resolution = (636, 333)
 
 display = pg.display.set_mode(
     resolution,
+    pg.RESIZABLE
     # pg.SCALED,
 )  # , pg.RESIZABLE)
 clock = pg.time.Clock()
@@ -66,9 +67,7 @@ star.get_server(tilemap)
 
 groups.add_render(tilemap.layers)
 groups.add_render({"draw": Group()})
-# units = Group()
-# render_layers = tilemap.layers.copy()
-# render_layers["draw"] = Group()
+
 
 camera = initialize_camera(
     groups.render_groups,
@@ -91,7 +90,6 @@ sprite = AnimatedSprite(
         "3": img_server.animations["tardigrade_3"],
     },
     Vector2(100, 100),
-    # groups.colliders,
     groups.update,
     groups.render_groups["active"],
     anchor="center",

@@ -25,7 +25,6 @@ class GroupServer:
     update: Group = Group()
 
     def add_render(self, groups: dict[str, Group] | dict[str, AbstractGroup]):
-        print(type(self.render_groups))
         self.render_groups = self.render_groups | groups.copy()
 
     def add_collider_sprite(self, entity: Sprite):
