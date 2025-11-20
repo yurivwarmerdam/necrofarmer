@@ -4,6 +4,8 @@ from pygame.sprite import Sprite
 from dataclasses import dataclass
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
+from game_scripts import group_server
+from game_scripts.group_server import GroupServer
 
 
 class SelectBox(NodeSprite):
@@ -15,6 +17,7 @@ class SelectBox(NodeSprite):
         self.dragging: bool = False
         self.start = Vector2()
         self.camera: Camera = get_camera()
+        self.group_server = group_server.get_server()
 
     def start_drag(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -44,6 +47,14 @@ class SelectBox(NodeSprite):
             self.rect = Rect(0, 0, 0, 0)
 
     def get_overlaps(self):
+        collides=pg.sprite.spritecollide(
+            self,
+            self.group_server.colliders,
+            dokill=False,
+            collided=pg.sprite.collide_mask,
+        )
+        print(self.group_server.colliders)
+        print(collides)
         pass
 
 
@@ -78,6 +89,7 @@ class Commander:
                 self.box.start_drag()
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 # do box select
+                self.box.get_overlaps()
                 self.box.stop_drag()
             else:
                 # check for overlaps

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pygame.sprite import AbstractGroup, Group, Sprite
 
 
@@ -13,7 +13,7 @@ class GroupServer:
     # --------------
     #
     # only dict group, since rendering happens in layers.
-    render_groups: dict[str, Group]
+    render_groups: dict[str, Group] = field(default_factory=dict)
 
     # --------------
     # function-specific groups
@@ -21,14 +21,15 @@ class GroupServer:
     #
     # Could be edited to be collision groups by making a dict,
     # and adding collision layers if needed.
-    collision: Group = Group()
+    colliders: Group = Group()
     update: Group = Group()
 
-    def add_render(self, groups: dict[str, Group]|dict[str, AbstractGroup]):
+    def add_render(self, groups: dict[str, Group] | dict[str, AbstractGroup]):
+        print(type(self.render_groups))
         self.render_groups = self.render_groups | groups.copy()
 
     def add_collision(self, entity: Sprite):
-        self.collision.add(entity)
+        self.colliders.add(entity)
 
     def add_update(self, entity: Sprite):
         self.update.add(entity)
@@ -40,5 +41,5 @@ _instance = None
 def get_server() -> GroupServer:
     global _instance
     if _instance is None:
-        _instance = GroupServer(map)  # type: ignore
+        _instance = GroupServer()  # type: ignore
     return _instance

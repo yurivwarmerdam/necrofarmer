@@ -42,7 +42,10 @@ pg.init()
 
 resolution = (636, 333)
 
-display = pg.display.set_mode(resolution, pg.SCALED)  # , pg.RESIZABLE)
+display = pg.display.set_mode(
+    resolution,
+    # pg.SCALED,
+)  # , pg.RESIZABLE)
 clock = pg.time.Clock()
 
 # -- UI experiments --
