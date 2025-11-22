@@ -15,16 +15,16 @@ class SelectBox(NodeSprite):
         self.image.fill(self.color)
         self.image.set_alpha(128)
         self.dragging: bool = False
-        self.start = Vector2()
+        self.start: Vector2 | None = None
         self.camera: Camera = get_camera()
         self.group_server = group_server.get_server()
 
     def start_drag(self):
         self.start = self.camera.get_global_mouse_pos()
-        self.dragging = True
 
     def stop_drag(self):
         self.image = pg.Surface((0, 0))
+        self.start = None
         self.dragging = False
 
     def update(self, _delta=0.0):
@@ -45,6 +45,17 @@ class SelectBox(NodeSprite):
             )
         else:
             self.rect = Rect(0, 0, 0, 0)
+
+    def handle_drag(self, event: pg.event.Event):
+        """
+        Please only feed me mouse motion. I am a picky eater.
+        """
+        if self.start:
+            travel = self.start - self.camera.get_global_mouse_pos()
+            if travel.length() > 10:
+                self.dragging = True
+            else:
+                self.dragging = False
 
     def get_collides(self):
         collides = pg.sprite.spritecollide(
@@ -68,26 +79,44 @@ class Commander:
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
+        # self.camera = get_camera()
 
     def process_events(self, event: pg.event.Event) -> bool:
         is_processed = False
-        if self.selected:
-            if hasattr(event, "button"):
+        # button is kind of a button mask when event is mousemotion
+        if event.type == pg.MOUSEMOTION and event.buttons[0] == 1:
+            self.box.handle_drag(event)
+            is_processed = True
+        if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
+            if self.selected:
                 for sprite in self.selected:
                     is_processed = sprite.process_events(event)
-        if not is_processed and hasattr(event, "button"):
-            if event.button == 1:
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    self.box.start_drag()
-                elif event.type == pg.MOUSEBUTTONUP:
-                    collides = self.box.get_collides()
-                    for collide in collides:
-                        if isinstance(collide, Sprite):
-                            collide.add(self.selected)
-                    self.box.stop_drag()
+            if not is_processed:
+                if event.button == 1:
+                    if event.type == pg.MOUSEBUTTONDOWN:
+                        self.box.start_drag()
+                        is_processed = True
+                    elif self.box.dragging:
+                        self.do_box_select()
             else:
                 # check for overlaps
                 # unselect/select based on rules
                 pass
 
         return is_processed
+
+    def do_box_select(self):
+        for collide in self.box.get_collides():
+            if isinstance(collide, Sprite):
+                collide.add(self.selected)
+        self.box.stop_drag()
+        pass
+
+    def handle_click(self):
+        """Handle it my own damn self."""
+        overlaps=collides = pg.sprite.spritecollide(
+            self,
+            self.group_server.colliders,
+            dokill=False,
+            collided=pg.sprite.collide_mask,
+        )

@@ -1,3 +1,4 @@
+import pygame as pg
 from scripts.custom_sprites import AnimatedSprite
 from scripts import image_server
 from pygame import Vector2
@@ -28,6 +29,8 @@ class Tardigrade(AnimatedSprite):
         self.move_goal = None
         self.path = []
 
+    def process_events(self, event: pg.event.Event):
+        print("processing")
+
     def set_path(self, goal: Vector2):
         pass
-
