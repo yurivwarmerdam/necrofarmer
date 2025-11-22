@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame import Vector2, Rect, Surface
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, Group
 from dataclasses import dataclass
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
@@ -46,15 +46,15 @@ class SelectBox(NodeSprite):
         else:
             self.rect = Rect(0, 0, 0, 0)
 
-    def get_overlaps(self):
-        collides=pg.sprite.spritecollide(
+    def get_collides(self):
+        collides = pg.sprite.spritecollide(
             self,
             self.group_server.colliders,
             dokill=False,
             collided=pg.sprite.collide_mask,
         )
         print(collides)
-        pass
+        return collides
 
 
 class Commander:
@@ -64,7 +64,7 @@ class Commander:
     """
 
     def __init__(self):
-        self.selected = []
+        self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
@@ -72,17 +72,18 @@ class Commander:
     def process_events(self, event: pg.event.Event) -> bool:
         is_processed = False
         if self.selected:
-            if len(self.selected) == 1:
-                is_processed = self.selected[0].process_events(event)
-            else:
-                # group select. Dunno.
-                pass
+            if hasattr(event, "button"):
+                for sprite in self.selected:
+                    is_processed = sprite.process_events(event)
         if not is_processed and hasattr(event, "button"):
             if event.button == 1:
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.box.start_drag()
                 elif event.type == pg.MOUSEBUTTONUP:
-                    self.box.get_overlaps()
+                    collides = self.box.get_collides()
+                    for collide in collides:
+                        if isinstance(collide, Sprite):
+                            collide.add(self.selected)
                     self.box.stop_drag()
             else:
                 # check for overlaps

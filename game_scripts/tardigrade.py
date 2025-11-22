@@ -30,3 +30,4 @@ class Tardigrade(AnimatedSprite):
 
     def set_path(self, goal: Vector2):
         pass
+

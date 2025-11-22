@@ -26,9 +26,18 @@ pip install -r requirements.txt
     - game mainclass
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
         - process (rest of the fucking owl. Think about how to abstract inputevents)
-    ~  learn how to consume input in pygame ui.
+    v  learn how to consume input in pygame ui.
     - collision
 
+    Selection list:
+    - select() on tardigrade (maybe just add to select(able) group?)
+    - handle_events() on tardigrade (walk on right-click)
+    - update() on tardigrade
+    - move_towards() on tardigrade
+    - 
+
+
+### Groups
     I am currently considering using Groups for a few different uses:
     - collision
     - rendering
