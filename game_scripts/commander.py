@@ -7,6 +7,8 @@ from scripts.custom_sprites import NodeSprite
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
 
+from pygame.mask import from_surface
+
 
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
@@ -78,7 +80,8 @@ class Commander:
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
-        # self.camera = get_camera()
+        self.group_server = group_server.get_server()
+        self.camera = get_camera()
 
     def process_events(self, event: pg.event.Event) -> bool:
         is_processed = False
@@ -97,6 +100,9 @@ class Commander:
                         is_processed = True
                     elif self.box.dragging:
                         self.do_box_select()
+                        is_processed = True
+                    else:
+                        self.handle_click()
             else:
                 # check for overlaps
                 # unselect/select based on rules
@@ -113,9 +119,40 @@ class Commander:
 
     def handle_click(self):
         """Handle it my own damn self."""
-        collides = pg.sprite.spritecollide(
-            self,
-            self.group_server.colliders,
-            dokill=False,
-            collided=pg.sprite.collide_mask,
-        )
+        print("My own damn self!")
+        for sprite in self.group_server.colliders:
+            collide = pointcollide_mask(self.camera.get_global_mouse_pos(), sprite)
+            print(collide)
+
+
+def pointcollide_mask(point: tuple[int, int], sprite: Sprite) -> bool:
+    """
+    REWRITE THIS!
+    collision detection between two sprites, using masks.
+
+    pygame.sprite.collide_mask(SpriteLeft, SpriteRight): bool
+
+    Tests for collision between two sprites by testing if their bitmasks
+    overlap. If the sprites have a "mask" attribute, that is used as the mask;
+    otherwise, a mask is created from the sprite image. Intended to be passed
+    as a collided callback function to the *collide functions. Sprites must
+    have a "rect" and an optional "mask" attribute.
+
+    New in pygame 1.8.0
+
+    """
+    xoffset = point[0] - sprite.rect[0]
+    yoffset = point[1] - sprite.rect[1]
+    try:
+        mask = sprite.mask
+    except AttributeError:
+        mask = from_surface(sprite.image)
+
+    if (
+        xoffset < 0
+        or xoffset >= mask.get_size()[0]
+        or yoffset < 0
+        or yoffset >= mask.get_size()[1]
+    ):
+        return False
+    return bool(mask.get_at((xoffset, yoffset)))
