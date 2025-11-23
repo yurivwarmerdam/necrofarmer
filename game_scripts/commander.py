@@ -64,7 +64,6 @@ class SelectBox(NodeSprite):
             dokill=False,
             collided=pg.sprite.collide_mask,
         )
-        print(collides)
         return collides
 
 
@@ -114,7 +113,7 @@ class Commander:
 
     def handle_click(self):
         """Handle it my own damn self."""
-        overlaps=collides = pg.sprite.spritecollide(
+        collides = pg.sprite.spritecollide(
             self,
             self.group_server.colliders,
             dokill=False,

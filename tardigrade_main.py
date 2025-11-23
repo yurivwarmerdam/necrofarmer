@@ -44,7 +44,7 @@ resolution = (636, 333)
 
 display = pg.display.set_mode(
     resolution,
-    pg.RESIZABLE
+    pg.RESIZABLE,
     # pg.SCALED,
 )  # , pg.RESIZABLE)
 clock = pg.time.Clock()
@@ -151,8 +151,6 @@ while True:
     camera_move = Vector2(0, 0)
     # --- event loop ---
     for event in pg.event.get():
-        if event.type == pg.MOUSEMOTION:
-            print(event.buttons, )
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
