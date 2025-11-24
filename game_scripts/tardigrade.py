@@ -29,8 +29,12 @@ class Tardigrade(AnimatedSprite):
         self.move_goal = None
         self.path = []
 
-    def process_events(self, event: pg.event.Event):
-        print("processing")
+    def process_events(self, event: pg.event.Event)->bool:
+        if hasattr(event,"button") and event.button == 2:
+            print("processing I need to start walking")
+            return True
+        else:
+            return False
 
     def set_path(self, goal: Vector2):
         pass

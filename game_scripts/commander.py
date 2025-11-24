@@ -84,31 +84,34 @@ class Commander:
         self.camera = get_camera()
 
     def process_events(self, event: pg.event.Event) -> bool:
-        is_processed = False
-        # button is kind of a button mask when event is mousemotion
+        # -- motion --
+        # buttons is kind of a button mask when event is mousemotion
         if event.type == pg.MOUSEMOTION and event.buttons[0] == 1:
             self.box.handle_drag(event)
-            is_processed = True
+            return True
+        # -- mouse buttons --
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
             if self.selected:
-                for sprite in self.selected:
-                    is_processed = sprite.process_events(event)
-            if not is_processed:
-                if event.button == 1:
-                    if event.type == pg.MOUSEBUTTONDOWN:
-                        self.box.start_drag()
-                        is_processed = True
-                    elif self.box.dragging:
-                        self.do_box_select()
-                        is_processed = True
-                    else:
-                        self.handle_click()
-            else:
-                # check for overlaps
-                # unselect/select based on rules
-                pass
-
-        return is_processed
+                processed = any(
+                    [sprite.process_events(event) for sprite in self.selected]
+                )
+                if processed:
+                    return True
+            if event.button == 1:
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    self.box.start_drag()
+                    return True
+                elif self.box.dragging:
+                    self.do_box_select()
+                    return True
+                else:
+                    collided_sprites = pointcollide(
+                        self.camera.get_global_mouse_pos(), self.group_server.colliders
+                    )
+                    self.selected.empty()
+                    self.selected.add(collided_sprites)
+                    return True
+        return False
 
     def do_box_select(self):
         for collide in self.box.get_collides():
@@ -117,28 +120,30 @@ class Commander:
         self.box.stop_drag()
         pass
 
-    def handle_click(self):
-        """Handle it my own damn self."""
-        print("My own damn self!")
-        for sprite in self.group_server.colliders:
-            collide = pointcollide_mask(self.camera.get_global_mouse_pos(), sprite)
-            print(collide)
+
+def pointcollide(point, group, collide_callback=None):
+    """Kind of extra for now. However, it mostly follows the pattern of *collide functions in official pygame."""
+    default_callback = pointcollide_mask
+
+    if collide_callback is not None:
+        return [sprite for sprite in group if collide_callback(point, sprite)]
+
+    return [sprite for sprite in group if default_callback(point, sprite)]
+
+    pass
 
 
 def pointcollide_mask(point: tuple[int, int], sprite: Sprite) -> bool:
     """
-    collision detection for a point and sprite, using the sprite's mask.
+    collision detection between a point and a sprite, using masks.
 
-    pygame.sprite.pointcollide_mask(point, Sprite): bool
+    pygame.sprite.collide_mask(point, sprite): bool
 
-    Tests for collision between a point and a sprite by testing if the sprite's bitmask
-    is occupied. If the sprite has a "mask" attribute, that is used as the mask;
+    Tests for collision between a point and a sprite by testing if the sprites' bitmask
+    is occupied at the point. If the sprite has a "mask" attribute, that is used as the mask;
     otherwise, a mask is created from the sprite image. Intended to be passed
-    as a collided callback function to the *collide functions. Sprites must
+    as a collided callback function to pointcollide. Sprites must
     have a "rect" and an optional "mask" attribute.
-
-    New in pygame 1.8.0
-
     """
     xoffset = point[0] - sprite.rect[0]
     yoffset = point[1] - sprite.rect[1]
