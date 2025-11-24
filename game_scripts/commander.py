@@ -127,13 +127,12 @@ class Commander:
 
 def pointcollide_mask(point: tuple[int, int], sprite: Sprite) -> bool:
     """
-    REWRITE THIS!
-    collision detection between two sprites, using masks.
+    collision detection for a point and sprite, using the sprite's mask.
 
-    pygame.sprite.collide_mask(SpriteLeft, SpriteRight): bool
+    pygame.sprite.pointcollide_mask(point, Sprite): bool
 
-    Tests for collision between two sprites by testing if their bitmasks
-    overlap. If the sprites have a "mask" attribute, that is used as the mask;
+    Tests for collision between a point and a sprite by testing if the sprite's bitmask
+    is occupied. If the sprite has a "mask" attribute, that is used as the mask;
     otherwise, a mask is created from the sprite image. Intended to be passed
     as a collided callback function to the *collide functions. Sprites must
     have a "rect" and an optional "mask" attribute.
