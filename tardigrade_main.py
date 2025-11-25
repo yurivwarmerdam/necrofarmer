@@ -82,52 +82,50 @@ commander.box.add(groups.render_groups["draw"])
 
 img_server = image_server.get_server()
 
-sprite = AnimatedSprite(
-    {
-        "0": img_server.animations["tardigrade_0"],
-        "1": img_server.animations["tardigrade_1"],
-        "2": img_server.animations["tardigrade_2"],
-        "3": img_server.animations["tardigrade_3"],
-    },
-    Vector2(100, 100),
-    groups.update,
-    groups.render_groups["active"],
-    anchor="center",
-    offset=Vector2(0, 10),
-)
-
-trd = Tardigrade(
-    Vector2(150, 150),
-    groups.update,
-    groups.colliders,
-    groups.render_groups["active"],
-)
+# sprite = AnimatedSprite(
+#     {
+#         "0": img_server.animations["tardigrade_0"],
+#         "1": img_server.animations["tardigrade_1"],
+#         "2": img_server.animations["tardigrade_2"],
+#         "3": img_server.animations["tardigrade_3"],
+#     },
+#     Vector2(100, 100),
+#     groups.update,
+#     groups.render_groups["active"],
+#     anchor="center",
+#     offset=Vector2(0, 10),
+# )
 
 
-def move_towards(source: Vector2, target: Vector2, by: float) -> Vector2:
-    delta = target - source
-    dist = delta.length()
-    if dist <= by or dist == 0:
-        return target
-    return source + delta.normalize() * by
+
+# def move_towards(source: Vector2, target: Vector2, by: float) -> Vector2:
+#     delta = target - source
+#     dist = delta.length()
+#     if dist <= by or dist == 0:
+#         return target
+#     return source + delta.normalize() * by
 
 
-def move_along_path(source: Vector2, path: deque[Vector2], by: float) -> Vector2:
-    """Note: this consumes path when waypoints are reached."""
-    EPS = 1e-9
-    result = source.copy()
-    while by > EPS and path:
-        intermediate = move_towards(result, path[0], by)
-        by -= (intermediate - result).length()
-        result = intermediate
-        if path[0] == result:
-            path.popleft()
-    return result
+# def move_along_path(source: Vector2, path: deque[Vector2], by: float) -> Vector2:
+#     """Note: this consumes path when waypoints are reached."""
+#     EPS = 1e-9
+#     result = source.copy()
+#     while by > EPS and path:
+#         intermediate = move_towards(result, path[0], by)
+#         by -= (intermediate - result).length()
+#         result = intermediate
+#         if path[0] == result:
+#             path.popleft()
+#     return result
 
 
-move_goal = None
-path = []
+# move_goal = None
+# path = []
 
+# trd = 
+Tardigrade(Vector2(150, 120))
+Tardigrade(Vector2(120, 150))
+Tardigrade(Vector2(150, 150))
 
 def handle_key_input():
     # ----------Alternate way of processing?------------#
@@ -142,7 +140,7 @@ def handle_key_input():
     return camera_move
 
 
-path_planner = star.get_server(tilemap)
+# path_planner = star.get_server(tilemap)
 
 # ---- core loop ----
 while True:
@@ -158,23 +156,24 @@ while True:
         processed = manager.process_events(event)
         if not processed:
             processed = commander.process_events(event)
-        if not processed and event.type == pg.MOUSEBUTTONDOWN:
-            start = tuple(tilemap.world_to_map(sprite.pos))
-            move_goal = camera.get_global_mouse_pos()
-            goal = tuple(tilemap.world_to_map(move_goal))
-            path = path_planner.astar(start, goal) or []
-            path = deque([tilemap.map_to_world(*pos) for pos in path])
+        # if not processed and event.type == pg.MOUSEBUTTONDOWN:
+        #     start = tuple(tilemap.world_to_map(sprite.pos))
+        #     move_goal = camera.get_global_mouse_pos()
+        #     goal = tuple(tilemap.world_to_map(move_goal))
+        #     path = path_planner.astar(start, goal) or []
+        #     path = deque([tilemap.map_to_world(*pos) for pos in path])
+        #     # print(path)
 
-    if path:
-        sprite.pos = move_along_path(sprite.pos, path, _delta / 10)
+    # if path:
+    #     sprite.pos = move_along_path(sprite.pos, path, _delta / 10)
 
     camera_move = handle_key_input()
     if camera_move != Vector2(0, 0):
         camera.pos += camera_move
 
-    if randint(0, 100) > 99:
-        sprite.set_animation(str(randint(0, 3)))
-        sprite.flip_h = bool(randint(0, 1))
+    # if randint(0, 100) > 99:
+    #     sprite.set_animation(str(randint(0, 3)))
+    #     sprite.flip_h = bool(randint(0, 1))
 
     # --- update loop ---
     camera.render_layers["draw"].update()

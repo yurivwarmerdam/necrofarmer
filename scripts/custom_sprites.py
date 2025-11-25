@@ -91,7 +91,7 @@ class AnimatedSprite(NodeSprite):
         self.image = self.active_animation.image
         pass
 
-    def update(self, delta) -> None:
+    def update(self, delta):
         result = self.active_animation.tick(delta)
         if result:
             self.image = transform.flip(result, True, False) if self.flip_h else result

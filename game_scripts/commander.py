@@ -109,11 +109,13 @@ class Commander:
                         self.camera.get_global_mouse_pos(), self.group_server.colliders
                     )
                     self.selected.empty()
-                    self.selected.add(collided_sprites)
+                    if collided_sprites:
+                        self.selected.add(collided_sprites[0])
                     return True
         return False
 
     def do_box_select(self):
+        self.selected.empty()
         for collide in self.box.get_collides():
             if isinstance(collide, Sprite):
                 collide.add(self.selected)
