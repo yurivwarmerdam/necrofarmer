@@ -29,12 +29,12 @@ pip install -r requirements.txt
     v  learn how to consume input in pygame ui.
     - collision
 
-    Selection list:
-    - select() on tardigrade (maybe just add to select(able) group?)
-    - handle_events() on tardigrade (walk on right-click)
-    - update() on tardigrade
-    - move_towards() on tardigrade
-    - 
+    Next step (choices!):
+    - highlight on select
+    - ui on select (really any ui at all)
+    - other selectables (building)
+    - logical animation
+    
 
 
 ### Groups
@@ -42,6 +42,7 @@ pip install -r requirements.txt
     - collision
     - rendering
     - updates
+    - keeping track of selected (probably also of under_construction type stuff)
     I could have a Groups singleton, with a corresponding dataclass that holds groups along with some (bitmask/attributes) that identifies a group as having a specific function.
 
     Group creation:

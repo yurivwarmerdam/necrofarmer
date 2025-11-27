@@ -45,6 +45,7 @@ class MyButton(pygame_gui.elements.UIButton):
 
 
 class ContextPanel(UIPanel):
+    """Good example of being able to nest ui elements."""
     def __init__(self, display: Surface, outline_sprites, my_object):
         screen_size = display.get_size()
         own_size = [450, 100]

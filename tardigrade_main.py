@@ -17,6 +17,8 @@ from scripts import image_server
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
 
+from scripts.ui_shim import UIPanel
+
 
 # Server architecture:
 # spin up and have global access to the following:
@@ -55,6 +57,10 @@ clock = pg.time.Clock()
 manager = pygame_gui.UIManager(resolution)
 ui_image = load_image("art/tst_ui.png")
 image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
+
+own_size = [450, 100]
+UIPanel(pg.Rect(80, resolution[1] - own_size[1], *own_size))
+
 
 # -- group initialization --
 
