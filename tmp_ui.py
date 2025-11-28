@@ -84,7 +84,7 @@ display: Surface = pg.display.set_mode(resolution, pg.SCALED)
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
-manager = pygame_gui.UIManager(resolution)
+manager = pygame_gui.UIManager(resolution,theme_path="theme/theme.json")
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
@@ -103,15 +103,16 @@ ui_panel = UIPanel(
 )
 
 # button_layout_rect = pg.Rect(0, 0, 100, 20)
-button_layout_rect = pg.Rect(0, -30, 150, 20)
+hello_rect = pg.Rect(0, 30, 150, 20)
 
-another_button = pygame_gui.elements.UIButton(
-    button_layout_rect,
+hello_button = pygame_gui.elements.UIButton(
+    hello_rect,
     text="Hello",
-    manager=manager,
-    object_id="moar",
-    anchors={"centerx": "centerx", "bottom": "bottom"},
+    # manager=manager,
+    # object_id="moar",
+    # anchors={"centerx": "centerx", "bottom": "bottom"},
 )
+print(hello_button.relative_rect)
 # another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
 

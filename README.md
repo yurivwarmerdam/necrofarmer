@@ -34,6 +34,30 @@ pip install -r requirements.txt
     - ui on select (really any ui at all)
     - other selectables (building)
     - logical animation
+
+
+### tiling UI Images, with 9-slice:
+
+    I will have to figure out exactly when all the redraw steps happen.
+    Once I do, I can trigger something like this set_image, _set_image, set_image_clip, rebuild, or somesuch.
+
+    Also peek in __init__ under the if ignore_shadow_for_initial_size_and_pos condition. That expands, but it's a start.
+
+    - slice original image into 9 slices: 
+    rect=self.image.get_rect()
+    center_rect=Rect()
+    center_rect.width=rect.width-=lpad,rpad
+    center_rect.height=rect.height-toppad-bottompad
+    center_rect.topleft=(lpad,toppad)
+    tr:(0,0,lpad,toppad)
+    br:(*center_rect.bottomleft,rpad,bottompad)
+
+    #do the scaling for each of the top/left/right/bottom rects
+    - grab original (or if sliced: slice) image provided, get w,h. 
+    - Find multiplier for w an h in image target size
+    for x in 0,target_width,initial_image_width): # third parameter is stride length
+      for y in 0,target_height,initial_image_height):
+        blit original image on final image
     
 
 

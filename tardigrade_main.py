@@ -55,9 +55,11 @@ clock = pg.time.Clock()
 clock = pg.time.Clock()
 
 # -- UI experiments --
-manager = pygame_gui.UIManager(resolution)
+manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 ui_image = load_image("art/tst_ui.png")
-image_elem = pygame_gui.elements.UIImage(ui_image.get_rect(), ui_image, manager)
+rect:Rect= ui_image.get_rect()
+rect.width=rect.width*2
+image_elem = pygame_gui.elements.UIImage(rect, ui_image, manager)
 
 own_size = [450, 100]
 UIPanel(pg.Rect(80, resolution[1] - own_size[1], *own_size))
