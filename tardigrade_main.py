@@ -17,7 +17,8 @@ from scripts import image_server
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
 
-from scripts.ui_shim import UIPanel
+from pygame_gui.elements import UIPanel
+# from scripts.ui_shim import UIPanel
 
 
 # Server architecture:
