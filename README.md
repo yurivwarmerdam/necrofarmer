@@ -58,6 +58,9 @@ pip install -r requirements.txt
     for x in 0,target_width,initial_image_width): # third parameter is stride length
       for y in 0,target_height,initial_image_height):
         blit original image on final image
+
+    https://pygame-gui.readthedocs.io/en/latest/theme_reference/theme_button.html
+    
     
 
 

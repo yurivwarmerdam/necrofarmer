@@ -1,5 +1,17 @@
 from pygame_gui.elements import UIPanel as UIPANEL_original
+from pygame_gui.elements import UIImage as UIImage_original
+from pygame_gui.core.gui_type_hints import RectLike
+
 import pygame
+from pygame import Surface, Rect
+from typing import Optional, Union
+from pygame_gui.core.interfaces import (
+    IContainerLikeInterface,
+    IUIManagerInterface,
+    IUIElementInterface,
+)
+from pygame_gui.core import UIElement
+from pygame_gui.core import ObjectID
 
 
 class UIPanel(UIPANEL_original):
@@ -20,7 +32,7 @@ class UIPanel(UIPANEL_original):
         consumed_event = False
         if (
             self is not None
-            and event.type in [pygame.MOUSEBUTTONDOWN,pygame.MOUSEBUTTONUP]
+            and event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]
             and event.button
             in [pygame.BUTTON_LEFT, pygame.BUTTON_RIGHT, pygame.BUTTON_MIDDLE]
         ):
@@ -31,3 +43,50 @@ class UIPanel(UIPANEL_original):
                 consumed_event = True
 
         return consumed_event
+
+
+class UIImage(UIImage_original):
+    def __init__(
+        self,
+        relative_rect: RectLike,
+        image_surface: pygame.surface.Surface,
+        manager: Optional[IUIManagerInterface] = None,
+        image_is_alpha_premultiplied: bool = False,
+        container: Optional[IContainerLikeInterface] = None,
+        parent_element: Optional[UIElement] = None,
+        object_id: Optional[Union[ObjectID, str]] = None,
+        anchors: Optional[dict[str, Union[str, IUIElementInterface]]] = None,
+        visible: int = 1,
+        *,
+        starting_height: int = 1,
+        scale_func=pygame.transform.smoothscale,
+        tiling=False,
+    ):
+        if tiling:
+            image_surface = self.scale_image_surf(relative_rect, image_surface)
+
+        super().__init__(
+            relative_rect,
+            image_surface,
+            manager,
+            image_is_alpha_premultiplied,
+            container,
+            parent_element,
+            object_id,
+            anchors,
+            visible,
+            starting_height=starting_height,
+            scale_func=scale_func,
+        )
+
+    def scale_image_surf(
+        self, relative_rect: RectLike, image_surface: Surface
+    ) -> Surface:
+        src_rect = image_surface.get_rect()
+        tgt_rect = relative_rect
+        tgt_surf = Surface((tgt_rect.width, tgt_rect.height))
+
+        for x in range(0, tgt_rect.width, src_rect.width):
+            for y in range(0, tgt_rect.height, src_rect.height):
+                tgt_surf.blit(image_surface, (x, y))
+        return tgt_surf

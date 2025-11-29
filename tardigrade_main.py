@@ -16,6 +16,8 @@ import pygame_gui
 from scripts import image_server
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
+from scripts.ui_shim import UIImage
+from math import floor
 
 from pygame_gui.elements import UIPanel
 # from scripts.ui_shim import UIPanel
@@ -58,8 +60,9 @@ clock = pg.time.Clock()
 manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 ui_image = load_image("art/tst_ui.png")
 rect:Rect= ui_image.get_rect()
-rect.width=rect.width*2
-image_elem = pygame_gui.elements.UIImage(rect, ui_image, manager)
+rect.width=rect.width*2.1
+rect.height+=5
+image_elem = UIImage(rect, ui_image, tiling=True)
 
 own_size = [450, 100]
 UIPanel(pg.Rect(80, resolution[1] - own_size[1], *own_size))
