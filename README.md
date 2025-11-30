@@ -53,8 +53,8 @@ pip install -r requirements.txt
     br:(*center_rect.bottomleft,rpad,bottompad)
 
     #do the scaling for each of the top/left/right/bottom rects
-    - grab original (or if sliced: slice) image provided, get w,h. 
-    - Find multiplier for w an h in image target size
+    v grab original (or if sliced: slice) image provided, get w,h. 
+    v Find multiplier for w an h in image target size
     for x in 0,target_width,initial_image_width): # third parameter is stride length
       for y in 0,target_height,initial_image_height):
         blit original image on final image
