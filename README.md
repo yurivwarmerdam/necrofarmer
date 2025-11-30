@@ -43,6 +43,11 @@ pip install -r requirements.txt
 
     Also peek in __init__ under the if ignore_shadow_for_initial_size_and_pos condition. That expands, but it's a start.
 
+    Potential: define own scale_func, similar api as pygame.transform.smoothscale, just implement as:
+    tilingscale
+    nineslicescale
+    tilingnineslicescale
+
     - slice original image into 9 slices: 
     rect=self.image.get_rect()
     center_rect=Rect()
