@@ -79,7 +79,7 @@ pg.display.set_caption("Quick Start")
 
 resolution = (636, 333)
 
-display: Surface = pg.display.set_mode(resolution, pg.SCALED)
+display: Surface = pg.display.set_mode(resolution, pg.RESIZABLE)
 
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
