@@ -16,10 +16,12 @@ import pygame_gui
 from scripts import image_server
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
-from scripts.ui_shim import UIImage
 from math import floor
 
 from pygame_gui.elements import UIPanel
+from pygame_gui.elements import UIImage
+from scripts.ui_shim import tilingscale
+# from scripts.ui_shim import UIImage
 # from scripts.ui_shim import UIPanel
 
 
@@ -63,7 +65,10 @@ rect: Rect = ui_image.get_rect()
 rect.width = resolution[0] - 50
 rect.height += 5
 image_elem = UIImage(
-    rect, ui_image, tiling=True, anchors={"left": "left", "right": "right"}
+    rect,
+    ui_image,
+    anchors={"left": "left", "right": "right"},
+    scale_func=tilingscale,
 )
 
 own_size = [450, 100]

@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
     godot does as follows:
     - some sprite subclass IS a 9-patch
-    - sprites have attribute axis stech or tile or tile_fit
+    - it then has a attribute axis scale: stech or tile or tile_fit
 
     - slice original image into 9 slices: 
     rect=self.image.get_rect()

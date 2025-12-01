@@ -12,6 +12,7 @@ from pygame_gui.core.interfaces import (
 )
 from pygame_gui.core import UIElement
 from pygame_gui.core import ObjectID
+from pygame.typing import Point
 
 
 class UIPanel(UIPANEL_original):
@@ -60,11 +61,8 @@ class UIImage(UIImage_original):
         *,
         starting_height: int = 1,
         scale_func=pygame.transform.smoothscale,
-        tiling=False,
+        nineslice={},
     ):
-        if tiling:
-            image_surface = self.scale_image_surf(relative_rect, image_surface)
-
         super().__init__(
             relative_rect,
             image_surface,
@@ -78,15 +76,49 @@ class UIImage(UIImage_original):
             starting_height=starting_height,
             scale_func=scale_func,
         )
+        self.nineslice = nineslice
 
-    def scale_image_surf(
-        self, relative_rect: RectLike, image_surface: Surface
-    ) -> Surface:
-        src_rect = image_surface.get_rect()
-        tgt_rect = relative_rect
-        tgt_surf = Surface((tgt_rect.width, tgt_rect.height))
 
-        for x in range(0, tgt_rect.width, src_rect.width):
-            for y in range(0, tgt_rect.height, src_rect.height):
-                tgt_surf.blit(image_surface, (x, y))
-        return tgt_surf
+def tilingscale(
+    surface: Surface,
+    size: Point,
+    dest_surface: Optional[Surface] = None,
+) -> Surface:
+    """Scale a surface to an arbitrary size smoothly.
+
+    tiles the input surface as a way of scaling each dimension as required.
+    For shrinkage, the surface is simply clipped to fit the dest_surface.
+    The size is a 2 number sequence for (width, height).
+
+    An optional destination surface can be passed which is faster than creating a new
+    Surface. This destination surface must be the same as the size (width, height) passed
+    in, and the same depth and format as the source Surface.
+    """
+    if not dest_surface:
+        dest_surface = Surface(size)
+    for x in range(0, dest_surface.width, surface.width):
+        for y in range(0, dest_surface.height, surface.height):
+            dest_surface.blit(surface, (x, y))
+    return dest_surface
+
+
+def ninepatchscale(
+    surface: Surface,
+    size: Point,
+    dest_surface: Optional[Surface] = None,
+    patch_margain={"left": 0, "right": 0, "top": 0, "bottom": 0},
+) -> Surface:
+    """
+    Behaves like a scaling func, but should probably be thought of more as a wrapper for some other scaling func.
+    """
+    if not dest_surface:
+        dest_surface = Surface(size)
+
+    tl_dim = Surface((patch_margain["left"], patch_margain["top"]))
+    tr_dim = Surface((patch_margain["right"], patch_margain["top"]))
+    bl_dim = Surface((patch_margain["left"], patch_margain["bottom"]))
+    br_dim = Surface((patch_margain["rght"], patch_margain["bottom"]))
+
+    center_dim = dest_surface.get_rect().copy()
+    center_dim.width -= patch_margain["left"] + patch_margain["right"]
+    center_dim.height -= patch_margain["top"] + patch_margain["bottom"]
