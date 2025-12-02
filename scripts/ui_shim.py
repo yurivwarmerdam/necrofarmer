@@ -121,31 +121,36 @@ def ninepatchscale(
     else:
         dest_surface = Surface(size)
 
-    if patch_margain is int:
-        patch_margain = (
-            {
-                "left": patch_margain,
-                "right": patch_margain,
-                "top": patch_margain,
-                "bottom": patch_margain,
-            },
-        )
+    if type(patch_margain) is int:
+        patch_margain = {
+            "left": patch_margain,
+            "right": patch_margain,
+            "top": patch_margain,
+            "bottom": patch_margain,
+        }
+
     if not dest_surface:
         dest_surface = Surface(size)
 
-    dest_w, dest_h = size  # non-sequence argument caught by python
     surface_w, surface_h = surface.size
+    dest_w, dest_h = size  # non-sequence argument caught by python
     subsurface = surface.subsurface
 
+    surf_center_w = surface_w - (patch_margain["left"] + patch_margain["right"])
+    surf_center_h = surface_h - (patch_margain["top"] + patch_margain["bottom"])
+
+    dest_center_w = dest_w - (patch_margain["left"] + patch_margain["right"])
+    dest_center_h = dest_h - (patch_margain["top"] + patch_margain["bottom"])
+
     if (
-        min(patch_margain.values) < 0
-        or patch_margain["left"] + patch_margain["right"] > min(dest_w)
-        or patch_margain["top"] + patch_margain["bottom"] > min(dest_h)
+        min(patch_margain.values()) < 0
+        or patch_margain["left"] + patch_margain["right"] > dest_w
+        or patch_margain["top"] + patch_margain["bottom"] > dest_h
     ):
         raise ValueError(
             "Corner size must be nonnegative and not greater than the smaller between width and height"
         )
-    if not any(patch_margain.values):  # default to normal scaling if all are 0
+    if not any(patch_margain.values()):  # default to normal scaling if all are 0
         return scale_func(surface, size)
 
     dest_surface.blit(  # topleft corner
@@ -153,12 +158,12 @@ def ninepatchscale(
     )
     dest_surface.blit(  # topright corner
         subsurface(
-            surface_w - patch_margain["rght"],
+            surface_w - patch_margain["right"],
             0,
-            patch_margain["rght"],
+            patch_margain["right"],
             patch_margain["top"],
         ),
-        (dest_w - patch_margain["rght"], 0),
+        (dest_w - patch_margain["right"], 0),
     )
     dest_surface.blit(  # bottomleft corner
         subsurface(
@@ -171,7 +176,7 @@ def ninepatchscale(
     )
     dest_surface.blit(  # bottomright corner
         subsurface(
-            surface_w - patch_margain["rght"],
+            surface_w - patch_margain["right"],
             surface_h - patch_margain["bottom"],
             patch_margain["right"],
             patch_margain["bottom"],
@@ -181,102 +186,70 @@ def ninepatchscale(
 
     if patch_margain["top"] > 0:
         dest_surface.blit(  # top side
-            scale_func(subsurface(patch_margain["left"], 0, src_x_side, c), (ret_x_side, c)), (c, 0)
+            scale_func(
+                subsurface(
+                    patch_margain["left"],
+                    0,
+                    surf_center_w,
+                    patch_margain["top"],
+                ),
+                (dest_center_w, patch_margain["top"]),
+            ),
+            (patch_margain["left"], 0),
         )
+    if patch_margain["bottom"] > 0:
         dest_surface.blit(  # bottom side
-            scale_func(subsurface(c, surface_h - c, src_x_side, c), (ret_x_side, c)),
-            (c, dest_h - c),
+            scale_func(
+                subsurface(
+                    patch_margain["left"],
+                    surface_h - patch_margain["bottom"],
+                    surf_center_w,
+                    patch_margain["bottom"],
+                ),
+                (dest_center_w, patch_margain["bottom"]),
+            ),
+            (patch_margain["left"], dest_h - patch_margain["bottom"]),
         )
 
-    if src_y_side > 0:
+    if patch_margain["left"] > 0:
         dest_surface.blit(  # left side
-            scale_func(subsurface(0, c, c, src_y_side), (c, ret_y_side)), (0, c)
+            scale_func(
+                subsurface(
+                    0,
+                    patch_margain["top"],
+                    patch_margain["left"],
+                    surf_center_h,
+                ),
+                (patch_margain["left"], dest_center_h),
+            ),
+            (0, patch_margain["top"]),
         )
+    if patch_margain["right"] > 0:
         dest_surface.blit(  # right side
-            scale_func(subsurface(surface_w - c, c, c, src_y_side), (c, ret_y_side)),
-            (dest_w - c, c),
+            scale_func(
+                subsurface(
+                    surface_w - patch_margain["right"],
+                    patch_margain["top"],
+                    patch_margain["right"],
+                    surf_center_h,
+                ),
+                (patch_margain["right"], dest_center_h),
+            ),
+            (dest_w - patch_margain["right"], patch_margain["top"]),
         )
 
-    if src_x_side > 0 and src_y_side > 0:
+    if surf_center_w > 0 and surf_center_h > 0:
         dest_surface.blit(  # central area
             scale_func(
-                subsurface(c, c, src_x_side, src_y_side), (ret_x_side, ret_y_side)
+                subsurface(
+                    patch_margain["left"],
+                    patch_margain["top"],
+                    surf_center_w,
+                    surf_center_h,
+                ),
+                (dest_center_w, dest_center_h),
             ),
-            (c, c),
+            (patch_margain["left"], patch_margain["top"]),
         )
 
-def ninepatch_scale(
-    surface: pygame.Surface,
-    size: pygame.typing.Point,
-    corner_size: int,
-    alpha: bool = True,
-    smooth: bool = False,
-    dest_surface: pygame.Surface | None = None,
-) -> pygame.Surface:
-    # the code of this function also emulates how a transform-like ninepatch function would likely behave
-    if dest_surface is not None:
-        ret_surface = dest_surface
-        if ret_surface.size != size:
-            raise ValueError("Destination surface doesn't match the provided size")
-    else:
-        ret_surface = pygame.Surface(
-            size, pygame.SRCALPHA * alpha
-        )  # when alpha is False the flags become 0
-
-    # aliases
-    dest_w, dest_h = size  # non-sequence argument caught by python
-    surface_w, surface_h = surface.size
-    c = corner_size
-    scale_func = pygame.transform.smoothscale if smooth else pygame.transform.scale
-    subsurface = surface.subsurface  # alias for performance/clarity
-
-    if corner_size < 0 or corner_size > min(dest_w, dest_h):
-        raise ValueError(
-            "Corner size must be nonnegative and not greater than the smaller between width and height"
-        )
-    if corner_size == 0:  # default to normal scaling
-        return scale_func(surface, size)
-
-    src_x_side, src_y_side = surface.size - pygame.Vector2(c) * 2
-    ret_x_side, ret_y_side = size - pygame.Vector2(c) * 2
-
-    ret_surface.blit(  # topleft corner
-        subsurface(0, 0, c, c), (0, 0)
-    )
-    ret_surface.blit(  # topright corner
-        subsurface(surface_w - c, 0, c, c), (dest_w - c, 0)
-    )
-    ret_surface.blit(  # bottomleft corner
-        subsurface(0, surface_h - c, c, c), (0, dest_h - c)
-    )
-    ret_surface.blit(  # bottomright corner
-        subsurface(surface_w - c, surface_h - c, c, c), (dest_w - c, dest_h - c)
-    )
-
-    if src_x_side > 0:
-        ret_surface.blit(  # top side
-            scale_func(subsurface(c, 0, src_x_side, c), (ret_x_side, c)), (c, 0)
-        )
-        ret_surface.blit(  # bottom side
-            scale_func(subsurface(c, surface_h - c, src_x_side, c), (ret_x_side, c)),
-            (c, dest_h - c),
-        )
-
-    if src_y_side > 0:
-        ret_surface.blit(  # left side
-            scale_func(subsurface(0, c, c, src_y_side), (c, ret_y_side)), (0, c)
-        )
-        ret_surface.blit(  # right side
-            scale_func(subsurface(surface_w - c, c, c, src_y_side), (c, ret_y_side)),
-            (dest_w - c, c),
-        )
-
-    if src_x_side > 0 and src_y_side > 0:
-        ret_surface.blit(  # central area
-            scale_func(
-                subsurface(c, c, src_x_side, src_y_side), (ret_x_side, ret_y_side)
-            ),
-            (c, c),
-        )
-
-    return ret_surface
+    return dest_surface

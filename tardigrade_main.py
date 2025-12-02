@@ -17,12 +17,14 @@ from scripts import image_server
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
 from math import floor
+from functools import partial
+
 
 from pygame_gui.elements import UIPanel
 from pygame_gui.elements import UIImage
 from scripts.ui_shim import tilingscale
 # from scripts.ui_shim import UIImage
-# from scripts.ui_shim import UIPanel
+from scripts.ui_shim import ninepatchscale
 
 
 # Server architecture:
@@ -64,11 +66,13 @@ ui_image = load_image("art/tst_ui.png")
 rect: Rect = ui_image.get_rect()
 rect.width = resolution[0] - 50
 rect.height += 5
+scale_func=partial(ninepatchscale,patch_margain=3,scale_func=tilingscale)
 image_elem = UIImage(
     rect,
     ui_image,
     anchors={"left": "left", "right": "right"},
-    scale_func=tilingscale,
+    # scale_func=tilingscale,
+    scale_func=scale_func,
 )
 
 own_size = [450, 100]
