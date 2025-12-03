@@ -32,7 +32,11 @@ pip install -r requirements.txt
     Next step (choices!):
     - highlight on select
     - ui on select (really any ui at all)
-    - other selectables (building)
+        - figure out how theming works, how to make separate buttons per art, 
+        - how to add callables to theming (function on click, function on click, scaling function, binds)
+        - start assembling master_ui server/locator
+        - spawn active tabs based on select. Look at how I did it in godot, see if I hate that, and if it makes sense here.
+    - other selectables (building, thopter)
     - logical animation
 
 
