@@ -1,30 +1,19 @@
 import pygame as pg
-from pygame import Vector2, Rect, Surface
-from pygame.sprite import Group, LayeredUpdates
+import pygame_gui
 import sys
+from pygame import Vector2, Rect
+from pygame.sprite import Group
 from game_scripts.commander import Commander
-from scripts.tilemap import Tilemap
 from game_scripts import entity_tilemap
 from game_scripts.tardigrade import Tardigrade
-from scripts.utils import sheet_to_sprites, load_image
-from scripts.camera import Camera, initialize_camera
-from random import randint
-from scripts.custom_sprites import AnimatedSprite, AnimationSequence, NodeSprite
+from scripts.utils import load_image, sheet_to_sprites
+from scripts.camera import initialize_camera
 from game_scripts import star
-from collections import deque
-import pygame_gui
 from scripts import image_server
 from game_scripts import group_server
-from game_scripts.group_server import GroupServer
-from math import floor
 from functools import partial
-
-
-from pygame_gui.elements import UIPanel
-from pygame_gui.elements import UIImage
-from scripts.ui_shim import tilingscale
-# from scripts.ui_shim import UIImage
-from scripts.ui_shim import ninepatchscale
+from pygame_gui.elements import UIImage, UIPanel
+from scripts.custom_sprites import tilingscale, ninepatchscale
 
 
 # Server architecture:
@@ -63,20 +52,32 @@ clock = pg.time.Clock()
 # -- UI experiments --
 manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 ui_image = load_image("art/tst_ui.png")
-rect: Rect = ui_image.get_rect()
-rect.width = resolution[0] - 50
-rect.height += 5
-scale_func=partial(ninepatchscale,patch_margain=3,scale_func=tilingscale)
-image_elem = UIImage(
-    rect,
-    ui_image,
-    anchors={"left": "left", "right": "right"},
-    # scale_func=tilingscale,
-    scale_func=scale_func,
-)
+outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
+button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 
-own_size = [450, 100]
-UIPanel(pg.Rect(80, resolution[1] - own_size[1], *own_size))
+context_panel_size = (300, 80)
+ui_container=UIPanel(
+    pg.Rect(80, -context_panel_size[1], *context_panel_size),
+    anchors={"left": "left", "right": "right", "top": "bottom", "bottom": "bottom"},
+)
+scale_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
+context_panel_rect: Rect = Rect(0,0, 400, 100)
+
+image_elem = UIImage(
+    context_panel_rect,
+    ui_image,
+    anchors={"left": "left", "right": "right", "top": "top", "bottom": "bottom"},
+    scale_func=scale_func,
+    container=ui_container.get_container()
+)
+from scripts.custom_sprites import MyButton
+
+MyButton(
+    (2, 2),
+    outline_sprites,
+    button_sprites[(0, 0)],
+    container=ui_container.get_container(),
+)
 
 
 # -- group initialization --
