@@ -39,6 +39,12 @@ pip install -r requirements.txt
     - other selectables (building, thopter)
     - logical animation
 
+### signal/observer stuff
+https://pypi.org/project/blinker/
+https://pypi.org/project/PyDispatcher/
+https://pypi.org/project/Events/
+https://pypi.org/project/traitlets/
+
 
 ### tiling UI Images, with 9-slice:
 
