@@ -39,6 +39,9 @@ pip install -r requirements.txt
     - other selectables (building, thopter)
     - logical animation
 
+    - ui class
+    - 
+
 ### signal/observer stuff
 https://pypi.org/project/blinker/
 https://pypi.org/project/PyDispatcher/

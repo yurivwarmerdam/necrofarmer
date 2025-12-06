@@ -23,7 +23,8 @@ observer2=signal("number go up")
 
 # connecting twice, under different name does nothing the second time around.
 ngu.connect(some_func)
-observer2.connect(some_func)
+# observer2.connect(some_func)
+ngu.connect(lambda sender: print(sender),weak=False)
 
 some_obj.send()
 # another_obj.send()

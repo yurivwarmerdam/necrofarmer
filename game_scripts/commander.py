@@ -1,7 +1,6 @@
 import pygame as pg
 from pygame import Vector2, Rect, Surface
 from pygame.sprite import Sprite, Group
-from dataclasses import dataclass
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
 from game_scripts import group_server

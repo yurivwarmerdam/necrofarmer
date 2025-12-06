@@ -1,26 +1,24 @@
-import pygame as pg
-from pygame.sprite import Sprite
-from pygame.surface import Surface
-from pygame.font import Font
-from pygame.math import Vector2
+import pygame_gui
+from pygame_gui.core.interfaces import IContainerLikeInterface
 
 
-class ManaBar(Sprite):
-    def __init__(self, game, pos,*groups):
-        super().__init__(*groups)
-        self.game = game
-
-        self.image = Surface((64, 16))
-        self.image.fill("darkblue")
-        self.rect = self.image.get_rect()
-        self.rect.topleft = pos
-        self.font = Font(None, 16)
-        self.text = self.font.render(f"Mana: {game.player.mana:.0f}", True, (255, 255, 255))
-        self.image.blit(self.text, (0, 0))
-
-    def update(
+class ImageButton(pygame_gui.elements.UIButton):
+    def __init__(
         self,
+        pos,
+        outline_sprites,
+        fill_sprite,
+        container: IContainerLikeInterface | None = None,
     ):
-        self.image.fill("darkblue")
-        text = self.font.render(f"Mana: {self.game.player.mana:.0f}", True, (255, 255, 255))
-        self.image.blit(text, (0, 0))
+        super().__init__(
+            relative_rect=outline_sprites[(0, 0)].get_rect(),
+            text="",
+            object_id="hello_button",
+            container=container,
+        )
+        self.normal_images = [outline_sprites[(0, 0)], fill_sprite]
+        self.hovered_images = [outline_sprites[(0, 0)], fill_sprite]
+        self.disabled_images = [outline_sprites[(2, 0)], fill_sprite]
+        self.selected_images = [outline_sprites[(1, 0)], fill_sprite]
+        self.set_relative_position(pos)
+        self.rebuild()

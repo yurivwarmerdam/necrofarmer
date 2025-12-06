@@ -50,34 +50,38 @@ clock = pg.time.Clock()
 clock = pg.time.Clock()
 
 # -- UI experiments --
+
+from game_scripts.game_ui import MainUI
+
 manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
-ui_image = load_image("art/tst_ui.png")
-outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
-button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
+MainUI()
+# ui_image = load_image("art/tst_ui.png")
+# outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
+# button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 
-context_panel_size = (300, 80)
-ui_container=UIPanel(
-    pg.Rect(80, -context_panel_size[1], *context_panel_size),
-    anchors={"left": "left", "right": "right", "top": "bottom", "bottom": "bottom"},
-)
-scale_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
-context_panel_rect: Rect = Rect(0,0, 400, 100)
+# context_panel_size = (300, 80)
+# ui_container = UIPanel(
+#     pg.Rect(80, -context_panel_size[1], *context_panel_size),
+#     anchors={"left": "left", "right": "right", "top": "bottom", "bottom": "bottom"},
+# )
+# scale_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
+# context_panel_rect: Rect = Rect(0, 0, 400, 100)
 
-image_elem = UIImage(
-    context_panel_rect,
-    ui_image,
-    anchors={"left": "left", "right": "right", "top": "top", "bottom": "bottom"},
-    scale_func=scale_func,
-    container=ui_container.get_container()
-)
-from scripts.custom_sprites import MyButton
+# image_elem = UIImage(
+#     context_panel_rect,
+#     ui_image,
+#     anchors={"left": "left", "right": "right", "top": "top", "bottom": "bottom"},
+#     scale_func=scale_func,
+#     container=ui_container.get_container(),
+# )
+# from scripts.ui import ImageButton
 
-MyButton(
-    (2, 2),
-    outline_sprites,
-    button_sprites[(0, 0)],
-    container=ui_container.get_container(),
-)
+# ImageButton(
+#     (2, 2),
+#     outline_sprites,
+#     button_sprites[(0, 0)],
+#     container=ui_container.get_container(),
+# )
 
 
 # -- group initialization --
