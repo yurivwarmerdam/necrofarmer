@@ -13,7 +13,7 @@ from scripts.utils import load_image, sheet_to_sprites
 from functools import partial
 from scripts.ui import ImageButton
 from pygame import Vector2
-
+from blinker import signal
 
 class MainUI(UIPanel):
     def __init__(self):
@@ -59,3 +59,6 @@ class MainUI(UIPanel):
             button_sprites[(0, 0)],
             container=self.get_container(),
         )
+
+    class ContextPanel(UIPanel):
+        pass
