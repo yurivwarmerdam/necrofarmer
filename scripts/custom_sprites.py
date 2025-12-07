@@ -1,11 +1,12 @@
 import pygame as pg
-from pygame.sprite import Sprite, LayeredUpdates
+from pygame.sprite import AbstractGroup, Sprite, LayeredUpdates, Group
 from pygame import Vector2
 from pygame.surface import Surface
 from pygame.rect import Rect
 from pygame import transform
 from pygame.typing import Point
-from typing import Optional
+from typing import Any, Iterable, Optional, override
+from blinker import signal
 
 
 class NodeSprite(Sprite):
@@ -280,3 +281,29 @@ def ninepatchscale(
     return dest_surface
 
 
+class SignalGroup(Group):
+    """
+    Regular Group that sends a signal whenever add or remove is called.
+    Signal name is provided through kwargs.
+    """
+
+    def __init__(
+        self, *sprites: Any | AbstractGroup | Iterable, signal_name=""
+    ) -> None:
+        self.signal = signal(signal_name)
+        super().__init__(*sprites)
+
+    @override
+    def add(self, *sprites: Any | AbstractGroup | Iterable) -> None:
+        super().add(*sprites)
+        self.signal.send(self)
+
+    @override
+    def remove(self, *sprites: Any | AbstractGroup | Iterable) -> None:
+        super().remove(*sprites)
+        self.signal.send(self)
+    
+    @override
+    def empty(self) -> None:
+        return super().empty()
+        self.signal.send(self)

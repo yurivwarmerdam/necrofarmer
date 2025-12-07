@@ -14,6 +14,9 @@ from functools import partial
 from scripts.ui import ImageButton
 from pygame import Vector2
 from blinker import signal
+from game_scripts.commander import Commander
+from pygame.sprite import Group
+
 
 class MainUI(UIPanel):
     def __init__(self):
@@ -60,5 +63,16 @@ class MainUI(UIPanel):
             container=self.get_container(),
         )
 
-    class ContextPanel(UIPanel):
-        pass
+        # signals we are observing
+        selected_changed = signal("selected_changed")
+        selected_changed.connect(self.selected_changed)
+
+    def selected_changed(self, sender: Group, **kwargs):
+        # create appropriate contextpanel, depending on what is selected
+        print(f"changing selected. Sender: {sender}")
+        for i in sender:
+            print(type(i))
+
+
+class ContextPanel(UIPanel):
+    pass

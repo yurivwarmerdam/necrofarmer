@@ -5,7 +5,7 @@ from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
 from game_scripts import group_server
 from game_scripts.group_server import GroupServer
-
+from scripts.custom_sprites import SignalGroup
 from pygame.mask import from_surface
 
 
@@ -75,7 +75,7 @@ class Commander:
     """
 
     def __init__(self):
-        self.selected = Group()
+        self.selected = SignalGroup(signal_name="selected_changed")
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
