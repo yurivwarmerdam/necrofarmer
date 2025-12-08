@@ -305,5 +305,5 @@ class SignalGroup(Group):
     
     @override
     def empty(self) -> None:
-        return super().empty()
+        super().empty()
         self.signal.send(self)

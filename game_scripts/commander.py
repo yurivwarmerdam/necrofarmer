@@ -115,9 +115,11 @@ class Commander:
 
     def do_box_select(self):
         self.selected.empty()
-        for collide in self.box.get_collides():
-            if isinstance(collide, Sprite):
-                collide.add(self.selected)
+        collides=self.box.get_collides()
+        self.selected.add(collides)
+        # for collide in self.box.get_collides():
+        #     if isinstance(collide, Sprite):
+        #         collide.add(self.selected)
         self.box.stop_drag()
         pass
 
