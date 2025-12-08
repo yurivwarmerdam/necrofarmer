@@ -40,7 +40,10 @@ pip install -r requirements.txt
     - logical animation
 
     - ui class
-    - 
+    - Time to make a properly themed button!
+        - read up on how they are populated
+        - start making my nested button with the cute littel pressed effect
+        
 
 ### signal/observer stuff
 https://pypi.org/project/blinker/
