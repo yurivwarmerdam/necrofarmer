@@ -7,7 +7,7 @@ from game_scripts import group_server
 from game_scripts.group_server import GroupServer
 from scripts.custom_sprites import SignalGroup
 from pygame.mask import from_surface
-
+from blinker import signal
 
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
@@ -75,12 +75,13 @@ class Commander:
     """
 
     def __init__(self):
-        self.selected = SignalGroup(signal_name="selected_changed")
+        self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
         self.group_server = group_server.get_server()
         self.camera = get_camera()
+        self.selected_changed=signal("selected_changed")
 
     def process_events(self, event: pg.event.Event) -> bool:
         # -- motion --
@@ -107,21 +108,25 @@ class Commander:
                     collided_sprites = pointcollide(
                         self.camera.get_global_mouse_pos(), self.group_server.colliders
                     )
-                    self.selected.empty()
+                    if self.selected:
+                        self.selected.empty()
+                        print("emptying!")
+                    self.selected_changed.send(self)
                     if collided_sprites:
                         self.selected.add(collided_sprites[0])
+                        self.selected_changed.send(self)
                     return True
         return False
 
     def do_box_select(self):
         self.selected.empty()
-        collides=self.box.get_collides()
-        self.selected.add(collides)
-        # for collide in self.box.get_collides():
-        #     if isinstance(collide, Sprite):
-        #         collide.add(self.selected)
+        # collides=self.box.get_collides()
+        # self.selected.add(collides)
+        for collide in self.box.get_collides():
+            if isinstance(collide, Sprite):
+                collide.add(self.selected)
         self.box.stop_drag()
-        pass
+        self.selected_changed.send(self)
 
 
 def pointcollide(point, group, collide_callback=None):

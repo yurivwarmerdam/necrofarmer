@@ -46,14 +46,11 @@ display = pg.display.set_mode(
     pg.RESIZABLE,
     # pg.SCALED,
 )
-clock = pg.time.Clock()
-
+manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 clock = pg.time.Clock()
 
 # -- UI experiments --
 
-
-manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 MainUI()
 
 # -- group initialization --

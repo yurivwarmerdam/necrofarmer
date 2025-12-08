@@ -67,10 +67,10 @@ class MainUI(UIPanel):
         selected_changed = signal("selected_changed")
         selected_changed.connect(self.selected_changed)
 
-    def selected_changed(self, sender: Group, **kwargs):
+    def selected_changed(self, sender: Commander, **kwargs):
         # create appropriate contextpanel, depending on what is selected
         print(f"changing selected. Sender: {sender}")
-        for i in sender:
+        for i in sender.selected:
             print(type(i))
 
 
