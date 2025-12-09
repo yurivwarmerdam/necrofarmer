@@ -22,7 +22,9 @@ class Thing:
         print("Goober")
 
 
-class MyButton(pygame_gui.elements.UIButton):
+
+
+class ImageButton(pygame_gui.elements.UIButton):
     def __init__(
             self,
             pos,
@@ -58,14 +60,14 @@ class ContextPanel(UIPanel):
         self.image = pg.Surface(self.relative_rect.size)
         self.image.fill(pg.Color("darkgray"))
 
-        self.hello_button = MyButton(
+        self.hello_button = ImageButton(
             (2, 2),
             outline_sprites,
             button_sprites[(0, 0)],
             container=self.get_container(),
         )
         self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED,my_object.do_stuff)
-        self.other_button = MyButton(
+        self.other_button = ImageButton(
             (58, 2),
             outline_sprites,
             button_sprites[(1, 0)],
