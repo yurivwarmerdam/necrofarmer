@@ -45,6 +45,8 @@ class ImageButton(pygame_gui.elements.UIButton):
         self.set_relative_position(pos)
         self.rebuild()
 
+class NewButton(pygame_gui.elements.UIButton):
+    pass
 
 class ContextPanel(UIPanel):
     """Good example of being able to nest ui elements."""
@@ -110,7 +112,6 @@ hello_rect = pg.Rect(0, 30, 150, 20)
 hello_button = pygame_gui.elements.UIButton(
     hello_rect,
     text="Hello",
-    # manager=manager,
     # object_id="moar",
     # anchors={"centerx": "centerx", "bottom": "bottom"},
 )
