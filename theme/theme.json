@@ -1,5 +1,9 @@
 {
     "button": {
+        "dimensions": {
+            "width": 120,
+            "height": 40
+        },
         "images": {
             "normal_images": [
                 {

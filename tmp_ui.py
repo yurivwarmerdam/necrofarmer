@@ -1,6 +1,6 @@
 from typing import Dict, Iterable
 import pygame as pg
-from pygame import Surface
+from pygame import Surface, Rect
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
 import pygame_gui
 from pygame_gui.core import ObjectID, UIElement
@@ -12,7 +12,8 @@ from pygame_gui.core.interfaces import (
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
-from typing import Tuple
+from typing import Tuple, Callable, Any
+
 
 from scripts.ui_shim import UIPanel
 
@@ -22,15 +23,13 @@ class Thing:
         print("Goober")
 
 
-
-
 class ImageButton(pygame_gui.elements.UIButton):
     def __init__(
-            self,
-            pos,
-            outline_sprites,
-            fill_sprite,
-            container: IContainerLikeInterface | None = None,
+        self,
+        pos,
+        outline_sprites,
+        fill_sprite,
+        container: IContainerLikeInterface | None = None,
     ):
         super().__init__(
             relative_rect=outline_sprites[(0, 0)].get_rect(),
@@ -45,11 +44,18 @@ class ImageButton(pygame_gui.elements.UIButton):
         self.set_relative_position(pos)
         self.rebuild()
 
+
 class NewButton(pygame_gui.elements.UIButton):
-    pass
+    def __init__(
+        self,
+        pos: Vector2,
+    ):
+        super().__init__(Rect(*pos, 54, 46), "")
+
 
 class ContextPanel(UIPanel):
     """Good example of being able to nest ui elements."""
+
     def __init__(self, display: Surface, outline_sprites, my_object):
         screen_size = display.get_size()
         own_size = [450, 100]
@@ -68,7 +74,7 @@ class ContextPanel(UIPanel):
             button_sprites[(0, 0)],
             container=self.get_container(),
         )
-        self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED,my_object.do_stuff)
+        self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED, my_object.do_stuff)
         self.other_button = ImageButton(
             (58, 2),
             outline_sprites,
@@ -88,15 +94,15 @@ display: Surface = pg.display.set_mode(resolution, pg.RESIZABLE)
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
-manager = pygame_gui.UIManager(resolution,theme_path="theme/theme.json")
+manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
 
 
-thing=Thing()
-ContextPanel(display, outline_sprites,thing)
+thing = Thing()
+ContextPanel(display, outline_sprites, thing)
 
 a_rect = outline_sprites[0, 0].get_rect()
 b_rect = pg.Rect(0, 0, 54, 46)
@@ -118,6 +124,8 @@ hello_button = pygame_gui.elements.UIButton(
 print(hello_button.relative_rect)
 # another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
+
+NewButton(Vector2(10, 70))
 
 clock = pg.time.Clock()
 
