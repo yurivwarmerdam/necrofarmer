@@ -10,28 +10,56 @@
                     "id": "background",
                     "layer": 0,
                     "path": "art/tst_ui.png"
-                },
-                {
-                    "id": "icon",
-                    "layer": 1,
-                    "path": "data/images/button_icon.png"
-                },
-                {
-                    "id": "decoration",
-                    "layer": 2,
-                    "path": "data/images/button_decoration.png"
                 }
-            ],
-            "hovered_images": [
+            ]
+        }
+    },
+    "@warcraft_button": {
+        "images": {
+            "normal_images": [
                 {
                     "id": "background",
                     "layer": 0,
-                    "path": "data/images/button_bg_hover.png"
+                    "path": "art/ui_components.png",
+                    "sub_surface_rect": "0,64,54,46"
                 },
                 {
-                    "id": "icon",
+                    "id": "face",
                     "layer": 1,
-                    "path": "data/images/button_icon_hover.png"
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "46,0,46,38"
+                }
+            ],
+            "selected_images": [
+                {
+                    "id": "background",
+                    "layer": 0,
+                    "path": "art/ui_components.png",
+                    "sub_surface_rect": "54,64,54,46"
+                },
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "46,0,46,38"
+                }
+            ]
+        }
+    },
+    "#thopter_button": {
+        "images": {
+            "normal_images": [
+                {
+                    "id": "background",
+                    "layer": 0,
+                    "path": "art/ui_components.png",
+                    "sub_surface_rect": "0,64,54,46"
+                },
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "46,0,46,38"
                 }
             ]
         }

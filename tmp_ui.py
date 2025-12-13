@@ -50,7 +50,12 @@ class NewButton(pygame_gui.elements.UIButton):
         self,
         pos: Vector2,
     ):
-        super().__init__(Rect(*pos, 54, 46), "")
+        object_id = "#thopter_button"
+        super().__init__(
+            Rect(*pos, 54, 46),
+            "",
+            object_id=ObjectID(class_id="@warcraft_button", object_id=object_id),
+        )
 
 
 class ContextPanel(UIPanel):
@@ -121,7 +126,6 @@ hello_button = pygame_gui.elements.UIButton(
     # object_id="moar",
     # anchors={"centerx": "centerx", "bottom": "bottom"},
 )
-print(hello_button.relative_rect)
 # another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
 
@@ -136,11 +140,6 @@ while True:
             pg.quit()
             sys.exit()
 
-        # if event.type == pygame_gui.UI_BUTTON_PRESSED:
-        #     print(event.ui_object_id)
-        #     if event.ui_object_id == "hello_button":
-        #         print("image pressed")
-
         processed = manager.process_events(event)
 
         if event.type in [
@@ -149,7 +148,6 @@ while True:
             pg.MOUSEBUTTONDOWN,
         ]:
             pass
-            # print(processed, pg.event.event_name(event.type))
 
     manager.update(time_delta)
 
