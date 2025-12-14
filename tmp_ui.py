@@ -54,7 +54,7 @@ class NewButton(pygame_gui.elements.UIButton):
         super().__init__(
             Rect(*pos, 54, 46),
             "",
-            object_id=ObjectID(class_id="@warcraft_button", object_id=object_id),
+            object_id=object_id,
         )
 
 
