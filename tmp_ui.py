@@ -123,6 +123,7 @@ hello_rect = pg.Rect(0, 30, 150, 20)
 hello_button = pygame_gui.elements.UIButton(
     hello_rect,
     text="Hello",
+    object_id="#boring_button"
     # object_id="moar",
     # anchors={"centerx": "centerx", "bottom": "bottom"},
 )
