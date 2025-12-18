@@ -130,6 +130,11 @@ hello_button = pygame_gui.elements.UIButton(
 # another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
 
+image_button=pygame_gui.elements.UIButton(
+    pg.Rect(180,30,60,60),text="theme image?",
+    object_id="#inherited"
+)
+
 NewButton(Vector2(10, 70))
 
 clock = pg.time.Clock()

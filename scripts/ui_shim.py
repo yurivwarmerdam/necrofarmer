@@ -11,6 +11,9 @@ from pygame_gui.core.interfaces import (
 )
 from pygame_gui.core import UIElement
 from pygame_gui.core import ObjectID
+from pygame_gui.core.ui_appearance_theme import (
+    UIAppearanceTheme as UIAppearanceTheme_original,
+)
 
 
 class UIPanel(UIPANEL_original):
@@ -76,3 +79,25 @@ class UIImage(UIImage_original):
         )
         self.nineslice = nineslice
 
+
+class UIAppearanceTheme(UIAppearanceTheme_original):
+    pass
+
+
+
+# my_framework_module.py
+# This file replaces/extends framework.framework_module
+
+import framework.framework_module as orig
+import framework.internal as internal
+
+class FixedInternal(internal.internal_class):
+    def do_something(self):
+        # fixed behavior
+        pass
+
+# override the symbol USED by framework_module
+orig.internal_class = FixedInternal
+
+class framework_class(orig.framework_class):
+    pass

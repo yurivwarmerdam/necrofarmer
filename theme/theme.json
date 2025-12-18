@@ -76,6 +76,19 @@
                     "sub_surface_rect": "0,0,46,38"
                 }
             ]
+        },
+        "colours": {
+            "dark_bg": "#fb86fb,#fd92A0,180",
+            "normal_border": "#ffB2A5",
+            "normal_bg": "#fb9e91"
+        },
+        "misc": {
+            "shape": "ellipse",
+            "border_width": "2",
+            "shadow_width": "1"
         }
+    },
+    "#inherited": {
+        "prototype": "#thopter_button"
     }
 }
