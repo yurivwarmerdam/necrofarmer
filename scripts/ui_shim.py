@@ -1,3 +1,4 @@
+from typing import Any
 from pygame_gui.elements import UIPanel as UIPANEL_original
 from pygame_gui.elements import UIImage as UIImage_original
 from pygame_gui.core.gui_type_hints import RectLike
@@ -14,6 +15,7 @@ from pygame_gui.core import ObjectID
 from pygame_gui.core.ui_appearance_theme import (
     UIAppearanceTheme as UIAppearanceTheme_original,
 )
+from pygame_gui import ui_manager
 
 
 class UIPanel(UIPANEL_original):
@@ -81,23 +83,66 @@ class UIImage(UIImage_original):
 
 
 class UIAppearanceTheme(UIAppearanceTheme_original):
+    def _parse_single_element_data(
+        self, element_name: str, element_theming: dict[str, Any]
+    ) -> None:
+        # Clear image data if no images block is present in the new theme
+        # This ensures proper cleanup when switching to themes without images
+        if "images" not in element_theming and "prototype" not in element_theming:
+            if element_name in self.ui_element_image_locs:
+                self.ui_element_image_locs[element_name].clear()
+            if element_name in self.ui_element_image_surfaces:
+                self.ui_element_image_surfaces[element_name].clear()
+
+        for data_type in element_theming:
+            if data_type == "font":
+                file_dict = element_theming[data_type]
+                if isinstance(file_dict, list):
+                    for item in file_dict:
+                        self._load_element_font_data_from_theme(item, element_name)
+                else:
+                    self._load_element_font_data_from_theme(file_dict, element_name)
+
+            if data_type in ["colours", "colors"]:
+                self._load_element_colour_data_from_theme(
+                    data_type, element_name, element_theming
+                )
+
+            elif data_type == "images":
+                self._load_element_image_data_from_theme(
+                    data_type, element_name, element_theming
+                )
+
+            elif data_type == "misc":
+                self._load_element_misc_data_from_theme(
+                    data_type, element_name, element_theming
+                )
+
+
+ui_manager.UIAppearanceTheme = UIAppearanceTheme
+
+
+class UIManager(ui_manager.UIManager):
     pass
 
 
-
+# ------------------------------------
 # my_framework_module.py
 # This file replaces/extends framework.framework_module
 
-import framework.framework_module as orig
-import framework.internal as internal
+# import framework.framework_module as orig
+# import framework.internal as internal
 
-class FixedInternal(internal.internal_class):
-    def do_something(self):
-        # fixed behavior
-        pass
 
-# override the symbol USED by framework_module
-orig.internal_class = FixedInternal
+# class FixedInternal(internal.internal_class):
+#     def do_something(self):
+#         # fixed behavior
+#         pass
 
-class framework_class(orig.framework_class):
-    pass
+
+# # override the symbol USED by framework_module
+# orig.internal_class = FixedInternal
+
+
+# class framework_class(orig.framework_class):
+#     pass

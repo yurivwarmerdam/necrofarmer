@@ -2,6 +2,8 @@ from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface, Rect
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+# import pygame_gui
+from scripts import ui_shim
 import pygame_gui
 from pygame_gui.core import ObjectID, UIElement
 from pygame_gui.core.interfaces import (
@@ -99,7 +101,8 @@ display: Surface = pg.display.set_mode(resolution, pg.RESIZABLE)
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
-manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
+# manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
+manager = ui_shim.UIManager(resolution, theme_path="theme/theme.json")
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
