@@ -91,12 +91,22 @@
     "#inherited": {
         "prototype": "#thopter_button",
         "images": {
-            "normal_images": {
-                "id": "face",
-                "layer": 1,
-                "path": "art/thumbnails.png",
-                "sub_surface_rect": "46,0,46,38"
-            }
+            "normal_images": [
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "46,0,46,38"
+                }
+            ],
+            "selected_images": [
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "46,0,46,38"
+                }
+            ]
         }
     }
 }
