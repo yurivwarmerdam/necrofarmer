@@ -23,6 +23,7 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 ### current:
+    - buildout (cook resources stuff)
     - game mainclass
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
         - process (rest of the fucking owl. Think about how to abstract inputevents)
