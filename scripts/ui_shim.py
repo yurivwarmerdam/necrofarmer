@@ -1,18 +1,13 @@
 import warnings
 from typing import Any
 from pygame_gui.elements import UIPanel as UIPANEL_original
-from pygame_gui.elements import UIImage as UIImage_original
-from pygame_gui.core.gui_type_hints import RectLike
 
 import pygame
-from typing import Optional, Union
 from pygame_gui.core.interfaces import (
     IContainerLikeInterface,
     IUIManagerInterface,
     IUIElementInterface,
 )
-from pygame_gui.core import UIElement
-from pygame_gui.core import ObjectID
 from pygame_gui.core.ui_appearance_theme import (
     UIAppearanceTheme as UIAppearanceTheme_original,
 )
@@ -22,6 +17,8 @@ from pygame_gui import ui_manager
 class UIPanel(UIPANEL_original):
     """
     A shim until my PR gets accepted.
+    Over time I am less and less convinced this is desired behavior.
+    I may need to register click down in commander, and only fire up behavior on up. That will lead to a more smooth experience.
     """
 
     def process_event(self, event: pygame.event.Event) -> bool:
@@ -48,39 +45,6 @@ class UIPanel(UIPANEL_original):
                 consumed_event = True
 
         return consumed_event
-
-
-class UIImage(UIImage_original):
-    def __init__(
-        self,
-        relative_rect: RectLike,
-        image_surface: pygame.surface.Surface,
-        manager: Optional[IUIManagerInterface] = None,
-        image_is_alpha_premultiplied: bool = False,
-        container: Optional[IContainerLikeInterface] = None,
-        parent_element: Optional[UIElement] = None,
-        object_id: Optional[Union[ObjectID, str]] = None,
-        anchors: Optional[dict[str, Union[str, IUIElementInterface]]] = None,
-        visible: int = 1,
-        *,
-        starting_height: int = 1,
-        scale_func=pygame.transform.smoothscale,
-        nineslice={},
-    ):
-        super().__init__(
-            relative_rect,
-            image_surface,
-            manager,
-            image_is_alpha_premultiplied,
-            container,
-            parent_element,
-            object_id,
-            anchors,
-            visible,
-            starting_height=starting_height,
-            scale_func=scale_func,
-        )
-        self.nineslice = nineslice
 
 
 class UIAppearanceTheme(UIAppearanceTheme_original):
@@ -134,7 +98,14 @@ class UIAppearanceTheme(UIAppearanceTheme_original):
 
         self._load_fonts_images_and_shadow_edges()
 
+
+# overriding import
+ui_manager.UIAppearanceTheme = UIAppearanceTheme
+
+
+class UIManager(ui_manager.UIManager):
     pass
+
     # def _parse_single_element_data(
     #     self, element_name: str, element_theming: dict[str, Any]
     # ) -> None:
@@ -206,32 +177,3 @@ class UIAppearanceTheme(UIAppearanceTheme_original):
     #             self._load_element_misc_data_from_theme(
     #                 data_type, element_name, element_theming
     #             )
-
-
-ui_manager.UIAppearanceTheme = UIAppearanceTheme
-
-
-class UIManager(ui_manager.UIManager):
-    pass
-
-
-# ------------------------------------
-# my_framework_module.py
-# This file replaces/extends framework.framework_module
-
-# import framework.framework_module as orig
-# import framework.internal as internal
-
-
-# class FixedInternal(internal.internal_class):
-#     def do_something(self):
-#         # fixed behavior
-#         pass
-
-
-# # override the symbol USED by framework_module
-# orig.internal_class = FixedInternal
-
-
-# class framework_class(orig.framework_class):
-#     pass
