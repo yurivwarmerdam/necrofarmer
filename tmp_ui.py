@@ -102,7 +102,7 @@ background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
 # manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
-manager = ui_shim.UIManager(resolution, theme_path="theme/theme.json")
+manager = ui_shim.UIManager(resolution, theme_path="theme/buttons.json")
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
@@ -135,7 +135,7 @@ hello_button = pygame_gui.elements.UIButton(
 
 image_button=pygame_gui.elements.UIButton(
     pg.Rect(180,30,60,60),text="theme image?",
-    object_id="#inherited"
+    object_id="#thopter_button"
 )
 
 NewButton(Vector2(10, 70))
