@@ -18,6 +18,8 @@ from game_scripts.commander import Commander
 from pygame.sprite import Group
 
 
+# This should be a container object; not a uipanel.
+# Can definitely hold a bunch of utility functions.
 class MainUI(UIPanel):
     def __init__(self):
         context_panel_size = (300, 80)
@@ -43,7 +45,7 @@ class MainUI(UIPanel):
         )
 
         # context background?
-        image_elem = UIImage(
+        context_background = UIImage(
             context_panel_rect,
             ui_image,
             anchors={
@@ -74,5 +76,33 @@ class MainUI(UIPanel):
             print(type(i))
 
 
+# This should be passed portrait panel and context panel. Portrait gives either big image, or a series of small thumbs.
+# context is contextual, based on what's selected.
 class ContextPanel(UIPanel):
+    def __init__(
+        self,
+        relative_rect: Rect | FRect | tuple[float, float, float, float],
+        starting_height: int = 1,
+        manager: IUIManagerInterface | None = None,
+        *,
+        element_id: str = "panel",
+        margins: Dict[str, int] | None = None,
+        container: IContainerLikeInterface | None = None,
+        parent_element: UIElement | None = None,
+        object_id: ObjectID | str | None = None,
+        anchors: Dict[str, str | IUIElementInterface] | None = None,
+        visible: int = 1,
+    ):
+        super().__init__(
+            relative_rect,
+            starting_height,
+            manager,
+            element_id=element_id,
+            margins=margins,
+            container=container,
+            parent_element=parent_element,
+            object_id=object_id,
+            anchors=anchors,
+        )
+
     pass
