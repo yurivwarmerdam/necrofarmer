@@ -16,22 +16,13 @@ from pygame import Vector2
 from blinker import signal
 from game_scripts.commander import Commander
 from pygame.sprite import Group
+import pygame_gui
 
 
 # This should be a container object; not a uipanel.
 # Can definitely hold a bunch of utility functions.
-class MainUI(UIPanel):
+class MainUI:
     def __init__(self):
-        context_panel_size = (300, 80)
-        super().__init__(
-            pg.Rect(80, -context_panel_size[1], *context_panel_size),
-            anchors={
-                "left": "left",
-                "right": "right",
-                "top": "bottom",
-                "bottom": "bottom",
-            },
-        )
         # setup main elements
 
         scale_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
@@ -44,7 +35,33 @@ class MainUI(UIPanel):
             load_image("art/thumbnails.png"), Vector2(46, 38)
         )
 
-        # context background?
+        # base elements
+        portrait_panel_size= (170,146)
+        context_panel_size = (400, 99)
+        portrait_panel = UIPanel(
+            pg.Rect(0, -portrait_panel_size[1], *portrait_panel_size),
+            anchors={
+                "left": "left",
+                "right": "left",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
+        )
+        portrait_background = pygame_gui.elements.UIButton(
+            pg.Rect(0, 0, 54, 46),
+            text="",
+            object_id="#thopter_button",
+            container=portrait_panel.get_container(),
+        )
+        context_panel = UIPanel(
+            pg.Rect(portrait_panel_size[0], -context_panel_size[1], *context_panel_size),
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
+        )
         context_background = UIImage(
             context_panel_rect,
             ui_image,
@@ -55,14 +72,14 @@ class MainUI(UIPanel):
                 "bottom": "bottom",
             },
             scale_func=scale_func,
-            container=self.get_container(),
+            container=context_panel.get_container(),
         )
-        pass
-        ImageButton(
-            (2, 2),
-            outline_sprites,
-            button_sprites[(0, 0)],
-            container=self.get_container(),
+
+        image_button = pygame_gui.elements.UIButton(
+            pg.Rect(3, 3, 54, 46),
+            text="",
+            object_id="#thopter_button",
+            container=context_panel.get_container(),
         )
 
         # signals we are observing
