@@ -11,5 +11,16 @@
         "misc": {
             "border_width": "0"
         }
+    },
+    "#portrait_background": {
+        "images": {
+            "background_image": {
+                "path": "art/ui_components.png",
+                "sub_surface_rect": "0, 112, 170, 146"
+            }
+        }
+    },
+    "misc": {
+        "border_width": "0"
     }
 }

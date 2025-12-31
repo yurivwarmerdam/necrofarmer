@@ -149,36 +149,37 @@ ui_components_sheet = load_image("art/ui_components.png")
 portrait_background_sprite = sheet_to_sprite(
     ui_components_sheet, Rect(0, 112, 170, 146)
 )
-# portrait_panel = UIPanel(
-#     pg.Rect(
-#         0,
-#         -portrait_panel_rect[3],
-#         portrait_panel_rect[2],
-#         portrait_panel_rect[3],
-#     ),
-#     anchors={
-#         "left": "left",
-#         "right": "left",
-#         "top": "bottom",
-#         "bottom": "bottom",
-#     },
-# )
-portrait_background = UIImage(
+portrait_panel = UIPanel(
     pg.Rect(
         0,
         -portrait_panel_rect[3],
         portrait_panel_rect[2],
         portrait_panel_rect[3],
     ),
-    portrait_background_sprite,
     anchors={
         "left": "left",
         "right": "left",
         "top": "bottom",
         "bottom": "bottom",
     },
-    # container=portrait_panel.get_container(),
+    object_id="#portrait_background"
 )
+# portrait_background = UIImage(
+#     pg.Rect(
+#         0,
+#         -portrait_panel_rect[3],
+#         portrait_panel_rect[2],
+#         portrait_panel_rect[3],
+#     ),
+#     portrait_background_sprite,
+#     anchors={
+#         "left": "left",
+#         "right": "left",
+#         "top": "bottom",
+#         "bottom": "bottom",
+#     },
+#     # container=portrait_panel.get_container(),
+# )
 
 while True:
     time_delta = clock.tick(60) / 1000.0
