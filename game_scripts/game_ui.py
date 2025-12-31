@@ -52,7 +52,7 @@ class MainUI:
             },
         )
         portrait_background = UIImage(
-            context_panel_rect,
+            portrait_panel_rect,
             portrait_background_sprite,
             anchors={
                 "left": "left",
@@ -60,9 +60,9 @@ class MainUI:
                 "top": "top",
                 "bottom": "bottom",
             },
-            scale_func=nine_slice_func,
             container=portrait_panel.get_container(),
         )
+        print(portrait_panel.rect)
 
         context_panel = UIPanel(
             pg.Rect(

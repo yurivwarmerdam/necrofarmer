@@ -2,6 +2,8 @@ from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface, Rect
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+from pygame_gui.elements import UIImage
+
 # import pygame_gui
 from scripts import ui_shim
 import pygame_gui
@@ -15,7 +17,7 @@ from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
 from typing import Tuple, Callable, Any
-
+from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
 
 from scripts.ui_shim import UIPanel
 
@@ -102,7 +104,8 @@ background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
 
 # manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
-manager = ui_shim.UIManager(resolution, theme_path="theme/buttons.json")
+manager = ui_shim.UIManager(resolution, theme_path="theme/theme.json")
+manager.get_theme().load_theme("theme/buttons_generated.json")
 
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
@@ -126,21 +129,56 @@ hello_rect = pg.Rect(0, 30, 150, 20)
 hello_button = pygame_gui.elements.UIButton(
     hello_rect,
     text="Hello",
-    object_id="#boring_button"
+    object_id="#boring_button",
     # object_id="moar",
     # anchors={"centerx": "centerx", "bottom": "bottom"},
 )
 # another_button.set_relative_position((0, -10))
 # Oh crickey. It tunrs out that the relative position is only kind of relative...
 
-image_button=pygame_gui.elements.UIButton(
-    pg.Rect(180,30,60,60),text="theme image?",
-    object_id="#thopter_button"
+image_button = pygame_gui.elements.UIButton(
+    pg.Rect(180, 30, 60, 60), text="theme image?", object_id="#thopter_button"
 )
 
 NewButton(Vector2(10, 70))
 
 clock = pg.time.Clock()
+
+portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
+ui_components_sheet = load_image("art/ui_components.png")
+portrait_background_sprite = sheet_to_sprite(
+    ui_components_sheet, Rect(0, 112, 170, 146)
+)
+# portrait_panel = UIPanel(
+#     pg.Rect(
+#         0,
+#         -portrait_panel_rect[3],
+#         portrait_panel_rect[2],
+#         portrait_panel_rect[3],
+#     ),
+#     anchors={
+#         "left": "left",
+#         "right": "left",
+#         "top": "bottom",
+#         "bottom": "bottom",
+#     },
+# )
+portrait_background = UIImage(
+    pg.Rect(
+        0,
+        -portrait_panel_rect[3],
+        portrait_panel_rect[2],
+        portrait_panel_rect[3],
+    ),
+    portrait_background_sprite,
+    anchors={
+        "left": "left",
+        "right": "left",
+        "top": "bottom",
+        "bottom": "bottom",
+    },
+    # container=portrait_panel.get_container(),
+)
 
 while True:
     time_delta = clock.tick(60) / 1000.0

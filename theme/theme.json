@@ -1,15 +1,15 @@
 {
     "defaults": {
         "colors": {
-            "normal_bg": "hsla(0deg, 0.0, 0.0, 0%)"
+            "normal_bg": "rgba(0, 0, 0, 0)"
+        }
+    },
+    "panel": {
+        "colors": {
+            "dark_bg": "rgba(0, 0, 0, 0)"
         },
         "misc": {
-            "border_width": {
-                "left": 0,
-                "right": 0,
-                "top": 0,
-                "bottom": 0
-            }
+            "border_width": "0"
         }
     }
 }

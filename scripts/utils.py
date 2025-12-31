@@ -46,7 +46,7 @@ def sheet_to_sprite(spritesheet: Surface, subsurf_rect: Rect) -> Surface:
     :type subsurf_rect: Rect
     """
     sprite = Surface(subsurf_rect.size).convert()
-    sprite.blit(spritesheet, subsurf_rect)
+    sprite.blit(spritesheet, area=subsurf_rect)
     sprite.set_colorkey((0, 0, 0, 0))
     return sprite
 
