@@ -4,3 +4,4 @@ beautifulsoup4
 lxml
 astar
 blinker
+pygame_gui

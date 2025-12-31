@@ -11,35 +11,54 @@ def load_image(path) -> Surface:
 
 
 # no support for padding
-def sheet_to_sprites(surface: Surface, size: Vector2) -> dict:
-    cols = int(surface.get_size()[0] / size.x)
-    rows = int(surface.get_size()[1] / size.y)
+def sheet_to_sprites(spritesheet: Surface, size: Vector2) -> dict:
+    """
+    Slice spritesheet into subsurfaces of size.
+    Returns a dict of surfaces, accesssed by (col,row).
+
+    :param spritesheet: surface to be sliced
+    :type spritesheet: Surface
+    :param size: Description
+    :type size: Vector2
+    :return: Description
+    :rtype: dict[Any, Any]
+    """
+    cols = int(spritesheet.get_size()[0] / size.x)
+    rows = int(spritesheet.get_size()[1] / size.y)
     sprites = {}
     for col in range(cols):
         for row in range(rows):
             rect = pg.Rect(col * size.x, row * size.y, size.x, size.y)
             sprite = Surface(size).convert()
             sprite.set_colorkey((0, 0, 0, 0))
-            sprite.blit(surface, (0, 0), rect)
+            sprite.blit(spritesheet, (0, 0), rect)
             sprites[(col, row)] = sprite
     return sprites
 
 
-def sheet_to_sprite(surface: Surface, rect: Rect):
-    sprite = Surface(rect.size).convert()
-    sprite.blit(surface, rect)
+def sheet_to_sprite(spritesheet: Surface, subsurf_rect: Rect) -> Surface:
+    """
+    take a surface, and return a subsurface located at subsurf_rect.
+
+    :param spritesheet: surface to be accessed
+    :type spritesheet: Surface
+    :param subsurf_rect: rectangle to locate at
+    :type subsurf_rect: Rect
+    """
+    sprite = Surface(subsurf_rect.size).convert()
+    sprite.blit(spritesheet, subsurf_rect)
     sprite.set_colorkey((0, 0, 0, 0))
     return sprite
 
 
 # no support for padding
+# That's this FOR, then?
 def sheet_to_sprites_with_pad(sheet: Surface, tile_size: Vector2, pad=(0, 0)) -> dict:
     sprites = []
     remaining_x = sheet.get_size()[0]
-    
+
     while remaining_x >= tile_size[0]:
         pass
-    
 
     cols = int(sheet.get_size()[0] / tile_size.x)
     rows = int(sheet.get_size()[1] / tile_size.y)

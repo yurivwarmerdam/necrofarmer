@@ -2,12 +2,19 @@ import json
 from pprint import pprint
 
 
+# Generates json to be read into pygame_ui.
+# reads in prototypes, replacing relevant info.
+# custom hierarchies per prototype.
+
+prototype_file: str = "theme/proto.json"
+output_file: str = "theme/buttons_generated.json"
+
 button_ids = {
     "#thopter_button": "0,0,46,38",
     "#tardigrade_button": "138,0,46,38",
 }
 
-with open("theme/proto.json", "r") as input:
+with open(prototype_file, "r") as input:
     prototypes = json.load(input)
     button_proto = prototypes["#button_proto"]
 
@@ -20,5 +27,5 @@ with open("theme/proto.json", "r") as input:
         export[id]["images"]["normal_images"][1]["sub_surface_rect"] = button_ids[id]
         export[id]["images"]["selected_images"][1]["sub_surface_rect"] = button_ids[id]
 
-    with open("theme/buttons.json", "w") as output:
+    with open(output_file, "w") as output:
         json.dump(export, output, indent=2)

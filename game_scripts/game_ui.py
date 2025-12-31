@@ -9,9 +9,8 @@ from pygame_gui.core.interfaces import (
 from pygame_gui.elements import UIImage, UIPanel
 from pygame.rect import Rect, FRect
 from scripts.custom_sprites import tilingscale, ninepatchscale
-from scripts.utils import load_image, sheet_to_sprites
+from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
 from functools import partial
-from scripts.ui import ImageButton
 from pygame import Vector2
 from blinker import signal
 from game_scripts.commander import Commander
@@ -25,21 +24,26 @@ class MainUI:
     def __init__(self):
         # setup main elements
 
-        scale_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
-        context_panel_rect: Rect = Rect(0, 0, 400, 100)
-        ui_image = load_image("art/tst_ui.png")
-        outline_sprites = sheet_to_sprites(
-            load_image("art/outlines.png"), Vector2(54, 46)
+        nine_slice_func = partial(
+            ninepatchscale, patch_margain=3, scale_func=tilingscale
         )
-        button_sprites = sheet_to_sprites(
-            load_image("art/thumbnails.png"), Vector2(46, 38)
+        portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
+        context_panel_rect: Rect = Rect(0, 0, 400, 99)
+        ui_components_sheet = load_image("art/ui_components.png")
+        portrait_background_sprite = sheet_to_sprite(
+            ui_components_sheet, Rect(0, 112, 170, 146)
         )
+        ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
 
-        # base elements
-        portrait_panel_size= (170,146)
-        context_panel_size = (400, 99)
+        # ------- base elements -------
+
         portrait_panel = UIPanel(
-            pg.Rect(0, -portrait_panel_size[1], *portrait_panel_size),
+            pg.Rect(
+                0,
+                -portrait_panel_rect[3],
+                portrait_panel_rect[2],
+                portrait_panel_rect[3],
+            ),
             anchors={
                 "left": "left",
                 "right": "left",
@@ -47,14 +51,26 @@ class MainUI:
                 "bottom": "bottom",
             },
         )
-        portrait_background = pygame_gui.elements.UIButton(
-            pg.Rect(0, 0, 54, 46),
-            text="",
-            object_id="#thopter_button",
+        portrait_background = UIImage(
+            context_panel_rect,
+            portrait_background_sprite,
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "bottom",
+            },
+            scale_func=nine_slice_func,
             container=portrait_panel.get_container(),
         )
+
         context_panel = UIPanel(
-            pg.Rect(portrait_panel_size[0], -context_panel_size[1], *context_panel_size),
+            pg.Rect(
+                portrait_panel_rect[2],
+                -context_panel_rect[3],
+                context_panel_rect[2],
+                context_panel_rect[3],
+            ),
             anchors={
                 "left": "left",
                 "right": "right",
@@ -64,15 +80,24 @@ class MainUI:
         )
         context_background = UIImage(
             context_panel_rect,
-            ui_image,
+            ui_background_sprite,
             anchors={
                 "left": "left",
                 "right": "right",
                 "top": "top",
                 "bottom": "bottom",
             },
-            scale_func=scale_func,
+            scale_func=nine_slice_func,
             container=context_panel.get_container(),
+        )
+
+        # buttons to be moved to context:
+
+        portrait_button = pygame_gui.elements.UIButton(
+            pg.Rect(3, 3, 54 * 3, 46 * 3),
+            text="",
+            object_id="#thopter_button",
+            container=portrait_panel.get_container(),
         )
 
         image_button = pygame_gui.elements.UIButton(

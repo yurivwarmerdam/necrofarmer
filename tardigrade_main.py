@@ -6,14 +6,10 @@ from pygame.sprite import Group
 from game_scripts.commander import Commander
 from game_scripts import entity_tilemap
 from game_scripts.tardigrade import Tardigrade
-from scripts.utils import load_image, sheet_to_sprites
 from scripts.camera import initialize_camera
 from game_scripts import star
 from scripts import image_server
 from game_scripts import group_server
-from functools import partial
-from pygame_gui.elements import UIImage, UIPanel
-from scripts.custom_sprites import tilingscale, ninepatchscale
 from game_scripts.game_ui import MainUI
 
 
@@ -46,7 +42,9 @@ display = pg.display.set_mode(
     pg.RESIZABLE,
     # pg.SCALED,
 )
+# theme is for general settins, buttons for buttons
 manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
+manager.get_theme().load_theme("theme/buttons_generated.json")
 clock = pg.time.Clock()
 
 # -- UI experiments --
@@ -71,7 +69,6 @@ camera = initialize_camera(
     Group(),
     display,
     Vector2(-125, 0),
-    # Vector2(0, 0),
 )
 
 commander = Commander()

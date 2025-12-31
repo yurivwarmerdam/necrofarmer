@@ -9,6 +9,7 @@ from scripts.custom_sprites import SignalGroup
 from pygame.mask import from_surface
 from blinker import signal
 
+
 class SelectBox(NodeSprite):
     def __init__(self) -> None:
         super().__init__(Surface((0, 0)))
@@ -81,7 +82,7 @@ class Commander:
         self.box = SelectBox()
         self.group_server = group_server.get_server()
         self.camera = get_camera()
-        self.selected_changed=signal("selected_changed")
+        self.selected_changed = signal("selected_changed")
 
     def process_events(self, event: pg.event.Event) -> bool:
         # -- motion --
@@ -110,7 +111,6 @@ class Commander:
                     )
                     if self.selected:
                         self.selected.empty()
-                        print("emptying!")
                     self.selected_changed.send(self)
                     if collided_sprites:
                         self.selected.add(collided_sprites[0])
