@@ -61,7 +61,8 @@
           "sub_surface_rect": "0,0,46,38"
         }
       ]
-    }
+    },
+    "misc":{"auto_scale_images":"1"}
   },
   "#tardigrade_button": {
     "images": {

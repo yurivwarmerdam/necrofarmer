@@ -1,12 +1,12 @@
 {
     "defaults": {
         "colors": {
-            "normal_bg": "rgba(0, 0, 0, 0)"
+            "normal_bg": "rgba(255, 255, 255, 0)"
         }
     },
     "panel": {
         "colors": {
-            "dark_bg": "rgba(0, 0, 0, 0)"
+            "dark_bg": "rgba(0, 0, 0, 255)"
         },
         "misc": {
             "border_width": "0"
@@ -20,7 +20,12 @@
             }
         }
     },
-    "misc": {
-        "border_width": "0"
+    "#panel_background": {
+        "images": {
+            "background_image": {
+                "path": "art/ui_components.png",
+                "sub_surface_rect": "0, 0, 60, 62"
+            }
+        }
     }
 }

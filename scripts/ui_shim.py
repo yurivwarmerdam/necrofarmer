@@ -1,6 +1,12 @@
+from pygame_gui.core.gui_type_hints import Coordinate, RectLike
+from typing import Union, Optional
+from pygame_gui.core import ObjectID
 import warnings
-from typing import Any
+from typing import Any, Callable, Iterable
+from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+from pygame_gui.core.ui_element import UIElement
 from pygame_gui.elements import UIPanel as UIPANEL_original
+from pygame_gui.elements import UIButton as UIButton_original
 
 import pygame
 from pygame_gui.core.interfaces import (
@@ -45,6 +51,206 @@ class UIPanel(UIPANEL_original):
                 consumed_event = True
 
         return consumed_event
+
+
+class UIButton(UIButton_original):
+    def __init__(
+        self,
+        relative_rect: Union[RectLike, Coordinate],
+        text: str,
+        manager: Optional[IUIManagerInterface] = None,
+        container: Optional[IContainerLikeInterface] = None,
+        tool_tip_text: Union[str, None] = None,
+        starting_height: int = 1,
+        parent_element: Optional[UIElement] = None,
+        object_id: Union[ObjectID, str, None] = None,
+        anchors: Optional[dict[str, Union[str, IUIElementInterface]]] = None,
+        allow_double_clicks: bool = False,
+        generate_click_events_from: Iterable[int] = frozenset([pygame.BUTTON_LEFT]),
+        visible: int = 1,
+        *,
+        command: Optional[Union[Callable, dict[int, Callable]]] = None,
+        tool_tip_object_id: Optional[ObjectID] = None,
+        text_kwargs: Optional[dict[str, str]] = None,
+        tool_tip_text_kwargs: Optional[dict[str, str]] = None,
+        max_dynamic_width: Optional[int] = None,
+        scale_func=pygame.transform.smoothscale,
+    ):
+        self.scale_func = scale_func
+        super().__init__(
+            relative_rect,
+            text,
+            manager,
+            container,
+            tool_tip_text,
+            starting_height,
+            parent_element,
+            object_id,
+            anchors,
+            allow_double_clicks,
+            generate_click_events_from,
+            visible,
+            command=command,
+            tool_tip_object_id=tool_tip_object_id,
+            text_kwargs=text_kwargs,
+            tool_tip_text_kwargs=tool_tip_text_kwargs,
+            max_dynamic_width=max_dynamic_width,
+        )
+
+    @staticmethod
+    def _scale_image_to_fit(
+        image: pygame.Surface,
+        target_size: tuple[int, int],
+        scale_func=pygame.transform.smoothscale,
+    ) -> pygame.Surface:
+        """
+        Scale an image to fit within the target size while maintaining aspect ratio.
+        The image will be scaled to the largest size that fits within the target dimensions.
+
+        :param image: The image surface to scale.
+        :param target_size: The target size (width, height) to fit the image within.
+        :return: The scaled image surface.
+        """
+        if image is None:
+            return None
+
+        image_width, image_height = image.get_size()
+        target_width, target_height = target_size
+
+        # Calculate scale factors for both dimensions
+        scale_x = target_width / image_width
+        scale_y = target_height / image_height
+
+        # Use the smaller scale factor to ensure the image fits within the target size
+        scale = min(scale_x, scale_y)
+
+        # Calculate new dimensions
+        new_width = int(image_width * scale)
+        new_height = int(image_height * scale)
+
+        # Scale the image
+        if new_width > 0 and new_height > 0:
+            return scale_func(image, (new_width, new_height))
+        else:
+            return image
+
+    def _set_any_images_from_theme(self) -> bool:
+        """
+        Grabs images for this button from the UI theme if any are set.
+        Supports both single image format and multi-image format from JSON,
+        but internally always uses lists for consistency.
+
+        :return: True if any of the images have changed since last time they were set.
+        """
+        changed = False
+
+        # Process normal state first to establish baseline for fallbacks
+        normal_images = []
+        normal_positions = []
+
+        # First try to load multi-image format for normal state
+        try:
+            image_details = self.ui_theme.get_image_details(
+                "normal_images", self.combined_element_ids
+            )
+            normal_images = [detail["surface"] for detail in image_details]
+            normal_positions = [detail["position"] for detail in image_details]
+        except LookupError:
+            # Fall back to single image format for normal state
+            try:
+                image_details = self.ui_theme.get_image_details(
+                    "normal_image", self.combined_element_ids
+                )
+                if image_details:
+                    normal_images = [detail["surface"] for detail in image_details]
+                    normal_positions = [detail["position"] for detail in image_details]
+            except LookupError:
+                # No normal image found
+                pass
+
+        # Apply auto-scaling to normal images if enabled
+        if normal_images and self.auto_scale_images:
+            scaled_images = []
+            for img in normal_images:
+                scaled_img = self._scale_image_to_fit(
+                    img, self.rect.size, self.scale_func
+                )
+                scaled_images.append(scaled_img)
+            normal_images = scaled_images
+
+        # Ensure we have positions for all normal images (default to center if missing)
+        while len(normal_positions) < len(normal_images):
+            normal_positions.append((0.5, 0.5))
+
+        # Check if normal images have changed
+        if (
+            normal_images != self.normal_images
+            or normal_positions != self.normal_image_positions
+        ):
+            self.normal_images = normal_images
+            self.normal_image_positions = normal_positions
+            changed = True
+
+        # Now process other states with fallback to normal
+        other_state_mappings = [
+            ("hovered", "hovered_images", "hovered_image_positions"),
+            ("selected", "selected_images", "selected_image_positions"),
+            ("disabled", "disabled_images", "disabled_image_positions"),
+        ]
+
+        for state_name, attr_name, position_attr_name in other_state_mappings:
+            new_images = []
+            new_positions = []
+
+            # First try to load multi-image format (e.g., "hovered_images")
+            try:
+                image_details = self.ui_theme.get_image_details(
+                    f"{state_name}_images", self.combined_element_ids
+                )
+                new_images = [detail["surface"] for detail in image_details]
+                new_positions = [detail["position"] for detail in image_details]
+            except LookupError:
+                # Fall back to single image format (e.g., "hovered_image")
+                try:
+                    image_details = self.ui_theme.get_image_details(
+                        f"{state_name}_image", self.combined_element_ids
+                    )
+                    if image_details:
+                        new_images = [detail["surface"] for detail in image_details]
+                        new_positions = [detail["position"] for detail in image_details]
+                except LookupError:
+                    # No image found for this state
+                    pass
+
+            # Apply auto-scaling if enabled
+            if new_images and self.auto_scale_images:
+                scaled_images = []
+                for img in new_images:
+                    scaled_img = self._scale_image_to_fit(
+                        img, self.rect.size, self.scale_func
+                    )
+                    scaled_images.append(scaled_img)
+                new_images = scaled_images
+
+            # Handle fallbacks to normal state
+            if not new_images:
+                # Fall back to normal_images and normal_image_positions
+                new_images = normal_images.copy()
+                new_positions = normal_positions.copy()
+
+            # Ensure we have positions for all images (default to center if missing)
+            while len(new_positions) < len(new_images):
+                new_positions.append((0.5, 0.5))
+
+            # Check if images have changed
+            current_images = getattr(self, attr_name)
+            current_positions = getattr(self, position_attr_name, [])
+            if new_images != current_images or new_positions != current_positions:
+                setattr(self, attr_name, new_images)
+                setattr(self, position_attr_name, new_positions)
+                changed = True
+
+        return changed
 
 
 class UIAppearanceTheme(UIAppearanceTheme_original):

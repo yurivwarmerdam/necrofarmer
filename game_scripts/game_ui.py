@@ -16,7 +16,8 @@ from blinker import signal
 from game_scripts.commander import Commander
 from pygame.sprite import Group
 import pygame_gui
-
+from scripts.ui_shim import UIButton
+import pygame
 
 # This should be a container object; not a uipanel.
 # Can definitely hold a bunch of utility functions.
@@ -50,24 +51,25 @@ class MainUI:
                 "top": "bottom",
                 "bottom": "bottom",
             },
+            object_id="#portrait_background"
         )
-        portrait_background = UIImage(
-            portrait_panel_rect,
-            portrait_background_sprite,
-            anchors={
-                "left": "left",
-                "right": "right",
-                "top": "top",
-                "bottom": "bottom",
-            },
-            container=portrait_panel.get_container(),
-        )
-        print(portrait_panel.rect)
+        # portrait_background = UIImage(
+        #     portrait_panel_rect,
+        #     portrait_background_sprite,
+        #     anchors={
+        #         "left": "left",
+        #         "right": "right",
+        #         "top": "top",
+        #         "bottom": "bottom",
+        #     },
+        #     container=portrait_panel.get_container(),
+        # )
+        # print(portrait_panel.rect)
 
         context_panel = UIPanel(
             pg.Rect(
-                portrait_panel_rect[2],
-                -context_panel_rect[3],
+                portrait_panel_rect[2]-2,
+                -(context_panel_rect[3]-1),
                 context_panel_rect[2],
                 context_panel_rect[3],
             ),
@@ -76,7 +78,7 @@ class MainUI:
                 "right": "right",
                 "top": "bottom",
                 "bottom": "bottom",
-            },
+            }
         )
         context_background = UIImage(
             context_panel_rect,
@@ -88,19 +90,20 @@ class MainUI:
                 "bottom": "bottom",
             },
             scale_func=nine_slice_func,
-            container=context_panel.get_container(),
+            container=context_panel.get_container()
         )
 
         # buttons to be moved to context:
 
-        portrait_button = pygame_gui.elements.UIButton(
+        portrait_button = UIButton(
             pg.Rect(3, 3, 54 * 3, 46 * 3),
             text="",
             object_id="#thopter_button",
+            scale_func=pygame.transform.scale,
             container=portrait_panel.get_container(),
         )
 
-        image_button = pygame_gui.elements.UIButton(
+        image_button = UIButton(
             pg.Rect(3, 3, 54, 46),
             text="",
             object_id="#thopter_button",

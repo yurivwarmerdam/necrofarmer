@@ -23,6 +23,7 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 ### current:
+    - renderer.coordinates_from/to_window() is apparently a shiny new way of doing mouse pos??
     - buildout (cook resources stuff)
     - game mainclass
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
