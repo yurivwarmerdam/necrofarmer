@@ -40,7 +40,7 @@ resolution = (636, 333)
 display = pg.display.set_mode(
     resolution,
     pg.RESIZABLE,
-    pg.SCALED,
+    # pg.SCALED,
 )
 # theme is for general settins, buttons for buttons
 manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")

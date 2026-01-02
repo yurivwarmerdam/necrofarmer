@@ -8,7 +8,7 @@ from pygame_gui.core.interfaces import (
 )
 from pygame_gui.elements import UIImage, UIPanel
 from pygame.rect import Rect, FRect
-from scripts.custom_sprites import tilingscale, ninepatchscale
+from scripts.custom_sprites import tilingscale, ninepatchscale,integer_scale
 from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
 from functools import partial
 from pygame import Vector2
@@ -99,7 +99,7 @@ class MainUI:
             pg.Rect(3, 3, 54 * 3, 46 * 3),
             text="",
             object_id="#thopter_button",
-            scale_func=pygame.transform.scale,
+            scale_func=integer_scale,
             container=portrait_panel.get_container(),
         )
 
@@ -107,6 +107,7 @@ class MainUI:
             pg.Rect(3, 3, 54, 46),
             text="",
             object_id="#thopter_button",
+            scale_func=integer_scale,
             container=context_panel.get_container(),
         )
 

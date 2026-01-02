@@ -7,6 +7,7 @@ from pygame import transform
 from pygame.typing import Point
 from typing import Any, Iterable, Optional, override
 from blinker import signal
+from pygame.transform import scale_by
 
 
 class NodeSprite(Sprite):
@@ -155,9 +156,6 @@ def ninepatchscale(
             "bottom": patch_margain,
         }
 
-    if not dest_surface:
-        dest_surface = Surface(size)
-
     surface_w, surface_h = surface.size
     dest_w, dest_h = size  # non-sequence argument caught by python
     subsurface = surface.subsurface
@@ -281,6 +279,37 @@ def ninepatchscale(
     return dest_surface
 
 
+def integer_scale(
+    surface: Surface,
+    size: Point,
+    dest_surface: Optional[Surface] = None,
+):
+    """Scale a surface to the largest integer multiple of surface:size.
+    if dimentional ratios of surface and size do not match, takes the smallest of the width and height multiplier.
+
+    Uses the scale_by function, but presents itself as a more regular scale func,
+    in order to comply with what something like pygame_gui expects.
+    Currently does not support shrinkage.
+    The size is a 2 number sequence for (width, height).
+
+    An optional destination surface can be passed which is faster than creating a new
+    Surface. This destination surface must be the same as the size (width, height) passed
+    in, and the same depth and format as the source Surface.
+    """
+
+    multiplier = min(size[0] // surface.size[0], size[1] // surface.size[1])
+
+    if dest_surface is not None:
+        if dest_surface.size != size:
+            raise ValueError("Destination surface doesn't match the provided size")
+    else:
+        dest_surface = Surface(
+            (surface.size[0] * multiplier, surface.size[1] * multiplier)
+        )
+    scale_by(surface, multiplier, dest_surface)
+    return dest_surface
+
+
 class SignalGroup(Group):
     """
     Regular Group that sends a signal whenever add or remove is called.
@@ -302,7 +331,7 @@ class SignalGroup(Group):
     def remove(self, *sprites: Any | AbstractGroup | Iterable) -> None:
         super().remove(*sprites)
         self.signal.send(self)
-    
+
     @override
     def empty(self) -> None:
         super().empty()
