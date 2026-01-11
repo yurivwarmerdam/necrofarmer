@@ -113,9 +113,9 @@ class MainUI:
 
         # signals we are observing
         selected_changed = signal("selected_changed")
-        selected_changed.connect(self.selected_changed)
+        selected_changed.connect(self.selected_changed,weak=False)
 
-    def selected_changed(self, sender: Commander, **kwargs):
+    def selected_changed(self, sender: Commander):
         # create appropriate contextpanel, depending on what is selected
         print(f"changing selected. Sender: {sender}")
         for i in sender.selected:
