@@ -8,7 +8,7 @@ from pygame_gui.core.interfaces import (
 )
 from pygame_gui.elements import UIImage, UIPanel
 from pygame.rect import Rect, FRect
-from scripts.custom_sprites import tilingscale, ninepatchscale,integer_scale
+from scripts.custom_sprites import tilingscale, ninepatchscale, integer_scale
 from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
 from functools import partial
 from pygame import Vector2
@@ -18,6 +18,7 @@ from pygame.sprite import Group
 import pygame_gui
 from scripts.ui_shim import UIButton
 import pygame
+
 
 # This should be a container object; not a uipanel.
 # Can definitely hold a bunch of utility functions.
@@ -38,7 +39,7 @@ class MainUI:
 
         # ------- base elements -------
 
-        portrait_panel = UIPanel(
+        self.portrait_panel = UIPanel(
             pg.Rect(
                 0,
                 -portrait_panel_rect[3],
@@ -51,7 +52,7 @@ class MainUI:
                 "top": "bottom",
                 "bottom": "bottom",
             },
-            object_id="#portrait_background"
+            object_id="#portrait_background",
         )
         # portrait_background = UIImage(
         #     portrait_panel_rect,
@@ -66,10 +67,10 @@ class MainUI:
         # )
         # print(portrait_panel.rect)
 
-        context_panel = UIPanel(
+        self.context_panel = UIPanel(
             pg.Rect(
-                portrait_panel_rect[2]-2,
-                -(context_panel_rect[3]-1),
+                portrait_panel_rect[2] - 2,
+                -(context_panel_rect[3] - 1),
                 context_panel_rect[2],
                 context_panel_rect[3],
             ),
@@ -78,7 +79,7 @@ class MainUI:
                 "right": "right",
                 "top": "bottom",
                 "bottom": "bottom",
-            }
+            },
         )
         context_background = UIImage(
             context_panel_rect,
@@ -90,17 +91,39 @@ class MainUI:
                 "bottom": "bottom",
             },
             scale_func=nine_slice_func,
-            container=context_panel.get_container()
+            container=self.context_panel.get_container(),
         )
 
         # buttons to be moved to context:
 
+        # signals we are observing
+        selected_changed = signal("selected_changed")
+        selected_changed.connect(self.selected_changed, weak=False)
+
+    def selected_changed(self, sender: Commander):
+        # create appropriate contextpanel, depending on what is selected
+        print(f"changing selected. Sender: {sender}")
+        if sender.selected:
+            self.active_panel = ContextPanel(self)
+        else:
+            if self.active_panel:
+                self.active_panel = None
+                self.portrait_panel.get_container().clear()
+                self.context_panel.get_container().clear()
+        for i in sender.selected:
+            print(type(i))
+
+
+# This should be passed portrait panel and context panel. Portrait gives either big image, or a series of small thumbs.
+# context is contextual, based on what's selected.
+class ContextPanel:
+    def __init__(self, main_ui: MainUI):
         portrait_button = UIButton(
             pg.Rect(3, 3, 54 * 3, 46 * 3),
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
-            container=portrait_panel.get_container(),
+            container=main_ui.portrait_panel.get_container(),
         )
 
         image_button = UIButton(
@@ -108,47 +131,5 @@ class MainUI:
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
-            container=context_panel.get_container(),
+            container=main_ui.context_panel.get_container(),
         )
-
-        # signals we are observing
-        selected_changed = signal("selected_changed")
-        selected_changed.connect(self.selected_changed,weak=False)
-
-    def selected_changed(self, sender: Commander):
-        # create appropriate contextpanel, depending on what is selected
-        print(f"changing selected. Sender: {sender}")
-        for i in sender.selected:
-            print(type(i))
-
-
-# This should be passed portrait panel and context panel. Portrait gives either big image, or a series of small thumbs.
-# context is contextual, based on what's selected.
-class ContextPanel(UIPanel):
-    def __init__(
-        self,
-        relative_rect: Rect | FRect | tuple[float, float, float, float],
-        starting_height: int = 1,
-        manager: IUIManagerInterface | None = None,
-        *,
-        element_id: str = "panel",
-        margins: Dict[str, int] | None = None,
-        container: IContainerLikeInterface | None = None,
-        parent_element: UIElement | None = None,
-        object_id: ObjectID | str | None = None,
-        anchors: Dict[str, str | IUIElementInterface] | None = None,
-        visible: int = 1,
-    ):
-        super().__init__(
-            relative_rect,
-            starting_height,
-            manager,
-            element_id=element_id,
-            margins=margins,
-            container=container,
-            parent_element=parent_element,
-            object_id=object_id,
-            anchors=anchors,
-        )
-
-    pass
