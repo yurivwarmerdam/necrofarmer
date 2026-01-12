@@ -111,7 +111,7 @@ class Commander:
                     )
                     if self.selected:
                         self.selected.empty()
-                    self.selected_changed.send(self)
+                        self.selected_changed.send(self)
                     if collided_sprites:
                         self.selected.add(collided_sprites[0])
                         self.selected_changed.send(self)
