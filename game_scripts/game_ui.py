@@ -6,7 +6,7 @@ from pygame_gui.core.interfaces import (
     IUIElementInterface,
     IUIManagerInterface,
 )
-from pygame_gui.elements import UIImage, UIPanel
+from pygame_gui.elements import UIImage
 from pygame.rect import Rect, FRect
 from scripts.custom_sprites import tilingscale, ninepatchscale, integer_scale
 from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
@@ -16,7 +16,7 @@ from blinker import signal
 from game_scripts.commander import Commander
 from pygame.sprite import Group
 import pygame_gui
-from scripts.ui_shim import UIButton
+from scripts.ui_shim import UIButton, UIPanel
 import pygame
 
 
@@ -80,19 +80,21 @@ class MainUI:
                 "top": "bottom",
                 "bottom": "bottom",
             },
-        )
-        context_background = UIImage(
-            context_panel_rect,
-            ui_background_sprite,
-            anchors={
-                "left": "left",
-                "right": "right",
-                "top": "top",
-                "bottom": "bottom",
-            },
+            object_id="#panel_background",
             scale_func=nine_slice_func,
-            container=self.context_panel.get_container(),
         )
+        # context_background = UIImage(
+        #     context_panel_rect,
+        #     ui_background_sprite,
+        #     anchors={
+        #         "left": "left",
+        #         "right": "right",
+        #         "top": "top",
+        #         "bottom": "bottom",
+        #     },
+        #     scale_func=nine_slice_func,
+        #     container=self.context_panel.get_container(),
+        # )
 
         # buttons to be moved to context:
 

@@ -26,6 +26,9 @@
                 "path": "art/ui_components.png",
                 "sub_surface_rect": "0, 0, 60, 62"
             }
+        },
+        "misc": {
+            "auto_scale_images": "1"
         }
     }
 }

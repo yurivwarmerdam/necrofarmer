@@ -27,30 +27,246 @@ class UIPanel(UIPANEL_original):
     I may need to register click down in commander, and only fire up behavior on up. That will lead to a more smooth experience.
     """
 
-    def process_event(self, event: pygame.event.Event) -> bool:
+    def __init__(
+        self,
+        relative_rect: RectLike,
+        starting_height: int = 1,
+        manager: Optional[IUIManagerInterface] = None,
+        *,
+        element_id: str = "panel",
+        margins: Optional[dict[str, int]] = None,
+        container: Optional[IContainerLikeInterface] = None,
+        parent_element: Optional[UIElement] = None,
+        object_id: Optional[Union[ObjectID, str]] = None,
+        anchors: Optional[dict[str, Union[str, IUIElementInterface]]] = None,
+        visible: int = 1,
+        scale_func=pygame.transform.smoothscale,
+    ):
+        self.scale_func = scale_func
+        super().__init__(
+            relative_rect,
+            starting_height,
+            manager,
+            element_id=element_id,
+            margins=margins,
+            container=container,
+            parent_element=parent_element,
+            object_id=object_id,
+            anchors=anchors,
+            visible=visible,
+        )
+
+    @staticmethod
+    def _scale_image_to_fit(
+        image: pygame.Surface,
+        target_size: tuple[int, int],
+        scale_func=pygame.transform.smoothscale,
+    ) -> pygame.Surface:
         """
-        Can be overridden, also handle resizing windows. Gives UI Windows access to pygame events.
-        Currently just blocks mouse click down events from passing through the panel.
+        Scale an image to fit within the target size while maintaining aspect ratio.
+        The image will be scaled to the largest size that fits within the target dimensions.
 
-        :param event: The event to process.
-
-        :return: Should return True if this element consumes this event.
-
+        :param image: The image surface to scale.
+        :param target_size: The target size (width, height) to fit the image within.
+        :return: The scaled image surface.
         """
-        consumed_event = False
-        if (
-            self is not None
-            and event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]
-            and event.button
-            in [pygame.BUTTON_LEFT, pygame.BUTTON_RIGHT, pygame.BUTTON_MIDDLE]
-        ):
-            scaled_mouse_pos = self.ui_manager.calculate_scaled_mouse_position(
-                event.pos
+        if image is None:
+            return None
+
+        image_width, image_height = image.get_size()
+        target_width, target_height = target_size
+
+        # Calculate scale factors for both dimensions
+        scale_x = target_width / image_width
+        scale_y = target_height / image_height
+
+        # Use the smaller scale factor to ensure the image fits within the target size
+        scale = min(scale_x, scale_y)
+
+        # Calculate new dimensions
+        new_width = int(image_width * scale)
+        new_height = int(image_height * scale)
+
+        # Scale the image
+        if new_width > 0 and new_height > 0:
+            return scale_func(image, (new_width, new_height))
+        else:
+            return image
+
+    def _set_any_images_from_theme(self) -> bool:
+        """
+        Grabs background images for this panel from the UI theme if any are set.
+        Supports both single image format and multi-image format from JSON,
+        but internally always uses lists for consistency.
+
+        :return: True if any of the images have changed since last time they were set.
+        """
+        changed = False
+        new_images = []
+        new_positions = []
+
+        # First try to load multi-image format (background_images)
+        try:
+            image_details = self.ui_theme.get_image_details(
+                "background_images", self.combined_element_ids
             )
-            if self.hover_point(scaled_mouse_pos[0], scaled_mouse_pos[1]):
-                consumed_event = True
+            new_images = [detail["surface"] for detail in image_details]
+            new_positions = [
+                detail.get("position", (0.5, 0.5)) for detail in image_details
+            ]
+        except LookupError:
+            # Fall back to single image format (background_image)
+            try:
+                image_details = self.ui_theme.get_image_details(
+                    "background_image", self.combined_element_ids
+                )
+                if image_details:
+                    new_images = [detail["surface"] for detail in image_details]
+                    new_positions = [
+                        detail.get("position", (0.5, 0.5)) for detail in image_details
+                    ]
+            except LookupError:
+                # No image found for this state
+                pass
 
-        return consumed_event
+        # Apply auto-scaling if enabled
+        if new_images and self.auto_scale_images:
+            scaled_images = []
+            for img in new_images:
+                scaled_img = self._scale_image_to_fit(
+                    img, self.rect.size, self.scale_func
+                )
+                scaled_images.append(scaled_img)
+            new_images = scaled_images
+
+        # Ensure we have positions for all images (default to center if missing)
+        while len(new_positions) < len(new_images):
+            new_positions.append((0.5, 0.5))
+
+        # Check if images or positions have changed
+        if (
+            new_images != self.background_images
+            or new_positions != self.background_image_positions
+        ):
+            self.background_images = new_images
+            self.background_image_positions = new_positions
+            changed = True
+
+        return changed
+
+    def set_dimensions(self, dimensions: Coordinate, clamp_to_container: bool = False):
+        """
+        Set the size of this panel and then re-sizes and shifts the contents of the panel container
+        to fit the new size.
+
+        :param dimensions: The new dimensions to set.
+        :param clamp_to_container: Whether we should clamp the dimensions to the
+                                   dimensions of the container or not.
+
+        """
+        # Don't use a basic gate on this set dimensions method because the container may be a
+        # different size to the window
+        super().set_dimensions(dimensions)
+
+        # Handle auto-scaling of background images when panel size changes
+        if self.auto_scale_images and self.background_images:
+            scaled_images = []
+            for img in self.background_images:
+                scaled_img = self._scale_image_to_fit(
+                    img, self.rect.size, self.scale_func
+                )
+                scaled_images.append(scaled_img)
+            self.background_images = scaled_images
+            self.rebuild()
+
+        new_container_dimensions = (
+            self.relative_rect.width
+            - (self.container_margins["left"] + self.container_margins["right"]),
+            self.relative_rect.height
+            - (self.container_margins["top"] + self.container_margins["bottom"]),
+        )
+        if new_container_dimensions != self.get_container().get_size():
+            self.get_container().set_dimensions(new_container_dimensions)
+
+    def set_background_images(self, images: list[pygame.Surface]):
+        """
+        Set the background images for the panel.
+
+        :param images: List of pygame.Surface objects to use as background images
+        """
+        if images != self.background_images:
+            self.background_images = images.copy() if images else []
+
+            # Apply auto-scaling if enabled
+            if self.background_images and self.auto_scale_images:
+                scaled_images = []
+                for img in self.background_images:
+                    scaled_img = self._scale_image_to_fit(
+                        img, self.rect.size, self.scale_func
+                    )
+                    scaled_images.append(scaled_img)
+                self.background_images = scaled_images
+
+            self.rebuild()
+
+    def set_auto_scale_images(self, auto_scale: bool):
+        """
+        Enable or disable automatic scaling of background images to fit the panel size.
+
+        :param auto_scale: True to enable auto-scaling, False to disable
+        """
+        if auto_scale != self.auto_scale_images:
+            self.auto_scale_images = auto_scale
+
+            # If enabling auto-scale, rescale existing images
+            if auto_scale and self.background_images:
+                scaled_images = []
+                for img in self.background_images:
+                    scaled_img = self._scale_image_to_fit(
+                        img, self.rect.size, self.scale_func
+                    )
+                    scaled_images.append(scaled_img)
+                self.background_images = scaled_images
+                self.rebuild()
+
+    def add_background_image(self, image: pygame.Surface):
+        """
+        Add a background image to the panel's image list.
+
+        :param image: pygame.Surface object to add to the background images
+        """
+        if image is not None:
+            # Apply auto-scaling if enabled
+            if self.auto_scale_images:
+                image = self._scale_image_to_fit(image, self.rect.size, self.scale_func)
+
+            self.background_images.append(image)
+            self.rebuild()
+
+    # def process_event(self, event: pygame.event.Event) -> bool:
+    #     """
+    #     Can be overridden, also handle resizing windows. Gives UI Windows access to pygame events.
+    #     Currently just blocks mouse click down events from passing through the panel.
+
+    #     :param event: The event to process.
+
+    #     :return: Should return True if this element consumes this event.
+
+    #     """
+    #     consumed_event = False
+    #     if (
+    #         self is not None
+    #         and event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]
+    #         and event.button
+    #         in [pygame.BUTTON_LEFT, pygame.BUTTON_RIGHT, pygame.BUTTON_MIDDLE]
+    #     ):
+    #         scaled_mouse_pos = self.ui_manager.calculate_scaled_mouse_position(
+    #             event.pos
+    #         )
+    #         if self.hover_point(scaled_mouse_pos[0], scaled_mouse_pos[1]):
+    #             consumed_event = True
+
+    #     return consumed_event
 
 
 class UIButton(UIButton_original):
