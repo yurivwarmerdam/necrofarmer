@@ -67,6 +67,35 @@ class MainUI:
         # )
         # print(portrait_panel.rect)
 
+        self.context_background = UIPanel(
+            pg.Rect(
+                portrait_panel_rect[2] - 2,
+                -(context_panel_rect[3] - 1),
+                context_panel_rect[2],
+                context_panel_rect[3],
+            ),
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
+            # object_id="#panel_background",
+            scale_func=nine_slice_func,
+        )
+        UIImage(
+            context_panel_rect,
+            ui_background_sprite,
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "bottom",
+            },
+            scale_func=nine_slice_func,
+            container=self.context_background.get_container(),
+        )
+
         self.context_panel = UIPanel(
             pg.Rect(
                 portrait_panel_rect[2] - 2,
@@ -80,23 +109,7 @@ class MainUI:
                 "top": "bottom",
                 "bottom": "bottom",
             },
-            object_id="#panel_background",
-            scale_func=nine_slice_func,
         )
-        # context_background = UIImage(
-        #     context_panel_rect,
-        #     ui_background_sprite,
-        #     anchors={
-        #         "left": "left",
-        #         "right": "right",
-        #         "top": "top",
-        #         "bottom": "bottom",
-        #     },
-        #     scale_func=nine_slice_func,
-        #     container=self.context_panel.get_container(),
-        # )
-
-        # buttons to be moved to context:
 
         # signals we are observing
         selected_changed = signal("selected_changed")
