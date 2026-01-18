@@ -69,8 +69,8 @@ class MainUI:
 
         self.context_background = UIPanel(
             pg.Rect(
-                portrait_panel_rect[2] - 2,
-                -(context_panel_rect[3] - 1),
+                portrait_panel_rect[2],
+                -(context_panel_rect[3]),
                 context_panel_rect[2],
                 context_panel_rect[3],
             ),

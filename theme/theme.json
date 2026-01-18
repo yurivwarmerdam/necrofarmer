@@ -6,7 +6,7 @@
     },
     "panel": {
         "colors": {
-            "dark_bg": "rgba(0, 0, 0, 255)"
+            "dark_bg": "rgba(0, 0, 0, 0)"
         },
         "misc": {
             "border_width": "0",
