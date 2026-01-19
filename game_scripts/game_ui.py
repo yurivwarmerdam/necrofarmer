@@ -32,10 +32,8 @@ class MainUI:
         portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
         context_panel_rect: Rect = Rect(0, 0, 400, 99)
         ui_components_sheet = load_image("art/ui_components.png")
-        portrait_background_sprite = sheet_to_sprite(
-            ui_components_sheet, Rect(0, 112, 170, 146)
-        )
         ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
+        # ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(132, 5, 61, 22))
 
         # ------- base elements -------
 
