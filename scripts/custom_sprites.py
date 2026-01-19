@@ -146,7 +146,7 @@ def ninepatchscale(
         if dest_surface.size != size:
             raise ValueError("Destination surface doesn't match the provided size")
     else:
-        dest_surface = Surface(size)
+        dest_surface = Surface(size, pg.SRCALPHA)
 
     if type(patch_margain) is int:
         patch_margain = {
