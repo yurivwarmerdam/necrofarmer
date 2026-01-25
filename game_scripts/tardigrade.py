@@ -8,13 +8,14 @@ from scripts import image_server
 from pygame import Vector2
 from collections import deque
 from random import randint
-
+from game_scripts.context_panel import ContextPanel
+from game_scripts.selectable import Selectable
 
 # Needs access to:
 # - groups
 # v tilemap
 # v star (already has a server)
-class Tardigrade(AnimatedSprite):
+class Tardigrade(AnimatedSprite,Selectable):
     def __init__(self, pos: Vector2):
         img_server = image_server.get_server()
         groups = group_server.get_server()
@@ -92,3 +93,6 @@ class Tardigrade(AnimatedSprite):
             if path[0] == result:
                 path.popleft()
         return result
+
+class TardigradePanel(ContextPanel):
+    pass

@@ -1,0 +1,13 @@
+from abc import ABC
+from abc import abstractmethod
+from game_scripts.context_panel import ContextPanel
+
+
+class Selectable(ABC):
+    @property
+    @abstractmethod
+    def get_context_panel(self) -> type[ContextPanel]:
+        """
+        returns subclass of contextpanel
+        which should be instantiated when this entity is selected.
+        """

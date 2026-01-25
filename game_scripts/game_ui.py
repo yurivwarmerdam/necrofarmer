@@ -8,7 +8,8 @@ from pygame_gui.core.interfaces import (
 )
 from pygame_gui.elements import UIImage
 from pygame.rect import Rect, FRect
-from scripts.custom_sprites import tilingscale, ninepatchscale, integer_scale
+from game_scripts.context_panel import ContextPanel
+from scripts.custom_sprites import tilingscale, ninepatchscale
 from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
 from functools import partial
 from pygame import Vector2
@@ -16,13 +17,15 @@ from blinker import signal
 from game_scripts.commander import Commander
 from pygame.sprite import Group
 import pygame_gui
-from scripts.ui_shim import UIButton, UIPanel
-import pygame
+from scripts.ui_shim import UIPanel
 
 
-# This should be a container object; not a uipanel.
-# Can definitely hold a bunch of utility functions.
 class MainUI:
+    """
+    This should be a container object; not the actual panel.
+    Can definitely hold a bunch of utility functions.
+    """
+
     def __init__(self):
         # setup main elements
 
@@ -37,6 +40,7 @@ class MainUI:
 
         # ------- base elements -------
 
+        self.active_panel = None
         self.portrait_panel = UIPanel(
             pg.Rect(
                 0,
@@ -52,18 +56,6 @@ class MainUI:
             },
             object_id="#portrait_background",
         )
-        # portrait_background = UIImage(
-        #     portrait_panel_rect,
-        #     portrait_background_sprite,
-        #     anchors={
-        #         "left": "left",
-        #         "right": "right",
-        #         "top": "top",
-        #         "bottom": "bottom",
-        #     },
-        #     container=portrait_panel.get_container(),
-        # )
-        # print(portrait_panel.rect)
 
         self.context_background = UIPanel(
             pg.Rect(
@@ -127,22 +119,3 @@ class MainUI:
             print(type(i))
 
 
-# This should be passed portrait panel and context panel. Portrait gives either big image, or a series of small thumbs.
-# context is contextual, based on what's selected.
-class ContextPanel:
-    def __init__(self, main_ui: MainUI):
-        portrait_button = UIButton(
-            pg.Rect(3, 3, 54 * 3, 46 * 3),
-            text="",
-            object_id="#thopter_button",
-            scale_func=integer_scale,
-            container=main_ui.portrait_panel.get_container(),
-        )
-
-        image_button = UIButton(
-            pg.Rect(3, 3, 54, 46),
-            text="",
-            object_id="#thopter_button",
-            scale_func=integer_scale,
-            container=main_ui.context_panel.get_container(),
-        )
