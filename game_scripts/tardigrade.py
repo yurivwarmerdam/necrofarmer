@@ -10,12 +10,14 @@ from collections import deque
 from random import randint
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
+from scripts.custom_sprites import integer_scale
+from scripts.ui_shim import UIButton
 
 # Needs access to:
 # - groups
 # v tilemap
 # v star (already has a server)
-class Tardigrade(AnimatedSprite,Selectable):
+class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
         img_server = image_server.get_server()
         groups = group_server.get_server()
@@ -95,4 +97,18 @@ class Tardigrade(AnimatedSprite,Selectable):
         return result
 
 class TardigradePanel(ContextPanel):
-    pass
+    portrait_button = UIButton(
+        pg.Rect(3, 3, 54 * 3, 46 * 3),
+        text="",
+        object_id="#thopter_button",
+        scale_func=integer_scale,
+        # container=main_ui.portrait_panel.get_container(),
+    )
+
+    image_button = UIButton(
+        pg.Rect(3, 3, 54, 46),
+        text="",
+        object_id="#thopter_button",
+        scale_func=integer_scale,
+        # container=main_ui.context_panel.get_container(),
+    )

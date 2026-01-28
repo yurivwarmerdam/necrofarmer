@@ -109,7 +109,8 @@ class MainUI:
         # create appropriate contextpanel, depending on what is selected
         print(f"changing selected. Sender: {sender}")
         if sender.selected:
-            self.active_panel = ContextPanel(self)
+            self.set_context_panel(sender.selected)
+
         else:
             if self.active_panel:
                 self.active_panel = None
@@ -118,4 +119,9 @@ class MainUI:
         for i in sender.selected:
             print(type(i))
 
-
+    def set_context_panel(self, selected: Group):
+        new_panel: type[ContextPanel] = selected.sprites()[0].get_context_panel()
+        self.active_panel = new_panel()
+        self.active_panel.portrait_button.set_container(self.portrait_panel)
+        self.active_panel.image_button.set_container(self.context_panel)
+        pass
