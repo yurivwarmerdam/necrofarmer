@@ -120,7 +120,7 @@ class MainUI:
             print(type(i))
 
     def set_context_panel(self, selected: Group):
-        new_panel: type[ContextPanel] = selected.sprites()[0].get_context_panel()
+        new_panel: type[ContextPanel] = selected.sprites()[0].context_panel
         self.active_panel = new_panel()
         self.active_panel.portrait_button.set_container(self.portrait_panel)
         self.active_panel.image_button.set_container(self.context_panel)

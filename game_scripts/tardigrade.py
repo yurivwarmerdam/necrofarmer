@@ -13,6 +13,7 @@ from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
 
+
 # Needs access to:
 # - groups
 # v tilemap
@@ -96,19 +97,33 @@ class Tardigrade(AnimatedSprite, Selectable):
                 path.popleft()
         return result
 
-class TardigradePanel(ContextPanel):
-    portrait_button = UIButton(
-        pg.Rect(3, 3, 54 * 3, 46 * 3),
-        text="",
-        object_id="#thopter_button",
-        scale_func=integer_scale,
-        # container=main_ui.portrait_panel.get_container(),
-    )
+    @property
+    def context_panel(self) -> type[ContextPanel]:
+        return TardigradePanel
 
-    image_button = UIButton(
-        pg.Rect(3, 3, 54, 46),
-        text="",
-        object_id="#thopter_button",
-        scale_func=integer_scale,
-        # container=main_ui.context_panel.get_container(),
-    )
+
+class TardigradePanel(ContextPanel):
+    def __init__(self) -> None:
+        self._portrait_button = UIButton(
+            pg.Rect(3, 3, 54 * 3, 46 * 3),
+            text="",
+            object_id="#thopter_button",
+            scale_func=integer_scale,
+            # container=main_ui.portrait_panel.get_container(),
+        )
+        self._image_button = UIButton(
+            pg.Rect(3, 3, 54, 46),
+            text="",
+            object_id="#thopter_button",
+            scale_func=integer_scale,
+            # container=main_ui.context_panel.get_container(),
+        )
+        pass
+
+    @property
+    def portrait_button(self) -> UIButton:
+        return self._portrait_button
+
+    @property
+    def image_button(self) -> UIButton:
+        return self._image_button

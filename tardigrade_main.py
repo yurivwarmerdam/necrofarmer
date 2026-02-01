@@ -1,7 +1,7 @@
 import pygame as pg
 import pygame_gui
 import sys
-from pygame import Vector2, Rect
+from pygame import Vector2
 from pygame.sprite import Group
 from game_scripts.commander import Commander
 from game_scripts import entity_tilemap
