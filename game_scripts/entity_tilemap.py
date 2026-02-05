@@ -41,7 +41,7 @@ class EntityTilemap(Tilemap):
         tmx_path,
     ):
         super().__init__(tmx_path)
-        self.bigtiles: dict[Vector2, BigTile] = {}
+        self.bigtiles: dict[tuple[int, int], BigTile] = {}
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
 
@@ -63,7 +63,7 @@ class EntityTilemap(Tilemap):
                     offset=tile.offset,
                     tiles=sub_idxs,
                 )
-                self.bigtiles[new_tile] = sub_idxs
+                self.bigtiles[tuple(origin_idx)] = new_tile
                 self.set_tile(new_tile, layer, origin_idx)
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):

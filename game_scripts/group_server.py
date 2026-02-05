@@ -4,10 +4,6 @@ from pygame.sprite import AbstractGroup, Group, Sprite
 
 @dataclass
 class GroupServer:
-    RENDER = 1
-    COLLISION = 2
-    UPDATE = 4
-
     # --------------
     # Render groups
     # --------------
