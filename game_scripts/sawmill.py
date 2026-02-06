@@ -44,6 +44,7 @@ class SawmillPanel(ContextPanel):
             scale_func=integer_scale,
             # container=main_ui.context_panel.get_container(),
         )
+        super().__init__("#sawmill_button")
         pass
 
     @property

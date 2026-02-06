@@ -5,6 +5,11 @@ import json
 from math import floor
 from game_scripts.selectable import Selectable
 
+from game_scripts.sawmill import Sawmill
+
+bigtile_entities = {
+    "sawmill":Sawmill
+}
 
 class BigTile(Tile):
     def __init__(
@@ -42,7 +47,7 @@ class EntityTilemap(Tilemap):
         tmx_path,
     ):
         super().__init__(tmx_path)
-        self.bigtiles: dict[tuple[int, int], BigTile] = {}
+        self.bigtiles: dict[tuple[float, float], BigTile] = {}
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
 
