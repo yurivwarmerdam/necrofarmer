@@ -104,13 +104,6 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 class TardigradePanel(ContextPanel):
     def __init__(self) -> None:
-        self._portrait_button = UIButton(
-            pg.Rect(3, 3, 54 * 3, 46 * 3),
-            text="",
-            object_id="#thopter_button",
-            scale_func=integer_scale,
-            # container=main_ui.portrait_panel.get_container(),
-        )
         self._image_button = UIButton(
             pg.Rect(3, 3, 54, 46),
             text="",
@@ -118,6 +111,7 @@ class TardigradePanel(ContextPanel):
             scale_func=integer_scale,
             # container=main_ui.context_panel.get_container(),
         )
+        super().__init__(portait_id="#tardigrade_button")
         pass
 
     @property

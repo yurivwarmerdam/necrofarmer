@@ -11,21 +11,21 @@ class ContextPanel(ABC):
     context is contextual, based on what's selected.
     """
 
-    def __init__(self) -> None:
+    def __init__(self,portait_id="default") -> None:
         self._portrait_button = UIButton(
             pg.Rect(3, 3, 54 * 3, 46 * 3),
             text="",
-            # object_id="#thopter_button",
+            object_id=portait_id,
             scale_func=integer_scale,
             # container=main_ui.portrait_panel.get_container(),
         )
-        self._image_button = UIButton(
-            pg.Rect(3, 3, 54, 46),
-            text="",
-            # object_id="#thopter_button",
-            scale_func=integer_scale,
-            # container=main_ui.context_panel.get_container(),
-        )
+        # self._image_button = UIButton(
+        #     pg.Rect(3, 3, 54, 46),
+        #     text="",
+        #     # object_id="#thopter_button",
+        #     scale_func=integer_scale,
+        #     # container=main_ui.context_panel.get_container(),
+        # )
         pass
 
     @property

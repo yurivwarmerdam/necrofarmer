@@ -29,6 +29,9 @@
                     "sub_surface_rect": "46,0,46,38"
                 }
             ]
+        },
+        "misc": {
+            "auto_scale_images": "1"
         }
     }
 }

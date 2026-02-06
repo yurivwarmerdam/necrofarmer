@@ -29,6 +29,9 @@
           "sub_surface_rect": "46,0,46,38"
         }
       ]
+    },
+    "misc": {
+      "auto_scale_images": "1"
     }
   },
   "#thopter_button": {
@@ -62,7 +65,9 @@
         }
       ]
     },
-    "misc":{"auto_scale_images":"1"}
+    "misc": {
+      "auto_scale_images": "1"
+    }
   },
   "#tardigrade_button": {
     "images": {
@@ -94,6 +99,9 @@
           "sub_surface_rect": "138,0,46,38"
         }
       ]
+    },
+    "misc": {
+      "auto_scale_images": "1"
     }
   }
 }

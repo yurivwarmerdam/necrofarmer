@@ -3,6 +3,7 @@ from scripts.tilemap import Tilemap, Tile
 from pygame import Vector2, Surface
 import json
 from math import floor
+from game_scripts.selectable import Selectable
 
 
 class BigTile(Tile):
