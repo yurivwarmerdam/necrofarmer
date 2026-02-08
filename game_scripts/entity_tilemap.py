@@ -1,4 +1,5 @@
 from pygame.sprite import Group, Sprite
+from game_scripts.big_tile import BigTile
 from scripts.tilemap import Tilemap, Tile
 from pygame import Vector2, Surface
 import json
@@ -7,38 +8,8 @@ from game_scripts.selectable import Selectable
 
 from game_scripts.sawmill import Sawmill
 
-bigtile_entities = {
-    "sawmill":Sawmill
-}
-
-class BigTile(Tile):
-    def __init__(
-        self,
-        pos,
-        image,
-        properties: dict,
-        *groups,
-        anchor="bottomleft",
-        offset=Vector2(0, 0),
-        tiles: list = [Vector2(0, 0)],
-    ):
-        """
-        Currently only suports isometric tiles.
-        Should also be compatible with orthogonal tiles with comparatively little effort.
-        Args:
-            pos: position of tile
-            image: image
-            properties: tile properties
-            groups: groups this sprite will belong to
-            anchor: Sprite anchor
-            offset: vector pointing from anchor intended origin of the tile.
-            tiles: map_idxs of all subtiles within this bigtile
-        """
-        super().__init__(pos, image, properties, *groups, anchor=anchor, offset=offset)
-        self.tiles = tiles
-
-    def bigtile_prop_to_vectors(self, property):
-        return [Vector2(*p) for p in json.loads(property)]
+# TODO: this wants to be in some .conf or json file.
+bigtile_entities = {"sawmill": Sawmill}
 
 
 class EntityTilemap(Tilemap):
@@ -50,9 +21,10 @@ class EntityTilemap(Tilemap):
         self.bigtiles: dict[tuple[float, float], BigTile] = {}
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
-
+            print(self.get_tile_idxs_by_property("name", layer))
             for origin_idx in bigtile_map_idxs:
                 tile: Tile = self.get_tilev(layer, origin_idx)
+                name = self.get_tilev_properties(origin_idx, layer).get("name", None)
                 self.kill_tile(layer, origin_idx)
                 sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
                 sub_idxs = [idx + origin_idx for idx in sub_idxs]
@@ -60,15 +32,26 @@ class EntityTilemap(Tilemap):
                     raise Exception(
                         "invalid BigTile Placement in EntityTilemap init! Aborting."
                     )
-                new_tile = BigTile(
-                    tile.pos,
-                    tile.image,
-                    tile.properties,
-                    tile.groups(),
-                    anchor=tile.anchor,
-                    offset=tile.offset,
-                    tiles=sub_idxs,
-                )
+                if name and name in bigtile_entities:
+                    new_tile = bigtile_entities[name](
+                        tile.pos,
+                        tile.image,
+                        tile.properties,
+                        tile.groups(),
+                        anchor=tile.anchor,
+                        offset=tile.offset,
+                        tiles=sub_idxs,
+                    )
+                else:
+                    new_tile = BigTile(
+                        tile.pos,
+                        tile.image,
+                        tile.properties,
+                        tile.groups(),
+                        anchor=tile.anchor,
+                        offset=tile.offset,
+                        tiles=sub_idxs,
+                    )
                 self.bigtiles[tuple(origin_idx)] = new_tile
                 self.set_tile(new_tile, layer, origin_idx)
 

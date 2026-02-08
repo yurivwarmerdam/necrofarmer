@@ -1,9 +1,11 @@
 from pygame import Vector2
-from game_scripts.entity_tilemap import BigTile
+from game_scripts.big_tile import BigTile
 from game_scripts.selectable import Selectable
-from scripts import group_server
+from game_scripts import group_server
 from game_scripts.game_ui import ContextPanel
 from scripts.ui_shim import UIButton
+import pygame as pg
+from scripts.custom_sprites import integer_scale
 
 
 class Sawmill(BigTile, Selectable):
@@ -18,14 +20,20 @@ class Sawmill(BigTile, Selectable):
         tiles: list = [Vector2(0, 0)],
     ):
         global_groups = group_server.get_server()
-        groups = global_groups.colliders + groups
         super().__init__(
-            pos, image, properties, *groups, anchor=anchor, offset=offset, tiles=tiles
+            pos,
+            image,
+            properties,
+            global_groups.colliders,  # prepending colliders to groups.
+            *groups,
+            anchor=anchor,
+            offset=offset,
+            tiles=tiles,
         )
 
-        @property
-        def context_panel(self) -> type[ContextPanel]:
-            return SawmillPanel
+    @property
+    def context_panel(self) -> type[ContextPanel]:
+        return SawmillPanel
 
 
 class SawmillPanel(ContextPanel):
@@ -49,9 +57,8 @@ class SawmillPanel(ContextPanel):
 
     @property
     def portrait_button(self) -> UIButton:
-        return self.portrait_button
-        raise NotImplementedError
+        return self._portrait_button
 
     @property
     def image_button(self) -> UIButton:
-        raise NotImplementedError
+        return self._image_button

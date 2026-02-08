@@ -92,12 +92,14 @@ class Commander:
             return True
         # -- mouse buttons --
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
+            processed = []
             if self.selected:
-                processed = any(
-                    [sprite.process_events(event) for sprite in self.selected]
-                )
-                if processed:
-                    return True
+                for sprite in self.selected:
+                    if hasattr(sprite, "process_events"):
+                        processed.append(sprite.process_events(event))
+            processed = any(processed)
+            if processed:
+                return True
             if event.button == 1:
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.box.start_drag()
