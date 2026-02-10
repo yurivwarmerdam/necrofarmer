@@ -116,8 +116,6 @@ class MainUI:
                 self.active_panel = None
                 self.portrait_panel.get_container().clear()
                 self.context_panel.get_container().clear()
-        for i in sender.selected:
-            print(type(i))
 
     def set_context_panel(self, selected: Group):
         new_panel: type[ContextPanel] = selected.sprites()[0].context_panel

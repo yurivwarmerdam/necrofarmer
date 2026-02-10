@@ -57,7 +57,14 @@ class SawmillPanel(ContextPanel):
 
     @property
     def portrait_button(self) -> UIButton:
-        return self._portrait_button
+        # return self._portrait_button
+        return UIButton(
+            pg.Rect(3, 3, 54 * 3, 46 * 3),
+            text="",
+            object_id="#sawmill_button",
+            scale_func=integer_scale,
+            # container=main_ui.portrait_panel.get_container(),
+        )
 
     @property
     def image_button(self) -> UIButton:

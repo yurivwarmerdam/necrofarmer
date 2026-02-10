@@ -21,7 +21,6 @@ class EntityTilemap(Tilemap):
         self.bigtiles: dict[tuple[float, float], BigTile] = {}
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
-            print(self.get_tile_idxs_by_property("name", layer))
             for origin_idx in bigtile_map_idxs:
                 tile: Tile = self.get_tilev(layer, origin_idx)
                 name = self.get_tilev_properties(origin_idx, layer).get("name", None)
