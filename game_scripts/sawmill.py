@@ -38,34 +38,14 @@ class Sawmill(BigTile, Selectable):
 
 class SawmillPanel(ContextPanel):
     def __init__(self) -> None:
-        self._portrait_button = UIButton(
-            pg.Rect(3, 3, 54 * 3, 46 * 3),
-            text="",
-            # object_id="#thopter_button",
-            scale_func=integer_scale,
-            # container=main_ui.portrait_panel.get_container(),
-        )
-        self._image_button = UIButton(
+        super().__init__("#sawmill_button")
+
+    @property
+    def image_button(self) -> UIButton:
+        return UIButton(
             pg.Rect(3, 3, 54, 46),
             text="",
             # object_id="#thopter_button",
             scale_func=integer_scale,
             # container=main_ui.context_panel.get_container(),
         )
-        super().__init__("#sawmill_button")
-        pass
-
-    @property
-    def portrait_button(self) -> UIButton:
-        # return self._portrait_button
-        return UIButton(
-            pg.Rect(3, 3, 54 * 3, 46 * 3),
-            text="",
-            object_id="#sawmill_button",
-            scale_func=integer_scale,
-            # container=main_ui.portrait_panel.get_container(),
-        )
-
-    @property
-    def image_button(self) -> UIButton:
-        return self._image_button
