@@ -29,16 +29,18 @@ pip install -r requirements.txt
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
         - process (rest of the fucking owl. Think about how to abstract inputevents)
     v  learn how to consume input in pygame ui.
-    - collision
+    - collision (not really. More like )
+
+    selection logic:
+    - I remember passing my_entity(entities) to context_panels and then populating object internal state based on that. Probably using a bunch of signals.
+    - I wonder if that's easier/better than just looking at commander.selected.
+    - On selected changed the panel will be destroyed and recreated anyway, so it won't lead to annoyances when adding a unit to a seleciton when slift-clicking or anything.
+    - multi-slect panels (not a feature yet) would know how to pull data
+    - same with single-select panels.
+    - this approach would eliminate a bunch of passing around objects, instead just asking where the commander server is and taking some reference from there.
 
     Next step (choices!):
     - highlight on select
-    - ui on select (really any ui at all)
-        - figure out how theming works, how to make separate buttons per art, 
-        - how to add callables to theming (function on click, function on click, scaling function, binds)
-        - start assembling master_ui server/locator
-        - spawn active tabs based on select. Look at how I did it in godot, see if I hate that, and if it makes sense here.
-    - other selectables (building, thopter)
     - logical animation
 
     - ui class
@@ -46,6 +48,15 @@ pip install -r requirements.txt
         - read up on how they are populated
         - start making my nested button with the cute littel pressed effect
         
+### selection logic
+    v ui on select (really any ui at all)
+        - figure out how theming works, how to make separate buttons per art, 
+        - how to add callables to theming (function on click, function on click, scaling function, binds)
+        - start assembling master_ui server/locator
+        - spawn active tabs based on select. Look at how I did it in godot, see if I hate that, and if it makes sense here.
+    v other selectables (building, thopter)
+
+
 
 ### signal/observer stuff
 https://pypi.org/project/blinker/
