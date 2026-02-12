@@ -11,7 +11,7 @@ from random import randint
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
-from scripts.ui_shim import UIButton
+from scripts.ui_shim import UIButton, UIPanel
 
 
 # Needs access to:
@@ -108,6 +108,10 @@ class TardigradePanel(ContextPanel):
         pass
 
     @property
+    def context_panel(self) -> UIPanel:
+        return UIPanel()
+
+    @property
     def image_button(self) -> UIButton:
         return UIButton(
             pg.Rect(3, 3, 54, 46),
@@ -115,3 +119,4 @@ class TardigradePanel(ContextPanel):
             object_id="#thopter_button",
             scale_func=integer_scale,
         )
+

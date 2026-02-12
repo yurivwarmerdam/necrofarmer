@@ -1,5 +1,5 @@
 from scripts.custom_sprites import integer_scale
-from scripts.ui_shim import UIButton
+from scripts.ui_shim import UIButton, UIPanel
 from abc import ABC, abstractmethod
 
 import pygame as pg
@@ -24,6 +24,11 @@ class ContextPanel(ABC):
             object_id=self.portait_id,
             scale_func=integer_scale,
         )
+
+    @property
+    @abstractmethod
+    def context_panel(self) -> UIPanel:
+        pass
 
     @property
     @abstractmethod
