@@ -49,3 +49,7 @@ class SawmillPanel(ContextPanel):
             scale_func=integer_scale,
             # container=main_ui.context_panel.get_container(),
         )
+
+    @property
+    def context_panel(self):
+        raise NotImplementedError
