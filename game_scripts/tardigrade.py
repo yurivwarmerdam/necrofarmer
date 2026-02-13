@@ -114,9 +114,8 @@ class TardigradePanel(ContextPanel):
     @property
     def image_button(self) -> UIButton:
         return UIButton(
-            pg.Rect(3, 3, 54, 46),
+            pg.Rect(0, 0, 54, 46),
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
         )
-

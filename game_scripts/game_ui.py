@@ -88,10 +88,10 @@ class MainUI:
 
         self.context_panel = UIPanel(
             pg.Rect(
-                portrait_panel_rect[2] - 2,
-                -(context_panel_rect[3] - 1),
-                context_panel_rect[2],
-                context_panel_rect[3],
+                portrait_panel_rect[2] + 3,
+                -(context_panel_rect[3]) + 3,
+                context_panel_rect[2] - 6,
+                context_panel_rect[3] - 6,
             ),
             anchors={
                 "left": "left",
