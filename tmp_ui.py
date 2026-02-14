@@ -1,10 +1,9 @@
+from functools import partial
 from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface, Rect
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
 from pygame_gui.elements import UIImage
-
-# import pygame_gui
 from scripts import ui_shim
 import pygame_gui
 from pygame_gui.core import ObjectID, UIElement
@@ -18,137 +17,35 @@ from pygame.math import Vector2
 import sys
 from typing import Tuple, Callable, Any
 from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
-
+from scripts.custom_sprites import tilingscale, ninepatchscale
 from scripts.ui_shim import UIPanel
 
 
-class Thing:
-    def do_stuff(self):
-        print("Goober")
-
-
-class ImageButton(pygame_gui.elements.UIButton):
-    def __init__(
-        self,
-        pos,
-        outline_sprites,
-        fill_sprite,
-        container: IContainerLikeInterface | None = None,
-    ):
-        super().__init__(
-            relative_rect=outline_sprites[(0, 0)].get_rect(),
-            text="",
-            object_id="hello_button",
-            container=container,
-        )
-        self.normal_images = [outline_sprites[(0, 0)], fill_sprite]
-        self.hovered_images = [outline_sprites[(0, 0)], fill_sprite]
-        self.disabled_images = [outline_sprites[(2, 0)], fill_sprite]
-        self.selected_images = [outline_sprites[(1, 0)], fill_sprite]
-        self.set_relative_position(pos)
-        self.rebuild()
-
-
-class NewButton(pygame_gui.elements.UIButton):
-    def __init__(
-        self,
-        pos: Vector2,
-    ):
-        object_id = "#thopter_button"
-        super().__init__(
-            Rect(*pos, 54, 46),
-            "",
-            object_id=object_id,
-        )
-
-
-class ContextPanel(UIPanel):
-    """Good example of being able to nest ui elements."""
-
-    def __init__(self, display: Surface, outline_sprites, my_object):
-        screen_size = display.get_size()
-        own_size = [450, 100]
-        own_rect = pg.Rect(80, screen_size[1] - own_size[1], *own_size)
-        super().__init__(
-            own_rect,
-            element_id="context_panel",
-            # anchors=anchors,
-        )
-        self.image = pg.Surface(self.relative_rect.size)
-        self.image.fill(pg.Color("darkgray"))
-
-        self.hello_button = ImageButton(
-            (2, 2),
-            outline_sprites,
-            button_sprites[(0, 0)],
-            container=self.get_container(),
-        )
-        self.hello_button.bind(pygame_gui.UI_BUTTON_PRESSED, my_object.do_stuff)
-        self.other_button = ImageButton(
-            (58, 2),
-            outline_sprites,
-            button_sprites[(1, 0)],
-            container=self.get_container(),
-        )
-
-
+# --- setup base elements ---
 pg.init()
-
 pg.display.set_caption("Quick Start")
-
 resolution = (636, 333)
-
 display: Surface = pg.display.set_mode(resolution, pg.RESIZABLE)
-
 background = pg.Surface(resolution)
 background.fill(pg.Color("springgreen3"))
-
-# manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
 manager = ui_shim.UIManager(resolution, theme_path="theme/theme.json")
 manager.get_theme().load_theme("theme/buttons_generated.json")
-
 ui_image = load_image("art/tst_ui.png")
 button_sprites = sheet_to_sprites(load_image("art/thumbnails.png"), Vector2(46, 38))
 outline_sprites = sheet_to_sprites(load_image("art/outlines.png"), Vector2(54, 46))
-
-
-thing = Thing()
-ContextPanel(display, outline_sprites, thing)
-
-a_rect = outline_sprites[0, 0].get_rect()
-b_rect = pg.Rect(0, 0, 54, 46)
-ui_panel = UIPanel(
-    b_rect,
-    manager=manager,
-    anchors={"left": "left", "bottom": "bottom"},
-)
-
-# button_layout_rect = pg.Rect(0, 0, 100, 20)
-hello_rect = pg.Rect(0, 30, 150, 20)
-
-hello_button = pygame_gui.elements.UIButton(
-    hello_rect,
-    text="Hello",
-    object_id="#boring_button",
-    # object_id="moar",
-    # anchors={"centerx": "centerx", "bottom": "bottom"},
-)
-# another_button.set_relative_position((0, -10))
-# Oh crickey. It tunrs out that the relative position is only kind of relative...
-
-image_button = pygame_gui.elements.UIButton(
-    pg.Rect(180, 30, 60, 60), text="theme image?", object_id="#thopter_button"
-)
-
-NewButton(Vector2(10, 70))
-
 clock = pg.time.Clock()
+# --------------------------
 
+# ---///////////////////////////
+# ---- expermental code here ---------
+# ---///////////////////////////
+
+nine_slice_func = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
 portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
+context_panel_rect: Rect = Rect(0, 0, 400, 99)
 ui_components_sheet = load_image("art/ui_components.png")
-portrait_background_sprite = sheet_to_sprite(
-    ui_components_sheet, Rect(0, 112, 170, 146)
-)
+ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
+
 portrait_panel = UIPanel(
     pg.Rect(
         0,
@@ -162,25 +59,74 @@ portrait_panel = UIPanel(
         "top": "bottom",
         "bottom": "bottom",
     },
-    object_id="#portrait_background"
+    object_id="#portrait_background",
 )
-# portrait_background = UIImage(
-#     pg.Rect(
-#         0,
-#         -portrait_panel_rect[3],
-#         portrait_panel_rect[2],
-#         portrait_panel_rect[3],
-#     ),
-#     portrait_background_sprite,
-#     anchors={
-#         "left": "left",
-#         "right": "left",
-#         "top": "bottom",
-#         "bottom": "bottom",
-#     },
-#     # container=portrait_panel.get_container(),
-# )
 
+parent_panel = UIPanel(
+    pg.Rect(
+        portrait_panel_rect[2],
+        -(context_panel_rect[3]),
+        context_panel_rect[2],
+        context_panel_rect[3],
+    ),
+    anchors={
+        "left": "left",
+        "right": "right",
+        "top": "bottom",
+        "bottom": "bottom",
+    },
+    scale_func=nine_slice_func,
+    object_id="#panel_background",
+)
+
+child_panel = UIPanel(
+    pg.Rect(
+        0,
+        0,
+        80,
+        80,
+    ),
+    anchors={
+        "left": "left",
+        "right": "right",
+        "top": "top",
+        "bottom": "bottom",
+    },
+    container=parent_panel.get_container(),
+)
+
+grandchild_panel = UIPanel(
+    pg.Rect(
+        0,
+        0,
+        100,
+        100,
+    ),
+    anchors={
+        "left": "left",
+        "right": "right",
+        "top": "top",
+        "bottom": "bottom",
+    },
+    container=child_panel.get_container(),
+)
+
+
+UIImage(
+    context_panel_rect,
+    ui_background_sprite,
+    anchors={
+        "left": "left",
+        "right": "right",
+        "top": "top",
+        "bottom": "bottom",
+    },
+    scale_func=nine_slice_func,
+    container=child_panel.get_container(),
+    # container=parent_panel.get_container(),
+)
+
+# core loop
 while True:
     time_delta = clock.tick(60) / 1000.0
     for event in pg.event.get():
@@ -190,12 +136,8 @@ while True:
 
         processed = manager.process_events(event)
 
-        if event.type in [
-            pg.MOUSEBUTTONUP,
-            pygame_gui.UI_BUTTON_PRESSED,
-            pg.MOUSEBUTTONDOWN,
-        ]:
-            pass
+        if event.type == pg.VIDEORESIZE:
+            manager.set_window_resolution(event.size)
 
     manager.update(time_delta)
 
@@ -203,12 +145,4 @@ while True:
     manager.draw_ui(display)
 
     pg.display.update()
-
-# Ok, so mouse events get consumed. That's good.
-# Now to figure out if that also happens when dealingw ith other ui elems.
-# Start ehre: https://github.com/MyreMylar/pygame_gui_examples
-# FOUND IT: https://github.com/MyreMylar/tower_defence
-# Thought: Have my own UIPanel element that serves to:
-#   - draw a picture
-#   - consume clicks if the mouse pos overlaps
-# Another thought: Maybe only draw a subset of the world the should actually be visile?
+    print(grandchild_panel.relative_rect)
