@@ -11,8 +11,11 @@ class ContextPanel(ABC):
     context is contextual, based on what's selected.
     """
 
-    def __init__(self, portait_id="default") -> None:
-        self.portait_id = portait_id
+    def __init__(
+        self, *, portait_id: str = "default", context_panel_size: pg.Rect
+    ) -> None:
+        self.portait_id: str = portait_id
+        self._context_panel: UIPanel = UIPanel(context_panel_size)
         pass
 
     @property
@@ -26,8 +29,9 @@ class ContextPanel(ABC):
         )
 
     @property
-    @abstractmethod
+    # @abstractmethod
     def context_panel(self) -> UIPanel:
+        return self._context_panel
         pass
 
     @property

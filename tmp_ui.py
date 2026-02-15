@@ -146,3 +146,4 @@ while True:
 
     pg.display.update()
     print(grandchild_panel.relative_rect)
+    parent_panel.get_container().clear()
