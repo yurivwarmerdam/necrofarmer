@@ -128,5 +128,7 @@ class MainUI:
         )
         self.active_panel.portrait_button.set_container(self.portrait_panel)
         self.active_panel.context_panel.set_container(self.context_panel)
-        # self.active_panel.image_button.set_container(self.context_panel)
+        self.active_panel.context_panel.update_containing_rect_position()
+        print(self.active_panel.context_panel.relative_rect)
+        print(self.active_panel.context_panel.get_container())
         pass
