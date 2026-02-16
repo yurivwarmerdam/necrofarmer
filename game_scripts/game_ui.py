@@ -106,7 +106,6 @@ class MainUI:
 
     def selected_changed(self, sender: Commander):
         # create appropriate contextpanel, depending on what is selected
-        print(f"changing selected. Sender: {sender}")
         if sender.selected:
             self.set_context_panel(sender.selected)
 
@@ -126,9 +125,20 @@ class MainUI:
                 self.context_panel.get_relative_rect()[3],
             )
         )
-        self.active_panel.portrait_button.set_container(self.portrait_panel)
-        self.active_panel.context_panel.set_container(self.context_panel)
+        # print(self.active_panel.portrait_button.groups())
+        self.active_panel.portrait_button.set_container(
+            self.portrait_panel.get_container()
+        )
+        # print(self.active_panel.portrait_button.groups())
+        self.active_panel.context_panel.set_container(
+            self.context_panel.get_container()
+        )
         self.active_panel.context_panel.update_containing_rect_position()
-        print(self.active_panel.context_panel.relative_rect)
-        print(self.active_panel.context_panel.get_container())
+        # print(self.active_panel.context_panel.relative_rect)
+        # print(self.active_panel.context_panel.get_container())
+        # print(
+        #     self.context_panel.get_container()
+        #     == self.active_panel.context_panel.get_container()
+        # )
+
         pass
