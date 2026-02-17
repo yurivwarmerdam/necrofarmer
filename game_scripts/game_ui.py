@@ -125,28 +125,5 @@ class MainUI:
                 self.context_panel.get_relative_rect()[3],
             )
         )
-        # print(self.portrait_panel.get_container().elements)
-        self.active_panel.portrait_button.set_container(
-            self.portrait_panel.get_container()
-        )
-        # print(self.portrait_panel.get_container().elements)
-        print(self.context_panel.get_container().elements)
-        self.active_panel.context_panel.set_container(
-            self.context_panel.get_container()
-        )
-        print(self.context_panel.get_container().elements)
-
-        # print(self.active_panel.context_panel.relative_rect)
-        # print(self.active_panel.context_panel.get_container())
-        # print(
-        #     self.context_panel.get_container()
-        #     == self.active_panel.context_panel.get_container()
-        # )
-
-        # Thought: inside ContextPanel class, Consider something like:
-        # def set_context_elems(context_panel:<Called with this class' self.context_panel>):
-        #   UIButton(<Rect>,parent=context_panel)
-        #   <add other elements>
-        # I can experiment with initializing some of these in the __init__, and seeing how that behaves
-
+        self.active_panel.set_context_elems(self.context_panel.get_container())
         pass

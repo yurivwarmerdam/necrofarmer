@@ -1,5 +1,6 @@
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton, UIPanel
+from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from abc import ABC, abstractmethod
 
 import pygame as pg
@@ -34,14 +35,6 @@ class ContextPanel(ABC):
         return self._context_panel
         pass
 
-    @property
     @abstractmethod
-    def image_button(self) -> UIButton:
+    def set_context_elems(self, context_container: IContainerAndContainerLike):
         pass
-        # return UIButton(
-        #     pg.Rect(3, 3, 54, 46),
-        #     text="",
-        #     # object_id="#thopter_button",
-        #     scale_func=integer_scale,
-        #     # container=main_ui.context_panel.get_container(),
-        # )

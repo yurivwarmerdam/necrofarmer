@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from scripts.custom_sprites import AnimatedSprite
 from game_scripts import group_server
 from scripts.camera import get_camera
@@ -107,24 +108,12 @@ class TardigradePanel(ContextPanel):
         super().__init__(
             portait_id="#tardigrade_button", context_panel_size=context_panel_size
         )
+
+    def set_context_elems(self, context_container: IContainerAndContainerLike):
         UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
-            container=self.context_panel.get_container(),
-        )
-        pass
-
-    # @property
-    # def context_panel(self) -> UIPanel:
-    #     return UIPanel()
-
-    @property
-    def image_button(self) -> UIButton:
-        return UIButton(
-            pg.Rect(0, 0, 54, 46),
-            text="",
-            object_id="#thopter_button",
-            scale_func=integer_scale,
+            container=context_container,
         )
