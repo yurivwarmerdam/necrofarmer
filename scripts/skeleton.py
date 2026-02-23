@@ -1,5 +1,4 @@
 from random import randint
-import pygame as pg
 
 from pygame import Surface
 from pygame.math import Vector2

@@ -1,5 +1,4 @@
 import json
-from pprint import pprint
 
 
 # Generates json to be read into pygame_ui.
@@ -12,7 +11,7 @@ output_file: str = "theme/buttons_generated.json"
 button_ids = {
     "#thopter_button": "0,0,46,38",
     "#tardigrade_button": "138,0,46,38",
-    "#sawmill_button":"230,0,46,38",
+    "#sawmill_button": "230,0,46,38",
 }
 
 with open(prototype_file, "r") as input:

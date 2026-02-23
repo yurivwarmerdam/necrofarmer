@@ -1,4 +1,3 @@
-from typing import Iterable, override, Optional, List, Any
 import sys
 import pygame as pg
 from pygame import Rect

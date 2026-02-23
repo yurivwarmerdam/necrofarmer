@@ -1,5 +1,4 @@
 import random
-import pygame as pg
 
 UP = 1
 RIGHT = 2

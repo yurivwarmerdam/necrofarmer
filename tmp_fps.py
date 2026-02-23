@@ -1,20 +1,12 @@
-from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
 import pygame_gui
-from pygame_gui.core import ObjectID, UIElement
-from pygame_gui.core.interfaces import (
-    IContainerLikeInterface,
-    IUIElementInterface,
-    IUIManagerInterface,
-)
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
-from typing import Tuple
 from pygame import Rect
-from pygame.sprite import Sprite, Group
+from pygame.sprite import Group
 from scripts.custom_sprites import NodeSprite
 # from scripts import camera
 
@@ -55,6 +47,7 @@ class SelectBox(NodeSprite):
             )
         else:
             self.rect = Rect(0, 0, 0, 0)
+
     def get_overlaps(self):
         pass
 

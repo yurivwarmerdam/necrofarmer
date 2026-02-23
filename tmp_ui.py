@@ -1,22 +1,13 @@
 from functools import partial
-from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface, Rect
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
 from pygame_gui.elements import UIImage
 from scripts import ui_shim
-import pygame_gui
-from pygame_gui.core import ObjectID, UIElement
-from pygame_gui.core.interfaces import (
-    IContainerLikeInterface,
-    IUIElementInterface,
-    IUIManagerInterface,
-)
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
-from typing import Tuple, Callable, Any
-from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
+from scripts.utils import sheet_to_sprite
 from scripts.custom_sprites import tilingscale, ninepatchscale
 from scripts.ui_shim import UIPanel
 

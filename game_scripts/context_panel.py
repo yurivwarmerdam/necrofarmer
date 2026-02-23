@@ -13,9 +13,9 @@ class ContextPanel(ABC):
     """
 
     def __init__(
-        self, *, portait_id: str = "default", context_panel_size: pg.Rect
+        self, *, portrait_id: str = "default", context_panel_size: pg.Rect
     ) -> None:
-        self.portait_id: str = portait_id
+        self.portrait_id: str = portrait_id
         self._context_panel: UIPanel = UIPanel(context_panel_size)
         pass
 
@@ -37,4 +37,10 @@ class ContextPanel(ABC):
 
     @abstractmethod
     def set_context_elems(self, context_container: IContainerAndContainerLike):
+        """
+        set elements inside context_panel of game_ui.
+        Note that this excludes portrait_panel.
+
+        context_container: context_panel container
+        """
         pass

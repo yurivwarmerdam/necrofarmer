@@ -12,7 +12,7 @@ from random import randint
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
-from scripts.ui_shim import UIButton, UIPanel
+from scripts.ui_shim import UIButton
 
 
 # Needs access to:
@@ -106,7 +106,7 @@ class Tardigrade(AnimatedSprite, Selectable):
 class TardigradePanel(ContextPanel):
     def __init__(self, context_panel_size) -> None:
         super().__init__(
-            portait_id="#tardigrade_button", context_panel_size=context_panel_size
+            portrait_id="#tardigrade_button", context_panel_size=context_panel_size
         )
 
     def set_context_elems(self, context_container: IContainerAndContainerLike):

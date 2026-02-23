@@ -1,18 +1,7 @@
-from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
-from pygame.sprite import Sprite, Group
-import pygame_gui
-from pygame_gui.core.interfaces import (
-    IContainerLikeInterface,
-)
-from scripts.utils import load_image, sheet_to_sprites
-from pygame.math import Vector2
 import sys
-from typing import Tuple
-
-from scripts.ui_shim import UIPanel
 
 
 pg.init()
@@ -26,7 +15,7 @@ background.fill(pg.Color("springgreen3"))
 
 
 a_rect = pg.Rect(0, 0, 50, 50)
-a_surf = pg.Surface((50, 50),pg.SRCALPHA)
+a_surf = pg.Surface((50, 50), pg.SRCALPHA)
 pg.draw.circle(a_surf, pg.Color("red"), (25, 25), 25)
 
 clock = pg.time.Clock()
@@ -39,15 +28,18 @@ while True:
             sys.exit()
 
         if event.type == pg.MOUSEBUTTONDOWN:
-            point=pg.mouse.get_pos()
-            coll=a_surf.get_rect().collidepoint(point)
+            point = pg.mouse.get_pos()
+            coll = a_surf.get_rect().collidepoint(point)
             print(f"collide? {coll}")
             if coll:
-                corrected=(point[0]- a_surf.get_rect().x,point[1]-a_surf.get_rect().y)
+                corrected = (
+                    point[0] - a_surf.get_rect().x,
+                    point[1] - a_surf.get_rect().y,
+                )
 
-                value=a_surf.get_at(corrected)
+                value = a_surf.get_at(corrected)
                 print(value)
-                if value!=pg.Color(0,0,0,0):
+                if value != pg.Color(0, 0, 0, 0):
                     print("which is true")
 
     display.blit(background, (0, 0))

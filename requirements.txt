@@ -5,3 +5,4 @@ lxml
 astar
 blinker
 pygame_gui
+ruff

@@ -125,7 +125,7 @@ def tilingscale(
         if dest_surface.size != size:
             raise ValueError("Destination surface doesn't match the provided size")
     else:
-        dest_surface = Surface(size,pg.SRCALPHA)
+        dest_surface = Surface(size, pg.SRCALPHA)
     for x in range(0, dest_surface.width, surface.width):
         for y in range(0, dest_surface.height, surface.height):
             dest_surface.blit(surface, (x, y))

@@ -2,7 +2,6 @@ from enum import Enum
 from pygame.math import Vector2
 from pygame.sprite import Sprite, Group
 from pygame.time import get_ticks
-import pygame as pg
 
 
 class ActionStatus(Enum):

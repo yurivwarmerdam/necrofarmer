@@ -4,8 +4,6 @@ from pygame.sprite import Sprite, Group
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
 from game_scripts import group_server
-from game_scripts.group_server import GroupServer
-from scripts.custom_sprites import SignalGroup
 from pygame.mask import from_surface
 from blinker import signal
 

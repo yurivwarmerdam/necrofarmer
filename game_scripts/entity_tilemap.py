@@ -1,10 +1,8 @@
-from pygame.sprite import Group, Sprite
 from game_scripts.big_tile import BigTile
 from scripts.tilemap import Tilemap, Tile
-from pygame import Vector2, Surface
+from pygame import Vector2
 import json
 from math import floor
-from game_scripts.selectable import Selectable
 
 from game_scripts.sawmill import Sawmill
 

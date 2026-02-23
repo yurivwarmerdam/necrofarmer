@@ -1,18 +1,10 @@
-from typing import Dict, Iterable
 import pygame as pg
 from pygame import Surface
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
 import pygame_gui
-from pygame_gui.core import ObjectID, UIElement
-from pygame_gui.core.interfaces import (
-    IContainerLikeInterface,
-    IUIElementInterface,
-    IUIManagerInterface,
-)
 from scripts.utils import load_image, sheet_to_sprites
 from pygame.math import Vector2
 import sys
-from typing import Tuple
 from pygame import Rect
 from pygame.sprite import Sprite
 

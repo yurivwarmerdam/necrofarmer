@@ -1,23 +1,15 @@
 import pygame as pg
-from typing import Dict
-from pygame_gui.core import ObjectID, UIElement
-from pygame_gui.core.interfaces import (
-    IContainerLikeInterface,
-    IUIElementInterface,
-    IUIManagerInterface,
-)
 from pygame_gui.elements import UIImage
-from pygame.rect import Rect, FRect
+from pygame.rect import Rect
 from game_scripts.context_panel import ContextPanel
-from scripts.custom_sprites import tilingscale, ninepatchscale
-from scripts.utils import load_image, sheet_to_sprites, sheet_to_sprite
+from scripts.custom_sprites import tilingscale, ninepatchscale, integer_scale
+from scripts.utils import load_image, sheet_to_sprite
 from functools import partial
-from pygame import Vector2
 from blinker import signal
 from game_scripts.commander import Commander
 from pygame.sprite import Group
-import pygame_gui
 from scripts.ui_shim import UIPanel
+from scripts.ui_shim import UIButton
 
 
 class MainUI:
@@ -40,6 +32,7 @@ class MainUI:
         # ------- base elements -------
 
         self.active_panel = None
+        # TODO: Be more consistent here.
         self.portrait_panel = UIPanel(
             pg.Rect(
                 0,
@@ -86,7 +79,7 @@ class MainUI:
         )
 
         self.context_panel = UIPanel(
-            pg.Rect(
+            Rect(
                 portrait_panel_rect[2] + 3,
                 -(context_panel_rect[3]) + 3,
                 context_panel_rect[2] - 6,
@@ -106,14 +99,20 @@ class MainUI:
 
     def selected_changed(self, sender: Commander):
         # create appropriate contextpanel, depending on what is selected
+        if self.active_panel:
+            self.active_panel = None
+            self.portrait_panel.get_container().clear()
+            self.context_panel.get_container().clear()
         if sender.selected:
             self.set_context_panel(sender.selected)
-
-        else:
-            if self.active_panel:
-                self.active_panel = None
-                self.portrait_panel.get_container().clear()
-                self.context_panel.get_container().clear()
+            UIButton(
+                Rect(4, 4, 54 * 3, 46 * 3),
+                text="",
+                object_id=self.active_panel.portrait_id,
+                scale_func=integer_scale,
+                container=self.portrait_panel,
+                command=lambda: print("I should now unselect!"),
+            )
 
     def set_context_panel(self, selected: Group):
         new_panel: type[ContextPanel] = selected.sprites()[0].context_panel

@@ -68,8 +68,9 @@ class Camera:
         return dirty
 
     def draw_to_screen(self):
-        
+
         pass
+
 
 _instance = None
 

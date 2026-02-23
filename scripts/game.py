@@ -15,9 +15,9 @@ class Game(ABC):
             self.update()
 
     def process_events(self):
-        #event loop
+        # event loop
         pass
 
     def update(self):
-        #update whatever needs update running
+        # update whatever needs update running
         pass
