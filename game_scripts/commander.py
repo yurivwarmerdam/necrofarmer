@@ -109,14 +109,20 @@ class Commander:
                     collided_sprites = pointcollide(
                         self.camera.get_global_mouse_pos(), self.group_server.colliders
                     )
-                    if self.selected:
-                        self.selected.empty()
-                        self.selected_changed.send(self)
+                    self.unselect_all()
                     if collided_sprites:
-                        self.selected.add(collided_sprites[0])
-                        self.selected_changed.send(self)
+                        self.select(collided_sprites[0])
                     return True
         return False
+
+    def unselect_all(self):
+        if self.selected:
+            self.selected.empty()
+            self.selected_changed.send(self)
+
+    def select(self, sprites: Sprite | list):
+        self.selected.add(sprites)
+        self.selected_changed.send(self)
 
     def do_box_select(self):
         self.selected.empty()
