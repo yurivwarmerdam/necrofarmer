@@ -1,10 +1,8 @@
-from scripts.tilemap import Tile
-
+import json
 
 from pygame import Vector2
 
-
-import json
+from scripts.tilemap import Tile
 
 
 class BigTile(Tile):

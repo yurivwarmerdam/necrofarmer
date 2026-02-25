@@ -1,19 +1,19 @@
+import asyncio
 from random import randint
 
 from pygame import Surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
 
-from scripts.behaviortree_py.dummy_nodes import Succeeder, Failer, Outputter, Talker
-from scripts.entities import ActionStatus
+from scripts.async_runner import async_runner
 from scripts.behaviortree_py.behaviortree import (
-    SimpleActionNode,
-    StatefulActionNode,
     BehaviorTreeFactory,
     NodeStatus,
+    SimpleActionNode,
+    StatefulActionNode,
 )
-import asyncio
-from scripts.async_runner import async_runner
+from scripts.behaviortree_py.dummy_nodes import Failer, Outputter, Succeeder, Talker
+from scripts.entities import ActionStatus
 from scripts.global_blackboard import global_blackboard
 
 

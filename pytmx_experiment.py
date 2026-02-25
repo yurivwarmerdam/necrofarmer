@@ -1,7 +1,6 @@
 import pygame as pg
 from pytmx.util_pygame import load_pygame
 
-
 screen = pg.display.set_mode((1280, 960))
 display = pg.Surface((640, 480))
 

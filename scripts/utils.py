@@ -1,6 +1,7 @@
 import pygame as pg
-from pygame import Surface, Rect
+from pygame import Rect, Surface
 from pygame.math import Vector2
+
 # from typing import List
 
 

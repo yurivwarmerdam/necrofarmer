@@ -1,12 +1,13 @@
-import pygame as pg
-from pygame import Surface
-from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
-import pygame_gui
-from scripts.utils import load_image, sheet_to_sprites
-from pygame.math import Vector2
 import sys
-from pygame import Rect
+
+import pygame as pg
+import pygame_gui
+from pygame import Rect, Surface
+from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+from pygame.math import Vector2
 from pygame.sprite import Sprite
+
+from scripts.utils import load_image, sheet_to_sprites
 
 
 class SelectBox(Sprite):

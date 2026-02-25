@@ -1,6 +1,7 @@
 from enum import Enum
+
 from pygame.math import Vector2
-from pygame.sprite import Sprite, Group
+from pygame.sprite import Group, Sprite
 from pygame.time import get_ticks
 
 

@@ -1,8 +1,8 @@
+import sys
+
 import pygame as pg
 from pygame import Surface
 from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
-import sys
-
 
 pg.init()
 

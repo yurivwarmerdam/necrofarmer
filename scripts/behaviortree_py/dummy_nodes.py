@@ -1,7 +1,7 @@
 from scripts.behaviortree_py.behaviortree import (
-    SimpleActionNode,
-    NodeStatus,
     BehaviorTreeFactory,
+    NodeStatus,
+    SimpleActionNode,
 )
 
 

@@ -1,7 +1,9 @@
-from pygame import Vector2
-from scripts.utils import sheet_to_sprites, load_image
-from scripts.custom_sprites import AnimationSequence
 from dataclasses import dataclass
+
+from pygame import Vector2
+
+from scripts.custom_sprites import AnimationSequence
+from scripts.utils import load_image, sheet_to_sprites
 
 
 @dataclass

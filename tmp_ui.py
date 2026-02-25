@@ -1,16 +1,16 @@
-from functools import partial
-import pygame as pg
-from pygame import Surface, Rect
-from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
-from pygame_gui.elements import UIImage
-from scripts import ui_shim
-from scripts.utils import load_image, sheet_to_sprites
-from pygame.math import Vector2
 import sys
-from scripts.utils import sheet_to_sprite
-from scripts.custom_sprites import tilingscale, ninepatchscale
-from scripts.ui_shim import UIPanel
+from functools import partial
 
+import pygame as pg
+from pygame import Rect, Surface
+from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+from pygame.math import Vector2
+from pygame_gui.elements import UIImage
+
+from scripts import ui_shim
+from scripts.custom_sprites import ninepatchscale, tilingscale
+from scripts.ui_shim import UIPanel
+from scripts.utils import load_image, sheet_to_sprite, sheet_to_sprites
 
 # --- setup base elements ---
 pg.init()

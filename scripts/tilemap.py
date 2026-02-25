@@ -1,8 +1,10 @@
-from pygame.sprite import Group, LayeredUpdates, AbstractGroup
-from pytmx.util_pygame import load_pygame
-from pytmx import TiledMap
-from pygame import Vector2
 from math import floor
+
+from pygame import Vector2
+from pygame.sprite import AbstractGroup, Group, LayeredUpdates
+from pytmx import TiledMap
+from pytmx.util_pygame import load_pygame
+
 from scripts.custom_sprites import NodeSprite
 
 

@@ -1,7 +1,8 @@
-from pygame.math import Vector2
 from pygame.key import ScancodeWrapper
-from scripts.entities import Seed
+from pygame.math import Vector2
+
 from scripts.custom_sprites import NodeSprite
+from scripts.entities import Seed
 
 FACINGS = [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]
 

@@ -1,15 +1,16 @@
-import pygame as pg
-from pygame_gui.elements import UIImage
-from pygame.rect import Rect
-from game_scripts.context_panel import ContextPanel
-from scripts.custom_sprites import tilingscale, ninepatchscale, integer_scale
-from scripts.utils import load_image, sheet_to_sprite
 from functools import partial
+
+import pygame as pg
 from blinker import signal
-from game_scripts.commander import Commander
+from pygame.rect import Rect
 from pygame.sprite import Group
-from scripts.ui_shim import UIPanel
-from scripts.ui_shim import UIButton
+from pygame_gui.elements import UIImage
+
+from game_scripts.commander import Commander
+from game_scripts.context_panel import ContextPanel
+from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
+from scripts.ui_shim import UIButton, UIPanel
+from scripts.utils import load_image, sheet_to_sprite
 
 
 class MainUI:
@@ -98,24 +99,26 @@ class MainUI:
         selected_changed.connect(self.selected_changed, weak=False)
 
     def selected_changed(self, sender: Commander):
-        # create appropriate contextpanel, depending on what is selected
+        """
+        create appropriate contextpanel, depending on what is selected
+        """
         if self.active_panel:
             self.active_panel = None
             self.portrait_panel.get_container().clear()
             self.context_panel.get_container().clear()
         if sender.selected:
-            self.set_context_panel(sender.selected)
+            self.set_context_panel(sender)
             UIButton(
                 Rect(4, 4, 54 * 3, 46 * 3),
                 text="",
                 object_id=self.active_panel.portrait_id,
                 scale_func=integer_scale,
                 container=self.portrait_panel,
-                command=lambda: print("I should now unselect!"),
+                command=lambda: sender.unselect(sender.selected.sprites()[0]),
             )
 
-    def set_context_panel(self, selected: Group):
-        new_panel: type[ContextPanel] = selected.sprites()[0].context_panel
+    def set_context_panel(self, commander: Commander):
+        new_panel: type[ContextPanel] = commander.selected.sprites()[0].context_panel
         self.active_panel = new_panel(
             context_panel_size=Rect(
                 0,

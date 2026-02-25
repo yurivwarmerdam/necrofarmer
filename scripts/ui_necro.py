@@ -1,6 +1,6 @@
+from pygame.font import Font
 from pygame.sprite import Sprite
 from pygame.surface import Surface
-from pygame.font import Font
 
 
 class ManaBar(Sprite):

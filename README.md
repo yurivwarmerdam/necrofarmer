@@ -38,6 +38,7 @@ pip install -r requirements.txt
     - multi-slect panels (not a feature yet) would know how to pull data
     - same with single-select panels.
     - this approach would eliminate a bunch of passing around objects, instead just asking where the commander server is and taking some reference from there.
+    - Issue: Commander is not a server yet. Good candidate, though; there's only one. Maaayyyyybe I want to have 2 commanders (players) down the line, but I'd have to solve multi-mouse input before then. Seems like a perfect-enemy-of-the-good problem.
 
     Next step (choices!):
     - highlight on select

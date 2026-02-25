@@ -1,23 +1,22 @@
-from pygame_gui.core.gui_type_hints import Coordinate, RectLike
-from typing import Union, Optional
-from pygame_gui.core import ObjectID
 import warnings
-from typing import Any, Callable, Iterable
-from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
-from pygame_gui.core.ui_element import UIElement
-from pygame_gui.elements import UIPanel as UIPANEL_original
-from pygame_gui.elements import UIButton as UIButton_original
+from typing import Any, Callable, Iterable, Optional, Union
 
 import pygame
+from pygame.constants import BUTTON_LEFT as BUTTON_LEFT
+from pygame_gui import ui_manager
+from pygame_gui.core import ObjectID
+from pygame_gui.core.gui_type_hints import Coordinate, RectLike
 from pygame_gui.core.interfaces import (
     IContainerLikeInterface,
-    IUIManagerInterface,
     IUIElementInterface,
+    IUIManagerInterface,
 )
 from pygame_gui.core.ui_appearance_theme import (
     UIAppearanceTheme as UIAppearanceTheme_original,
 )
-from pygame_gui import ui_manager
+from pygame_gui.core.ui_element import UIElement
+from pygame_gui.elements import UIButton as UIButton_original
+from pygame_gui.elements import UIPanel as UIPANEL_original
 
 
 class UIPanel(UIPANEL_original):

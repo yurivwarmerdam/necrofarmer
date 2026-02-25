@@ -1,11 +1,12 @@
 import pygame as pg
-from pygame import Vector2, Rect, Surface
-from pygame.sprite import Sprite, Group
+from blinker import signal
+from pygame import Rect, Surface, Vector2
+from pygame.mask import from_surface
+from pygame.sprite import Group, Sprite
+
+from game_scripts import group_server
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
-from game_scripts import group_server
-from pygame.mask import from_surface
-from blinker import signal
 
 
 class SelectBox(NodeSprite):
@@ -124,10 +125,13 @@ class Commander:
         self.selected.add(sprites)
         self.selected_changed.send(self)
 
+    def unselect(self, sprites: Sprite | list):
+        self.selected.remove(sprites)
+        self.selected_changed.send(self)
+
     def do_box_select(self):
         self.selected.empty()
-        # collides=self.box.get_collides()
-        # self.selected.add(collides)
+        # TODO: Is this test even needed?
         for collide in self.box.get_collides():
             if isinstance(collide, Sprite):
                 collide.add(self.selected)

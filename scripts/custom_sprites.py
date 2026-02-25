@@ -1,13 +1,13 @@
-import pygame as pg
-from pygame.sprite import AbstractGroup, Sprite, LayeredUpdates, Group
-from pygame import Vector2
-from pygame.surface import Surface
-from pygame.rect import Rect
-from pygame import transform
-from pygame.typing import Point
 from typing import Any, Iterable, Optional, override
+
+import pygame as pg
 from blinker import signal
+from pygame import Vector2, transform
+from pygame.rect import Rect
+from pygame.sprite import AbstractGroup, Group, LayeredUpdates, Sprite
+from pygame.surface import Surface
 from pygame.transform import scale_by
+from pygame.typing import Point
 
 
 class NodeSprite(Sprite):

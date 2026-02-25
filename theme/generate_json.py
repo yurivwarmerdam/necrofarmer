@@ -1,6 +1,5 @@
 import json
 
-
 # Generates json to be read into pygame_ui.
 # reads in prototypes, replacing relevant info.
 # custom hierarchies per prototype.

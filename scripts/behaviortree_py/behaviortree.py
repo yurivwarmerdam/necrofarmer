@@ -1,8 +1,8 @@
 import ast
-
-from enum import Enum
 from abc import ABC
+from enum import Enum
 from typing import Callable, Type
+
 from bs4 import BeautifulSoup as soup
 
 

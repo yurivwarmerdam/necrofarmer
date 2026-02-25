@@ -1,5 +1,6 @@
-import pygame as pg
 from abc import ABC
+
+import pygame as pg
 
 
 class Game(ABC):

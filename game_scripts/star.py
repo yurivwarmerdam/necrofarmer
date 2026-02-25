@@ -1,8 +1,10 @@
-from typing import Iterable
-from astar import AStar
-from scripts.tilemap import Tilemap
-from pygame import Vector2
 from math import hypot
+from typing import Iterable
+
+from astar import AStar
+from pygame import Vector2
+
+from scripts.tilemap import Tilemap
 
 
 class WalkPath(AStar):

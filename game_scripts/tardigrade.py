@@ -1,17 +1,16 @@
-import pygame as pg
-from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
-from scripts.custom_sprites import AnimatedSprite
-from game_scripts import group_server
-from scripts.camera import get_camera
-from game_scripts import entity_tilemap
-from game_scripts import star
-from scripts import image_server
-from pygame import Vector2
 from collections import deque
 from random import randint
+
+import pygame as pg
+from pygame import Vector2
+from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
+
+from game_scripts import entity_tilemap, group_server, star
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
-from scripts.custom_sprites import integer_scale
+from scripts import image_server
+from scripts.camera import get_camera
+from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
 
 

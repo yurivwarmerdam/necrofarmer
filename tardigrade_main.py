@@ -1,17 +1,16 @@
+import sys
+
 import pygame as pg
 import pygame_gui
-import sys
 from pygame import Vector2
 from pygame.sprite import Group
-from game_scripts.commander import Commander
-from game_scripts import entity_tilemap
-from game_scripts.tardigrade import Tardigrade
-from scripts.camera import initialize_camera
-from game_scripts import star
-from scripts import image_server
-from game_scripts import group_server
-from game_scripts.game_ui import MainUI
 
+from game_scripts import entity_tilemap, group_server, star
+from game_scripts.commander import Commander
+from game_scripts.game_ui import MainUI
+from game_scripts.tardigrade import Tardigrade
+from scripts import image_server
+from scripts.camera import initialize_camera
 
 # Server architecture:
 # spin up and have global access to the following:

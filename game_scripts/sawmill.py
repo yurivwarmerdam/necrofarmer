@@ -1,11 +1,12 @@
-from pygame import Vector2
-from game_scripts.big_tile import BigTile
-from game_scripts.selectable import Selectable
-from game_scripts import group_server
-from game_scripts.game_ui import ContextPanel
-from scripts.ui_shim import UIButton
 import pygame as pg
+from pygame import Vector2
+
+from game_scripts import group_server
+from game_scripts.big_tile import BigTile
+from game_scripts.game_ui import ContextPanel
+from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
+from scripts.ui_shim import UIButton
 
 
 class Sawmill(BigTile, Selectable):
