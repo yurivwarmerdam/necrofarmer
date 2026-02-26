@@ -4,8 +4,10 @@ from random import randint
 import pygame as pg
 from pygame import Vector2
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
+from pygame_gui.elements import UILabel
 
 from game_scripts import entity_tilemap, group_server, star
+from game_scripts.commander import Commander
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
@@ -103,10 +105,8 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 
 class TardigradePanel(ContextPanel):
-    def __init__(self, context_panel_size) -> None:
-        super().__init__(
-            portrait_id="#tardigrade_button", context_panel_size=context_panel_size
-        )
+    def __init__(self, commander: Commander) -> None:
+        super().__init__(portrait_id="#tardigrade_button", commander=commander)
 
     def set_context_elems(self, context_container: IContainerAndContainerLike):
         UIButton(
@@ -114,5 +114,11 @@ class TardigradePanel(ContextPanel):
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
+            container=context_container,
+            command=lambda: print("I do nothing yet!")
+        )
+        UILabel(
+            pg.Rect(6, 50, 120, 30),
+            f"Num selected: {len(self.commander.selected)}",
             container=context_container,
         )

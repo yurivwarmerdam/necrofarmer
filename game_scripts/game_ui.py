@@ -3,7 +3,6 @@ from functools import partial
 import pygame as pg
 from blinker import signal
 from pygame.rect import Rect
-from pygame.sprite import Group
 from pygame_gui.elements import UIImage
 
 from game_scripts.commander import Commander
@@ -119,13 +118,6 @@ class MainUI:
 
     def set_context_panel(self, commander: Commander):
         new_panel: type[ContextPanel] = commander.selected.sprites()[0].context_panel
-        self.active_panel = new_panel(
-            context_panel_size=Rect(
-                0,
-                0,
-                self.context_panel.get_relative_rect()[2],
-                self.context_panel.get_relative_rect()[3],
-            )
-        )
+        self.active_panel = new_panel(commander=commander)
         self.active_panel.set_context_elems(self.context_panel.get_container())
         pass
