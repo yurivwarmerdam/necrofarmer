@@ -103,7 +103,12 @@ class Tardigrade(AnimatedSprite, Selectable):
     def context_panel(self) -> type[ContextPanel]:
         return TardigradePanel
 
-
+from time import time
+# TODO: Time to move set_context_elements to __init__, 
+# add container as init param
+# and do something clever with the id setter.
+# Perhaps peek at how you do this again with sprites? 
+# I remember there being a similar pattern, here.
 class TardigradePanel(ContextPanel):
     def __init__(self, commander: Commander) -> None:
         super().__init__(portrait_id="#tardigrade_button", commander=commander)
@@ -120,5 +125,10 @@ class TardigradePanel(ContextPanel):
         UILabel(
             pg.Rect(6, 50, 120, 30),
             f"Num selected: {len(self.commander.selected)}",
+            container=context_container,
+        )
+        UILabel(
+            pg.Rect(70, 20, 120, 30),
+            f"Time! {time()}",
             container=context_container,
         )

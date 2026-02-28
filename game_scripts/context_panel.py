@@ -12,7 +12,7 @@ class ContextPanel(ABC):
 
     def __init__(self, *, portrait_id: str = "default", commander: Commander) -> None:
         self.portrait_id: str = portrait_id
-        self.commander=commander
+        self.commander = commander
         pass
 
     @abstractmethod
@@ -24,3 +24,6 @@ class ContextPanel(ABC):
         context_container: context_panel container
         """
         pass
+
+        def update(_delta) -> None:
+            pass
