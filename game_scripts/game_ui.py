@@ -121,3 +121,7 @@ class MainUI:
         self.active_panel = new_panel(commander=commander)
         self.active_panel.set_context_elems(self.context_panel.get_container())
         pass
+
+    def update(self,_delta):
+        if self.active_panel:
+            self.active_panel.update(_delta)

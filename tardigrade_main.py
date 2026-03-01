@@ -48,7 +48,7 @@ clock = pg.time.Clock()
 
 # -- UI experiments --
 
-MainUI()
+ui=MainUI()
 
 # -- group initialization --
 
@@ -119,6 +119,7 @@ while True:
     # --- update loop ---
     camera.render_layers["draw"].update()
     groups.update.update(_delta)
+    ui.update(_delta)
 
     # --- render loop ---
     camera.draw_all()

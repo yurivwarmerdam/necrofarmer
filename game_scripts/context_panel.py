@@ -25,5 +25,5 @@ class ContextPanel(ABC):
         """
         pass
 
-        def update(_delta) -> None:
-            pass
+    def update(self, _delta) -> None:
+        pass
