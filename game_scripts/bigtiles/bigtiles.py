@@ -55,10 +55,45 @@ class SawmillPanel(ContextPanel):
 
 
 class ThopterFactory(BigTile, Selectable):
+    def __init__(
+        self,
+        pos,
+        image,
+        properties: dict,
+        *groups,
+        anchor="bottomleft",
+        offset=Vector2(0, 0),
+        tiles: list = [Vector2(0, 0)],
+    ):
+        global_groups = group_server.get_server()
+        super().__init__(
+            pos,
+            image,
+            properties,
+            global_groups.colliders,  # prepending colliders to groups.
+            *groups,
+            anchor=anchor,
+            offset=offset,
+            tiles=tiles,
+        )
+
     @property
     def context_panel(self) -> type[ContextPanel]:
         return ThopterFactoryPanel
 
 
 class ThopterFactoryPanel(ContextPanel):
-    pass
+    def __init__(self, commander, context_container) -> None:
+        super().__init__(
+            portrait_id="#thopter_factory_2_button",
+            commander=commander,
+            context_container=context_container,
+        )
+        UIButton(
+            pg.Rect(0, 0, 54, 46),
+            text="",
+            object_id="#thopter_button",
+            scale_func=integer_scale,
+            container=context_container,
+            command=lambda: print("I do nothing yet!"),
+        )

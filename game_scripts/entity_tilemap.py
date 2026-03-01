@@ -4,11 +4,14 @@ from math import floor
 from pygame import Vector2
 
 from game_scripts.bigtiles.bigtile import BigTile
-from game_scripts.bigtiles.bigtiles import Sawmill
+from game_scripts.bigtiles import bigtiles
 from scripts.tilemap import Tile, Tilemap
 
 # TODO: this wants to be in some .conf or json file.
-bigtile_entities = {"sawmill": Sawmill}
+bigtile_entities = {
+    "sawmill": bigtiles.Sawmill,
+    "thopter_factory_2": bigtiles.ThopterFactory,
+}
 
 
 class EntityTilemap(Tilemap):

@@ -6,6 +6,7 @@
   <properties>
    <property name="bigtile" value="[[0,0],[1,0],[2,0],[0,-1],[1,-1],[2,-1],[0,-2],[1,-2],[2,-2]]"/>
    <property name="can_walk" value=""/>
+   <property name="name" value="thopter_factory_2"/>
   </properties>
  </tile>
 </tileset>
