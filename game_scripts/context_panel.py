@@ -10,20 +10,30 @@ class ContextPanel(ABC):
     context is contextual, based on what's selected.
     """
 
-    def __init__(self, *, portrait_id: str = "default", commander: Commander) -> None:
-        self.portrait_id: str = portrait_id
-        self.commander = commander
-        pass
-
-    @abstractmethod
-    def set_context_elems(self, context_container: IContainerAndContainerLike):
+    def __init__(
+        self,
+        *,
+        portrait_id: str = "default",
+        commander: Commander,
+        context_container: IContainerAndContainerLike,
+    ) -> None:
         """
-        set elements inside context_panel of game_ui.
-        Note that this excludes portrait_panel.
+        Make sure to set elements inside context_panel of game_ui.
 
         context_container: context_panel container
         """
-        pass
+        self.portrait_id: str = portrait_id
+        self.commander = commander
+
+    # @abstractmethod
+    # def set_context_elems(self, context_container: IContainerAndContainerLike):
+    #     """
+    #     set elements inside context_panel of game_ui.
+    #     Note that this excludes portrait_panel.
+
+    #     context_container: context_panel container
+    #     """
+    #     pass
 
     def update(self, _delta) -> None:
         pass

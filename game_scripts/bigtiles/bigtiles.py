@@ -2,7 +2,7 @@ import pygame as pg
 from pygame import Vector2
 
 from game_scripts import group_server
-from game_scripts.big_tile import BigTile
+from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.game_ui import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
@@ -38,19 +38,27 @@ class Sawmill(BigTile, Selectable):
 
 
 class SawmillPanel(ContextPanel):
-    def __init__(self) -> None:
-        super().__init__("#sawmill_button")
-
-    @property
-    def image_button(self) -> UIButton:
-        return UIButton(
-            pg.Rect(3, 3, 54, 46),
+    def __init__(self, commander, context_container) -> None:
+        super().__init__(
+            portrait_id="#sawmill_button",
+            commander=commander,
+            context_container=context_container,
+        )
+        UIButton(
+            pg.Rect(0, 0, 54, 46),
             text="",
-            # object_id="#thopter_button",
+            object_id="#thopter_button",
             scale_func=integer_scale,
-            # container=main_ui.context_panel.get_container(),
+            container=context_container,
+            command=lambda: print("I do nothing yet!"),
         )
 
+
+class ThopterFactory(BigTile, Selectable):
     @property
-    def context_panel(self):
-        raise NotImplementedError
+    def context_panel(self) -> type[ContextPanel]:
+        return ThopterFactoryPanel
+
+
+class ThopterFactoryPanel(ContextPanel):
+    pass

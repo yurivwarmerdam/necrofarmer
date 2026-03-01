@@ -32,8 +32,8 @@ pip install -r requirements.txt
     - collision (not really. More like )
 
     selection logic:
-    - make commander into server
-    - allow panels to be ticked/updated/processed
+    x make commander into server
+    v allow panels to be ticked/updated/processed
     
 
     - I remember passing my_entity(entities) to context_panels and then populating object internal state based on that. Probably using a bunch of signals.

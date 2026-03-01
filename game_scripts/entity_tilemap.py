@@ -3,8 +3,8 @@ from math import floor
 
 from pygame import Vector2
 
-from game_scripts.big_tile import BigTile
-from game_scripts.sawmill import Sawmill
+from game_scripts.bigtiles.bigtile import BigTile
+from game_scripts.bigtiles.bigtiles import Sawmill
 from scripts.tilemap import Tile, Tilemap
 
 # TODO: this wants to be in some .conf or json file.

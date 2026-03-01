@@ -113,8 +113,15 @@ from time import time
 # Perhaps peek at how you do this again with sprites?
 # I remember there being a similar pattern, here.
 class TardigradePanel(ContextPanel):
-    def __init__(self, commander: Commander) -> None:
-        super().__init__(portrait_id="#tardigrade_button", commander=commander)
+    def __init__(
+        self, commander: Commander, context_container: IContainerAndContainerLike
+    ) -> None:
+        super().__init__(
+            portrait_id="#tardigrade_button",
+            commander=commander,
+            context_container=context_container,
+        )
+        self.set_context_elems(context_container)
 
     def set_context_elems(self, context_container: IContainerAndContainerLike):
         UIButton(
@@ -131,7 +138,7 @@ class TardigradePanel(ContextPanel):
             container=context_container,
         )
         self.counter = UILabel(
-            pg.Rect(70, 20, 120, 30),
+            pg.Rect(70, 20, -1, -1),
             f"Time! {time()}",
             container=context_container,
         )

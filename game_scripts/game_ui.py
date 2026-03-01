@@ -118,10 +118,11 @@ class MainUI:
 
     def set_context_panel(self, commander: Commander):
         new_panel: type[ContextPanel] = commander.selected.sprites()[0].context_panel
-        self.active_panel = new_panel(commander=commander)
-        self.active_panel.set_context_elems(self.context_panel.get_container())
-        pass
+        self.active_panel = new_panel(
+            commander=commander, context_container=self.context_panel.get_container()
+        )
+        # self.active_panel.set_context_elems(self.context_panel.get_container())
 
-    def update(self,_delta):
+    def update(self, _delta):
         if self.active_panel:
             self.active_panel.update(_delta)
