@@ -49,7 +49,7 @@ clock = pg.time.Clock()
 
 # -- UI experiments --
 
-ui=MainUI()
+ui = MainUI()
 
 # -- group initialization --
 
@@ -79,7 +79,8 @@ img_server = image_server.get_server()
 Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
 Tardigrade(Vector2(150, 150))
-Ornithopter(Vector2(200,200))
+
+Ornithopter(Vector2(200, 200))
 
 
 def handle_key_input():

@@ -52,7 +52,18 @@ pip install -r requirements.txt
     - Time to make a properly themed button!
         - read up on how they are populated
         - start making my nested button with the cute littel pressed effect
-        
+
+
+### autotile
+    - https://www.youtube.com/watch?v=uaIQau4woSM
+    - https://doc.mapeditor.org/en/stable/manual/automapping/
+    - How to integrate into pytmx?
+    may also be called terrains:
+    - https://doc.mapeditor.org/en/stable/manual/terrain/
+
+    - goal could//should be to create some debug menu (in pygame_gui) that allows me to free-place paths and buildings.
+
+
 ### selection logic
     v ui on select (really any ui at all)
         - figure out how theming works, how to make separate buttons per art, 
