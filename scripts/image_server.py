@@ -59,24 +59,35 @@ class ImageServer:
             self.tardigrade_sprites[(1, 0)],
             self.tardigrade_sprites[(2, 0)],
             self.tardigrade_sprites[(3, 0)],
+            self.tardigrade_sprites[(4, 0)],
         )
         self.animations["thopter_1"] = AnimationSequence(
             self.tardigrade_sprites[(0, 1)],
             self.tardigrade_sprites[(1, 1)],
             self.tardigrade_sprites[(2, 1)],
             self.tardigrade_sprites[(3, 1)],
+            self.tardigrade_sprites[(4, 1)],
         )
         self.animations["thopter_2"] = AnimationSequence(
             self.tardigrade_sprites[(0, 2)],
             self.tardigrade_sprites[(1, 2)],
             self.tardigrade_sprites[(2, 2)],
             self.tardigrade_sprites[(3, 2)],
+            self.tardigrade_sprites[(4, 2)],
         )
         self.animations["thopter_3"] = AnimationSequence(
             self.tardigrade_sprites[(0, 3)],
             self.tardigrade_sprites[(1, 3)],
             self.tardigrade_sprites[(2, 3)],
             self.tardigrade_sprites[(3, 3)],
+            self.tardigrade_sprites[(4, 3)],
+        )
+        self.animations["thopter_4"] = AnimationSequence(
+            self.tardigrade_sprites[(0, 4)],
+            self.tardigrade_sprites[(1, 4)],
+            self.tardigrade_sprites[(2, 4)],
+            self.tardigrade_sprites[(3, 4)],
+            self.tardigrade_sprites[(4, 4)],
         )
 
 

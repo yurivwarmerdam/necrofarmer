@@ -9,6 +9,7 @@ from game_scripts import entity_tilemap, group_server, star
 from game_scripts.commander import Commander
 from game_scripts.game_ui import MainUI
 from game_scripts.tardigrade import Tardigrade
+from game_scripts.thopter import Ornithopter
 from scripts import image_server
 from scripts.camera import initialize_camera
 
@@ -78,6 +79,7 @@ img_server = image_server.get_server()
 Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
 Tardigrade(Vector2(150, 150))
+Ornithopter(Vector2(200,200))
 
 
 def handle_key_input():
