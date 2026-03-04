@@ -4,6 +4,14 @@ from game_scripts.selectable import Selectable
 from scripts import image_server
 from game_scripts import group_server
 
+# TODO:
+# - add btree
+# - def move (maybe with random target position button)
+# - def load
+# - def unload
+# - def idle (land)
+# - def take off
+
 
 class Ornithopter(AnimatedSprite, Selectable):
     def __init__(self, pos):
