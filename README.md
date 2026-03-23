@@ -31,6 +31,9 @@ pip install -r requirements.txt
     v  learn how to consume input in pygame ui.
     - collision (not really. More like )
 
+    spawners (+spawner debug menu?) for units and for buildings
+    First just click on a cell, then work on hover ghosts
+
     selection logic:
     x make commander into server
     v allow panels to be ticked/updated/processed
