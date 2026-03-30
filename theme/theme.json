@@ -1,7 +1,8 @@
 {
     "defaults": {
         "colors": {
-            "normal_bg": "rgba(255, 255, 255, 0)"
+            "normal_bg": "rgba(255, 255, 255, 0)",
+            "text_shadow": "#000000"
         }
     },
     "panel": {
@@ -11,6 +12,32 @@
         "misc": {
             "border_width": "0",
             "shadow_width": "0"
+        }
+    },
+    "label": {
+        "font": {
+            "name": "Arpegius",
+            "size": "16",
+            "regular_resource": {
+                "package": "game_scripts",
+                "resource": "Arpegius.ttf"
+            }
+        },
+        "misc": {
+            "text_shadow_size": "1"
+        }
+    },
+    "button": {
+        "font": {
+            "name": "Arpegius",
+            "size": "16",
+            "regular_resource": {
+                "package": "game_scripts",
+                "resource": "Arpegius.ttf"
+            }
+        },
+        "misc": {
+            "text_shadow_size": "1"
         }
     },
     "#portrait_background": {
@@ -31,5 +58,8 @@
         "misc": {
             "auto_scale_images": "1"
         }
+    },
+    "#menu_button":{
+        
     }
 }

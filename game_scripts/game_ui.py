@@ -33,7 +33,17 @@ class MainUI:
 
         self.active_panel = None
         # TODO: Be more consistent here.
-        self.menu_button=UIButton(pg.Rect())
+        self.menu_button = UIButton(
+            pg.Rect(-126, 0, 126, 18),
+            "Menu",
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "top",
+                "bottom": "top",
+            },
+            object_id="#menu_button"
+        )
         self.portrait_panel = UIPanel(
             pg.Rect(
                 0,
