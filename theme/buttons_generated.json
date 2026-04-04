@@ -173,40 +173,5 @@
     "misc": {
       "auto_scale_images": "1"
     }
-  },
-  "#menu_button": {
-    "images": {
-      "normal_images": [
-        {
-          "id": "background",
-          "layer": 0,
-          "path": "art/ui_components.png",
-          "sub_surface_rect": "0,64,54,46"
-        },
-        {
-          "id": "face",
-          "layer": 1,
-          "path": "art/thumbnails.png",
-          "sub_surface_rect": "0,229,128,18"
-        }
-      ],
-      "selected_images": [
-        {
-          "id": "background",
-          "layer": 0,
-          "path": "art/ui_components.png",
-          "sub_surface_rect": "54,64,54,46"
-        },
-        {
-          "id": "face",
-          "layer": 1,
-          "path": "art/thumbnails.png",
-          "sub_surface_rect": "0,229,128,18"
-        }
-      ]
-    },
-    "misc": {
-      "auto_scale_images": "1"
-    }
   }
 }

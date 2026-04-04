@@ -59,7 +59,27 @@
             "auto_scale_images": "1"
         }
     },
-    "#menu_button":{
-        
+    "#menu_button": {
+        "images": {
+            "normal_images": [
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "0,229,128,18"
+                }
+            ],
+            "selected_images": [
+                {
+                    "id": "face",
+                    "layer": 1,
+                    "path": "art/thumbnails.png",
+                    "sub_surface_rect": "0,229,128,18"
+                }
+            ]
+        },
+        "misc": {
+            "auto_scale_images": "1"
+        }
     }
 }
