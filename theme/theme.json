@@ -66,7 +66,7 @@
                     "id": "face",
                     "layer": 1,
                     "path": "art/thumbnails.png",
-                    "sub_surface_rect": "0,229,128,18"
+                    "sub_surface_rect": "0,248,126,18"
                 }
             ],
             "selected_images": [
@@ -74,7 +74,7 @@
                     "id": "face",
                     "layer": 1,
                     "path": "art/thumbnails.png",
-                    "sub_surface_rect": "0,229,128,18"
+                    "sub_surface_rect": "0,267,126,18"
                 }
             ]
         },
