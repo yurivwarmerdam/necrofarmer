@@ -1,6 +1,8 @@
 from functools import partial
 
+
 import pygame as pg
+import pygame_gui
 from blinker import signal
 from pygame.rect import Rect
 from pygame_gui.elements import UIImage
@@ -10,6 +12,7 @@ from game_scripts.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
 from scripts.ui_shim import UIButton, UIPanel
 from scripts.utils import load_image, sheet_to_sprite
+from pygame_gui.core.utility import get_default_manager
 
 
 class MainUI:
@@ -29,10 +32,12 @@ class MainUI:
         ui_components_sheet = load_image("art/ui_components.png")
         ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
 
+        self.main_menu = None
+
         # ------- base elements -------
 
         self.active_panel = None
-        # TODO: Be more consistent here.
+
         self.menu_button = UIButton(
             pg.Rect(-126, 0, 126, 18),
             "Menu",
@@ -42,8 +47,10 @@ class MainUI:
                 "top": "top",
                 "bottom": "top",
             },
-            object_id="#menu_button"
+            object_id="#menu_button",
+            command=self.toggle_main_menu,
         )
+
         self.portrait_panel = UIPanel(
             pg.Rect(
                 0,
@@ -125,6 +132,20 @@ class MainUI:
                 scale_func=integer_scale,
                 container=self.portrait_panel,
                 command=lambda: sender.unselect(sender.selected.sprites()[0]),
+            )
+
+    def toggle_main_menu(self):
+        if self.main_menu:
+            self.main_menu.kill()
+            self.main_menu = None
+        else:
+            self.main_menu = UIPanel(
+                Rect(0, 0, 150, 100),
+                element_id="#panel_background",
+                scale_func=tilingscale,
+                anchors={
+                    "center": "center",
+                },
             )
 
     def set_context_panel(self, commander: Commander):
