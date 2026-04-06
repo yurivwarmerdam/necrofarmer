@@ -11,8 +11,10 @@ from game_scripts.commander import Commander
 from game_scripts.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
 from scripts.ui_shim import UIButton, UIPanel
+from pygame_gui.elements import UIPanel as UIPanel_original
 from scripts.utils import load_image, sheet_to_sprite
 from pygame_gui.core.utility import get_default_manager
+from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel
 
 
 class MainUI:
@@ -24,13 +26,15 @@ class MainUI:
     def __init__(self):
         # setup main elements
 
-        nine_slice_func = partial(
-            ninepatchscale, patch_margain=3, scale_func=tilingscale
-        )
+        # nine_slice_func = partial(
+        #     ninepatchscale, patch_margain=3, scale_func=tilingscale
+        # )
         portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
         context_panel_rect: Rect = Rect(0, 0, 400, 99)
         ui_components_sheet = load_image("art/ui_components.png")
-        ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
+        self.ui_background_sprite = sheet_to_sprite(
+            ui_components_sheet, Rect(0, 0, 60, 62)
+        )
 
         self.main_menu = None
 
@@ -67,7 +71,7 @@ class MainUI:
             object_id="#portrait_background",
         )
 
-        self.context_background = UIPanel(
+        self.context_background = ImagePanel(
             pg.Rect(
                 portrait_panel_rect[2],
                 -(context_panel_rect[3]),
@@ -80,20 +84,8 @@ class MainUI:
                 "top": "bottom",
                 "bottom": "bottom",
             },
-            # object_id="#panel_background",
-            scale_func=nine_slice_func,
-        )
-        UIImage(
-            context_panel_rect,
-            ui_background_sprite,
-            anchors={
-                "left": "left",
-                "right": "right",
-                "top": "top",
-                "bottom": "bottom",
-            },
-            scale_func=nine_slice_func,
-            container=self.context_background.get_container(),
+            image_surf=self.ui_background_sprite,
+            scale_func=NINE_SLICE_FUNC,
         )
 
         self.context_panel = UIPanel(
@@ -139,13 +131,14 @@ class MainUI:
             self.main_menu.kill()
             self.main_menu = None
         else:
-            self.main_menu = UIPanel(
+            
+            self.main_menu = ImagePanel(
                 Rect(0, 0, 150, 100),
-                element_id="#panel_background",
-                scale_func=tilingscale,
                 anchors={
                     "center": "center",
                 },
+                image_surf=self.ui_background_sprite,
+                scale_func=NINE_SLICE_FUNC,
             )
 
     def set_context_panel(self, commander: Commander):
@@ -153,7 +146,6 @@ class MainUI:
         self.active_panel = new_panel(
             commander=commander, context_container=self.context_panel.get_container()
         )
-        # self.active_panel.set_context_elems(self.context_panel.get_container())
 
     def update(self, _delta):
         if self.active_panel:
