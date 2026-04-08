@@ -1,11 +1,15 @@
 from functools import partial
+from typing import Any, Dict
 
 
 import pygame as pg
+from pygame.transform import smoothscale
 import pygame_gui
 from blinker import signal
 from pygame.rect import Rect
-from pygame_gui.elements import UIImage
+from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
+from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface
+from pygame_gui.elements import UIWindow
 
 from game_scripts.commander import Commander
 from game_scripts.context_panel import ContextPanel
@@ -131,15 +135,7 @@ class MainUI:
             self.main_menu.kill()
             self.main_menu = None
         else:
-            
-            self.main_menu = ImagePanel(
-                Rect(0, 0, 150, 100),
-                anchors={
-                    "center": "center",
-                },
-                image_surf=self.ui_background_sprite,
-                scale_func=NINE_SLICE_FUNC,
-            )
+            self.main_menu = MainMenu()
 
     def set_context_panel(self, commander: Commander):
         new_panel: type[ContextPanel] = commander.selected.sprites()[0].context_panel
@@ -150,3 +146,31 @@ class MainUI:
     def update(self, _delta):
         if self.active_panel:
             self.active_panel.update(_delta)
+
+
+class MainMenu(ImagePanel):
+    def __init__(self):
+        ui_components_sheet = load_image("art/ui_components.png")
+        ui_background_sprite = sheet_to_sprite(ui_components_sheet, Rect(0, 0, 60, 62))
+        super().__init__(
+            Rect(0, 0, 150, 100),
+            anchors={
+                "center": "center",
+            },
+            image_surf=ui_background_sprite,
+            scale_func=NINE_SLICE_FUNC,
+        )
+        UIButton(
+            pg.Rect(0, 10, 126, 18),
+            "Debug Menu",
+            anchors={"centerx": "centerx", "top": "top"},
+            object_id="#menu_button",
+            container=self.get_container(),
+            command=DebugMenu,
+        )
+
+
+class DebugMenu(UIWindow):
+    def __init__(self) -> None:
+        super().__init__(Rect(80, 30, 80, 100))
+

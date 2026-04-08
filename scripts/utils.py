@@ -4,7 +4,7 @@ from pygame.math import Vector2
 
 # from typing import List
 
-
+# TODO: keep references to surfaces that were previously loaded.
 def load_image(path) -> Surface:
     image = pg.image.load(path).convert()
     image.set_colorkey((0, 0, 0, 0))
