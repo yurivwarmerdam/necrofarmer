@@ -71,5 +71,8 @@
         "misc": {
             "auto_scale_images": "1"
         }
+    },
+    "window.button":{
+        "images":{}
     }
 }
