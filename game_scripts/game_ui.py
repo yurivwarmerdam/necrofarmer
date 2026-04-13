@@ -166,11 +166,31 @@ class MainMenu(ImagePanel):
             anchors={"centerx": "centerx", "top": "top"},
             object_id="#menu_button",
             container=self.get_container(),
-            command=DebugMenu,
+            command=self.toggle_debug_window,
         )
+
+    def toggle_debug_window(self):
+        for elem in self.ui_manager.get_root_container().elements:
+            if isinstance(elem, DebugMenu):
+                elem.kill()
+                return
+        DebugMenu()
 
 
 class DebugMenu(UIWindow):
     def __init__(self) -> None:
-        super().__init__(Rect(80, 30, 80, 100))
-
+        super().__init__(Rect(30, 30, 125, 100))
+        UIButton(
+            Rect(5, 5, 54, 46),
+            "",
+            object_id="#tardigrade_button",
+            scale_func=integer_scale,
+            container=self,
+        )
+        UIButton(
+            Rect(64, 5, 54, 46),
+            "",
+            object_id="#ornithopter_button",
+            scale_func=integer_scale,
+            container=self,
+        )

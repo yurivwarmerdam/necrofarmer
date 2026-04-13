@@ -48,7 +48,6 @@
             }
         }
     },
-
     "#menu_button": {
         "images": {
             "normal_images": [
@@ -72,7 +71,22 @@
             "auto_scale_images": "1"
         }
     },
-    "window.button":{
-        "images":{}
+    "window.#title_bar": {
+        "images": {
+            "normal_images": [],
+            "selected_images": []
+        },
+        "misc": {
+            "border_width": 0
+        }
+    },
+    "window.#close_button": {
+        "images": {
+            "normal_images": [],
+            "selected_images": []
+        },
+        "misc": {
+            "border_width": 0
+        }
     }
 }

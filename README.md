@@ -1,4 +1,4 @@
-# pygame_tst
+# Necrofarmer AKA Thopters & Tardigrades 3
 ===================
 
 ## Cheat sheet:
@@ -6,7 +6,7 @@
 ```
 # Clone:
 git clone --recurse-submodules git@github.com:yurivwarmerdam/simple_bt.git
-# venv because miniconda cannot be used since its installation of sqlite3 conflicts with he requirements of behaviortee.cpp
+# venv because miniconda cannot be used since its installation of sqlite3 conflicts with the requirements of behaviortee.cpp
 source venv/bin/activate
 ```
 
@@ -23,20 +23,31 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 ### current:
+    spawners (+spawner debug menu?) for units and for buildings
+    v make menu
+    - First just click on a cell, then work on hover ghosts
+    - (probably) make commander into server
+    - add object creation modality/state, initially only for units
+    - while you're there, also think about dragging logic. The "sticky" boxes annoy me.
+    - make stuff on click (at x/y? at grid cell? Whichever)
+    - make you a hover ghost
+    - do the same for buildings
+
+
+
+
+### Wishlist:
+
     - renderer.coordinates_from/to_window() is apparently a shiny new way of doing mouse pos??
     - buildout (cook resources stuff)
     - game mainclass
         - setup (called in init. Could also do an init super pattern. Is a little more pythonic)
         - process (rest of the fucking owl. Think about how to abstract inputevents)
-    v  learn how to consume input in pygame ui.
-    - collision (not really. More like )
 
-    spawners (+spawner debug menu?) for units and for buildings
-    First just click on a cell, then work on hover ghosts
+
 
     selection logic:
     x make commander into server
-    v allow panels to be ticked/updated/processed
     
 
     - I remember passing my_entity(entities) to context_panels and then populating object internal state based on that. Probably using a bunch of signals.
@@ -50,11 +61,6 @@ pip install -r requirements.txt
     Next step (choices!):
     - highlight on select
     - logical animation
-
-    - ui class
-    - Time to make a properly themed button!
-        - read up on how they are populated
-        - start making my nested button with the cute littel pressed effect
 
 
 ### autotile
