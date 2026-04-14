@@ -38,10 +38,9 @@ class Sawmill(BigTile, Selectable):
 
 
 class SawmillPanel(ContextPanel):
-    def __init__(self, commander, context_container) -> None:
+    def __init__(self, context_container) -> None:
         super().__init__(
             portrait_id="#sawmill_button",
-            commander=commander,
             context_container=context_container,
         )
         UIButton(
@@ -83,10 +82,9 @@ class ThopterFactory(BigTile, Selectable):
 
 
 class ThopterFactoryPanel(ContextPanel):
-    def __init__(self, commander, context_container) -> None:
+    def __init__(self, context_container) -> None:
         super().__init__(
             portrait_id="#thopter_factory_2_button",
-            commander=commander,
             context_container=context_container,
         )
         UIButton(

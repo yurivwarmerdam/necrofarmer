@@ -11,7 +11,7 @@ from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
 from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface
 from pygame_gui.elements import UIWindow
 
-from game_scripts.commander import Commander
+from game_scripts.commander import Commander,get_commander
 from game_scripts.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
 from scripts.ui_shim import UIButton, UIPanel
@@ -120,7 +120,7 @@ class MainUI:
             self.portrait_panel.get_container().clear()
             self.context_panel.get_container().clear()
         if sender.selected:
-            self.set_context_panel(sender)
+            self.set_context_panel()
             UIButton(
                 Rect(4, 4, 54 * 3, 46 * 3),
                 text="",
@@ -137,10 +137,10 @@ class MainUI:
         else:
             self.main_menu = MainMenu()
 
-    def set_context_panel(self, commander: Commander):
-        new_panel: type[ContextPanel] = commander.selected.sprites()[0].context_panel
+    def set_context_panel(self):
+        new_panel: type[ContextPanel] = get_commander().selected.sprites()[0].context_panel
         self.active_panel = new_panel(
-            commander=commander, context_container=self.context_panel.get_container()
+            context_container=self.context_panel.get_container()
         )
 
     def update(self, _delta):
@@ -180,6 +180,7 @@ class MainMenu(ImagePanel):
 class DebugMenu(UIWindow):
     def __init__(self) -> None:
         super().__init__(Rect(30, 30, 125, 100))
+
         UIButton(
             Rect(5, 5, 54, 46),
             "",

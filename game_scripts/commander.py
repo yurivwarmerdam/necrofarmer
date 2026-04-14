@@ -71,10 +71,12 @@ class SelectBox(NodeSprite):
 class Commander:
     """
     Keeps track of any selected units.
-    Defers inputs to
+    Defers inputs to special (used for debug menu, maybe popup minigames?)
+    Defers inputs to selected
     """
 
     def __init__(self):
+        self.special = Group()
         self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
@@ -92,7 +94,12 @@ class Commander:
         # -- mouse buttons --
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
             processed = []
-            if self.selected:
+            if self.special:
+                print("processing special")
+                special_item = self.special.sprites()[0]
+                if hasattr(special_item, "process_events"):
+                    processed.append(special_item.process_events(event))
+            if self.selected and not any(processed):
                 for sprite in self.selected:
                     if hasattr(sprite, "process_events"):
                         processed.append(sprite.process_events(event))
@@ -137,6 +144,16 @@ class Commander:
                 collide.add(self.selected)
         self.box.stop_drag()
         self.selected_changed.send(self)
+
+
+_instance = None
+
+
+def get_commander():
+    global _instance
+    if _instance is None:
+        _instance = Commander()
+    return _instance
 
 
 def pointcollide(point, group, collide_callback=None):

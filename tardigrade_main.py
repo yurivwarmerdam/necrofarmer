@@ -6,6 +6,7 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from game_scripts import entity_tilemap, group_server, star
+from game_scripts import commander
 from game_scripts.commander import Commander
 from game_scripts.game_ui import MainUI
 from game_scripts.tardigrade import Tardigrade
@@ -71,7 +72,7 @@ camera = initialize_camera(
     Vector2(-125, 0),
 )
 
-commander = Commander()
+commander = commander.get_commander()
 commander.box.add(groups.render_groups["draw"])
 
 img_server = image_server.get_server()

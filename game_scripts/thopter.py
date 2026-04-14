@@ -36,9 +36,8 @@ class Ornithopter(AnimatedSprite, Selectable):
 
 
 class OrnithopterPanel(ContextPanel):
-    def __init__(self, *, commander, context_container):
+    def __init__(self, *, context_container):
         super().__init__(
             portrait_id="#ornithopter_button",
-            commander=commander,
             context_container=context_container,
         )

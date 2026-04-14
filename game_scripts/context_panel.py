@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
-from game_scripts.commander import Commander
+from game_scripts.commander import Commander, get_commander
 
 
 class ContextPanel(ABC):
@@ -14,7 +14,6 @@ class ContextPanel(ABC):
         self,
         *,
         portrait_id: str = "default",
-        commander: Commander,
         context_container: IContainerAndContainerLike,
     ) -> None:
         """
@@ -23,7 +22,7 @@ class ContextPanel(ABC):
         context_container: context_panel container
         """
         self.portrait_id: str = portrait_id
-        self.commander = commander
+        self.commander: Commander = get_commander()
 
     # @abstractmethod
     # def set_context_elems(self, context_container: IContainerAndContainerLike):
