@@ -76,7 +76,7 @@ class Commander:
     """
 
     def __init__(self):
-        self.special = Group()
+        self.special = None
         self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
@@ -96,9 +96,8 @@ class Commander:
             processed = []
             if self.special:
                 print("processing special")
-                special_item = self.special.sprites()[0]
-                if hasattr(special_item, "process_events"):
-                    processed.append(special_item.process_events(event))
+                if hasattr(self.special, "process_events"):
+                    processed.append(self.special.process_events(event))
             if self.selected and not any(processed):
                 for sprite in self.selected:
                     if hasattr(sprite, "process_events"):

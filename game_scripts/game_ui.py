@@ -11,7 +11,7 @@ from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
 from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface
 from pygame_gui.elements import UIWindow
 
-from game_scripts.commander import Commander,get_commander
+from game_scripts.commander import Commander, get_commander
 from game_scripts.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
 from scripts.ui_shim import UIButton, UIPanel
@@ -138,7 +138,9 @@ class MainUI:
             self.main_menu = MainMenu()
 
     def set_context_panel(self):
-        new_panel: type[ContextPanel] = get_commander().selected.sprites()[0].context_panel
+        new_panel: type[ContextPanel] = (
+            get_commander().selected.sprites()[0].context_panel
+        )
         self.active_panel = new_panel(
             context_container=self.context_panel.get_container()
         )
@@ -180,7 +182,9 @@ class MainMenu(ImagePanel):
 class DebugMenu(UIWindow):
     def __init__(self) -> None:
         super().__init__(Rect(30, 30, 125, 100))
-
+        print(get_commander().special)
+        get_commander().special = self
+        print(get_commander().special)
         UIButton(
             Rect(5, 5, 54, 46),
             "",
@@ -195,3 +199,7 @@ class DebugMenu(UIWindow):
             scale_func=integer_scale,
             container=self,
         )
+
+    def process_events(self, event: pg.Event) -> bool:
+        print("yeah,a ctually")
+        return False
