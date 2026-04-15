@@ -19,6 +19,8 @@ from pygame_gui.elements import UIPanel as UIPanel_original
 from scripts.utils import load_image, sheet_to_sprite
 from pygame_gui.core.utility import get_default_manager
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel
+from game_scripts.thopter import Ornithopter
+from game_scripts.tardigrade import Tardigrade
 
 
 class MainUI:
@@ -191,6 +193,7 @@ class DebugMenu(UIWindow):
             object_id="#tardigrade_button",
             scale_func=integer_scale,
             container=self,
+            command=lambda: self.spawn(Tardigrade),
         )
         UIButton(
             Rect(64, 5, 54, 46),
@@ -198,8 +201,20 @@ class DebugMenu(UIWindow):
             object_id="#ornithopter_button",
             scale_func=integer_scale,
             container=self,
+            command=lambda: self.spawn(Ornithopter),
         )
 
     def process_events(self, event: pg.Event) -> bool:
         print("yeah,a ctually")
         return False
+        #if not self.spawning:
+            #return False
+            #if event is inputeventmousebutton and event is left click and event is button up:
+                #do_spawn(self.spawning)
+            #if event is right click up:
+                #self.spawning =None
+
+
+
+    def spawn(self, variant: type) -> None:
+        pass
