@@ -3,6 +3,7 @@ from blinker import signal
 from pygame import Rect, Surface, Vector2
 from pygame.mask import from_surface
 from pygame.sprite import Group, Sprite
+from pygame_gui.core import UIElement
 
 from game_scripts import group_server
 from scripts.camera import Camera, get_camera
@@ -76,7 +77,7 @@ class Commander:
     """
 
     def __init__(self):
-        self.special = None
+        self.special: Sprite | UIElement | None = None
         self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
@@ -148,7 +149,7 @@ class Commander:
 _instance = None
 
 
-def get_commander():
+def get_commander() -> Commander:
     global _instance
     if _instance is None:
         _instance = Commander()

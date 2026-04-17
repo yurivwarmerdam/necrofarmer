@@ -72,7 +72,7 @@ class Camera:
         pass
 
 
-_instance = None
+_instance: Camera | None = None
 
 
 def initialize_camera(
