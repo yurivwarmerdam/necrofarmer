@@ -22,8 +22,8 @@ from scripts.ui_shim import UIButton
 # v star (already has a server)
 class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
-        img_server = image_server.get_server()
-        groups = group_server.get_server()
+        img_server = image_server.get_image_server()
+        groups = group_server.get_group_server()
         super().__init__(
             {
                 "0": img_server.animations["tardigrade_0"],
@@ -40,8 +40,8 @@ class Tardigrade(AnimatedSprite, Selectable):
         )
 
         self.camera = get_camera()
-        self.tilemap = entity_tilemap.get_server()
-        self.path_planner = star.get_server()
+        self.tilemap = entity_tilemap.get_tilemap()
+        self.path_planner = star.get_star_server()
 
         # self.move_goal = None
         self.path = []

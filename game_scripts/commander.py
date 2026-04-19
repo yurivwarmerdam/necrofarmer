@@ -19,7 +19,7 @@ class SelectBox(NodeSprite):
         self.dragging: bool = False
         self.start: Vector2 | None = None
         self.camera: Camera = get_camera()
-        self.group_server = group_server.get_server()
+        self.group_server = group_server.get_group_server()
 
     def start_drag(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -82,7 +82,7 @@ class Commander:
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
-        self.group_server = group_server.get_server()
+        self.group_server = group_server.get_group_server()
         self.camera = get_camera()
         self.selected_changed = signal("selected_changed")
 

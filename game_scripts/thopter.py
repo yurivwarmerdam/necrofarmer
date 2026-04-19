@@ -15,8 +15,8 @@ from game_scripts import group_server
 
 class Ornithopter(AnimatedSprite, Selectable):
     def __init__(self, pos):
-        img_server = image_server.get_server()
-        groups = group_server.get_server()
+        img_server = image_server.get_image_server()
+        groups = group_server.get_group_server()
         super().__init__(
             {
                 "0": img_server.animations["thopter_0"],

@@ -34,7 +34,7 @@ class GroupServer:
 _instance = None
 
 
-def get_server() -> GroupServer:
+def get_group_server() -> GroupServer:
     global _instance
     if _instance is None:
         _instance = GroupServer()  # type: ignore

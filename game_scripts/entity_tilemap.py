@@ -70,10 +70,10 @@ _instance = None
 
 
 # TODO: how to deal with re-instantiating tilemap on load, level change, map expansion, whatever.
-def get_server(tmx_path: str | None = None) -> EntityTilemap:
+def get_tilemap(tmx_path: str | None = None) -> EntityTilemap:
     global _instance
     if _instance is None and tmx_path is None:
-        raise Exception("Star server not yet initiated with a map.")
+        raise Exception("Tilemap server not yet initiated with a map.")
     elif _instance is None:
         _instance = EntityTilemap(tmx_path)
     return _instance

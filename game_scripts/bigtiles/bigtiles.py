@@ -20,7 +20,7 @@ class Sawmill(BigTile, Selectable):
         offset=Vector2(0, 0),
         tiles: list = [Vector2(0, 0)],
     ):
-        global_groups = group_server.get_server()
+        global_groups = group_server.get_group_server()
         super().__init__(
             pos,
             image,
@@ -64,7 +64,7 @@ class ThopterFactory(BigTile, Selectable):
         offset=Vector2(0, 0),
         tiles: list = [Vector2(0, 0)],
     ):
-        global_groups = group_server.get_server()
+        global_groups = group_server.get_group_server()
         super().__init__(
             pos,
             image,

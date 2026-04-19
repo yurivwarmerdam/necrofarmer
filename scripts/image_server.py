@@ -94,7 +94,7 @@ class ImageServer:
 _instance = None
 
 
-def get_server() -> ImageServer:
+def get_image_server() -> ImageServer:
     global _instance
     if _instance is None:
         _instance = ImageServer()

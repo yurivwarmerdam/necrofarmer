@@ -25,7 +25,11 @@ pip install -r requirements.txt
 ### current:
     spawners (+spawner debug menu?) for units and for buildings
     v make menu
-    - First just click on a cell, then work on hover ghosts
+    - new challenger: make better bigtile entities
+        - better init
+        - think about how these are/will be processed
+        - maybe do an example like with tardigrade
+    ~ First just click on a cell, then work on hover ghosts
     - (probably) make commander into server
     - add object creation modality/state, initially only for units
     - while you're there, also think about dragging logic. The "sticky" boxes annoy me.

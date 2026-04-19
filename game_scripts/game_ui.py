@@ -210,13 +210,11 @@ class DebugMenu(UIWindow):
 
     def process_events(self, event: pg.event.Event) -> bool:
         if not self.spawning:
-            print("not spawning")
             return False
         if event.type == pg.MOUSEBUTTONUP:
             if event.button != 1:
                 self.spawning=None
                 return False
-            print("spawn!")
             self.do_spawn()
             return True
         
