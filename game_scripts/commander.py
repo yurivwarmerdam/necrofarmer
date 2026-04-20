@@ -96,7 +96,6 @@ class Commander:
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
             processed = []
             if self.special:
-                print("processing special")
                 if hasattr(self.special, "process_events"):
                     processed.append(self.special.process_events(event))
             if self.selected and not any(processed):
