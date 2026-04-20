@@ -37,6 +37,14 @@ pip install -r requirements.txt
     - make you a hover ghost
     - do the same for buildings
 
+    Current BigTile Tilemap notes:
+    - all bigtile properties are located in tile tsx.
+    - can I get them out through tsx?
+    - wants to load through tsx. What if I create a "dictionary" tilemap?
+        - contains one of each building type
+        - parse those, know what pos/idx/whatever corresponds, or just go by name
+        - place "from" that loc.
+        - alternatively, could also have a specific layer on the regular tilemap. Limits reuse somewhat.
 
 
 

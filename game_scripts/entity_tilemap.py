@@ -29,8 +29,8 @@ class EntityTilemap(Tilemap):
                 self.set_tile(new_tile, layer, origin_idx)
 
     def kill_and_replace_bigtile(self, tile_idx, layer) -> BigTile:
-        tile: Tile = self.get_tilev(layer, tile_idx)
         self.kill_tile(layer, tile_idx)
+        tile: Tile = self.get_tilev(layer, tile_idx)
         sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
         sub_idxs = [idx + tile_idx for idx in sub_idxs]
         if not self.is_valid_placement_idxs(sub_idxs, layer):
