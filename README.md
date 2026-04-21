@@ -38,6 +38,7 @@ pip install -r requirements.txt
     - do the same for buildings
 
     Current BigTile Tilemap notes:
+    - GOAL is to get a bunch of data ready so I can instantiate a bigtile
     - all bigtile properties are located in tile tsx.
     - can I get them out through tsx?
     - wants to load through tsx. What if I create a "dictionary" tilemap?

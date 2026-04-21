@@ -64,7 +64,6 @@ class Tilemap:
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
             tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
-            tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
 
             tile = Tile(
                 Vector2(0, 0),
