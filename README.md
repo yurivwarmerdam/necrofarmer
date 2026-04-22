@@ -46,6 +46,15 @@ pip install -r requirements.txt
         - parse those, know what pos/idx/whatever corresponds, or just go by name
         - place "from" that loc.
         - alternatively, could also have a specific layer on the regular tilemap. Limits reuse somewhat.
+    
+    I want:
+    - better class construction for (big)tiles
+        - have tiles extract data themselves inside constructor?
+    - ability to place tiles at runtime.
+        - have these tiles be relibably loaded identically, robust to future changes (so only in one place)
+        
+    - perhaps an "abstract" TileLoader parent for both TileEntities and Tilemap?
+        - ... use partials to for tiles? completely unsure where this belongs
 
 
 
