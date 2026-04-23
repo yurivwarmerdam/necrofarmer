@@ -16,9 +16,15 @@ class TileEntities:
         for x, y, surf in tmx_layer.tiles():
             pytmx_gid = self.data[y][x]
             tileset = tmx_data.get_tileset_from_gid(pytmx_gid)
+
             tile_properties = tmx_data.get_tile_properties_by_gid(pytmx_gid)
+            name = tile_properties["name"]
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
-            self.tiles[tile_properties["name"]] = (surf, tile_properties, offset)
+            self.tiles[name] = (
+                surf,
+                tile_properties,
+                offset,
+            )
 
 
 def tranform_subtiles(tile_idxs, pos):
