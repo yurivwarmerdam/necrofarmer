@@ -6,6 +6,17 @@ from pytmx import TiledMap
 from pytmx.util_pygame import load_pygame
 
 from scripts.custom_sprites import NodeSprite
+from dataclasses import dataclass
+from pygame.surface import Surface
+
+
+@dataclass
+class TileData:
+    map_pos: Vector2
+    world_pos: Vector2
+    properties: dict
+    surf: Surface
+    offset: Vector2
 
 
 class Tile(NodeSprite):
@@ -54,12 +65,13 @@ class Tilemap:
             layer = LayeredUpdates()
         else:
             layer = Group()
-        # group = Group()
 
         self.layers[name] = layer
         half_w = floor(self.tmx_data.tilewidth / 2)
         half_h = floor(self.tmx_data.tileheight / 2)
-        for x, y, surf in tmx_layer.tiles():
+        for tile in tmx_layer.tiles():
+            self.make_tiledata(tmx_layer, *tile)
+            x, y, surf = tile
             pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
             tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
@@ -73,6 +85,21 @@ class Tilemap:
             )
 
             self.set_tile(tile, name, Vector2(x, y))
+
+    def make_tiledata(self, tmx_layer, x, y, surf):
+        pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
+        tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
+        offset = -(
+            Vector2(tileset.offset)
+            + (-floor(self.tmx_data.tilewidth / 2), floor(self.tmx_data.tileheight / 2))
+        )
+        return TileData(
+            Vector2(x, y),
+            self.map_to_world(x, y),
+            self.tmx_data.get_tile_properties_by_gid(pytmx_gid) or {},
+            surf,
+            offset,
+        )
 
     def get_layer(self, layer):
         return self.layers[layer]

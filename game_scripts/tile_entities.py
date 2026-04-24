@@ -20,6 +20,11 @@ class TileEntities:
             tile_properties = tmx_data.get_tile_properties_by_gid(pytmx_gid)
             name = tile_properties["name"]
             offset = -(Vector2(tileset.offset) + (-half_w, half_h))
+            print(pytmx_gid, type(pytmx_gid))
+            print(surf, type(surf))
+            print(tile_properties, type(tile_properties))
+            print(offset, type(offset))
+            1 / 0
             self.tiles[name] = (
                 surf,
                 tile_properties,
