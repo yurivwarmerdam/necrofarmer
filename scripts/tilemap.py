@@ -8,15 +8,31 @@ from pytmx.util_pygame import load_pygame
 from scripts.custom_sprites import NodeSprite
 from dataclasses import dataclass
 from pygame.surface import Surface
+from scripts.tilemap import Tile
 
 
 @dataclass
 class TileData:
+    tile_type: type[Tile]
     map_pos: Vector2
     world_pos: Vector2
     properties: dict
     surf: Surface
     offset: Vector2
+
+    def make_tile(self):
+        return self.tile_type(
+            self.world_pos, self.surf, self.properties, offset=self.offset
+        )
+
+
+# lol. Weird notation
+# some_tiledata.tile.type(some_tiledata)
+
+
+class Tile:
+    def __init(self, Tiledata):
+        pass
 
 
 class Tile(NodeSprite):

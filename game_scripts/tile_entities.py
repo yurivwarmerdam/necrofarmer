@@ -2,10 +2,11 @@ import pygame as pg
 from pytmx.util_pygame import load_pygame
 from pygame.math import Vector2
 from math import floor
+from scripts.tilemap import TileData
 
+class TileDataCollection:
 
-class TileEntities:
-    def __init__(self, tmx_file="tilemaps/tile_entities.tmx") -> None:
+    def __init__(self, tmx_file:str) -> None:
         self.tiles = {}
 
         tmx_data = load_pygame(tmx_file)
@@ -40,5 +41,5 @@ def tranform_subtiles(tile_idxs, pos):
 if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
-    tile_entities = TileEntities()
+    tile_entities = TileDataCollection("tilemaps/tile_entities.tmx")
     print(tile_entities.tiles)
