@@ -1,5 +1,6 @@
 from math import floor
 
+import pygame as pg
 from pygame import Vector2
 from pygame.sprite import AbstractGroup, Group, LayeredUpdates
 from pytmx.map import TiledMap, TiledLayer
@@ -14,7 +15,7 @@ from pygame.surface import Surface
 # some_tiledata.tile.type(some_tiledata)
 @dataclass
 class TileData:
-    tile_type: type[Tile]
+    tile_type: type
     map_pos: Vector2
     world_pos: Vector2
     properties: dict
@@ -31,7 +32,7 @@ class TileData:
 class Tile(NodeSprite):
     def __init__(self, Tiledata: TileData, *groups):
         super().__init__(
-            Tiledata.surf, TileData.world_pos, Tiledata.anchor, Tiledata.offset, *groups
+            Tiledata.surf, Tiledata.world_pos, Tiledata.anchor, Tiledata.offset, *groups
         )
         self.properties = Tiledata.properties
 
@@ -86,8 +87,8 @@ class TileDataLayers:
     def make_layerdata(self, source_layer: TiledLayer) -> dict[Vector2, TileData]:
         layer = {}
         for x, y, surf in source_layer.tiles():
-            tile = self.make_tiledata(layer, x, y, surf)
-            layer[Vector2(x, y)] = tile
+            tile = self.make_tiledata(source_layer, x, y, surf)
+            layer[(x, y)] = tile
         return layer
 
     def make_tiledata(self, tmx_layer, x, y, surf):
@@ -131,17 +132,18 @@ class Tilemap:
         for layer_name in self.tile_data_layers.layers:
             self.init_layer(layer_name)
 
-        # for layer in self.tmx_data.visible_layers:
-        #     name = layer.name
-        #     self.map[name] = [
-        #         [None for _ in range(self.tmx_data.height)]
-        #         for _ in range(self.tmx_data.width)
-        #     ]
-        #     if hasattr(layer, "data"):
-        #         self.make_layer(layer, name)
-
     def init_layer(self, layer_name):
         self.map[layer_name] = {}
+        # TODO: You are here
+        # Current issue is that you need to konw what type of Group to make,
+        # and that's a layer-specific custom property.
+        # probably just grab it from self.tmx_data.
+
+        if self.tmx_data.layers[layer_name].properties.get("LayeredUpdates", False):
+            layer = LayeredUpdates()
+        else:
+            layer = Group()
+        self.layers[layer_name] = layer
         data_layer = self.tile_data_layers.layers[layer_name]
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
@@ -149,37 +151,9 @@ class Tilemap:
             self.set_tile(tile, layer_name, tile_data.map_pos)
 
     def populate_layer(self, layere_name):
-
+        # TODO: split out the non-init stuff from init_layer and create actual tiles here.
+        # init_layer should just make an empty map.
         pass
-
-    # def make_layer(self, tmx_layer, name):
-    #     if tmx_layer.properties.get("LayeredUpdates", False):
-    #         layer = LayeredUpdates()
-    #     else:
-    #         layer = Group()
-
-    #     self.layers[name] = layer
-    #     half_w = floor(self.tmx_data.tilewidth / 2)
-    #     half_h = floor(self.tmx_data.tileheight / 2)
-    #     for tile in tmx_layer.tiles():
-    #         self.make_tiledata(tmx_layer, *tile)
-    #         x, y, surf = tile
-    #         pytmx_gid = tmx_layer.data[y][x]  # Warning: y x != x y
-    #         tileset = self.tmx_data.get_tileset_from_gid(pytmx_gid)
-    #         offset = -(Vector2(tileset.offset) + (-half_w, half_h))
-    #         tile_properties = self.tmx_data.get_tile_properties_by_gid(pytmx_gid)
-
-    #         tile = Tile(
-    #             Vector2(0, 0),
-    #             surf,
-    #             tile_properties,
-    #             offset=offset,
-    #         )
-
-    #         self.set_tile(tile, name, Vector2(x, y))
-
-    def get_layer(self, layer_name):
-        return self.layers[layer_name]
 
     def get_neigbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
         result = []
@@ -301,4 +275,6 @@ def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
 
 
 if __name__ == "__main__":
+    pg.init()
+    display = pg.display.set_mode((0, 0), pg.RESIZABLE)
     Tilemap("tilemaps/another_island.tmx")
