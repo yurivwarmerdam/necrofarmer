@@ -187,10 +187,10 @@ class Tilemap:
         self.map[layer][floor(pos.x)][floor(pos.y)] = None
         self.layers[layer].remove(tile)
 
-    def get_tile_idxs_by_property(self, property, layer) -> list[Vector2]:
+    def get_tile_idxs_by_property(self, property, layer_name) -> list[Vector2]:
         return [
             Vector2(x, y)
-            for x, row in enumerate(self.map[layer])
+            for x, row in enumerate(self.map[layer_name])
             for y, cell in enumerate(row)
             if cell is not None and property in cell.properties
         ]
@@ -277,4 +277,6 @@ def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
 if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
-    Tilemap("tilemaps/another_island.tmx")
+    tm=Tilemap("tilemaps/another_island.tmx")
+    tm.layers
+    tm.get_tile_idxs_by_property("bigtile","ground")

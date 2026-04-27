@@ -54,12 +54,12 @@ ui = MainUI()
 
 # -- group initialization --
 
-groups = group_server.get_server()
+groups = group_server.get_group_server()
 
-tilemap = entity_tilemap.get_server(
+tilemap = entity_tilemap.get_tilemap(
     "tilemaps/another_island.tmx",
 )
-star.get_server(tilemap)
+star.get_star_server(tilemap)
 
 groups.add_render(tilemap.layers)
 groups.add_render({"draw": Group()})
