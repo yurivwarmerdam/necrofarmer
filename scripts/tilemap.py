@@ -139,7 +139,7 @@ class Tilemap:
         # and that's a layer-specific custom property.
         # probably just grab it from self.tmx_data.
 
-        if self.tmx_data.layers[layer_name].properties.get("LayeredUpdates", False):
+        if self.tmx_data.layernames[layer_name].properties.get("LayeredUpdates", False):
             layer = LayeredUpdates()
         else:
             layer = Group()
@@ -173,13 +173,13 @@ class Tilemap:
 
     def get_tilev(self, layer: str, pos: Vector2):
         try:
-            return self.map[layer][floor(pos.x)][floor(pos.y)]
+            return self.map[layer][floor(pos.x), floor(pos.y)]
         except IndexError:
             pass
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
         self.layers[layer].add(tile)
-        self.map[layer][map_pos] = tile
+        self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
 
     def kill_tile(self, layer: str, pos: Vector2):
         tile = self.map[layer][floor(pos.x)][floor(pos.y)]
