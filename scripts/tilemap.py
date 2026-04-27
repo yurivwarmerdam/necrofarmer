@@ -119,25 +119,27 @@ class Tilemap:
         tmx_file: filename to load tilemap from
     """
 
-    def __init__(self, tmx_file):
+    def __init__(
+        self,
+        tmx_file,
+        tile_types: dict[str, type[Tile]] = {},
+    ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.layers: dict[str, AbstractGroup] = {}
-        # TODO: Map currently breaks when building a map with negative indexes. Fix this.
-        self.map = {}
 
-        # self.isometric = self.tmx_data.orientation == "isometric"
+        # map has structure map[layer][(x,y)]
+        # cannot use Vector for the x,y coords, becasue Vectors are unhashable, so tuples are used.
+        self.map: dict[str, dict[tuple[int, int], Tile]] = {}
+
         tmx_data = load_pygame(tmx_file)
-        self.tile_data_layers = TileDataLayers(tmx_data)
+        self.isometric = self.tmx_data.orientation == "isometric"
+        self.tile_data_layers = TileDataLayers(tmx_data, tile_types)
 
         for layer_name in self.tile_data_layers.layers:
             self.init_layer(layer_name)
 
     def init_layer(self, layer_name):
         self.map[layer_name] = {}
-        # TODO: You are here
-        # Current issue is that you need to konw what type of Group to make,
-        # and that's a layer-specific custom property.
-        # probably just grab it from self.tmx_data.
 
         if self.tmx_data.layernames[layer_name].properties.get("LayeredUpdates", False):
             layer = LayeredUpdates()
@@ -167,32 +169,38 @@ class Tilemap:
                         floor(candidate.y)
                     ]
                     result.append(candidate)
-                except IndexError:
+                except KeyError:
                     continue
         return result
 
-    def get_tilev(self, layer: str, pos: Vector2):
+    def get_tile(self, layer: str, x, y) -> Tile | None:
         try:
-            return self.map[layer][floor(pos.x), floor(pos.y)]
-        except IndexError:
+            return self.map[layer][x, y]
+        except KeyError:
             pass
+
+    def get_tilev(self, layer: str, pos: Vector2) -> Tile | None:
+        return self.get_tile(layer, floor(pos.x), floor(pos.y))
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
         self.layers[layer].add(tile)
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
 
-    def kill_tile(self, layer: str, pos: Vector2):
-        tile = self.map[layer][floor(pos.x)][floor(pos.y)]
+    def kill_tile(self, layer: str, x: int, y: int):
+        tile = self.map[layer][x, y]
         tile.kill
-        self.map[layer][floor(pos.x)][floor(pos.y)] = None
+        self.map[layer][x, y] = None
         self.layers[layer].remove(tile)
 
-    def get_tile_idxs_by_property(self, property, layer_name) -> list[Vector2]:
+    def kill_tilev(self, layer: str, pos: Vector2):
+        self.kill_tile(layer, floor(pos.x), floor(pos.y))
+
+    def get_tile_idxs_by_property(self, property, layer_name) -> list[tuple[int, int]]:
         return [
-            Vector2(x, y)
-            for x, row in enumerate(self.map[layer_name])
-            for y, cell in enumerate(row)
-            if cell is not None and property in cell.properties
+            cell
+            for cell in self.map[layer_name]
+            if self.map[layer_name][cell] is not None
+            and property in self.map[layer_name][cell].properties
         ]
 
     def get_tiles_by_property(self, property, layer) -> list:
@@ -203,12 +211,16 @@ class Tilemap:
         ]
         return tiles
 
+    def get_tile_properties(self, x: int, y: int, layer: str):
+        return getattr(self.map[layer][floor(x), floor(y)], "properties", {})
+
     def get_tilev_properties(self, tile: Vector2, layer: str) -> dict:
         """
         Returns a dict containing all custom properties for a tile.
         Returns an empty dict for unpopulated tiles.
         """
-        return getattr(self.map[layer][floor(tile.x)][floor(tile.y)], "properties", {})
+        return self.get_tile_properties(floor(tile.x), floor(tile.y), layer)
+        # return getattr(self.map[layer][floor(tile.x), floor(tile.y)], "properties", {})
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:
@@ -277,6 +289,6 @@ def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
 if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
-    tm=Tilemap("tilemaps/another_island.tmx")
+    tm = Tilemap("tilemaps/another_island.tmx")
     tm.layers
-    tm.get_tile_idxs_by_property("bigtile","ground")
+    print(tm.get_tile_idxs_by_property("bigtile", "active"))

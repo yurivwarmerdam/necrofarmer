@@ -24,9 +24,9 @@ class EntityTilemap(Tilemap):
         for layer in self.layers:
             bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
             for origin_idx in bigtile_map_idxs:
-                tile: Tile = self.get_tilev(layer, origin_idx)
-                name = self.get_tilev_properties(origin_idx, layer).get("name", None)
-                self.kill_tile(layer, origin_idx)
+                tile: Tile = self.get_tile(layer, *origin_idx)
+                name = self.get_tile_properties(*origin_idx, layer).get("name", None)
+                self.kill_tile(layer, *origin_idx)
                 sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
                 sub_idxs = [idx + origin_idx for idx in sub_idxs]
                 if not self.is_valid_placement_idxs(sub_idxs, layer):

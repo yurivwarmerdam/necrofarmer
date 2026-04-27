@@ -1,13 +1,14 @@
 import json
 
 from pygame import Vector2
-
+from scripts.tilemap import TileData
 from scripts.tilemap import Tile
 
 
 class BigTile(Tile):
     def __init__(
         self,
+        tiledata: TileData,
         pos,
         image,
         properties: dict,
