@@ -15,69 +15,24 @@ bigtile_entities = {
 
 
 class EntityTilemap(Tilemap):
-    def __init__(
-        self,
-        tmx_path,
-    ):
-        super().__init__(tmx_path)
-        self.bigtiles: dict[tuple[float, float], BigTile] = {}
+    def __init__(self, tmx_path):
+        super().__init__(tmx_path, bigtile_entities)
+        self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
         for layer in self.layers:
-            bigtile_map_idxs = self.get_tile_idxs_by_property("bigtile", layer)
-            for origin_idx in bigtile_map_idxs:
-                tile: Tile = self.get_tile(layer, *origin_idx)
-                name = self.get_tile_properties(*origin_idx, layer).get("name", None)
-                self.kill_tile(layer, *origin_idx)
-                sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
-                sub_idxs = [idx + origin_idx for idx in sub_idxs]
-                if not self.is_valid_placement_idxs(sub_idxs, layer):
-                    raise Exception(
-                        "invalid BigTile Placement in EntityTilemap init! Aborting."
-                    )
-                if name and name in bigtile_entities:
-                    new_tile = bigtile_entities[name](
-                        tile.pos,
-                        tile.image,
-                        tile.properties,
-                        tile.groups(),
-                        anchor=tile.anchor,
-                        offset=tile.offset,
-                        tiles=sub_idxs,
-                    )
-                else:
-                    new_tile = BigTile(
-                        tile.pos,
-                        tile.image,
-                        tile.properties,
-                        tile.groups(),
-                        anchor=tile.anchor,
-                        offset=tile.offset,
-                        tiles=sub_idxs,
-                    )
-                self.bigtiles[tuple(origin_idx)] = new_tile
-                self.set_tile(new_tile, layer, origin_idx)
-
-    def tile_to_bigtile(self, tile, variant):
-        sub_idxs = [Vector2(*p) for p in json.loads(tile.properties["bigtile"])]
-        sub_idxs = [idx + origin_idx for idx in sub_idxs]
-        if not self.is_valid_placement_idxs(sub_idxs, layer):
-            raise Exception(
-                "invalid BigTile Placement in EntityTilemap init! Aborting."
-            )
-        return variant(
-            tile.pos,
-            tile.image,
-            tile.properties,
-            tile.groups(),
-            anchor=tile.anchor,
-            offset=tile.offset,
-            tiles=sub_idxs,
-        )
+            self.bigtiles[layer] = {}
+            for idx in self.get_tile_idxs_by_property("bigtile", layer):
+                self.bigtiles[layer][idx] = self.get_tile(layer, *idx)
 
     def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
-        super().set_tile(tile, layer, map_pos)
         if isinstance(tile, BigTile):
+            if not self.is_valid_placement_idxs(tile.tiles, layer):
+                raise Exception(
+                    "invalid BigTile Placement in EntityTilemap init! Aborting."
+                )
             for subtile in tile.tiles:
-                self.map[layer][floor(subtile.x)][floor(subtile.y)] = tile
+                super().set_tile(tile, layer, subtile + map_pos)
+        else:
+            super().set_tile(tile, layer, map_pos)
 
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
         return all(self.get_tilev(layer, x) is None for x in idxs)

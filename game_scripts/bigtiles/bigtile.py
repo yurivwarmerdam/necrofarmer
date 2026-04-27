@@ -6,31 +6,15 @@ from scripts.tilemap import Tile
 
 
 class BigTile(Tile):
-    def __init__(
-        self,
-        tiledata: TileData,
-        pos,
-        image,
-        properties: dict,
-        *groups,
-        anchor="bottomleft",
-        offset=Vector2(0, 0),
-        tiles: list = [Vector2(0, 0)],
-    ):
+    def __init__(self, tiledata: TileData, *groups):
         """
         Currently only suports isometric tiles.
         Should also be compatible with orthogonal tiles with comparatively little effort.
-        Args:
-            pos: position of tile
-            image: image
-            properties: tile properties
-            groups: groups this sprite will belong to
-            anchor: Sprite anchor
-            offset: vector pointing from anchor intended origin of the tile.
-            tiles: map_idxs of all subtiles within this bigtile
         """
-        super().__init__(pos, image, properties, *groups, anchor=anchor, offset=offset)
-        self.tiles = tiles
+        super().__init__(tiledata, *groups)
+        self.tiles: list[Vector2] = self.bigtile_prop_to_vectors(
+            tiledata.properties["bigtile"]
+        )
 
-    def bigtile_prop_to_vectors(self, property):
+    def bigtile_prop_to_vectors(self, property) -> list[Vector2]:
         return [Vector2(*p) for p in json.loads(property)]

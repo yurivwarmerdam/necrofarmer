@@ -1,35 +1,21 @@
 import pygame as pg
 from pygame import Vector2
 
-from game_scripts import group_server
+from game_scripts.group_server import get_group_server
 from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.game_ui import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
+from scripts.tilemap import TileData
 
 
 class Sawmill(BigTile, Selectable):
-    def __init__(
-        self,
-        pos,
-        image,
-        properties: dict,
-        *groups,
-        anchor="bottomleft",
-        offset=Vector2(0, 0),
-        tiles: list = [Vector2(0, 0)],
-    ):
-        global_groups = group_server.get_group_server()
+    def __init__(self, tiledata: TileData, *groups):
         super().__init__(
-            pos,
-            image,
-            properties,
-            global_groups.colliders,  # prepending colliders to groups.
+            tiledata,
+            get_group_server().colliders,  # prepending colliders to groups.
             *groups,
-            anchor=anchor,
-            offset=offset,
-            tiles=tiles,
         )
 
     @property
@@ -54,26 +40,11 @@ class SawmillPanel(ContextPanel):
 
 
 class ThopterFactory(BigTile, Selectable):
-    def __init__(
-        self,
-        pos,
-        image,
-        properties: dict,
-        *groups,
-        anchor="bottomleft",
-        offset=Vector2(0, 0),
-        tiles: list = [Vector2(0, 0)],
-    ):
-        global_groups = group_server.get_group_server()
+    def __init__(self, tiledata: TileData, *groups):
         super().__init__(
-            pos,
-            image,
-            properties,
-            global_groups.colliders,  # prepending colliders to groups.
+            tiledata,
+            get_group_server().colliders,  # prepending colliders to groups.
             *groups,
-            anchor=anchor,
-            offset=offset,
-            tiles=tiles,
         )
 
     @property

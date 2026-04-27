@@ -75,7 +75,7 @@ camera = initialize_camera(
 commander = commander.get_commander()
 commander.box.add(groups.render_groups["draw"])
 
-img_server = image_server.get_server()
+img_server = image_server.get_image_server()
 
 Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
