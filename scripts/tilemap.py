@@ -40,23 +40,6 @@ class Tile(NodeSprite):
         return attribute in self.properties
 
 
-# class Tile(NodeSprite):
-#     def __init__(
-#         self,
-#         pos,
-#         image,
-#         properties: dict,
-#         *groups,
-#         anchor="bottomleft",
-#         offset=Vector2(0, 0),
-#     ):
-#         super().__init__(image, pos, anchor, offset, *groups)
-#         self.properties: dict = properties if properties else {}
-
-#     def has(self, attribute):
-#         return attribute in self.properties
-
-
 class TileDataLayers:
     # TODO: maybe implement __getItem__?
     def __init__(
@@ -165,8 +148,8 @@ class Tilemap:
                     continue
                 candidate = tile_pos + Vector2(x, y)
                 try:
-                    next(iter(self.map.values()))[floor(candidate.x)][
-                        floor(candidate.y)
+                    next(iter(self.map.values()))[
+                        floor(candidate.x), floor(candidate.y)
                     ]
                     result.append(candidate)
                 except KeyError:
@@ -212,7 +195,10 @@ class Tilemap:
         return tiles
 
     def get_tile_properties(self, x: int, y: int, layer: str):
-        return getattr(self.map[layer][floor(x), floor(y)], "properties", {})
+        try:
+            return self.map[layer][floor(x), floor(y)].properties
+        except KeyError:
+            return {}
 
     def get_tilev_properties(self, tile: Vector2, layer: str) -> dict:
         """
@@ -220,7 +206,6 @@ class Tilemap:
         Returns an empty dict for unpopulated tiles.
         """
         return self.get_tile_properties(floor(tile.x), floor(tile.y), layer)
-        # return getattr(self.map[layer][floor(tile.x), floor(tile.y)], "properties", {})
 
     def world_to_map(self, world_pos: Vector2) -> Vector2:
         if self.isometric:
@@ -292,3 +277,4 @@ if __name__ == "__main__":
     tm = Tilemap("tilemaps/another_island.tmx")
     tm.layers
     print(tm.get_tile_idxs_by_property("bigtile", "active"))
+    print(tm.get_neigbors(Vector2(0, 0)))
