@@ -22,6 +22,7 @@ class NodeSprite(Sprite):
         offset: Vector2 = Vector2(0, 0),
         *groups,
     ):
+        self._layer = pos.y
         super().__init__(*groups)
         self.anchor = anchor
         self.image: Surface = image
@@ -44,6 +45,7 @@ class NodeSprite(Sprite):
             self._pos = value
         else:
             self._pos = Vector2(value)
+        self._layer = self._pos.y
         setattr(self.rect, self.anchor, self._pos - self.offset)
         for g in self.groups():
             if isinstance(g, LayeredUpdates):

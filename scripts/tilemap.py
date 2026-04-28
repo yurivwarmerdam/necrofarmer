@@ -171,8 +171,8 @@ class Tilemap:
 
     def kill_tile(self, layer: str, x: int, y: int):
         tile = self.map[layer][x, y]
-        tile.kill
-        self.map[layer][x, y] = None
+        tile.kill()
+        del self.map[layer][x, y]
         self.layers[layer].remove(tile)
 
     def kill_tilev(self, layer: str, pos: Vector2):
@@ -275,6 +275,6 @@ if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
     tm = Tilemap("tilemaps/another_island.tmx")
-    tm.layers
-    print(tm.get_tile_idxs_by_property("bigtile", "active"))
-    print(tm.get_neigbors(Vector2(0, 0)))
+    # print(tm.get_tile_idxs_by_property("bigtile", "active"))
+    # print(tm.get_neigbors(Vector2(0, 0)))
+    print(tm.layers["active"])

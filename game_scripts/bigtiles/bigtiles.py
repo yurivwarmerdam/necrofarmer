@@ -1,5 +1,4 @@
 import pygame as pg
-from pygame import Vector2
 
 from game_scripts.group_server import get_group_server
 from game_scripts.bigtiles.bigtile import BigTile

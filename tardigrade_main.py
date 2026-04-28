@@ -83,7 +83,6 @@ Tardigrade(Vector2(150, 150))
 
 Ornithopter(Vector2(200, 200))
 
-
 def handle_key_input():
     # ----------Alternate way of processing?------------#
     keys_pressed = pg.key.get_pressed()
