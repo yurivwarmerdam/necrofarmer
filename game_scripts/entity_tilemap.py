@@ -23,16 +23,16 @@ class EntityTilemap(Tilemap):
             for idx in self.get_tile_idxs_by_property("bigtile", layer):
                 self.bigtiles[layer][idx] = self.get_tile(layer, *idx)
 
-    def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
+    def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2):
         if isinstance(tile, BigTile):
             if not self.is_valid_placement_idxs(tile.tiles, layer):
                 raise Exception(
                     "invalid BigTile Placement in EntityTilemap init! Aborting."
                 )
             for subtile in tile.tiles:
-                super().set_tile(tile, layer, subtile + map_pos)
+                super().set_tile_in_map(tile, layer, subtile + map_pos)
         else:
-            super().set_tile(tile, layer, map_pos)
+            super().set_tile_in_map(tile, layer, map_pos)
 
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
         # TODO: is placement actually valid? I never really proved a negative, here.

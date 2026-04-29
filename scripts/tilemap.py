@@ -15,6 +15,9 @@ from pygame.surface import Surface
 # some_tiledata.tile.type(some_tiledata)
 @dataclass
 class TileData:
+    # TODO: This needs tile_size, and it needs a property of world_pos inferred from tile_size.
+    # This makes map_pos and world_pos play nice together (although it still does not sole the issue of a tilemap positioned at non-0 pos.)
+    # Can use the static def of map_to_world.
     tile_type: type
     map_pos: Vector2
     world_pos: Vector2
@@ -22,11 +25,6 @@ class TileData:
     surf: Surface
     offset: Vector2
     anchor: str = "bottomleft"
-
-    def make_tile(self):
-        return self.tile_type(
-            self.world_pos, self.surf, self.properties, offset=self.offset
-        )
 
 
 class Tile(NodeSprite):
@@ -132,8 +130,7 @@ class Tilemap:
         data_layer = self.tile_data_layers.layers[layer_name]
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
-            tile = tile_data.tile_type(tile_data)
-            self.set_tile(tile, layer_name, tile_data.map_pos)
+            self.make_tile(tile_data, layer_name)
 
     def populate_layer(self, layere_name):
         # TODO: split out the non-init stuff from init_layer and create actual tiles here.
@@ -165,7 +162,12 @@ class Tilemap:
     def get_tilev(self, layer: str, pos: Vector2) -> Tile | None:
         return self.get_tile(layer, floor(pos.x), floor(pos.y))
 
-    def set_tile(self, tile: Tile, layer: str, map_pos: Vector2):
+    def make_tile(self, tile_data: TileData, layer_name: str):
+        """Instantiates new tiles from TileData"""
+        tile = tile_data.tile_type(tile_data)
+        self.set_tile_in_map(tile, layer_name, tile_data.map_pos)
+
+    def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2):
         self.layers[layer].add(tile)
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
 
