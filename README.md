@@ -39,6 +39,8 @@ pip install -r requirements.txt
         - Right. Now the data gets loaded from a file read. Ideally want this to happen only once.
         - option: second "tilemap" server?
         - option: a whiteboard? This is what I did in godot.
+        - caching inside file loader?
+        - Am I over-relying on the server architecture? More composite servers sound like a nice option right about now.
         - maybe some kind of data holder singleton? Very similar to whiteboard, I guess.
         - it's only debug, so loading on menu load is fine. Just not prepped for the future.
         - maybe commander owns this?
