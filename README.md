@@ -38,7 +38,8 @@ pip install -r requirements.txt
     - do the same for buildings
         - Right. Now the data gets loaded from a file read. Ideally want this to happen only once.
         - option: second "tilemap" server?
-        - option: a whiteboard?
+        - option: a whiteboard? This is what I did in godot.
+        - maybe some kind of data holder singleton? Very similar to whiteboard, I guess.
         - it's only debug, so loading on menu load is fine. Just not prepped for the future.
         - maybe commander owns this?
 
