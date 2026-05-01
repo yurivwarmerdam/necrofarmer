@@ -30,12 +30,17 @@ pip install -r requirements.txt
         - think about how these are/will be processed
         - maybe do an example like with tardigrade
     ~ First just click on a cell, then work on hover ghosts
-    - (probably) make commander into server
-    - add object creation modality/state, initially only for units
+    v (probably) make commander into server
+    v add object creation modality/state, initially only for units
     - while you're there, also think about dragging logic. The "sticky" boxes annoy me.
-    - make stuff on click (at x/y? at grid cell? Whichever)
+    v make stuff on click (at x/y? at grid cell? Whichever)
     - make you a hover ghost
     - do the same for buildings
+        - Right. Now the data gets loaded from a file read. Ideally want this to happen only once.
+        - option: second "tilemap" server?
+        - option: a whiteboard?
+        - it's only debug, so loading on menu load is fine. Just not prepped for the future.
+        - maybe commander owns this?
 
     Current BigTile Tilemap notes:
     - GOAL is to get a bunch of data ready so I can instantiate a bigtile
