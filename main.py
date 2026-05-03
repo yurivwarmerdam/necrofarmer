@@ -1,14 +1,14 @@
 import sys
 
 import pygame as pg
-from game_scripts.async_runner import async_runner
-from game_scripts.camera import Camera
-from game_scripts.entities import BTGroup, Seed
-from game_scripts.global_blackboard import global_blackboard
-from game_scripts.player import PlayerEntity
-from game_scripts.skeleton import Skeleton
-from game_scripts.ui_necro import ManaBar
-from game_scripts.utils import load_image
+from scripts.async_runner import async_runner
+from scripts.camera import Camera
+from scripts.entities import BTGroup, Seed
+from scripts.global_blackboard import global_blackboard
+from scripts.player import PlayerEntity
+from scripts.skeleton import Skeleton
+from scripts.ui_necro import ManaBar
+from scripts.utils import load_image
 from pygame import Rect
 from pygame.math import Vector2
 from pygame.sprite import Group, LayeredUpdates

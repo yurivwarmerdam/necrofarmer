@@ -1,27 +1,14 @@
-from functools import partial
-from typing import Any, Dict
-from scripts.custom_sprites import AnimatedSprite
-from scripts.camera import get_camera
+from game_scripts.debug_menu import DebugMenu
 
 import pygame as pg
-from pygame.transform import smoothscale
-import pygame_gui
 from blinker import signal
 from pygame.rect import Rect
-from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
-from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface
-from pygame_gui.elements import UIWindow
 
 from game_scripts.commander import Commander, get_commander
 from game_scripts.context_panel import ContextPanel
-from scripts.custom_sprites import integer_scale, ninepatchscale, tilingscale
 from scripts.ui_shim import UIButton, UIPanel
-from pygame_gui.elements import UIPanel as UIPanel_original
 from scripts.utils import load_image, sheet_to_sprite
-from pygame_gui.core.utility import get_default_manager
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel
-from game_scripts.thopter import Ornithopter
-from game_scripts.tardigrade import Tardigrade
 
 
 class MainUI:
@@ -180,59 +167,3 @@ class MainMenu(ImagePanel):
                 elem.kill()
                 return
         DebugMenu()
-
-
-class DebugMenu(UIWindow):
-    def __init__(self) -> None:
-        super().__init__(Rect(510, 30, 125, 200), resizable=True)
-        get_commander().special = self
-        self.spawning: type[AnimatedSprite] | None = None
-
-        UIButton(
-            Rect(5, 5, 54, 46),
-            "",
-            object_id="#tardigrade_button",
-            scale_func=integer_scale,
-            container=self,
-            command=lambda: self.set_spawning(Tardigrade),
-        )
-        UIButton(
-            Rect(64, 5, 54, 46),
-            "",
-            object_id="#ornithopter_button",
-            scale_func=integer_scale,
-            container=self,
-            command=lambda: self.set_spawning(Ornithopter),
-        )
-        UIButton(
-            Rect(5, 56, 54, 46),
-            "",
-            object_id="#thopter_factory_button",
-            scale_func=integer_scale,
-            container=self,
-            command=lambda: print("draw owl here"),
-        )
-
-    def set_spawning(self, sprite_type: type[AnimatedSprite]):
-        self.spawning = sprite_type
-
-    def process_events(self, event: pg.event.Event) -> bool:
-        if not self.spawning:
-            return False
-        if event.type == pg.MOUSEBUTTONUP:
-            if event.button != 1:
-                self.spawning = None
-                return False
-            self.do_spawn()
-            return True
-
-        # if event is inputeventmousebutton and event is left click and event is button up:
-        # do_spawn(self.spawning)
-        # if event is right click up:
-        # self.spawning =None
-
-    def do_spawn(self) -> None:
-        # mouse pos ==camera.get_mouse_pos
-        type = self.spawning
-        type(get_camera().get_global_mouse_pos())
-        pass
