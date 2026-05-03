@@ -68,7 +68,7 @@ camera = initialize_camera(
     groups.render_groups,
     Group(),
     display,
-    Vector2(-125, 0),
+    Vector2(-300, 0),
 )
 
 commander = get_commander()

@@ -42,10 +42,12 @@ class DebugMenu(UIWindow):
             object_id="#thopter_factory_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: print("draw owl here"),
+            command=lambda: self.set_spawning_state(
+                get_Whiteboard().tile_entities["thopter_factory_2"]
+            ),
         )
 
-    def set_spawning_state(self, sprite_type: type[AnimatedSprite]):
+    def set_spawning_state(self, sprite_type: type[AnimatedSprite] | TileData):
         self.spawning = sprite_type
 
     def process_events(self, event: pg.event.Event) -> bool:
@@ -60,12 +62,11 @@ class DebugMenu(UIWindow):
         return False
 
     def do_spawn(self) -> None:
-        print(self.spawning)
-        if issubclass(self.spawning, AnimatedSprite):
-            self.spawn_unit()
-            return
+        if isinstance(self.spawning, type):
+            if issubclass(self.spawning, AnimatedSprite):
+                self.spawn_unit()
+                return
         elif isinstance(self.spawning, TileData):
-            print("nah")
             self.spawn_tile()
             return
         # mouse pos ==camera.get_mouse_pos
@@ -80,8 +81,9 @@ class DebugMenu(UIWindow):
         entity_to_spawn: TileData = self.spawning
         mouse_pos = get_camera().get_global_mouse_pos()
         map_pos = world_to_mapv(mouse_pos, entity_to_spawn.tile_size, True)
+        print(mouse_pos, map_pos)
+        print(entity_to_spawn.tile_size)
         entity_to_spawn.map_pos = map_pos
         new_tile = entity_to_spawn.tile_type(entity_to_spawn)
         get_tilemap().set_tile_in_map(new_tile, "active", map_pos)
-        # get_Whiteboard().tile_entities
         pass

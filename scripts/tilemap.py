@@ -15,9 +15,6 @@ from pygame.surface import Surface
 # some_tiledata.tile.type(some_tiledata)
 @dataclass
 class TileData:
-    # TODO: This needs tile_size, and it needs a property of world_pos inferred from tile_size.
-    # This makes map_pos and world_pos play nice together (although it still does not sole the issue of a tilemap positioned at non-0 pos.)
-    # Can use the static def of map_to_world.
     tile_type: type
     map_pos: Vector2
     tile_size: Vector2
@@ -280,6 +277,10 @@ def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
 if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
+    tile_size=Vector2(32,16)
+    input=Vector2(5,-201)
+    output=world_to_map(5,-201,32,16,True)
+    print(input,output)
     tm = Tilemap("tilemaps/another_island.tmx")
     # print(tm.get_tile_idxs_by_property("bigtile", "active"))
     # print(tm.get_neigbors(Vector2(0, 0)))
