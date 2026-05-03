@@ -184,7 +184,7 @@ class MainMenu(ImagePanel):
 
 class DebugMenu(UIWindow):
     def __init__(self) -> None:
-        super().__init__(Rect(30, 30, 125, 100))
+        super().__init__(Rect(510, 30, 125, 200), resizable=True)
         get_commander().special = self
         self.spawning: type[AnimatedSprite] | None = None
 
@@ -204,6 +204,14 @@ class DebugMenu(UIWindow):
             container=self,
             command=lambda: self.set_spawning(Ornithopter),
         )
+        UIButton(
+            Rect(5, 56, 54, 46),
+            "",
+            object_id="#thopter_factory_button",
+            scale_func=integer_scale,
+            container=self,
+            command=lambda: print("draw owl here"),
+        )
 
     def set_spawning(self, sprite_type: type[AnimatedSprite]):
         self.spawning = sprite_type
@@ -213,19 +221,18 @@ class DebugMenu(UIWindow):
             return False
         if event.type == pg.MOUSEBUTTONUP:
             if event.button != 1:
-                self.spawning=None
+                self.spawning = None
                 return False
             self.do_spawn()
             return True
-        
+
         # if event is inputeventmousebutton and event is left click and event is button up:
         # do_spawn(self.spawning)
         # if event is right click up:
         # self.spawning =None
 
-
     def do_spawn(self) -> None:
-        #mouse pos ==camera.get_mouse_pos
-        type=self.spawning
+        # mouse pos ==camera.get_mouse_pos
+        type = self.spawning
         type(get_camera().get_global_mouse_pos())
         pass

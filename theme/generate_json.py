@@ -1,4 +1,5 @@
 import json
+from game_scripts.Whiteboard import button_ids
 
 # Generates json to be read into pygame_ui.
 # reads in prototypes, replacing relevant info.
@@ -7,12 +8,13 @@ import json
 prototype_file: str = "theme/proto.json"
 output_file: str = "theme/buttons_generated.json"
 
-button_ids = {
-    "#thopter_button": "0,0,46,38",
-    "#tardigrade_button": "138,0,46,38",
-    "#sawmill_button": "230,0,46,38",
-    "#thopter_factory_2_button": "184,76,46,38",
-}
+# button_ids = {
+#     "#thopter_button": "0,0,46,38",
+#     "#tardigrade_button": "138,0,46,38",
+#     "#sawmill_button": "230,0,46,38",
+#     "#thopter_factory_2_button": "184,76,46,38",
+#     "#thopter_factory_button": "138,76,46,38",
+# }
 
 with open(prototype_file, "r") as input:
     prototypes = json.load(input)

@@ -1,0 +1,40 @@
+from scripts.tilemap import TileDataLayers
+from game_scripts.bigtiles import bigtiles
+
+# statics
+bigtile_entities = {
+    "sawmill": bigtiles.Sawmill,
+    "thopter_factory_2": bigtiles.ThopterFactory,
+}
+button_ids = {
+    "#thopter_button": "0,0,46,38",
+    "#tardigrade_button": "138,0,46,38",
+    "#sawmill_button": "230,0,46,38",
+    "#thopter_factory_2_button": "184,76,46,38",
+    "#thopter_factory_button": "138,76,46,38",
+}
+
+class Whiteboard:
+    """
+    Global whiteboard. Has some predefined and preloaded stuff.
+    Can also freely be written to for unnamed things
+    so, like:
+    class other_script():
+      Whiteboard.weird_var="value"
+      use_variable(whiteboard.weird_var)
+    """
+
+    # Ohgod, how could I possibly avoid circular import warnings!?
+
+    def __init__(self) -> None:
+        self.tile_entities = TileDataLayers("tilemaps/tile_entities.tmx", bigtile_entities)
+
+
+_instance: Whiteboard | None = None
+
+
+def get_Whiteboard() -> Whiteboard:
+    global _instance
+    if _instance is None:
+        raise Exception("Whiteboard server not yet initiated.")
+    return _instance

@@ -1,22 +1,14 @@
-import json
-from math import floor
-
 from pygame import Vector2
+from game_scripts import whiteboard
 
 from game_scripts.bigtiles.bigtile import BigTile
-from game_scripts.bigtiles import bigtiles
-from scripts.tilemap import Tile, Tilemap
 
-# TODO: this wants to be in some .conf or json file.
-bigtile_entities = {
-    "sawmill": bigtiles.Sawmill,
-    "thopter_factory_2": bigtiles.ThopterFactory,
-}
+from scripts.tilemap import Tile, Tilemap
 
 
 class EntityTilemap(Tilemap):
     def __init__(self, tmx_path):
-        super().__init__(tmx_path, bigtile_entities)
+        super().__init__(tmx_path, whiteboard.bigtile_entities)
         self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
         for layer in self.layers:
             self.bigtiles[layer] = {}

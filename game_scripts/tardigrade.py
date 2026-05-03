@@ -1,13 +1,12 @@
 from collections import deque
 from random import randint
-
+from time import time
 import pygame as pg
 from pygame import Vector2
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from pygame_gui.elements import UILabel
 
 from game_scripts import entity_tilemap, group_server, star
-from game_scripts.commander import Commander
 from game_scripts.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
@@ -104,14 +103,6 @@ class Tardigrade(AnimatedSprite, Selectable):
         return TardigradePanel
 
 
-from time import time
-
-
-# TODO: Time to move set_context_elements to __init__,
-# add container as init param
-# and do something clever with the id setter.
-# Perhaps peek at how you do this again with sprites?
-# I remember there being a similar pattern, here.
 class TardigradePanel(ContextPanel):
     def __init__(self, context_container: IContainerAndContainerLike) -> None:
         super().__init__(
