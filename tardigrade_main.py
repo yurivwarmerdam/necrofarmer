@@ -6,9 +6,8 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from game_scripts import entity_tilemap, group_server, star
-from game_scripts import commander
-from game_scripts.commander import Commander
-from game_scripts.game_ui import MainUI
+from game_scripts.commander import get_commander
+from game_scripts.ui.game_ui import MainUI
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
 from scripts import image_server
@@ -72,7 +71,7 @@ camera = initialize_camera(
     Vector2(-125, 0),
 )
 
-commander = commander.get_commander()
+commander = get_commander()
 commander.box.add(groups.render_groups["draw"])
 
 img_server = image_server.get_image_server()
@@ -82,6 +81,7 @@ Tardigrade(Vector2(120, 150))
 Tardigrade(Vector2(150, 150))
 
 Ornithopter(Vector2(200, 200))
+
 
 def handle_key_input():
     # ----------Alternate way of processing?------------#

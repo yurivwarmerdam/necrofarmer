@@ -4,8 +4,11 @@ from game_scripts.thopter import Ornithopter
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
+from scripts.tilemap import world_to_mapv
+from game_scripts.entity_tilemap import get_tilemap
+from game_scripts.whiteboard import get_Whiteboard, bigtile_entities
 
-
+from scripts.tilemap import TileData
 import pygame as pg
 from pygame.rect import Rect
 from pygame_gui.elements import UIWindow
@@ -15,7 +18,7 @@ class DebugMenu(UIWindow):
     def __init__(self) -> None:
         super().__init__(Rect(510, 30, 125, 200), resizable=True)
         get_commander().special = self
-        self.spawning: type[AnimatedSprite] | None = None
+        self.spawning: type[AnimatedSprite] | TileData | None = None
 
         UIButton(
             Rect(5, 5, 54, 46),
@@ -23,7 +26,7 @@ class DebugMenu(UIWindow):
             object_id="#tardigrade_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: self.set_spawning(Tardigrade),
+            command=lambda: self.set_spawning_state(Tardigrade),
         )
         UIButton(
             Rect(64, 5, 54, 46),
@@ -31,7 +34,7 @@ class DebugMenu(UIWindow):
             object_id="#ornithopter_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: self.set_spawning(Ornithopter),
+            command=lambda: self.set_spawning_state(Ornithopter),
         )
         UIButton(
             Rect(5, 56, 54, 46),
@@ -42,7 +45,7 @@ class DebugMenu(UIWindow):
             command=lambda: print("draw owl here"),
         )
 
-    def set_spawning(self, sprite_type: type[AnimatedSprite]):
+    def set_spawning_state(self, sprite_type: type[AnimatedSprite]):
         self.spawning = sprite_type
 
     def process_events(self, event: pg.event.Event) -> bool:
@@ -54,14 +57,31 @@ class DebugMenu(UIWindow):
                 return False
             self.do_spawn()
             return True
-
-        # if event is inputeventmousebutton and event is left click and event is button up:
-        # do_spawn(self.spawning)
-        # if event is right click up:
-        # self.spawning =None
+        return False
 
     def do_spawn(self) -> None:
+        print(self.spawning)
+        if issubclass(self.spawning, AnimatedSprite):
+            self.spawn_unit()
+            return
+        elif isinstance(self.spawning, TileData):
+            print("nah")
+            self.spawn_tile()
+            return
         # mouse pos ==camera.get_mouse_pos
-        type = self.spawning
-        type(get_camera().get_global_mouse_pos())
+        print("finally")
+        pass
+
+    def spawn_unit(self):
+        entity_to_spawn = self.spawning
+        entity_to_spawn(get_camera().get_global_mouse_pos())
+
+    def spawn_tile(self):
+        entity_to_spawn: TileData = self.spawning
+        mouse_pos = get_camera().get_global_mouse_pos()
+        map_pos = world_to_mapv(mouse_pos, entity_to_spawn.tile_size, True)
+        entity_to_spawn.map_pos = map_pos
+        new_tile = entity_to_spawn.tile_type(entity_to_spawn)
+        get_tilemap().set_tile_in_map(new_tile, "active", map_pos)
+        # get_Whiteboard().tile_entities
         pass

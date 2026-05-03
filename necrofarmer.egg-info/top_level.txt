@@ -1,6 +1,7 @@
 art
 build
 game_scripts
+legacy
 scripts
 simple_bt
 theme

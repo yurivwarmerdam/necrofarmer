@@ -14,7 +14,7 @@ from scripts.behaviortree_py.behaviortree import (
 )
 from scripts.behaviortree_py.dummy_nodes import Failer, Outputter, Succeeder, Talker
 from scripts.entities import ActionStatus
-from scripts.global_blackboard import global_blackboard
+from legacy.global_blackboard import global_blackboard
 
 
 class Skeleton(Sprite):

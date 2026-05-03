@@ -7,7 +7,7 @@ from pygame_gui.core.interfaces.container_interface import IContainerAndContaine
 from pygame_gui.elements import UILabel
 
 from game_scripts import entity_tilemap, group_server, star
-from game_scripts.context_panel import ContextPanel
+from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
 from scripts.camera import get_camera

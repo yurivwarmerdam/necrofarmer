@@ -1,5 +1,5 @@
 from scripts.custom_sprites import AnimatedSprite, integer_scale
-from game_scripts.context_panel import ContextPanel
+from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
 from game_scripts import group_server

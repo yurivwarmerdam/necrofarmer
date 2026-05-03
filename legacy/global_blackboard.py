@@ -2,8 +2,8 @@ import asyncio
 
 from pygame.sprite import Group
 
-from game_scripts.world_tilemap import WorldTilemap
-from scripts.player import PlayerEntity
+from legacy.world_tilemap import WorldTilemap
+from legacy.player import PlayerEntity
 
 
 class global_blackboard:

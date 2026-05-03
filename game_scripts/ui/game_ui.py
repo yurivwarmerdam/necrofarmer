@@ -1,11 +1,11 @@
-from game_scripts.debug_menu import DebugMenu
-
+from game_scripts.ui.debug_menu import DebugMenu
+from scripts.custom_sprites import integer_scale
 import pygame as pg
 from blinker import signal
 from pygame.rect import Rect
 
 from game_scripts.commander import Commander, get_commander
-from game_scripts.context_panel import ContextPanel
+from game_scripts.ui.context_panel import ContextPanel
 from scripts.ui_shim import UIButton, UIPanel
 from scripts.utils import load_image, sheet_to_sprite
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel

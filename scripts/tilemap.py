@@ -20,11 +20,16 @@ class TileData:
     # Can use the static def of map_to_world.
     tile_type: type
     map_pos: Vector2
-    world_pos: Vector2
+    tile_size: Vector2
     properties: dict
     surf: Surface
     offset: Vector2
+    isometric: bool = False
     anchor: str = "bottomleft"
+
+    @property
+    def world_pos(self) -> Vector2:
+        return map_to_worldv(self.map_pos, self.tile_size, self.isometric)
 
 
 class Tile(NodeSprite):
@@ -84,12 +89,11 @@ class TileDataLayers:
         return TileData(
             tile_type=tile_type,
             map_pos=Vector2(x, y),
-            world_pos=map_to_world(
-                x, y, self.tile_size.x, self.tile_size.y, self.isometric
-            ),
+            tile_size=self.tile_size,
             properties=properties,
             surf=surf,
             offset=offset,
+            isometric=self.isometric,
         )
 
 
