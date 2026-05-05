@@ -85,5 +85,5 @@ class DebugMenu(UIWindow):
         print(entity_to_spawn.tile_size)
         entity_to_spawn.map_pos = map_pos
         new_tile = entity_to_spawn.tile_type(entity_to_spawn)
-        get_tilemap().set_tile_in_map(new_tile, "active", map_pos)
+        get_tilemap().set_tile_in_map(new_tile, "active", entity_to_spawn.map_pos)
         pass

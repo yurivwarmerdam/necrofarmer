@@ -216,6 +216,13 @@ class Tilemap:
             half_h = self.tmx_data.tileheight / 2
             x = (((world_pos.x / half_w) + (world_pos.y / half_h)) / 2) + 0.5
             y = (((world_pos.y / half_h) - (world_pos.x / half_w)) / 2) + 0.5
+            print(
+                world_pos,
+                floor(x),
+                floor(y),
+                self.tmx_data.tilewidth,
+                self.tmx_data.tileheight,
+            )
             return Vector2(floor(x), floor(y))
         else:
             return Vector2(
@@ -256,17 +263,18 @@ def map_to_worldv(map_pos: Vector2, tile_size: Vector2, isometric=False):
     return map_to_world(map_pos.x, map_pos.y, tile_size.x, tile_size.y, isometric)
 
 
-def world_to_map(x, y, tilewidth, tileheight, isometric=False):
+def world_to_map(world_x, world_y, tilewidth, tileheight, isometric=False):
     if isometric:
         half_w = tilewidth / 2
         half_h = tileheight / 2
-        x = (((x / half_w) + (y / half_h)) / 2) + 0.5
-        y = (((y / half_h) - (x / half_w)) / 2) + 0.5
+        x = (((world_x / half_w) + (world_y / half_h)) / 2) + 0.5
+        y = (((world_y / half_h) - (world_x / half_w)) / 2) + 0.5
+        
         return Vector2(floor(x), floor(y))
     else:
         return Vector2(
-            floor(x / tilewidth),
-            floor(y / tileheight),
+            floor(world_x / tilewidth),
+            floor(world_y / tileheight),
         )
 
 
@@ -277,10 +285,10 @@ def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
 if __name__ == "__main__":
     pg.init()
     display = pg.display.set_mode((0, 0), pg.RESIZABLE)
-    tile_size=Vector2(32,16)
-    input=Vector2(5,-201)
-    output=world_to_map(5,-201,32,16,True)
-    print(input,output)
+    tile_size = Vector2(32, 16)
+    input = Vector2(-19, 199)
+    output = world_to_map(input.x, input.y, 32, 16, True)
+    print(input, output)
     tm = Tilemap("tilemaps/another_island.tmx")
     # print(tm.get_tile_idxs_by_property("bigtile", "active"))
     # print(tm.get_neigbors(Vector2(0, 0)))
