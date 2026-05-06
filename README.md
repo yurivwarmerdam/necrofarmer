@@ -37,6 +37,20 @@ pip install -r requirements.txt
     - make you a hover ghost
     - do the same for buildings
         - load from whiteboard
+    - building placement checks
+    - checks work fine at load time. crashes there are kind of nice.
+    - runtime placing should actually return false in some way. try//catch in function calls seem ugly.
+    - rewrite __init__ placement calls to throw when the placement returns false, take it from there.
+        - turns otu that's a preeeety layered set of calls.
+        - probably best to remove the throw, return false, make it always return true otherwise.
+        - start thinking about replacing tiles (at runtime)
+        - maybe the add_internal approach from groups isn't a bad idea
+            - allows for proper removal of bigtile entries from tilempap's map
+    - bigtiles currently only respect placement rules in own layer. This is probably buggy even in that context, but also needs expanding.
+    v first investigate if crashing always happens properly wihtin own layer.
+    - then extend to other layers.
+    - this is explicitly game-specific logic. Should use a game_tilemap or somesuch.
+    - can bigtile tilemap be promoted to /scripts? Perchance.
 
 
     Current BigTile Tilemap notes:

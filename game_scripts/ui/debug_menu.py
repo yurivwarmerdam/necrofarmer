@@ -74,8 +74,8 @@ class DebugMenu(UIWindow):
         pass
 
     def spawn_unit(self):
-        entity_to_spawn = self.spawning
-        entity_to_spawn(get_camera().get_global_mouse_pos())
+        entity = self.spawning
+        entity(get_camera().get_global_mouse_pos())
 
     def spawn_tile(self):
         entity_to_spawn: TileData = self.spawning
