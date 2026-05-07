@@ -81,8 +81,6 @@ class DebugMenu(UIWindow):
         entity_to_spawn: TileData = self.spawning
         mouse_pos = get_camera().get_global_mouse_pos()
         map_pos = world_to_mapv(mouse_pos, entity_to_spawn.tile_size, True)
-        print(mouse_pos, map_pos)
-        print(entity_to_spawn.tile_size)
         entity_to_spawn.map_pos = map_pos
         new_tile = entity_to_spawn.tile_type(entity_to_spawn)
         if not get_tilemap().set_tile_in_map(

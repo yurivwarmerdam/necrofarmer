@@ -27,7 +27,6 @@ class EntityTilemap(Tilemap):
             return super().set_tile_in_map(tile, layer, map_pos)
 
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
-        print(idxs)
         # TODO: is placement actually valid? I never really proved a negative, here.
         return all(self.get_tilev(layer, x) is None for x in idxs)
 
