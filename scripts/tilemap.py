@@ -168,9 +168,12 @@ class Tilemap:
         tile = tile_data.tile_type(tile_data)
         self.set_tile_in_map(tile, layer_name, tile_data.map_pos)
 
-    def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2):
+    def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
+        if self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is not None:
+            return False
         self.layers[layer].add(tile)
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
+        return True
 
     def kill_tile(self, layer: str, x: int, y: int):
         tile = self.map[layer][x, y]
@@ -269,7 +272,7 @@ def world_to_map(world_x, world_y, tilewidth, tileheight, isometric=False):
         half_h = tileheight / 2
         x = (((world_x / half_w) + (world_y / half_h)) / 2) + 0.5
         y = (((world_y / half_h) - (world_x / half_w)) / 2) + 0.5
-        
+
         return Vector2(floor(x), floor(y))
     else:
         return Vector2(
