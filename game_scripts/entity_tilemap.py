@@ -6,6 +6,8 @@ from game_scripts.bigtiles.bigtile import BigTile
 from scripts.tilemap import Tile, Tilemap
 
 
+# I want to become a more generic class.
+# TODO: Work out what I want to make more/less generic.
 class EntityTilemap(Tilemap):
     def __init__(self, tmx_path):
         super().__init__(tmx_path, whiteboard.bigtile_entities)
@@ -26,9 +28,11 @@ class EntityTilemap(Tilemap):
         else:
             return super().set_tile_in_map(tile, layer, map_pos)
 
-    def is_valid_placement_idxs(self, idxs: list[Vector2], layer):
-        # TODO: is placement actually valid? I never really proved a negative, here.
-        return all(self.get_tilev(layer, x) is None for x in idxs)
+    def is_valid_placement_idxs(self, idxs: list[Vector2], layer: str):
+        """
+        list-based verison of is_valid_placement.
+        """
+        return all(self.is_valid_placement(x, layer) for x in idxs)
 
 
 _instance = None

@@ -5,7 +5,7 @@ import pygame_gui
 from pygame import Vector2
 from pygame.sprite import Group
 
-from game_scripts import entity_tilemap, group_server, star
+from game_scripts import game_tilemap, group_server, star
 from game_scripts.commander import get_commander
 from game_scripts.ui.game_ui import MainUI
 from game_scripts.tardigrade import Tardigrade
@@ -55,7 +55,7 @@ ui = MainUI()
 
 groups = group_server.get_group_server()
 
-tilemap = entity_tilemap.get_tilemap(
+tilemap = game_tilemap.get_tilemap(
     "tilemaps/another_island.tmx",
 )
 star.get_star_server(tilemap)

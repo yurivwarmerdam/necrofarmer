@@ -219,13 +219,7 @@ class Tilemap:
             half_h = self.tmx_data.tileheight / 2
             x = (((world_pos.x / half_w) + (world_pos.y / half_h)) / 2) + 0.5
             y = (((world_pos.y / half_h) - (world_pos.x / half_w)) / 2) + 0.5
-            print(
-                world_pos,
-                floor(x),
-                floor(y),
-                self.tmx_data.tilewidth,
-                self.tmx_data.tileheight,
-            )
+
             return Vector2(floor(x), floor(y))
         else:
             return Vector2(
@@ -247,6 +241,13 @@ class Tilemap:
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
         return self.map_to_world(floor(map_pos.x), floor(map_pos.y))
+
+    def is_valid_placement(self, pos: Vector2, layer: str) -> bool:
+        """
+        Collision detection funciton can be overridden when needed
+        (for example, conditions based on other layers is required)
+        """
+        return self.get_tilev(layer, pos) is None
 
 
 def map_to_world(x, y, tilewidth, tileheight, isometric=False):

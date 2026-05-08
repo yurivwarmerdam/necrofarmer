@@ -5,7 +5,7 @@ from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
 from scripts.tilemap import world_to_mapv
-from game_scripts.entity_tilemap import get_tilemap
+from game_scripts.game_tilemap import get_tilemap
 from game_scripts.whiteboard import get_Whiteboard, bigtile_entities
 
 from scripts.tilemap import TileData
@@ -44,6 +44,16 @@ class DebugMenu(UIWindow):
             container=self,
             command=lambda: self.set_spawning_state(
                 get_Whiteboard().tile_entities["thopter_factory_2"]
+            ),
+        )
+        UIButton(
+            Rect(64, 56, 54, 46),
+            "",
+            object_id="#sawmill_button",
+            scale_func=integer_scale,
+            container=self,
+            command=lambda: self.set_spawning_state(
+                get_Whiteboard().tile_entities["sawmill"]
             ),
         )
 
