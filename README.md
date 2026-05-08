@@ -23,34 +23,42 @@ pip install -r requirements.txt
 ## TODO:
 ====================
 ### current:
+
+    Unit behavior (Btrees!)
+    - study skeleton, revisit documentation
+    - tardigrade
+        - build beheavior
+    - thopter
+        - pickup/dropoff behavior
+
     spawners (+spawner debug menu?) for units and for buildings
-    v make menu
-    - new challenger: make better bigtile entities
-        - better init
+    v new challenger: make better bigtile entities
+        v better init
         - think about how these are/will be processed
         - maybe do an example like with tardigrade
     ~ First just click on a cell, then work on hover ghosts
-    v (probably) make commander into server
-    v add object creation modality/state, initially only for units
     - while you're there, also think about dragging logic. The "sticky" boxes annoy me.
-    v make stuff on click (at x/y? at grid cell? Whichever)
     - make you a hover ghost
     - do the same for buildings
         - load from whiteboard
     - building placement checks
     - checks work fine at load time. crashes there are kind of nice.
     - runtime placing should actually return false in some way. try//catch in function calls seem ugly.
-    - rewrite __init__ placement calls to throw when the placement returns false, take it from there.
-        - turns otu that's a preeeety layered set of calls.
-        - probably best to remove the throw, return false, make it always return true otherwise.
+    v rewrite __init__ placement calls to throw when the placement returns false, take it from there.
+        v turns otu that's a preeeety layered set of calls.
+        v probably best to remove the throw, return false, make it always return true otherwise.
         - start thinking about replacing tiles (at runtime)
         - maybe the add_internal approach from groups isn't a bad idea
             - allows for proper removal of bigtile entries from tilempap's map
     - bigtiles currently only respect placement rules in own layer. This is probably buggy even in that context, but also needs expanding.
-    v first investigate if crashing always happens properly wihtin own layer.
     - then extend to other layers.
-    - this is explicitly game-specific logic. Should use a game_tilemap or somesuch.
+    ~ this is explicitly game-specific logic. Should use a game_tilemap or somesuch.
     - can bigtile tilemap be promoted to /scripts? Perchance.
+    v make menu
+    v (probably) make commander into server
+    v add object creation modality/state, initially only for units
+    v make stuff on click (at x/y? at grid cell? Whichever)
+    v first investigate if crashing always happens properly wihtin own layer.
 
 
     Current BigTile Tilemap notes:
@@ -419,5 +427,3 @@ all installs have been done from source.
 - Currently looking at pybind11: https://www.youtube.com/watch?v=_5T70cAXDJ0  
 - Corresponding gist: https://gist.github.com/safijari/f7aec85b89906b4b90a8f33039c11263  
 functors: https://www.geeksforgeeks.org/functors-in-cpp/  
-
-
