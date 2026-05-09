@@ -18,18 +18,31 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-
-
 ## TODO:
 ====================
 ### current:
 
+    -------------------------------------------------
+    --> add more/better documentation as you go!! <--
+    -------------------------------------------------
     Unit behavior (Btrees!)
     - study skeleton, revisit documentation
     - tardigrade
-        - build beheavior
+        - construction beheavior
+        - _building progress bar
+        - click on _building while tardigrade is selected
+        - on fill: kill and replace with building
     - thopter
         - pickup/dropoff behavior
+        - clone skeleton bheavior?
+        - make degenerate behavior:
+            - move to pos
+            - move to another random pos
+            - goto 2
+        - make tree that can be claimed (StatefulTile oid?)
+        
+        
+
 
     spawners (+spawner debug menu?) for units and for buildings
     v new challenger: make better bigtile entities
@@ -62,14 +75,14 @@ pip install -r requirements.txt
 
 
     Current BigTile Tilemap notes:
-    - GOAL is to get a bunch of data ready so I can instantiate a bigtile
-    - all bigtile properties are located in tile tsx.
-    - can I get them out through tsx?
-    - wants to load through tsx. What if I create a "dictionary" tilemap?
-        - contains one of each building type
-        - parse those, know what pos/idx/whatever corresponds, or just go by name
-        - place "from" that loc.
-        - alternatively, could also have a specific layer on the regular tilemap. Limits reuse somewhat.
+    v GOAL is to get a bunch of data ready so I can instantiate a bigtile
+    v all bigtile properties are located in tile tsx.
+    v can I get them out through tsx?
+    v wants to load through tsx. What if I create a "dictionary" tilemap?
+        v contains one of each building type
+        v parse those, know what pos/idx/whatever corresponds, or just go by name
+        v place "from" that loc.
+        v alternatively, could also have a specific layer on the regular tilemap. Limits reuse somewhat.
     
     I want:
     - better class construction for (big)tiles
@@ -116,7 +129,9 @@ pip install -r requirements.txt
     may also be called terrains:
     - https://doc.mapeditor.org/en/stable/manual/terrain/
 
-    - goal could//should be to create some debug menu (in pygame_gui) that allows me to free-place paths and buildings.
+    - add tree placement to debug menu
+    - make tree autotile? Maybe? pretty please? later?
+    - have autotiles update neighbors (on the next tick, probably?)
 
 
 ### selection logic
