@@ -1,0 +1,32 @@
+# BehaviorTree.py
+
+Normal behavior tree rules are followed.
+
+Trees are normally ticked once per game tick, but this could be adjusted in case of lag.
+
+Tick through:
+
+```
+from scripts.behaviortree_py.behaviortree import BehaviorTreeFactory
+from scripts.entities import ActionStatus
+from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder
+
+class Some_sprite(Sprite): # using sprite, because we are in pygame. Could feasibly be anything, but I like calling tick methods through a Group.
+
+def __init__(self,*groups):
+    super().__init__(*groups)
+    ## probably image & rect shenenigans. Outside of the cope of this snippet.
+    self.blackboard = {"action_status": ActionStatus.IDLE, "self": self} # minimal required set of blackboard entries.
+    nodes={"Succeeder": Succeeder,
+        "Failer": Failer,} #some sample nodes you'll propbably end up using anyway.
+    factory= BehaviorTreeFactory()
+    factory.register_blackboard(self.blackboard)
+    factory.register_nodes(nodes)
+    factory.register_conversion_context({"Vector2": Vector2}) # In case nonstandard datatypes are described in tree.xml, provide mappings here.
+    self.tree = factory.load_tree_from_xml("simple_bt/trees/skeleton.xml") # where your tree is defined
+
+def tick(self):
+    self.tree.tick()
+
+
+```
