@@ -3,6 +3,11 @@ from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
 from game_scripts import group_server
+from pygame.math import Vector2
+
+from scripts.behaviortree_py.behaviortree import BehaviorTreeFactory
+from scripts.entities import ActionStatus
+from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 
 # TODO:
 # - add btree
@@ -29,6 +34,26 @@ class Ornithopter(AnimatedSprite, Selectable):
             groups.colliders,
             groups.render_groups["active"],
         )
+
+        # --- BehaviorTree stuff ---
+        self.blackboard = {
+            "action_status": ActionStatus.IDLE,
+            "self": self,
+        }  # minimal required set of blackboard entries.
+        nodes = {
+            "Succeeder": Succeeder,
+            "Failer": Failer,
+            "Talker": Talker,
+        }  # some sample nodes you'll propbably end up using anyway.
+        factory = BehaviorTreeFactory()
+        factory.register_blackboard(self.blackboard)
+        factory.register_nodes(nodes)
+        factory.register_conversion_context(
+            {"Vector2": Vector2}
+        )  # In case nonstandard datatypes are described in tree.xml, provide mappings here.
+        self.tree = factory.load_tree_from_xml(
+            "trees/ornithopter.xml"
+        )  # where your tree is defined
 
     @property
     def context_panel(self) -> type[ContextPanel]:

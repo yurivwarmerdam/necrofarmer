@@ -1,9 +1,9 @@
 from game_scripts.entity_tilemap import EntityTilemap
 
 
-
 class GameTilemap(EntityTilemap):
     pass
+
 
 _instance = None
 
