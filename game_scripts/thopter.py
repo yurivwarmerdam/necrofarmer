@@ -33,6 +33,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             groups.update,
             groups.colliders,
             groups.render_groups["active"],
+            groups.behavior_trees,
         )
 
         # --- BehaviorTree stuff ---
@@ -54,6 +55,9 @@ class Ornithopter(AnimatedSprite, Selectable):
         self.tree = factory.load_tree_from_xml(
             "trees/ornithopter.xml"
         )  # where your tree is defined
+
+    def tick(self):
+        self.tree.tick()
 
     @property
     def context_panel(self) -> type[ContextPanel]:

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
 from pygame.sprite import AbstractGroup, Group, Sprite
+from scripts.behaviortree_py.util_pygame import BTGroup
 
 
 @dataclass
@@ -20,7 +21,7 @@ class GroupServer:
     # and adding collision layers if needed.
     colliders: Group = Group()
     update: Group = Group()
-    behavior_trees: Group = Group()
+    behavior_trees: BTGroup = BTGroup()
 
     def add_render(self, groups: dict[str, Group] | dict[str, AbstractGroup]):
         self.render_groups = self.render_groups | groups.copy()

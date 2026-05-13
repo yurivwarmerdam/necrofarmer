@@ -11,7 +11,7 @@ from scripts.behaviortree_py.behaviortree import BehaviorTreeFactory
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder
 
-class Some_sprite(Sprite): # using sprite, because we are in pygame. Could feasibly be anything, but I like calling tick methods through a Group.
+class SomeSprite(Sprite): # using sprite, because we are in pygame. Could feasibly be anything, but I like calling tick methods through a Group.
 
     def __init__(self,*groups):
         super().__init__(*groups)
@@ -25,19 +25,26 @@ class Some_sprite(Sprite): # using sprite, because we are in pygame. Could feasi
         factory.register_conversion_context({"Vector2": Vector2}) # In case nonstandard datatypes are described in tree.xml, provide mappings here.
         self.tree = factory.load_tree_from_xml("trees/some_tree.xml") # where your tree is defined
 
-def tick(self):
-    self.tree.tick()
+    def tick(self):
+        self.tree.tick()
 ```
 
 This class needs to be ticked in a corresponding main class:
 
 ``` python
 class MainClass:
-    def main(self):
 
     def __init__(self):
         self.BTREE_EVENT = pg.USEREVENT + 1
         pg.time.set_timer(self.BTREE_EVENT, 250)
+        self.tickables=BTGroup()
+        SomeSprite(tickables)
+    
+    def main(self):
+        for event in pg.event.get():
+            # probably handle quit event first.
+            if event.type == self.BTREE_EVENT:
+                self.tickables.tick()
 
 
 if __name__ == "__main__":

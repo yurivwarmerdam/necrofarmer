@@ -5,13 +5,15 @@ import pygame_gui
 from pygame import Vector2
 from pygame.sprite import Group
 
-from game_scripts import game_tilemap, group_server, star
+from game_scripts import game_tilemap, star
+from game_scripts.group_server import get_group_server
 from game_scripts.commander import get_commander
 from game_scripts.ui.game_ui import MainUI
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
 from scripts import image_server
 from scripts.camera import initialize_camera
+
 
 # Server architecture:
 # spin up and have global access to the following:
@@ -53,28 +55,37 @@ ui = MainUI()
 
 # -- group initialization --
 
-groups = group_server.get_group_server()
+group_server = get_group_server()
 
 tilemap = game_tilemap.get_tilemap(
     "tilemaps/another_island.tmx",
 )
 star.get_star_server(tilemap)
 
-groups.add_render(tilemap.layers)
-groups.add_render({"draw": Group()})
+group_server.add_render(tilemap.layers)
+group_server.add_render({"draw": Group()})
 
 
 camera = initialize_camera(
-    groups.render_groups,
+    group_server.render_groups,
     Group(),
     display,
     Vector2(-300, 0),
 )
 
 commander = get_commander()
-commander.box.add(groups.render_groups["draw"])
+commander.box.add(group_server.render_groups["draw"])
 
 img_server = image_server.get_image_server()
+
+
+# --- Behavior Tree section ---
+
+BTREE_EVENT = pg.USEREVENT + 1
+pg.time.set_timer(BTREE_EVENT, 250)
+
+# -----------------------------
+
 
 Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
@@ -108,6 +119,8 @@ while True:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
+        elif event.type == BTREE_EVENT:
+            group_server.behavior_trees.tick()
         elif event.type == pg.VIDEORESIZE:
             manager.set_window_resolution(event.size)
         processed = False
@@ -121,7 +134,7 @@ while True:
 
     # --- update loop ---
     camera.render_layers["draw"].update()
-    groups.update.update(_delta)
+    group_server.update.update(_delta)
     ui.update(_delta)
 
     # --- render loop ---

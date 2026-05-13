@@ -2,6 +2,7 @@ import ast
 from abc import ABC
 from enum import Enum
 from typing import Callable, Type
+from pygame.sprite import Group
 
 from bs4 import BeautifulSoup as soup
 
@@ -12,6 +13,20 @@ class NodeStatus(Enum):
     SUCCESS = 2
     FAILURE = 3
     SKIPPED = 4
+
+
+class BTGroup(Group):
+    def tick(self, *args, **kwargs):
+        """call the tick method of every member sprite
+
+        Group.tick(*args, **kwargs): return None
+
+        Calls the update method of every member sprite. All arguments that
+        were passed to this method are passed to the Sprite update function.
+
+        """
+        for sprite in self.sprites():
+            sprite.tick(*args, **kwargs)
 
 
 class Node(ABC):
