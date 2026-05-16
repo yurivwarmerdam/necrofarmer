@@ -1,5 +1,5 @@
 import ast
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Type
 from pygame.sprite import Group
@@ -35,6 +35,7 @@ class Node(ABC):
     def __init__(self):
         self.node_status = NodeStatus.IDLE
 
+    @abstractmethod
     def tick(self) -> NodeStatus:
         pass
 
@@ -228,7 +229,7 @@ class StatefulActionNode(LeafNode):
 
 
 class InputPort:
-    def get() -> any:
+    def get(self) -> any:
         pass
 
 

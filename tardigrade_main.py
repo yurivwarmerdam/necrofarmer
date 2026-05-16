@@ -82,7 +82,7 @@ img_server = image_server.get_image_server()
 # --- Behavior Tree section ---
 
 BTREE_EVENT = pg.USEREVENT + 1
-pg.time.set_timer(BTREE_EVENT, 250)
+pg.time.set_timer(BTREE_EVENT, 100)
 
 # -----------------------------
 
@@ -121,6 +121,7 @@ while True:
             sys.exit()
         elif event.type == BTREE_EVENT:
             group_server.behavior_trees.tick()
+            break
         elif event.type == pg.VIDEORESIZE:
             manager.set_window_resolution(event.size)
         processed = False

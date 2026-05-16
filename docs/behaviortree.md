@@ -18,7 +18,7 @@ class SomeSprite(Sprite): # using sprite, because we are in pygame. Could feasib
         ## probably image & rect shenenigans. Outside of the cope of this snippet.
         self.blackboard = {"action_status": ActionStatus.IDLE, "self": self} # minimal required set of blackboard entries.
         nodes={"Succeeder": Succeeder,
-            "Failer": Failer,} #some sample nodes you'll propbably end up using anyway.
+            "Failer": Failer,} #some sample nodes you'll probably end up using anyway.
         factory= BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)

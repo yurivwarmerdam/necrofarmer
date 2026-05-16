@@ -1,11 +1,15 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
-        <SequenceNode name="root_sequence">
-            <Succeeder />
-            <Talker>
-                <InputPort local="text" value="static" />
-            </Talker>
-            <Failer />
+        <SequenceNode name="random_walk">
+            <PickMoveGoal>
+                <InputPort local="self" bb="self" />
+                <OutputPort local="goal" bb="goal" />
+            </PickMoveGoal>
+            <MoveTowardsPos>
+                <InputPort local="pos" bb="goal" />
+                <InputPort local="action_status" bb="action_status" />
+                <OutputPort local="action_status" bb="action_status" />
+            </MoveTowardsPos>
         </SequenceNode>
     </BehaviorTree>
 </root>

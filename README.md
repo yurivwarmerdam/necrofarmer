@@ -40,6 +40,9 @@ pip install -r requirements.txt
             - move to another random pos
             - goto 2
         - make tree that can be claimed (StatefulTile oid?)
+        - think about how action should be cancelled mid-execution
+            - empty inventory
+            - something like stop_execution in tree, set some current_action whiteboard item, run tree from beginning, basically.
         
         
 

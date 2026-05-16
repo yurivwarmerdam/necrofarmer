@@ -1,11 +1,17 @@
-from scripts.custom_sprites import AnimatedSprite, integer_scale
+from scripts.custom_sprites import AnimatedSprite
 from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
 from scripts import image_server
 from game_scripts import group_server
 from pygame.math import Vector2
+from random import randint
 
-from scripts.behaviortree_py.behaviortree import BehaviorTreeFactory
+from scripts.behaviortree_py.behaviortree import (
+    BehaviorTreeFactory,
+    SimpleActionNode,
+    StatefulActionNode,
+    NodeStatus,
+)
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 
@@ -35,6 +41,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             groups.render_groups["active"],
             groups.behavior_trees,
         )
+        self.move_speed = 0.09
 
         # --- BehaviorTree stuff ---
         self.blackboard = {
@@ -45,6 +52,8 @@ class Ornithopter(AnimatedSprite, Selectable):
             "Succeeder": Succeeder,
             "Failer": Failer,
             "Talker": Talker,
+            "PickMoveGoal": PickMoveGoal,
+            "MoveTowardsPos": MoveTowardsPos,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -56,12 +65,57 @@ class Ornithopter(AnimatedSprite, Selectable):
             "trees/ornithopter.xml"
         )  # where your tree is defined
 
+    def update(self, delta):
+        super().update(delta)
+        if self.blackboard["action_status"] in [
+            ActionStatus.IDLE,
+            ActionStatus.SUCCESS,
+        ]:
+            return
+        status, func, params = self.blackboard["action_status"]
+        func = getattr(self, func)  # Only class funcs. May need to look in globals.
+        func(delta, params)
+
     def tick(self):
         self.tree.tick()
 
     @property
     def context_panel(self) -> type[ContextPanel]:
         return OrnithopterPanel
+
+    def move_towards(self, delta, goal: Vector2):
+        self.pos = Vector2(self.pos).move_towards(goal, delta * self.move_speed)
+        if self.pos == goal:
+            self.blackboard["action_status"] = ActionStatus.SUCCESS
+
+
+# --- Behavior tree section ---
+
+
+class MoveTowardsPos(StatefulActionNode):
+    def on_start(self) -> NodeStatus:
+        # this is the pattern when delegating actions to actual unit behavior
+        pos = self.get_input("pos")
+
+        self.set_output("action_status", (ActionStatus.RUNNING, "move_towards", pos))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        else:
+            return NodeStatus.RUNNING
+
+
+class PickMoveGoal(SimpleActionNode):
+    def tick(self) -> NodeStatus:
+        goal = self.get_input("self").pos + Vector2(randint(-50, 50), randint(-50, 50))
+        self.set_output("goal", goal)
+        return NodeStatus.SUCCESS
+
+
+# --- UI Section ---
 
 
 class OrnithopterPanel(ContextPanel):
