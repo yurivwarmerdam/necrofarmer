@@ -121,7 +121,7 @@ class SequenceNode(ControlNode):
 
 
 class FallbackNode(ControlNode):
-    def tick(self):
+    def tick(self) ->NodeStatus:
         if self.node_status == NodeStatus.IDLE:
             self.node_status = NodeStatus.RUNNING
             self.current_node = 0
@@ -187,6 +187,7 @@ class LeafNode(Node):
         self.input_ports = input_ports
         self.output_ports = output_ports
 
+    @abstractmethod
     def tick(self) -> NodeStatus:
         pass
 
