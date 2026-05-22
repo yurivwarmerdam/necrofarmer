@@ -28,14 +28,14 @@ class Camera:
     def set_window_resolution(self, window_resolution: tuple[int, int]):
         self.window_resolution = window_resolution
         self.buffer = Surface(window_resolution)
-        self.zoom_buffer = Surface(
+        self.scale_buffer = Surface(
             [x * self.zoom_level for x in self.buffer.get_size()]
         )
 
     def set_zoom(self, zoom_level: int):
         self.zoom_level = zoom_level
         # self.buffer = Surface(zoom_level)
-        self.zoom_buffer = Surface(
+        self.scale_buffer = Surface(
             [x * self.zoom_level for x in self.buffer.get_size()]
         )
 
@@ -43,21 +43,15 @@ class Camera:
         return Vector2(pg.mouse.get_pos()) + self.pos
 
     def draw_all(self):
-        #     self.display.fill(self.bg_color)
-        #     for group in self.render_layers:
-        #         self.draw_layer(self.render_layers[group])
-        #     self.ui.draw(self.display)
-
         self.buffer.fill(self.bg_color)
-        # self.display.fill(self.bg_color)
         for group in self.render_layers:
             self.draw_layer(self.render_layers[group])
         self.ui.draw(self.buffer)
 
         # scale by instead of blitting
-        scale_by(self.buffer, self.zoom_level, self.zoom_buffer)
+        scale_by(self.buffer, self.zoom_level, self.scale_buffer)
 
-        self.display.blit(self.zoom_buffer)
+        self.display.blit(self.scale_buffer)
 
     def draw_layer(self, layer: Group):
         """Adapted from pygame's cannonical draw logic:
