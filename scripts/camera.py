@@ -3,6 +3,7 @@ from pygame import Surface
 from pygame.color import Color
 from pygame.math import Vector2
 from pygame.sprite import Group, LayeredUpdates
+from pygame.transform import scale_by
 
 
 class Camera:
@@ -21,17 +22,42 @@ class Camera:
         self.ui = ui
         self.display = display
         self.bg_color = bg_color
-        # not using this yet. Goal is to use it for scale operations, prolly
         self.buffer = Surface(self.display.get_size())
+        self.set_zoom(1)
+
+    def set_window_resolution(self, window_resolution: tuple[int, int]):
+        self.window_resolution = window_resolution
+        self.buffer = Surface(window_resolution)
+        self.zoom_buffer = Surface(
+            [x * self.zoom_level for x in self.buffer.get_size()]
+        )
+
+    def set_zoom(self, zoom_level: int):
+        self.zoom_level = zoom_level
+        # self.buffer = Surface(zoom_level)
+        self.zoom_buffer = Surface(
+            [x * self.zoom_level for x in self.buffer.get_size()]
+        )
 
     def get_global_mouse_pos(self):
         return Vector2(pg.mouse.get_pos()) + self.pos
 
     def draw_all(self):
-        self.display.fill(self.bg_color)
+        #     self.display.fill(self.bg_color)
+        #     for group in self.render_layers:
+        #         self.draw_layer(self.render_layers[group])
+        #     self.ui.draw(self.display)
+
+        self.buffer.fill(self.bg_color)
+        # self.display.fill(self.bg_color)
         for group in self.render_layers:
             self.draw_layer(self.render_layers[group])
-        self.ui.draw(self.display)
+        self.ui.draw(self.buffer)
+
+        # scale by instead of blitting
+        scale_by(self.buffer, self.zoom_level, self.zoom_buffer)
+
+        self.display.blit(self.zoom_buffer)
 
     def draw_layer(self, layer: Group):
         """Adapted from pygame's cannonical draw logic:
@@ -47,11 +73,11 @@ class Camera:
         else:
             sprites = layer.sprites()
 
-        if hasattr(self.display, "blits"):
+        if hasattr(self.buffer, "blits"):
             layer.spritedict.update(
                 zip(
                     sprites,
-                    self.display.blits(
+                    self.buffer.blits(
                         (spr.image, spr.rect.move(-self.pos.x, -self.pos.y), None, 0)
                         for spr in sprites  # type: ignore
                     ),
@@ -59,7 +85,7 @@ class Camera:
             )
         else:
             for spr in sprites:
-                layer.spritedict[spr] = self.display.blit(
+                layer.spritedict[spr] = self.buffer.blit(
                     spr.image, spr.rect.move(-self.pos.x, -self.pos.y), None, 0
                 )
         self.lostsprites = []

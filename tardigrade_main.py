@@ -45,8 +45,8 @@ display = pg.display.set_mode(
     # pg.SCALED,
 )
 # theme is for general settins, buttons for buttons
-manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
-manager.get_theme().load_theme("theme/buttons_generated.json")
+ui_manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
+ui_manager.get_theme().load_theme("theme/buttons_generated.json")
 clock = pg.time.Clock()
 
 # -- UI experiments --
@@ -94,7 +94,7 @@ Tardigrade(Vector2(150, 150))
 Ornithopter(Vector2(200, 200))
 
 
-def handle_key_input():
+def handle_camera_move():
     # ----------Alternate way of processing?------------#
     keys_pressed = pg.key.get_pressed()
     camera_move = Vector2(0, 0)
@@ -108,6 +108,7 @@ def handle_key_input():
 
 
 # path_planner = star.get_server(tilemap)
+
 
 # ---- core loop ----
 while True:
@@ -123,13 +124,24 @@ while True:
             group_server.behavior_trees.tick()
             break
         elif event.type == pg.VIDEORESIZE:
-            manager.set_window_resolution(event.size)
+            camera.set_window_resolution(event.size)
+            ui_manager.set_window_resolution(event.size)
+        elif event.type == pg.KEYDOWN:
+            if event.key == pg.K_1:
+                camera.set_zoom(1)
+            elif event.key == pg.K_2:
+                camera.set_zoom(2)
+            elif event.key == pg.K_3:
+                camera.set_zoom(3)
+            elif event.key == pg.K_4:
+                camera.set_zoom(4)
+
         processed = False
-        processed = manager.process_events(event)
+        processed = ui_manager.process_events(event)
         if not processed:
             processed = commander.process_events(event)
 
-    camera_move = handle_key_input()
+    camera_move = handle_camera_move()
     if camera_move != Vector2(0, 0):
         camera.pos += camera_move
 
@@ -140,8 +152,8 @@ while True:
 
     # --- render loop ---
     camera.draw_all()
-    manager.update(_delta / 1000)
-    manager.draw_ui(display)
+    ui_manager.update(_delta / 1000)
+    ui_manager.draw_ui(display)
 
     pg.display.update()
     clock.tick(60)
