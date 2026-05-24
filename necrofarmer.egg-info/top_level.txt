@@ -1,9 +1,11 @@
 art
 build
+docs
 game_scripts
 legacy
 scripts
 simple_bt
 theme
 tilemaps
+trees
 venv

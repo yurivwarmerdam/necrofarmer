@@ -1,3 +1,4 @@
+import pygame as pg
 from scripts.custom_sprites import AnimatedSprite
 from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
@@ -5,6 +6,8 @@ from scripts import image_server
 from game_scripts import group_server
 from pygame.math import Vector2
 from random import randint
+from scripts.ui_shim import UIButton
+from scripts.custom_sprites import integer_scale
 
 from scripts.behaviortree_py.behaviortree import (
     BehaviorTreeFactory,
@@ -117,6 +120,8 @@ class PickMoveGoal(SimpleActionNode):
 
 # --- UI Section ---
 
+from game_scripts.game_tilemap import get_tilemap
+
 
 class OrnithopterPanel(ContextPanel):
     def __init__(self, *, context_container):
@@ -124,3 +129,17 @@ class OrnithopterPanel(ContextPanel):
             portrait_id="#ornithopter_button",
             context_container=context_container,
         )
+        UIButton(
+            pg.Rect(0, 0, 54, 46),
+            text="",
+            object_id="#haul_logs_button",
+            scale_func=integer_scale,
+            container=context_container,
+            command=self.get_closest_tree,
+        )
+
+    def get_closest_tree(self):
+        pos = self.commander.selected.sprites()[0].pos
+        map_pos = get_tilemap().world_to_map(pos)
+        closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
+        print(pos, map_pos, closest_tree)

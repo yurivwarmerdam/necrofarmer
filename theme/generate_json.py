@@ -1,5 +1,5 @@
 import json
-from game_scripts.Whiteboard import button_ids
+from game_scripts.whiteboard import button_ids
 
 # Generates json to be read into pygame_ui.
 # reads in prototypes, replacing relevant info.

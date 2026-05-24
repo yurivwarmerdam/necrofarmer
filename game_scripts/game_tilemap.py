@@ -1,8 +1,14 @@
 from game_scripts.entity_tilemap import EntityTilemap
+from pygame.math import Vector2
 
 
 class GameTilemap(EntityTilemap):
-    pass
+    def get_tree_idxs(self):
+        return self.get_tile_idxs_by_property("wood", "active")
+
+    def get_closest_local_tree_idx(self, to: Vector2):
+        trees = self.get_tree_idxs()
+        return min(trees, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2)
 
 
 _instance = None
