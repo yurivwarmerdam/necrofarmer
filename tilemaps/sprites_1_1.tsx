@@ -10,7 +10,7 @@
  <tile id="12">
   <properties>
    <property name="can_walk" type="bool" value="false"/>
-   <property name="wood" value="5"/>
+   <property name="wood" type="int" value="5"/>
   </properties>
  </tile>
  <tile id="13">
@@ -21,7 +21,7 @@
  <tile id="22">
   <properties>
    <property name="can_walk" type="bool" value="false"/>
-   <property name="wood" value="5"/>
+   <property name="wood" type="int" value="5"/>
   </properties>
  </tile>
  <tile id="23">
@@ -32,7 +32,7 @@
  <tile id="32">
   <properties>
    <property name="can_walk" type="bool" value="false"/>
-   <property name="wood" value="5"/>
+   <property name="wood" type="int" value="5"/>
   </properties>
  </tile>
  <tile id="33">

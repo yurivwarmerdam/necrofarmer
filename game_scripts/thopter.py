@@ -8,13 +8,14 @@ from pygame.math import Vector2
 from random import randint
 from scripts.ui_shim import UIButton
 from scripts.custom_sprites import integer_scale
-
+from game_scripts.game_tilemap import get_tilemap
 from scripts.behaviortree_py.behaviortree import (
     BehaviorTreeFactory,
     SimpleActionNode,
     StatefulActionNode,
     NodeStatus,
 )
+from game_scripts.commander import get_commander
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 
@@ -57,6 +58,8 @@ class Ornithopter(AnimatedSprite, Selectable):
             "Talker": Talker,
             "PickMoveGoal": PickMoveGoal,
             "MoveTowardsPos": MoveTowardsPos,
+            "GetClosestTree": GetClosestTree,
+            "TakeWood": TakeWood,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -118,9 +121,30 @@ class PickMoveGoal(SimpleActionNode):
         return NodeStatus.SUCCESS
 
 
-# --- UI Section ---
+class GetClosestTree(SimpleActionNode):
+    def tick(self) -> NodeStatus:
+        pos = self.get_input("self").pos
+        # get_commander().selected.sprites()[0].pos
+        map_pos = get_tilemap().world_to_map(pos)
+        closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
+        self.set_output("wood_pos", closest_tree)
+        print(pos, map_pos, closest_tree)
+        return NodeStatus.SUCCESS
 
-from game_scripts.game_tilemap import get_tilemap
+
+class TakeWood(StatefulActionNode):
+    # should become statefulacitonnode with unload speed
+
+    def tick(self) -> NodeStatus:
+        wood_pos = self.get_input("wood_pos")
+        result = get_tilemap().take_wood(wood_pos, 1)
+        if result is None:
+            return NodeStatus.FAILURE
+        else:
+            return NodeStatus.RUNNING
+
+
+# --- UI Section ---
 
 
 class OrnithopterPanel(ContextPanel):
