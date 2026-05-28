@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from game_scripts.commander import Commander, get_commander

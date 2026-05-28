@@ -6,7 +6,7 @@ from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
 from scripts.tilemap import world_to_mapv
 from game_scripts.game_tilemap import get_tilemap
-from game_scripts.whiteboard import get_Whiteboard, bigtile_entities
+from game_scripts.whiteboard import get_Whiteboard
 
 from scripts.tilemap import TileData
 import pygame as pg

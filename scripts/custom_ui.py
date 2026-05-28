@@ -1,8 +1,6 @@
 from typing import Dict
 
 import pygame as pg
-from pygame.transform import smoothscale
-import pygame_gui
 from scripts.ui_shim import UIPanel
 from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
 from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface

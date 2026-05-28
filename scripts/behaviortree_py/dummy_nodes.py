@@ -69,6 +69,7 @@ def main():
         # while tree_status == NodeStatus.RUNNING:
         print("ticking")
         tree_status = my_sequence.tick()
+        print(f"Tree status: {tree_status}")
 
 
 if __name__ == "__main__":

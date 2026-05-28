@@ -15,7 +15,6 @@ from scripts.behaviortree_py.behaviortree import (
     StatefulActionNode,
     NodeStatus,
 )
-from game_scripts.commander import get_commander
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 

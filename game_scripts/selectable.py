@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from pygame import Vector2
-from game_scripts import group_server
 from game_scripts.ui.context_panel import ContextPanel
 
 

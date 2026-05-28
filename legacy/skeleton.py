@@ -67,7 +67,8 @@ class Skeleton(Sprite):
         ]:
             return
         status, func, params = self.blackboard["action_status"]
-        func = getattr(self, func)  # Only class funcs. May need to look in globals.
+        if isinstance(func, str):
+            func = getattr(self, func)  # Only class funcs. May need to look in globals.
         func(delta, params)
 
         # -------debug viz ----------:
@@ -114,6 +115,14 @@ class SimpleSkeletonAction(SimpleActionNode):
         super().__init__(input_ports=input_ports, output_ports=output_ports)
 
 
+class StatefulSkeletonAction(StatefulActionNode):
+    """SimpleActionNode that has a reference to skeleton. Don't forget to register with self."""
+
+    def __init__(self, input_ports, output_ports, skeleton):
+        self.skeleton: Skeleton = skeleton
+        super().__init__(input_ports=input_ports, output_ports=output_ports)
+
+
 class IsCloseToPlayer(SimpleSkeletonAction):
     def tick(self) -> NodeStatus:
         dist: Vector2 = global_blackboard().player.pos - self.skeleton.pos
@@ -123,12 +132,15 @@ class IsCloseToPlayer(SimpleSkeletonAction):
             return NodeStatus.FAILURE
 
 
-class WalkTowardsPos(StatefulActionNode):
+class WalkTowardsPos(StatefulSkeletonAction):
     def on_start(self) -> NodeStatus:
         # this is the pattern when delegating actions to actual skeleton behavior
         pos = self.get_input("pos")
 
-        self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards", pos))
+        # self.set_output("action_status", (ActionStatus.RUNNING, "walk_towards", pos))
+        self.set_output(
+            "action_status", (ActionStatus.RUNNING, self.skeleton.walk_towards, pos)
+        )
         return super().on_start()
 
     def on_running(self) -> NodeStatus:

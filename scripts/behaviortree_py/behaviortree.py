@@ -121,7 +121,7 @@ class SequenceNode(ControlNode):
 
 
 class FallbackNode(ControlNode):
-    def tick(self) ->NodeStatus:
+    def tick(self) -> NodeStatus:
         if self.node_status == NodeStatus.IDLE:
             self.node_status = NodeStatus.RUNNING
             self.current_node = 0
