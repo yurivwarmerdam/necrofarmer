@@ -36,7 +36,7 @@ class Skeleton(Sprite):
             "Outputter": Outputter,
             "Talker": Talker,
             "RandomWait": RandomWait,
-            "WalkTowardsPos": WalkTowardsPos,
+            "WalkTowardsPos": (WalkTowardsPos, self),
             "StatefulActionNode": StatefulActionNode,
             "PickPlayerWalkGoal": PickPlayerWalkGoal,
             "IsCloseToPlayer": (IsCloseToPlayer, self),
