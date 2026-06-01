@@ -12,6 +12,9 @@ class GameTilemap(EntityTilemap):
         return min(trees, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2)
 
     def take_wood(self, map_pos: tuple[int, int], amount):
+        # TODO: preeeeety sure the per-tree stock is currently per tree TYPE; not instance.
+        # Should make a copy of properties, I suppose.
+        # Might want to have specific properties instanced versus others global.
         properties = self.get_tile_properties(*map_pos, "active")
         if "wood" not in properties:
             return None

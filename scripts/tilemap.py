@@ -292,8 +292,4 @@ if __name__ == "__main__":
     tile_size = Vector2(32, 16)
     input = Vector2(-19, 199)
     output = world_to_map(input.x, input.y, 32, 16, True)
-    print(input, output)
     tm = Tilemap("tilemaps/another_island.tmx")
-    # print(tm.get_tile_idxs_by_property("bigtile", "active"))
-    # print(tm.get_neigbors(Vector2(0, 0)))
-    print(tm.layers["active"])
