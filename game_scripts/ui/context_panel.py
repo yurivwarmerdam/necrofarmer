@@ -17,7 +17,7 @@ class ContextPanel(ABC):
         context_container: IContainerAndContainerLike,
     ) -> None:
         """
-        Make sure to set elements inside context_panel of game_ui.
+        Make sure to set elements inside context_panel of main_ui.
 
         context_container: context_panel container
         """
@@ -27,7 +27,7 @@ class ContextPanel(ABC):
     # @abstractmethod
     # def set_context_elems(self, context_container: IContainerAndContainerLike):
     #     """
-    #     set elements inside context_panel of game_ui.
+    #     set elements inside context_panel of main_ui.
     #     Note that this excludes portrait_panel.
 
     #     context_container: context_panel container

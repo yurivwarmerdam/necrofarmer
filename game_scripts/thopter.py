@@ -127,7 +127,7 @@ class GetClosestTree(SimpleActionNode):
         map_pos = get_tilemap().world_to_map(pos)
         closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
         self.set_output("wood_pos", closest_tree)
-        print(pos, map_pos, closest_tree)
+        # print(pos, map_pos, closest_tree)
         return NodeStatus.SUCCESS
 
 
@@ -165,4 +165,4 @@ class OrnithopterPanel(ContextPanel):
         pos = self.commander.selected.sprites()[0].pos
         map_pos = get_tilemap().world_to_map(pos)
         closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
-        print(pos, map_pos, closest_tree)
+        # print(pos, map_pos, closest_tree)

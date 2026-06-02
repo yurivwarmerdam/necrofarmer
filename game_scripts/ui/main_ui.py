@@ -36,8 +36,20 @@ class MainUI:
 
         self.active_panel = None
 
+        self.top_panel = ImagePanel(
+            pg.Rect(0, 0, 636, 18+6),
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "top",
+            },
+            image_surf=self.ui_background_sprite,
+            scale_func=NINE_SLICE_FUNC,
+        )
+
         self.menu_button = UIButton(
-            pg.Rect(-126, 0, 126, 18),
+            pg.Rect(-(126+3), 3, 126, 18),
             "Menu",
             anchors={
                 "left": "right",
@@ -47,6 +59,7 @@ class MainUI:
             },
             object_id="#menu_button",
             command=self.toggle_main_menu,
+            container=self.top_panel.get_container(),
         )
 
         self.portrait_panel = UIPanel(
