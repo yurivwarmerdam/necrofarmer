@@ -6,6 +6,7 @@ from pygame.rect import Rect
 
 from game_scripts.commander import Commander, get_commander
 from game_scripts.ui.context_panel import ContextPanel
+from pygame_gui.elements import UILabel
 from scripts.ui_shim import UIButton, UIPanel
 from scripts.utils import load_image, sheet_to_sprite
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel
@@ -37,7 +38,7 @@ class MainUI:
         self.active_panel = None
 
         self.top_panel = ImagePanel(
-            pg.Rect(0, 0, 636, 18+6),
+            pg.Rect(0, 0, 636, 18 + 6),
             anchors={
                 "left": "left",
                 "right": "right",
@@ -49,7 +50,7 @@ class MainUI:
         )
 
         self.menu_button = UIButton(
-            pg.Rect(-(126+3), 3, 126, 18),
+            pg.Rect(-(126 + 3), 3, 126, 18),
             "Menu",
             anchors={
                 "left": "right",
@@ -60,6 +61,9 @@ class MainUI:
             object_id="#menu_button",
             command=self.toggle_main_menu,
             container=self.top_panel.get_container(),
+        )
+        self.wood_text = UILabel(
+            pg.Rect(3, 3, 100, 18), "asd", container=self.top_panel.get_container()
         )
 
         self.portrait_panel = UIPanel(
