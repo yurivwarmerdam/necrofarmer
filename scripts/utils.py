@@ -38,15 +38,18 @@ def sheet_to_sprites(spritesheet: Surface, size: Vector2) -> dict:
     return sprites
 
 
-def sheet_to_sprite(spritesheet: Surface, subsurf_rect: Rect) -> Surface:
+def sheet_to_sprite(spritesheet: Surface | str, subsurf_rect: Rect) -> Surface:
     """
     take a surface, and return a subsurface located at subsurf_rect.
 
-    :param spritesheet: surface to be accessed
-    :type spritesheet: Surface
-    :param subsurf_rect: rectangle to locate at
-    :type subsurf_rect: Rect
+    Parameters:
+        spritesheet: surface to be accessed. If a strign is supplied, it is first loaded.
+        subsurf_rect: rectangle to locate at
+    Returns:
+        a single subsurface
     """
+    if isinstance(spritesheet, str):
+        spritesheet = load_image(spritesheet)
     sprite = Surface(subsurf_rect.size).convert()
     sprite.blit(spritesheet, area=subsurf_rect)
     sprite.set_colorkey((0, 0, 0, 0))

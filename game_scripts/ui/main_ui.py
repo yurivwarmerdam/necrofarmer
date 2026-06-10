@@ -3,10 +3,9 @@ from scripts.custom_sprites import integer_scale
 import pygame as pg
 from blinker import signal
 from pygame.rect import Rect
-
 from game_scripts.commander import Commander, get_commander
 from game_scripts.ui.context_panel import ContextPanel
-from pygame_gui.elements import UILabel
+from pygame_gui.elements import UILabel, UIImage
 from scripts.ui_shim import UIButton, UIPanel
 from scripts.utils import load_image, sheet_to_sprite
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel
@@ -62,8 +61,27 @@ class MainUI:
             command=self.toggle_main_menu,
             container=self.top_panel.get_container(),
         )
+
+        # TODO: this is temporary
+        self.counter = 0
+
+        wood_image = sheet_to_sprite("art/sprites_1_1.png", Rect(177, 25, 30, 23))
+        stone_image = sheet_to_sprite("art/sprites_1_1.png", Rect(216, 79, 24, 18))
+        self.wood_image = UIImage(
+            Rect(3, 3, *wood_image.get_size()),
+            wood_image,
+            container=self.top_panel.get_container(),
+        )
         self.wood_text = UILabel(
-            pg.Rect(3, 3, 100, 18), "asd", container=self.top_panel.get_container()
+            pg.Rect(20, 3, 100, 18), "0", container=self.top_panel.get_container()
+        )
+        self.stone_image = UIImage(
+            Rect(100, 2, *stone_image.get_size()),
+            stone_image,
+            container=self.top_panel.get_container(),
+        )
+        self.stone_text = UILabel(
+            pg.Rect(100 + 24, 3, 100, 18), "0", container=self.top_panel.get_container()
         )
 
         self.portrait_panel = UIPanel(
@@ -153,6 +171,9 @@ class MainUI:
         )
 
     def update(self, _delta):
+        self.counter += 1
+        print(self.counter)
+        self.wood_text.set_text(str(self.counter))
         if self.active_panel:
             self.active_panel.update(_delta)
 
