@@ -1,5 +1,6 @@
 from game_scripts.ui.debug_menu import DebugMenu
 from scripts.custom_sprites import integer_scale
+from game_scripts.stockpile import Stockpile
 import pygame as pg
 from blinker import signal
 from pygame.rect import Rect
@@ -20,9 +21,6 @@ class MainUI:
     def __init__(self):
         # setup main elements
 
-        # nine_slice_func = partial(
-        #     ninepatchscale, patch_margain=3, scale_func=tilingscale
-        # )
         portrait_panel_rect: Rect = Rect(0, 0, 170, 146)
         context_panel_rect: Rect = Rect(0, 0, 400, 99)
         ui_components_sheet = load_image("art/ui_components.png")
@@ -61,9 +59,6 @@ class MainUI:
             command=self.toggle_main_menu,
             container=self.top_panel.get_container(),
         )
-
-        # TODO: this is temporary
-        self.counter = 0
 
         wood_image = sheet_to_sprite("art/sprites_1_1.png", Rect(177, 25, 30, 23))
         stone_image = sheet_to_sprite("art/sprites_1_1.png", Rect(216, 79, 24, 18))
@@ -171,9 +166,9 @@ class MainUI:
         )
 
     def update(self, _delta):
-        self.counter += 1
-        print(self.counter)
-        self.wood_text.set_text(str(self.counter))
+
+        self.wood_text.set_text(str(Stockpile.wood))
+        self.stone_text.set_text(str(Stockpile.stone))
         if self.active_panel:
             self.active_panel.update(_delta)
 
