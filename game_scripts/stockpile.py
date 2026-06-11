@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Stockpile:
-    wood: int = 0
-    stone: int = 0
+    wood: int = 500
+    stone: int = 20
 
 
 _instance: Stockpile | None = None
