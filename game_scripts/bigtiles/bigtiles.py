@@ -7,6 +7,7 @@ from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
 from scripts.tilemap import TileData
+from pygame_gui.elements import UILabel
 
 
 class Sawmill(BigTile, Selectable):
@@ -16,6 +17,7 @@ class Sawmill(BigTile, Selectable):
             get_group_server().colliders,  # prepending colliders to groups.
             *groups,
         )
+        self.stock = 0
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -28,8 +30,11 @@ class SawmillPanel(ContextPanel):
             portrait_id="#sawmill_button",
             context_container=context_container,
         )
+
+        UILabel(pg.Rect(0, 0, 50, 16), "0", container=context_container)
+
         UIButton(
-            pg.Rect(0, 0, 54, 46),
+            pg.Rect(0, 47, 54, 46),
             text="",
             object_id="#thopter_button",
             scale_func=integer_scale,
