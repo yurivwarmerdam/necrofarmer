@@ -43,7 +43,7 @@ def sheet_to_sprite(spritesheet: Surface | str, subsurf_rect: Rect) -> Surface:
     take a surface, and return a subsurface located at subsurf_rect.
 
     Parameters:
-        spritesheet: surface to be accessed. If a strign is supplied, it is first loaded.
+        spritesheet: surface to be accessed. If a string is supplied, it is first loaded as a file.
         subsurf_rect: rectangle to locate at
     Returns:
         a single subsurface

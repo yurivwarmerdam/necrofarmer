@@ -1,3 +1,5 @@
+from typing import Any
+
 import pygame as pg
 
 from game_scripts.group_server import get_group_server
@@ -22,6 +24,10 @@ class Sawmill(BigTile, Selectable):
     @property
     def context_panel(self) -> type[ContextPanel]:
         return SawmillPanel
+    
+    def update(self, _delta) -> None:
+        print("asd")
+        pass
 
 
 class SawmillPanel(ContextPanel):
