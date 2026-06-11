@@ -17,7 +17,7 @@ class Sawmill(BigTile, Selectable):
             get_group_server().colliders,  # prepending colliders to groups.
             *groups,
         )
-        self.stock = 0
+        self.stock = 50
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -31,7 +31,11 @@ class SawmillPanel(ContextPanel):
             context_container=context_container,
         )
 
-        UILabel(pg.Rect(0, 0, 50, 16), "0", container=context_container)
+        self.stock_label = UILabel(
+            pg.Rect(0, 0, 50, 16),
+            str(self.commander.selected.sprites()[0].stock),
+            container=context_container,
+        )
 
         UIButton(
             pg.Rect(0, 47, 54, 46),
@@ -41,6 +45,9 @@ class SawmillPanel(ContextPanel):
             container=context_container,
             command=lambda: print("I do nothing yet!"),
         )
+
+    def update(self, _delta):
+        self.stock_label.set_text(str(self.commander.selected.sprites()[0].stock))
 
 
 class ThopterFactory(BigTile, Selectable):
