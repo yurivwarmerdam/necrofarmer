@@ -10,6 +10,7 @@ from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
 from scripts.tilemap import TileData
 from pygame_gui.elements import UILabel
+from game_scripts.stockpile import get_stockpile
 
 
 class Sawmill(BigTile, Selectable):
@@ -17,6 +18,7 @@ class Sawmill(BigTile, Selectable):
         super().__init__(
             tiledata,
             get_group_server().colliders,  # prepending colliders to groups.
+            get_group_server().update,
             *groups,
         )
         self.stock = 50
@@ -24,9 +26,11 @@ class Sawmill(BigTile, Selectable):
     @property
     def context_panel(self) -> type[ContextPanel]:
         return SawmillPanel
-    
+
     def update(self, _delta) -> None:
-        print("asd")
+        if self.stock > 0:
+            get_stockpile().add_wood(1)
+            self.stock -= 1
         pass
 
 
@@ -61,6 +65,7 @@ class ThopterFactory(BigTile, Selectable):
         super().__init__(
             tiledata,
             get_group_server().colliders,  # prepending colliders to groups.
+            get_group_server().update,
             *groups,
         )
 

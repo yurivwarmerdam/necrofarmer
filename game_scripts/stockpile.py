@@ -6,6 +6,13 @@ class Stockpile:
     wood: int = 500
     stone: int = 20
 
+    def add_wood(self, amount: int):
+        self.wood += amount
+        print(f"woodamount:{self.wood} {amount}")
+
+    def add_stone(self, amount: int):
+        self.stone += amount
+
 
 _instance: Stockpile | None = None
 

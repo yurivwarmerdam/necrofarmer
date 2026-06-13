@@ -1,6 +1,6 @@
 from game_scripts.ui.debug_menu import DebugMenu
 from scripts.custom_sprites import integer_scale
-from game_scripts.stockpile import Stockpile
+from game_scripts.stockpile import get_stockpile
 import pygame as pg
 from blinker import signal
 from pygame.rect import Rect
@@ -166,9 +166,9 @@ class MainUI:
         )
 
     def update(self, _delta):
-
-        self.wood_text.set_text(str(Stockpile.wood))
-        self.stone_text.set_text(str(Stockpile.stone))
+        # print(f"stocky: {.wood}")
+        self.wood_text.set_text(str(get_stockpile().wood))
+        self.stone_text.set_text(str(get_stockpile().stone))
         if self.active_panel:
             self.active_panel.update(_delta)
 

@@ -6,10 +6,12 @@ from pygame import Vector2
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from pygame_gui.elements import UILabel
 
-from game_scripts import game_tilemap, group_server, star
+from game_scripts import game_tilemap, star
+
+from game_scripts.group_server import get_group_server
 from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
-from scripts import image_server
+from scripts.image_server import get_image_server
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
@@ -21,8 +23,8 @@ from scripts.ui_shim import UIButton
 # v star (already has a server)
 class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
-        img_server = image_server.get_image_server()
-        groups = group_server.get_group_server()
+        img_server = get_image_server()
+        groups = get_group_server()
         super().__init__(
             {
                 "0": img_server.animations["tardigrade_0"],
