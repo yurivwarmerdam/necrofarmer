@@ -9,7 +9,7 @@ from game_scripts.selectable import Selectable
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
 from scripts.tilemap import TileData
-from pygame_gui.elements import UILabel
+from pygame_gui.elements import UILabel, UIStatusBar
 from game_scripts.stockpile import get_stockpile
 
 
@@ -21,7 +21,7 @@ class Sawmill(BigTile, Selectable):
             get_group_server().update,
             *groups,
         )
-        self.stock = 50
+        self.stock = 1000
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -42,22 +42,28 @@ class SawmillPanel(ContextPanel):
         )
 
         self.stock_label = UILabel(
-            pg.Rect(0, 0, 50, 16),
-            str(self.commander.selected.sprites()[0].stock),
+            pg.Rect(0, 0, 100, 16),
+            "",
+            container=context_container,
+        )
+        self.set_stock_text()
+
+        self.progress_bar = UIStatusBar(
+            pg.Rect(0, 50, 100, 20),
             container=context_container,
         )
 
-        UIButton(
-            pg.Rect(0, 47, 54, 46),
-            text="",
-            object_id="#thopter_button",
-            scale_func=integer_scale,
-            container=context_container,
-            command=lambda: print("I do nothing yet!"),
+    def set_stock_text(self):
+        self.stock_label.set_text(
+            f"Logs: {str(self.commander.selected.sprites()[0].stock)}"
         )
 
     def update(self, _delta):
-        self.stock_label.set_text(str(self.commander.selected.sprites()[0].stock))
+        if self.commander.selected.sprites()[0].stock == 0:
+            self.progress_bar.visible = False
+        else:
+            self.progress_bar.visible = True
+        self.set_stock_text()
 
 
 class ThopterFactory(BigTile, Selectable):
