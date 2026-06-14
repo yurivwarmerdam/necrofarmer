@@ -109,7 +109,11 @@ def handle_camera_move():
 
 # path_planner = star.get_server(tilemap)
 
-
+print(tilemap.get_tile_idxs_by_property("sawmill", "active"))
+print(tilemap.get_tiles_by_property("sawmill", "active"))
+print(tilemap.get_tilev_properties(Vector2(3, 9), "active"))
+print(tilemap.get_closest_local_named_tile_idx(Vector2(1, 9), "sawmill"))
+1 / 0
 # ---- core loop ----
 while True:
     _delta = clock.get_time()

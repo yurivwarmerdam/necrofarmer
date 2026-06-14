@@ -21,17 +21,27 @@ class Sawmill(BigTile, Selectable):
             get_group_server().update,
             *groups,
         )
+        self.saw_progress: float = 0
         self.stock = 1000
+
+    def update(self, _delta) -> None:
+        if self.stock > 0:
+            self.saw_progress += _delta / 1000
+            if self.saw_progress >= 1:
+                get_stockpile().add_wood(1)
+                self.saw_progress = 0
+                self.stock -= 1
+        pass
+
+    def add_stock(self, amount: int):
+        self.stock += amount
+
+    def get_sawmill_progress(self):
+        return self.saw_progress
 
     @property
     def context_panel(self) -> type[ContextPanel]:
         return SawmillPanel
-
-    def update(self, _delta) -> None:
-        if self.stock > 0:
-            get_stockpile().add_wood(1)
-            self.stock -= 1
-        pass
 
 
 class SawmillPanel(ContextPanel):
@@ -49,8 +59,9 @@ class SawmillPanel(ContextPanel):
         self.set_stock_text()
 
         self.progress_bar = UIStatusBar(
-            pg.Rect(0, 50, 100, 20),
+            pg.Rect(0, 20, 100, 20),
             container=context_container,
+            percent_method=self.commander.selected.sprites()[0].get_sawmill_progress,
         )
 
     def set_stock_text(self):
