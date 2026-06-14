@@ -107,8 +107,6 @@ def handle_camera_move():
     return camera_move
 
 
-# path_planner = star.get_server(tilemap)
-
 print(tilemap.get_tile_idxs_by_property("sawmill", "active"))
 print(tilemap.get_tiles_by_property("sawmill", "active"))
 print(tilemap.get_tilev_properties(Vector2(3, 9), "active"))
