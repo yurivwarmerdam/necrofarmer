@@ -120,6 +120,13 @@ class PickMoveGoal(SimpleActionNode):
         return NodeStatus.SUCCESS
 
 
+class MapToWorld(SimpleActionNode):
+    def tick(self) -> NodeStatus:
+        map_pos = self.get_input("map_pos")
+        world_pos = get_tilemap().map_to_world(*map_pos)
+        self.set_output("world_pos", world_pos)
+
+
 class GetClosestTree(SimpleActionNode):
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
