@@ -123,12 +123,29 @@ class PickMoveGoal(SimpleActionNode):
 class GetClosestTree(SimpleActionNode):
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
-        # get_commander().selected.sprites()[0].pos
         map_pos = get_tilemap().world_to_map(pos)
         closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
-        self.set_output("wood_pos", closest_tree)
-        # print(pos, map_pos, closest_tree)
-        return NodeStatus.SUCCESS
+        if closest_tree:
+            self.set_output("wood_pos", closest_tree)
+            # print(pos, map_pos, closest_tree)
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE
+
+
+class GetClosestBuilding(SimpleActionNode):
+    def tick(self) -> NodeStatus:
+        pos = self.get_input("self").pos
+        building_type = self.get_input("building_type")
+        map_pos = get_tilemap().world_to_map(pos)
+        closest_building = get_tilemap().get_closest_local_named_tile_idx(
+            map_pos, building_type
+        )
+        if closest_building:
+            self.set_output(f"{building_type}_pos", closest_building)
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE
 
 
 class TakeWood(StatefulActionNode):
