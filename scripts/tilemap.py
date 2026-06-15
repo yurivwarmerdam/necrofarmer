@@ -184,12 +184,18 @@ class Tilemap:
     def kill_tilev(self, layer: str, pos: Vector2):
         self.kill_tile(layer, floor(pos.x), floor(pos.y))
 
-    def get_tile_idxs_by_property(self, property, layer_name) -> list[tuple[int, int]]:
+    def get_tile_idxs_by_property(
+        self, property, layer_name, property_value=None
+    ) -> list[tuple[int, int]]:
         return [
             cell
             for cell in self.map[layer_name]
             if self.map[layer_name][cell] is not None
             and property in self.map[layer_name][cell].properties
+            and (
+                property_value is None
+                or self.map[layer_name][cell].properties[property] == property_value
+            )
         ]
 
     def get_tiles_by_property(self, property, layer) -> list:

@@ -6,19 +6,18 @@ class GameTilemap(EntityTilemap):
     def get_tree_idxs(self):
         return self.get_tile_idxs_by_property("wood", "active")
 
-    def get_closest_local_tree_idx(self, to: Vector2):
+    def get_closest_local_tree_idx(self, to: Vector2) -> tuple[int, int] | None:
         # TODO: bugged if there are no trees
         trees = self.get_tree_idxs()
-        return min(trees, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2)
+        return min(
+            trees, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2, default=None
+        )
 
-    def get_tile_indexes_by_name(
-        self, name: str, layer: str = "active"
-    ) -> list[tuple[int, int]]:
-        return self.get_tile_idxs_by_property("name", layer)
-
-    def get_closest_local_named_tile_idx(self, to, name):
-        idxs = self.get_tile_indexes_by_name(name)
-        return min(idxs, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2)
+    def get_closest_local_named_tile_idx(self, to, name) -> tuple[int, int] | None:
+        idxs = self.get_tile_idxs_by_property("name", "active", name)
+        return min(
+            idxs, key=lambda p: (p[0] - to.x) ** 2 + (p[1] - to.y) ** 2, default=None
+        )
 
     def take_wood(self, map_pos: tuple[int, int], amount):
         # TODO: preeeeety sure the per-tree stock is currently per tree TYPE; not instance.
