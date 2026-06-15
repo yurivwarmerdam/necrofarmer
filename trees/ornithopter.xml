@@ -1,10 +1,14 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
-        <SequenceNode name="random_walk">
+        <SequenceNode name="haul_logs">
             <GetClosestTree>
                 <InputPort local="self" bb="self" />
                 <OutputPort local="wood_pos" bb="wood_pos" />
             </GetClosestTree>
+            <MapToWorld>
+                <InputPort local="map_pos" />
+                <OutputPort local="world_pos" />
+            </MapToWorld>
             <TakeWood>
                 <InputPort local="wood_pos" bb="wood_pos" />
             </TakeWood>

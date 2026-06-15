@@ -3,8 +3,15 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Type
 from pygame.sprite import Group
+from dataclasses import dataclass
 
 from bs4 import BeautifulSoup as soup
+
+
+@dataclass
+class PortsList:
+    inputports: dict[str, type] = {}
+    outputports: dict[str, type] = {}
 
 
 class NodeStatus(Enum):
