@@ -1,38 +1,53 @@
-from blinker import signal
+xml_doc = """
+<WalkTowardsPos>
+    <InputPort local="pos" bb="walk_goal" />
+    <InputPort local="action_status" bb="action_status" />
+    <OutputPort local="action_status" bb="action_status" />
+</WalkTowardsPos>
+"""
 
 
-class SomeObj:
-    def __init__(self) -> None:
-        self.ngu = signal("number go up")
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(xml_doc, 'xml')
 
-    def send(self):
-        self.ngu.send(self)
+# print(soup.prettify())
+walker=soup.find("WalkTowardsPos")
+inputs=walker.find_all("InputPort")
 
+pos=walker.find(local="pos")
 
-def some_func(sender):
-    print(f"gettign stuff: {sender}")
+pos=walker.find("InputPort",local="action_status")
+print(pos or "default")
 
-
-def second_func(sender):
-    print(f"gettign more stuff: {sender}")
-
-
-some_obj = SomeObj()
-another_obj = SomeObj()
-
-# these two are the same object.
-ngu = signal("number go up")
-observer2 = signal("number go up")
-
-# connecting twice, under different name does nothing the second time around.
-ngu.connect(some_func)
-# observer2.connect(some_func)
-ngu.connect(lambda sender: print(sender), weak=False)
-
-some_obj.send()
-# another_obj.send()
-
-# in it's simplest form, you name a signal, and either conncet, or send through it.
-# all signals wiht same name will link up.
-# It kiiinda look like multiple connects to the same func (instance?) will only fire once.
-# (think set in the observer list)
+# <html>
+#  <head>
+#   <title>
+#    The Dormouse's story
+#   </title>
+#  </head>
+#  <body>
+#   <p class="title">
+#    <b>
+#     The Dormouse's story
+#    </b>
+#   </p>
+#   <p class="story">
+#    Once upon a time there were three little sisters; and their names were
+#    <a class="sister" href="http://example.com/elsie" id="link1">
+#     Elsie
+#    </a>
+#    ,
+#    <a class="sister" href="http://example.com/lacie" id="link2">
+#     Lacie
+#    </a>
+#    and
+#    <a class="sister" href="http://example.com/tillie" id="link2">
+#     Tillie
+#    </a>
+#    ; and they lived at the bottom of a well.
+#   </p>
+#   <p class="story">
+#    ...
+#   </p>
+#  </body>
+# </html>

@@ -14,6 +14,7 @@ from scripts.behaviortree_py.behaviortree import (
     SimpleActionNode,
     StatefulActionNode,
     NodeStatus,
+    PortsList,
 )
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
@@ -98,6 +99,12 @@ class Ornithopter(AnimatedSprite, Selectable):
 
 
 class MoveTowardsPos(StatefulActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList(
+            {"pos": Vector2, "get_input": NodeStatus}, {"action_status": NodeStatus}
+        )
+
     def on_start(self) -> NodeStatus:
         # this is the pattern when delegating actions to actual unit behavior
         pos = self.get_input("pos")
@@ -114,6 +121,10 @@ class MoveTowardsPos(StatefulActionNode):
 
 
 class PickMoveGoal(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({}, {"goal": Vector2})
+
     def tick(self) -> NodeStatus:
         goal = self.get_input("self").pos + Vector2(randint(-50, 50), randint(-50, 50))
         self.set_output("goal", goal)
@@ -121,13 +132,22 @@ class PickMoveGoal(SimpleActionNode):
 
 
 class MapToWorld(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"map_pos": Vector2}, {"world_pos": Vector2})
+
     def tick(self) -> NodeStatus:
         map_pos = self.get_input("map_pos")
         world_pos = get_tilemap().map_to_world(*map_pos)
         self.set_output("world_pos", world_pos)
+        return NodeStatus.SUCCESS
 
 
 class GetClosestTree(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({}, {"wood_pos": Vector2})
+
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
         map_pos = get_tilemap().world_to_map(pos)
@@ -141,6 +161,10 @@ class GetClosestTree(SimpleActionNode):
 
 
 class GetClosestBuilding(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"building_type": str}, {"building_pos": Vector2})
+
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
         building_type = self.get_input("building_type")
@@ -149,7 +173,7 @@ class GetClosestBuilding(SimpleActionNode):
             map_pos, building_type
         )
         if closest_building:
-            self.set_output(f"{building_type}_pos", closest_building)
+            self.set_output("building_pos", closest_building)
             return NodeStatus.SUCCESS
         else:
             return NodeStatus.FAILURE
@@ -157,6 +181,9 @@ class GetClosestBuilding(SimpleActionNode):
 
 class TakeWood(StatefulActionNode):
     # should become statefulacitonnode with unload speed
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({}, {"wood_pos": Vector2})
 
     def tick(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")

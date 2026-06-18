@@ -47,9 +47,3 @@ def get_tilemap(tmx_path: str | None = None) -> GameTilemap:
     elif _instance is None:
         _instance = GameTilemap(tmx_path)
     return _instance
-
-
-@dataclass
-class portslist():
-    inputports:dict[str,type]={}
-    outputports={}

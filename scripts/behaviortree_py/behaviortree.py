@@ -3,15 +3,10 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Type
 from pygame.sprite import Group
-from dataclasses import dataclass
+import ast
+from dataclasses import dataclass, field
 
 from bs4 import BeautifulSoup as soup
-
-
-@dataclass
-class PortsList:
-    inputports: dict[str, type] = {}
-    outputports: dict[str, type] = {}
 
 
 class NodeStatus(Enum):
@@ -180,62 +175,6 @@ class ReactiveSequenceNode(SequenceNode):
     pass
 
 
-class LeafNode(Node):
-    """
-    Template node for leaf nodes.
-
-     Args:
-        input_ports: Dict containing name:InputPort pairs used to address input ports by name.
-        output_ports: Dict containing name:Output ports used to address output ports by name.
-    """
-
-    def __init__(self, input_ports={}, output_ports={}):
-        super().__init__()
-        self.input_ports = input_ports
-        self.output_ports = output_ports
-
-    @abstractmethod
-    def tick(self) -> NodeStatus:
-        pass
-
-    def get_input(self, name):
-        """get value for named input port. Uses internally local name."""
-        return self.input_ports[name].get()
-
-    def set_output(self, name, value):
-        """set named output port to value. Uses internally local name."""
-        self.output_ports[name].set(value)
-
-
-class SimpleActionNode(LeafNode):
-    """Simple, stateless action node. Recommended for actions that do not require internal bookkeeping."""
-
-
-class StatefulActionNode(LeafNode):
-    """Stateful action node that monitors the running status of a process it is responsible for,"""
-
-    def on_start(self) -> NodeStatus:
-        self.node_status = NodeStatus.RUNNING
-        return self.node_status
-
-    def on_running(self) -> NodeStatus:
-        self.node_status = NodeStatus.SUCCESS
-        return self.node_status
-
-    def on_halted(self):
-        self.node_status = NodeStatus.IDLE
-
-    def tick(self) -> NodeStatus:
-        match self.node_status:
-            case NodeStatus.IDLE:
-                return self.on_start()
-            case NodeStatus.RUNNING:
-                self.node_status = self.on_running()
-                return self.node_status
-            case _:
-                return self.node_status
-
-
 class InputPort:
     def get(self) -> any:
         pass
@@ -297,6 +236,81 @@ class OutputPort:
         self.blackboard[self.key] = value
 
 
+@dataclass
+class PortsList:
+    inputports: dict[str, type] = field(default_factory=dict)
+    outputports: dict[str, type] = field(default_factory=dict)
+
+
+class LeafNode(Node):
+    """
+    Template node for leaf nodes.
+    If any ports are used in the node, it should be set inside the __init__ method.
+    Make sure to also call super()__init__() if doing so.
+
+     Args:
+        input_ports: Dict containing name:InputPort pairs used to address input ports by name.
+        output_ports: Dict containing name:Output ports used to address output ports by name.
+    """
+
+    # def __init__(
+    #     self, input_ports: dict[str, InputPort], output_ports: dict[str, OutputPort]
+    # ):
+    #     super().__init__()
+    #     self.input_ports = input_ports
+    #     self.output_ports = output_ports
+
+    def get_ports_list(self):
+        return getattr(self, "ports_list", PortsList())
+
+    def set_ports(
+        self, input_ports: dict[str, InputPort], output_ports: dict[str, OutputPort]
+    ):
+        self.input_ports: dict[str, InputPort] = input_ports
+        self.output_ports: dict[str, OutputPort] = output_ports
+
+    @abstractmethod
+    def tick(self) -> NodeStatus:
+        pass
+
+    def get_input(self, name):
+        """get value for named input port. Uses internally local name."""
+        return self.input_ports[name].get()
+
+    def set_output(self, name, value):
+        """set named output port to value. Uses internally local name."""
+        self.output_ports[name].set(value)
+
+
+class SimpleActionNode(LeafNode):
+    """Simple, stateless action node. Recommended for actions that do not require internal bookkeeping."""
+
+
+class StatefulActionNode(LeafNode):
+    """Stateful action node that monitors the running status of a process it is responsible for,"""
+
+    def on_start(self) -> NodeStatus:
+        self.node_status = NodeStatus.RUNNING
+        return self.node_status
+
+    def on_running(self) -> NodeStatus:
+        self.node_status = NodeStatus.SUCCESS
+        return self.node_status
+
+    def on_halted(self):
+        self.node_status = NodeStatus.IDLE
+
+    def tick(self) -> NodeStatus:
+        match self.node_status:
+            case NodeStatus.IDLE:
+                return self.on_start()
+            case NodeStatus.RUNNING:
+                self.node_status = self.on_running()
+                return self.node_status
+            case _:
+                return self.node_status
+
+
 class BehaviorTreeFactory:
     def __init__(self):
         self.nodes: dict = {}
@@ -340,8 +354,10 @@ class BehaviorTreeFactory:
             return {local: StaticInputPort(value, self.conversion_context)}
         elif elem.name == "InputPort":
             return {local: BBInputPort(self.blackboard, bb_key)}
-        else:
+        elif elem.name == "OutputPort":
             return {local: OutputPort(self.blackboard, bb_key)}
+        else:
+            raise Exception(f"Unknown port data provided. I received: {elem}")
 
     def parse_elems(self, elems) -> Node:
         if elems.name == "BehaviorTree":
@@ -351,16 +367,26 @@ class BehaviorTreeFactory:
         if isinstance(elem_class, tuple):
             elem_class, *args = elem_class
         if issubclass(elem_class, LeafNode):
-            input_ports = iter(elems.find_all("InputPort", recursive=False))
-            output_ports = iter(elems.find_all("OutputPort", recursive=False))
+            new_node: LeafNode = elem_class(*args)
+            ports_list = new_node.get_ports_list()
+
             input_dict = {
-                k: v for port in input_ports for k, v in self.make_port(port).items()
+                k: v
+                for key in ports_list.inputports.keys()
+                for k, v in self.make_port(
+                    elems.find("InputPort", local=key, recursive=False)
+                )
+            }
+            output_dict = {
+                k: v
+                for key in ports_list.outputports.keys()
+                for k, v in self.make_port(
+                    elems.find("InputPort", local=key, recursive=False)
+                )
             }
 
-            output_dict = {
-                k: v for port in output_ports for k, v in self.make_port(port).items()
-            }
-            return elem_class(input_dict, output_dict, *args)
+            new_node.set_ports(input_dict, output_dict)
+            return new_node
         elif issubclass(elem_class, ControlNode):
             children = [
                 self.parse_elems(child) for child in elems.find_all(recursive=False)
