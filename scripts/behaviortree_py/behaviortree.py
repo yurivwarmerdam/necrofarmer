@@ -355,6 +355,7 @@ class BehaviorTreeFactory:
         elif elem.name == "InputPort":
             return {local: BBInputPort(self.blackboard, bb_key)}
         elif elem.name == "OutputPort":
+            print("ports!")
             return {local: OutputPort(self.blackboard, bb_key)}
         else:
             raise Exception(f"Unknown port data provided. I received: {elem}")
@@ -370,20 +371,20 @@ class BehaviorTreeFactory:
             new_node: LeafNode = elem_class(*args)
             ports_list = new_node.get_ports_list()
 
-            input_dict = {
-                k: v
-                for key in ports_list.inputports.keys()
-                for k, v in self.make_port(
-                    elems.find("InputPort", local=key, recursive=False)
+            print("listing: ", ports_list.inputports.keys(), elems)
+            input_dict = {}
+            for key in ports_list.inputports.keys():
+                print("how?")
+
+                input_dict.update(
+                    self.make_port(elems.find("InputPort", local=key, recursive=False))
                 )
-            }
-            output_dict = {
-                k: v
-                for key in ports_list.outputports.keys()
-                for k, v in self.make_port(
-                    elems.find("InputPort", local=key, recursive=False)
+            output_dict = {}
+            print("---")
+            for key in ports_list.outputports.keys():
+                output_dict.update(
+                    self.make_port(elems.find("OutputPort", local=key, recursive=False))
                 )
-            }
 
             new_node.set_ports(input_dict, output_dict)
             return new_node

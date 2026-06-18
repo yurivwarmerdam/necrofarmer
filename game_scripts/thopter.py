@@ -60,6 +60,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             "MoveTowardsPos": MoveTowardsPos,
             "GetClosestTree": GetClosestTree,
             "TakeWood": TakeWood,
+            "MapToWorld": MapToWorld,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -183,7 +184,7 @@ class TakeWood(StatefulActionNode):
     # should become statefulacitonnode with unload speed
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({}, {"wood_pos": Vector2})
+        self.ports_list = PortsList({"wood_pos": Vector2}, {})
 
     def tick(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")
