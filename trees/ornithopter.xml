@@ -6,9 +6,14 @@
                 <OutputPort local="wood_pos" bb="wood_pos" />
             </GetClosestTree>
             <MapToWorld>
-                <InputPort local="map_pos" />
-                <OutputPort local="world_pos" />
+                <InputPort local="map_pos" bb="wood_pos" />
+                <OutputPort local="world_pos" bb="wood_world_pos" />
             </MapToWorld>
+            <MoveTowardsPos>
+                <InputPort local="pos" bb="wood_world_pos" />
+                <InputPort local="action_status" bb="action_status" />
+                <OutputPort local="action_status" bb="action_status" />
+            </MoveTowardsPos>
             <TakeWood>
                 <InputPort local="wood_pos" bb="wood_pos" />
             </TakeWood>

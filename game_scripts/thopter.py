@@ -103,7 +103,7 @@ class MoveTowardsPos(StatefulActionNode):
     def __init__(self):
         super().__init__()
         self.ports_list = PortsList(
-            {"pos": Vector2, "get_input": NodeStatus}, {"action_status": NodeStatus}
+            {"pos": Vector2, "action_status": NodeStatus}, {"action_status": NodeStatus}
         )
 
     def on_start(self) -> NodeStatus:
@@ -124,7 +124,7 @@ class MoveTowardsPos(StatefulActionNode):
 class PickMoveGoal(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({}, {"goal": Vector2})
+        self.ports_list = PortsList({"self": Ornithopter}, {"goal": Vector2})
 
     def tick(self) -> NodeStatus:
         goal = self.get_input("self").pos + Vector2(randint(-50, 50), randint(-50, 50))
@@ -147,7 +147,7 @@ class MapToWorld(SimpleActionNode):
 class GetClosestTree(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({}, {"wood_pos": Vector2})
+        self.ports_list = PortsList({"self": Ornithopter}, {"wood_pos": Vector2})
 
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
@@ -164,7 +164,9 @@ class GetClosestTree(SimpleActionNode):
 class GetClosestBuilding(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"building_type": str}, {"building_pos": Vector2})
+        self.ports_list = PortsList(
+            {"self": Ornithopter, "building_type": str}, {"building_pos": Vector2}
+        )
 
     def tick(self) -> NodeStatus:
         pos = self.get_input("self").pos
