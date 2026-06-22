@@ -124,7 +124,6 @@ class SequenceNode(ControlNode):
 
 class FallbackNode(ControlNode):
     def tick(self) -> NodeStatus:
-        print("trickign fallback!@")
         if self.node_status == NodeStatus.IDLE:
             self.node_status = NodeStatus.RUNNING
             self.current_node = 0
@@ -316,6 +315,7 @@ class BehaviorTreeFactory:
     def __init__(self):
         self.nodes: dict = {}
         self.blackboard: dict = {}
+        self.conversion_context={}
 
     def register_blackboard(self, blackboard: dict):
         self.blackboard = blackboard

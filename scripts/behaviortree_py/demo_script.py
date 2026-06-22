@@ -3,40 +3,18 @@ from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     SimpleActionNode,
 )
+from scripts.behaviortree_py import base_nodes
 
 
-class Succeeder(SimpleActionNode):
-    def tick(self) -> NodeStatus:
-        print("success")
-        return NodeStatus.SUCCESS
-
-
-class Failer(SimpleActionNode):
-    def tick(self) -> NodeStatus:
-        print("Failure")
-        return NodeStatus.FAILURE
-
-
-class Outputter(SimpleActionNode):
-    def tick(self) -> NodeStatus:
-        self.set_output("text", "hello world!")
-        return NodeStatus.SUCCESS
-
-
-class Talker(SimpleActionNode):
-    def tick(self) -> NodeStatus:
-        message = self.get_input("text")
-        print(f"I found the message: {message}")
-        return NodeStatus.SUCCESS
 
 
 def main():
     blackboard = {}
     nodes = {
-        "Succeeder": Succeeder,
-        "Failer": Failer,
-        "Outputter": Outputter,
-        "Talker": Talker,
+        "Succeeder": base_nodes.Succeeder,
+        "Failer": base_nodes.Failer,
+        "Outputter": base_nodes.Outputter,
+        "Talker": base_nodes.Talker,
     }
 
 
@@ -67,15 +45,15 @@ def main():
     factory = BehaviorTreeFactory()
     factory.register_blackboard(blackboard)
     factory.register_nodes(nodes)
-    my_sequence = factory.load_tree_from_xml("simple_bt/trees/dummy_tree.xml")
+    my_sequence = factory.load_tree_from_xml("simple_bt/trees/fallback_tree.xml")
 
     print("initial tick")
     tree_status = my_sequence.tick()
-    while True:
-        # while tree_status == NodeStatus.RUNNING:
-        print("ticking")
-        tree_status = my_sequence.tick()
+    # while True:
+    while tree_status == NodeStatus.RUNNING:
+        # print("ticking")
         print(f"Tree status: {tree_status}")
+        tree_status = my_sequence.tick()
 
 
 if __name__ == "__main__":

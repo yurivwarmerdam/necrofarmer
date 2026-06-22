@@ -14,10 +14,13 @@
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </MoveTowardsPos>
+            <Succeeder/>
             <TakeWood>
+                <InputPort local="self" bb="self" />
                 <InputPort local="wood_pos" bb="wood_pos" />
             </TakeWood>
             <FallbackNode name="identify dropoff">
+                <Failer/>
                 <HaveBlackboardEntry>
                     <InputPort local="building" bb="wood_unload_pos" />
                 </HaveBlackboardEntry>

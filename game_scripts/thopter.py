@@ -17,7 +17,9 @@ from scripts.behaviortree_py.behaviortree import (
     PortsList,
 )
 from scripts.entities import ActionStatus
-from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
+from scripts.behaviortree_py.base_nodes import Failer, Succeeder, Talker
+from scripts.behaviortree_py import base_nodes
+from pygame_gui.elements import UILabel
 
 # TODO:
 # - add btree
@@ -46,6 +48,8 @@ class Ornithopter(AnimatedSprite, Selectable):
             groups.behavior_trees,
         )
         self.move_speed = 0.09
+        self.cargo_capacity=5
+        self.cargo=0
 
         # --- BehaviorTree stuff ---
         self.blackboard = {
@@ -203,14 +207,21 @@ class TakeWood(StatefulActionNode):
     # should become statefulacitonnode with unload speed
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"wood_pos": Vector2}, {})
+        self.ports_list = PortsList({"self":Ornithopter,"wood_pos": Vector2}, {})
+        self.thopter=self.get_input("self")
 
     def tick(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")
-        result = get_tilemap().take_wood(wood_pos, 1)
+        headroom =  self.thopter.cargo_capacity - self.thopter.cargo
+        if headroom <= 0:
+            # cargo is full
+            return NodeStatus.SUCCESS
+        result = get_tilemap().take_wood(wood_pos, headroom)
         if result is None:
+            # Tree apparently does not exist (anymore)
             return NodeStatus.FAILURE
         else:
+            self.thopter.cargo += result
             return NodeStatus.RUNNING
 
 
@@ -231,3 +242,10 @@ class OrnithopterPanel(ContextPanel):
             container=context_container,
             command=lambda: print("now do a thing!"),
         )
+        self.stock_label=UILabel(pg.Rect(20, 3, 100, 18), "0", container=context_container
+        )
+
+    def update(self, _delta):
+        cargo=self.commander.selected.sprites()[0].cargo
+        cargo_capacity=self.commander.selected.sprites()[0].cargo_capacity
+        self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")
