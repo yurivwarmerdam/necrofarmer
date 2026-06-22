@@ -101,6 +101,20 @@ class Ornithopter(AnimatedSprite, Selectable):
         if self.pos == goal:
             self.blackboard["action_status"] = ActionStatus.SUCCESS
 
+    def TakeWood(self,wood_pos:Vector2):
+        # should become statefulacitonnode with unload speed
+
+        headroom =  self.cargo_capacity - self.cargo
+        if headroom <= 0:
+            # cargo is full
+           self.blackboard["action_status"] = ActionStatus.SUCCESS
+        result = get_tilemap().take_wood(wood_pos, headroom)
+        if result is None:
+            # Tree apparently does not exist (anymore)
+           self.blackboard["action_status"] = ActionStatus.FAILURE
+        else:
+            self.cargo += result
+
 
 # --- Behavior tree section ---
 
