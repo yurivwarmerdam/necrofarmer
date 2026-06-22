@@ -32,7 +32,13 @@ class Talker(SimpleActionNode):
 
 def main():
     blackboard = {}
-    nodes = [Succeeder, Failer, Outputter, Talker]
+    nodes = {
+        "Succeeder": Succeeder,
+        "Failer": Failer,
+        "Outputter": Outputter,
+        "Talker": Talker,
+    }
+
 
     # sequence
     # my_sequence = SequenceNode([succeeder(), failer()])

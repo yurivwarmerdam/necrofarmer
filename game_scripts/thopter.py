@@ -61,6 +61,8 @@ class Ornithopter(AnimatedSprite, Selectable):
             "GetClosestTree": GetClosestTree,
             "TakeWood": TakeWood,
             "MapToWorld": MapToWorld,
+            "GetClosestBuilding": GetClosestBuilding,
+            "HaveBlackboardEntry": HaveBlackboardEntry,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -109,7 +111,6 @@ class MoveTowardsPos(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         # this is the pattern when delegating actions to actual unit behavior
         pos = self.get_input("pos")
-
         self.set_output("action_status", (ActionStatus.RUNNING, "move_towards", pos))
         return super().on_start()
 
@@ -121,6 +122,7 @@ class MoveTowardsPos(StatefulActionNode):
             return NodeStatus.RUNNING
 
 
+# Pretty sure this one's deprecated
 class PickMoveGoal(SimpleActionNode):
     def __init__(self):
         super().__init__()
@@ -132,6 +134,7 @@ class PickMoveGoal(SimpleActionNode):
         return NodeStatus.SUCCESS
 
 
+# game-specific generic
 class MapToWorld(SimpleActionNode):
     def __init__(self):
         super().__init__()
@@ -155,12 +158,26 @@ class GetClosestTree(SimpleActionNode):
         closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
         if closest_tree:
             self.set_output("wood_pos", closest_tree)
-            # print(pos, map_pos, closest_tree)
             return NodeStatus.SUCCESS
         else:
             return NodeStatus.FAILURE
 
 
+# Generic
+class HaveBlackboardEntry(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"building": any}, {})
+
+    def tick(self) -> NodeStatus:
+        print(f"thyicking! {self.get_input('building')}")
+        if self.get_input("building"):
+            return NodeStatus.SUCCESS
+        else:
+            return NodeStatus.FAILURE
+
+
+# game-specific generic
 class GetClosestBuilding(SimpleActionNode):
     def __init__(self):
         super().__init__()
@@ -172,11 +189,11 @@ class GetClosestBuilding(SimpleActionNode):
         pos = self.get_input("self").pos
         building_type = self.get_input("building_type")
         map_pos = get_tilemap().world_to_map(pos)
-        closest_building = get_tilemap().get_closest_local_named_tile_idx(
+        closest_building_idx = get_tilemap().get_closest_local_named_tile_idx(
             map_pos, building_type
         )
-        if closest_building:
-            self.set_output("building_pos", closest_building)
+        if closest_building_idx:
+            self.set_output("building_pos", closest_building_idx)
             return NodeStatus.SUCCESS
         else:
             return NodeStatus.FAILURE
@@ -212,11 +229,5 @@ class OrnithopterPanel(ContextPanel):
             object_id="#haul_logs_button",
             scale_func=integer_scale,
             container=context_container,
-            command=self.get_closest_tree,
+            command=lambda: print("now do a thing!"),
         )
-
-    def get_closest_tree(self):
-        pos = self.commander.selected.sprites()[0].pos
-        map_pos = get_tilemap().world_to_map(pos)
-        closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
-        # print(pos, map_pos, closest_tree)
