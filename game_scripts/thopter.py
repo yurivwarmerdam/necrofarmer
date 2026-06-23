@@ -31,6 +31,11 @@ from pygame_gui.elements import UILabel
 
 
 class Ornithopter(AnimatedSprite, Selectable):
+    MOVE_SPEED = 0.09
+    CARGO_CAPACITY = 5
+    LOAD_SPEED = 1
+    LOAD_VOLUME = 1
+
     def __init__(self, pos):
         img_server = image_server.get_image_server()
         groups = group_server.get_group_server()
@@ -47,9 +52,8 @@ class Ornithopter(AnimatedSprite, Selectable):
             groups.render_groups["active"],
             groups.behavior_trees,
         )
-        self.move_speed = 0.09
-        self.cargo_capacity=5
-        self.cargo=0
+        self.cargo = 0
+        self.load_progress = 0.0
 
         # --- BehaviorTree stuff ---
         self.blackboard = {
@@ -83,6 +87,7 @@ class Ornithopter(AnimatedSprite, Selectable):
         if self.blackboard["action_status"] in [
             ActionStatus.IDLE,
             ActionStatus.SUCCESS,
+            ActionStatus.FAILURE,
         ]:
             return
         status, func, params = self.blackboard["action_status"]
@@ -97,23 +102,24 @@ class Ornithopter(AnimatedSprite, Selectable):
         return OrnithopterPanel
 
     def move_towards(self, delta, goal: Vector2):
-        self.pos = Vector2(self.pos).move_towards(goal, delta * self.move_speed)
+        self.pos = Vector2(self.pos).move_towards(goal, delta * self.MOVE_SPEED)
         if self.pos == goal:
             self.blackboard["action_status"] = ActionStatus.SUCCESS
 
-    def TakeWood(self,wood_pos:Vector2):
-        # should become statefulacitonnode with unload speed
-
-        headroom =  self.cargo_capacity - self.cargo
-        if headroom <= 0:
-            # cargo is full
-           self.blackboard["action_status"] = ActionStatus.SUCCESS
-        result = get_tilemap().take_wood(wood_pos, headroom)
-        if result is None:
-            # Tree apparently does not exist (anymore)
-           self.blackboard["action_status"] = ActionStatus.FAILURE
-        else:
-            self.cargo += result
+    def take_wood(self, delta, wood_pos: tuple[int, int]):
+        self.load_progress += delta
+        if self.load_progress >= self.LOAD_SPEED:
+            self.load_progress = 0
+            headroom = min(self.CARGO_CAPACITY - self.cargo, self.LOAD_VOLUME)
+            if headroom <= 0:
+                # cargo is full
+                self.blackboard["action_status"] = ActionStatus.SUCCESS
+            result = get_tilemap().take_wood(wood_pos, headroom)
+            if result is None:
+                # Tree apparently does not exist (anymore)
+                self.blackboard["action_status"] = ActionStatus.FAILURE
+            else:
+                self.cargo += result
 
 
 # --- Behavior tree section ---
@@ -221,21 +227,23 @@ class TakeWood(StatefulActionNode):
     # should become statefulacitonnode with unload speed
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"self":Ornithopter,"wood_pos": Vector2}, {})
-        self.thopter=self.get_input("self")
+        self.ports_list = PortsList(
+            {"wood_pos": tuple[int, int], "action_status": NodeStatus},
+            {"action_status": NodeStatus},
+        )
 
-    def tick(self) -> NodeStatus:
+    def on_start(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")
-        headroom =  self.thopter.cargo_capacity - self.thopter.cargo
-        if headroom <= 0:
-            # cargo is full
-            return NodeStatus.SUCCESS
-        result = get_tilemap().take_wood(wood_pos, headroom)
-        if result is None:
-            # Tree apparently does not exist (anymore)
-            return NodeStatus.FAILURE
+        self.set_output("action_status", (ActionStatus.RUNNING, "take_wood", wood_pos))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        # TODO: This seems.. odd. Why wouldn't it always match the tuple it's assigned to on start?
+        # I may be confused on when on_running is actually called.
+        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
         else:
-            self.thopter.cargo += result
             return NodeStatus.RUNNING
 
 
@@ -256,10 +264,11 @@ class OrnithopterPanel(ContextPanel):
             container=context_container,
             command=lambda: print("now do a thing!"),
         )
-        self.stock_label=UILabel(pg.Rect(20, 3, 100, 18), "0", container=context_container
+        self.stock_label = UILabel(
+            pg.Rect(20, 3, 100, 18), "0", container=context_container
         )
 
     def update(self, _delta):
-        cargo=self.commander.selected.sprites()[0].cargo
-        cargo_capacity=self.commander.selected.sprites()[0].cargo_capacity
+        cargo = self.commander.selected.sprites()[0].cargo
+        cargo_capacity = self.commander.selected.sprites()[0].cargo_capacity
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")
