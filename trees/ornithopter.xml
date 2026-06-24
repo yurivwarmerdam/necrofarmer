@@ -14,17 +14,18 @@
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </MoveTowardsPos>
-            <Succeeder />
             <TakeWood>
                 <InputPort local="wood_pos" bb="wood_pos" />
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </TakeWood>
+            <Succeeder />
             <FallbackNode name="identify dropoff">
                 <Failer />
                 <HaveBlackboardEntry>
-                    <InputPort local="building" bb="wood_unload_pos" />
+                    <InputPort local="entry" value="wood_unload_pos" />
                 </HaveBlackboardEntry>
+                <Failer />
                 <GetClosestBuilding>
                     <InputPort local="self" bb="self" />
                     <InputPort local="building_type" value="sawmill" />
@@ -40,6 +41,7 @@
                     <InputPort local="building_type" value="thopter_factory_1" />
                     <OutputPort local="building_pos" bb="wood_unload_pos" />
                 </GetClosestBuilding>
+                <Failer />
             </FallbackNode>
             <MapToWorld>
                 <InputPort local="map_pos" bb="wood_unload_pos" />

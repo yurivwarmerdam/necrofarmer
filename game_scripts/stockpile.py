@@ -8,7 +8,6 @@ class Stockpile:
 
     def add_wood(self, amount: int):
         self.wood += amount
-        print(f"woodamount:{self.wood} {amount}")
 
     def add_stone(self, amount: int):
         self.stone += amount

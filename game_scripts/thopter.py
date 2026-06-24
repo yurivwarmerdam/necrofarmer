@@ -107,19 +107,23 @@ class Ornithopter(AnimatedSprite, Selectable):
             self.blackboard["action_status"] = ActionStatus.SUCCESS
 
     def take_wood(self, delta, wood_pos: tuple[int, int]):
-        self.load_progress += delta
+        self.load_progress += delta / 1000
         if self.load_progress >= self.LOAD_SPEED:
             self.load_progress = 0
             headroom = min(self.CARGO_CAPACITY - self.cargo, self.LOAD_VOLUME)
+            print(headroom, headroom <= 0)
             if headroom <= 0:
                 # cargo is full
+                print("full")
                 self.blackboard["action_status"] = ActionStatus.SUCCESS
-            result = get_tilemap().take_wood(wood_pos, headroom)
-            if result is None:
-                # Tree apparently does not exist (anymore)
-                self.blackboard["action_status"] = ActionStatus.FAILURE
             else:
-                self.cargo += result
+                result = get_tilemap().take_wood(wood_pos, headroom)
+                if result is None:
+                    print(f"overfilling? {headroom}")
+                    # Tree apparently does not exist (anymore)
+                    self.blackboard["action_status"] = ActionStatus.FAILURE
+                else:
+                    self.cargo += result
 
 
 # --- Behavior tree section ---
@@ -191,13 +195,17 @@ class GetClosestTree(SimpleActionNode):
 class HaveBlackboardEntry(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"building": any}, {})
+        self.ports_list = PortsList({"entry": any}, {})
 
     def tick(self) -> NodeStatus:
-        print(f"thyicking! {self.get_input('building')}")
-        if self.get_input("building"):
+        # print(f"thyicking! {self.get_input('entry')}")
+        try:
+            entry=self.get_input("entry")
+            
+            print("not excepting:", self.get_input("entry"))
             return NodeStatus.SUCCESS
-        else:
+        except KeyError:
+            print("excepting")
             return NodeStatus.FAILURE
 
 
@@ -217,9 +225,11 @@ class GetClosestBuilding(SimpleActionNode):
             map_pos, building_type
         )
         if closest_building_idx:
+            print("yay!: ", closest_building_idx)
             self.set_output("building_pos", closest_building_idx)
             return NodeStatus.SUCCESS
         else:
+            print("can't find type: ", building_type)
             return NodeStatus.FAILURE
 
 
@@ -270,5 +280,5 @@ class OrnithopterPanel(ContextPanel):
 
     def update(self, _delta):
         cargo = self.commander.selected.sprites()[0].cargo
-        cargo_capacity = self.commander.selected.sprites()[0].cargo_capacity
+        cargo_capacity = self.commander.selected.sprites()[0].CARGO_CAPACITY
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")

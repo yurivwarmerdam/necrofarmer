@@ -22,7 +22,7 @@ class Sawmill(BigTile, Selectable):
             *groups,
         )
         self.saw_progress: float = 0
-        self.stock = 1000
+        self.stock = 0
 
     def update(self, _delta) -> None:
         if self.stock > 0:
