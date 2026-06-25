@@ -47,7 +47,9 @@
                 <OutputPort local="action_status" bb="action_status" />
             </MoveTowardsPos>
             <PutWood>
-                
+                <InputPort local="put_pos" bb="wood_unload_pos" />
+                <InputPort local="action_status" bb="action_status" />
+                <OutputPort local="action_status" bb="action_status" />
             </PutWood>
         </SequenceNode>
     </BehaviorTree>

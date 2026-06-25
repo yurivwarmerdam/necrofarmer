@@ -70,6 +70,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             "TakeWood": TakeWood,
             "MapToWorld": MapToWorld,
             "GetClosestBuilding": GetClosestBuilding,
+            "PutWood": PutWood,
             # "HaveBlackboardEntry": HaveBlackboardEntry,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
@@ -140,7 +141,7 @@ class Ornithopter(AnimatedSprite, Selectable):
                     # sawmill//stock is apparently full (not implemented yet at write-time)
                     self.blackboard["action_status"] = ActionStatus.FAILURE
                 else:
-                    self.cargo += result
+                    self.cargo -= result
 
 
 # --- Behavior tree section ---

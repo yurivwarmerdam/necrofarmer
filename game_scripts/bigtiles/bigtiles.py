@@ -35,6 +35,7 @@ class Sawmill(BigTile, Selectable):
 
     def put_wood(self, amount: int):
         self.stock += amount
+        return amount
 
     def get_sawmill_progress(self):
         return self.saw_progress
@@ -88,6 +89,7 @@ class ThopterFactory(BigTile, Selectable):
 
     def put_wood(self, amount: int):
         get_stockpile().add_wood(amount)
+        return amount
 
     @property
     def context_panel(self) -> type[ContextPanel]:
