@@ -118,6 +118,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             else:
                 result = get_tilemap().take_wood(wood_pos, headroom)
                 if result is None:
+                    print("failing")
                     # Tree apparently does not exist (anymore)
                     self.blackboard["action_status"] = ActionStatus.FAILURE
                 else:
@@ -131,7 +132,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             print(headroom, headroom <= 0)
             if headroom <= 0:
                 # cargo is empty
-                print("empty")
+                # print("empty")
                 self.blackboard["action_status"] = ActionStatus.SUCCESS
             else:
                 entity = get_tilemap().get_tile("active", *put_pos)
@@ -269,6 +270,9 @@ class TakeWood(StatefulActionNode):
         # I may be confused on when on_running is actually called.
         if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
             self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        elif self.get_input("action_status") is ActionStatus.FAILURE:
+            self.node_status = NodeStatus.FAILURE
             return self.node_status
         else:
             return NodeStatus.RUNNING
