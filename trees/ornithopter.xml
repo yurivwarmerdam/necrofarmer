@@ -19,13 +19,7 @@
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </TakeWood>
-            <Succeeder />
             <FallbackNode name="identify dropoff">
-                <Failer />
-                <HaveBlackboardEntry>
-                    <InputPort local="entry" value="wood_unload_pos" />
-                </HaveBlackboardEntry>
-                <Failer />
                 <GetClosestBuilding>
                     <InputPort local="self" bb="self" />
                     <InputPort local="building_type" value="sawmill" />
@@ -52,6 +46,9 @@
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </MoveTowardsPos>
+            <PutWood>
+                
+            </PutWood>
         </SequenceNode>
     </BehaviorTree>
 </root>

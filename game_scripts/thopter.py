@@ -70,7 +70,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             "TakeWood": TakeWood,
             "MapToWorld": MapToWorld,
             "GetClosestBuilding": GetClosestBuilding,
-            "HaveBlackboardEntry": HaveBlackboardEntry,
+            # "HaveBlackboardEntry": HaveBlackboardEntry,
         }  # some sample nodes you'll propbably end up using anyway.
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
@@ -111,16 +111,33 @@ class Ornithopter(AnimatedSprite, Selectable):
         if self.load_progress >= self.LOAD_SPEED:
             self.load_progress = 0
             headroom = min(self.CARGO_CAPACITY - self.cargo, self.LOAD_VOLUME)
-            print(headroom, headroom <= 0)
             if headroom <= 0:
                 # cargo is full
-                print("full")
                 self.blackboard["action_status"] = ActionStatus.SUCCESS
             else:
                 result = get_tilemap().take_wood(wood_pos, headroom)
                 if result is None:
-                    print(f"overfilling? {headroom}")
                     # Tree apparently does not exist (anymore)
+                    self.blackboard["action_status"] = ActionStatus.FAILURE
+                else:
+                    self.cargo += result
+
+    def put_wood(self, delta, put_pos: tuple[int, int]):
+        self.load_progress += delta / 1000
+        if self.load_progress >= self.LOAD_SPEED:
+            self.load_progress = 0
+            headroom = min(self.cargo, self.LOAD_VOLUME)
+            print(headroom, headroom <= 0)
+            if headroom <= 0:
+                # cargo is empty
+                print("empty")
+                self.blackboard["action_status"] = ActionStatus.SUCCESS
+            else:
+                entity = get_tilemap().get_tile("active", *put_pos)
+                result = entity.put_wood(headroom)
+                if result is None or result < headroom:
+                    print(f"overfilling? {headroom}")
+                    # sawmill//stock is apparently full (not implemented yet at write-time)
                     self.blackboard["action_status"] = ActionStatus.FAILURE
                 else:
                     self.cargo += result
@@ -192,21 +209,21 @@ class GetClosestTree(SimpleActionNode):
 
 
 # Generic
-class HaveBlackboardEntry(SimpleActionNode):
-    def __init__(self):
-        super().__init__()
-        self.ports_list = PortsList({"entry": any}, {})
+# class HaveBlackboardEntry(SimpleActionNode):
+#     def __init__(self):
+#         super().__init__()
+#         self.ports_list = PortsList({"entry": any}, {})
 
-    def tick(self) -> NodeStatus:
-        # print(f"thyicking! {self.get_input('entry')}")
-        try:
-            entry=self.get_input("entry")
-            
-            print("not excepting:", self.get_input("entry"))
-            return NodeStatus.SUCCESS
-        except KeyError:
-            print("excepting")
-            return NodeStatus.FAILURE
+#     def tick(self) -> NodeStatus:
+#         # print(f"thyicking! {self.get_input('entry')}")
+#         try:
+#             entry=self.get_input("entry")
+
+#             print("not excepting:", self.get_input("entry"))
+#             return NodeStatus.SUCCESS
+#         except KeyError:
+#             print("excepting")
+#             return NodeStatus.FAILURE
 
 
 # game-specific generic
@@ -225,7 +242,6 @@ class GetClosestBuilding(SimpleActionNode):
             map_pos, building_type
         )
         if closest_building_idx:
-            print("yay!: ", closest_building_idx)
             self.set_output("building_pos", closest_building_idx)
             return NodeStatus.SUCCESS
         else:
@@ -245,6 +261,29 @@ class TakeWood(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")
         self.set_output("action_status", (ActionStatus.RUNNING, "take_wood", wood_pos))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        # TODO: This seems.. odd. Why wouldn't it always match the tuple it's assigned to on start?
+        # I may be confused on when on_running is actually called.
+        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        else:
+            return NodeStatus.RUNNING
+
+
+class PutWood(StatefulActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList(
+            {"put_pos": tuple[int, int], "action_status": NodeStatus},
+            {"action_status": NodeStatus},
+        )
+
+    def on_start(self) -> NodeStatus:
+        put_pos = self.get_input("put_pos")
+        self.set_output("action_status", (ActionStatus.RUNNING, "put_wood", put_pos))
         return super().on_start()
 
     def on_running(self) -> NodeStatus:

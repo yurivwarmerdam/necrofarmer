@@ -33,7 +33,7 @@ class Sawmill(BigTile, Selectable):
                 self.stock -= 1
         pass
 
-    def add_stock(self, amount: int):
+    def put_wood(self, amount: int):
         self.stock += amount
 
     def get_sawmill_progress(self):
@@ -85,6 +85,9 @@ class ThopterFactory(BigTile, Selectable):
             get_group_server().update,
             *groups,
         )
+
+    def put_wood(self, amount: int):
+        get_stockpile().add_wood(amount)
 
     @property
     def context_panel(self) -> type[ContextPanel]:
