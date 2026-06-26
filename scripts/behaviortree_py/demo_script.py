@@ -6,8 +6,6 @@ from scripts.behaviortree_py.behaviortree import (
 from scripts.behaviortree_py import base_nodes
 
 
-
-
 def main():
     blackboard = {}
     nodes = {
@@ -15,8 +13,8 @@ def main():
         "Failer": base_nodes.Failer,
         "Outputter": base_nodes.Outputter,
         "Talker": base_nodes.Talker,
+        "HaveBlackboardEntry": base_nodes.HaveBlackboardEntry,
     }
-
 
     # sequence
     # my_sequence = SequenceNode([succeeder(), failer()])

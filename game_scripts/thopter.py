@@ -210,24 +210,6 @@ class GetClosestTree(SimpleActionNode):
             return NodeStatus.FAILURE
 
 
-# Generic
-# class HaveBlackboardEntry(SimpleActionNode):
-#     def __init__(self):
-#         super().__init__()
-#         self.ports_list = PortsList({"entry": any}, {})
-
-#     def tick(self) -> NodeStatus:
-#         # print(f"thyicking! {self.get_input('entry')}")
-#         try:
-#             entry=self.get_input("entry")
-
-#             print("not excepting:", self.get_input("entry"))
-#             return NodeStatus.SUCCESS
-#         except KeyError:
-#             print("excepting")
-#             return NodeStatus.FAILURE
-
-
 # game-specific generic
 class GetClosestBuilding(SimpleActionNode):
     def __init__(self):
