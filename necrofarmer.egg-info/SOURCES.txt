@@ -39,7 +39,8 @@ scripts/tilemap.py
 scripts/ui_shim.py
 scripts/utils.py
 scripts/behaviortree_py/__init__.py
+scripts/behaviortree_py/base_nodes.py
 scripts/behaviortree_py/behaviortree.py
-scripts/behaviortree_py/dummy_nodes.py
+scripts/behaviortree_py/demo_script.py
 scripts/behaviortree_py/util_pygame.py
 theme/generate_json.py

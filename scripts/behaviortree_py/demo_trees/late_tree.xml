@@ -1,0 +1,7 @@
+<root main_tree="MainTree" BTPY_format="1">
+    <BehaviorTree ID="MainTree">
+        <SequenceNode>
+<Talker><InputPort local="text" bb="some_val"></Talker>
+        </SequenceNode>
+    </BehaviorTree>
+</root>

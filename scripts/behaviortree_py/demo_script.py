@@ -43,15 +43,25 @@ def main():
     factory = BehaviorTreeFactory()
     factory.register_blackboard(blackboard)
     factory.register_nodes(nodes)
-    my_sequence = factory.load_tree_from_xml("simple_bt/trees/fallback_tree.xml")
+    main_tree = factory.load_tree_from_xml("scripts/behaviortree_py/demo_trees/fallback_tree.xml")
+    late_talker_tree = factory.load_tree_from_xml("scripts/behaviortree_py/demo_trees/late_tree.xml")
 
     print("initial tick")
-    tree_status = my_sequence.tick()
+    tree_status = main_tree.tick()
     # while True:
     while tree_status == NodeStatus.RUNNING:
         # print("ticking")
         print(f"Tree status: {tree_status}")
-        tree_status = my_sequence.tick()
+        tree_status = main_tree.tick()
+
+    print("-------")
+    main_tree.tick()
+    main_tree.tick()
+    print(f"Once more: {tree_status}")
+    while tree_status == NodeStatus.RUNNING:
+        # print("ticking")
+        print(f"Tree status: {tree_status}")
+        tree_status = main_tree.tick()
 
 
 if __name__ == "__main__":
