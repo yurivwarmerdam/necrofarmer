@@ -148,3 +148,10 @@ class LeafNode(Node):
     def set_output(self, name, value):
         """set named output port to value. Uses internally local name."""
         self.output_ports[name].set(value)
+
+
+class Tree:
+    def __init__(self, root_node) -> None:
+        pass
+
+    pass
