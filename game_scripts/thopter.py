@@ -1,4 +1,5 @@
 import pygame as pg
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
 from scripts.custom_sprites import AnimatedSprite
 from game_scripts.ui.context_panel import ContextPanel
 from game_scripts.selectable import Selectable
@@ -10,15 +11,16 @@ from scripts.ui_shim import UIButton
 from scripts.custom_sprites import integer_scale
 from game_scripts.game_tilemap import get_tilemap
 from scripts.behaviortree_py.behaviortree import (
-    BehaviorTreeFactory,
-    SimpleActionNode,
-    StatefulActionNode,
     NodeStatus,
     PortsList,
 )
+from scripts.behaviortree_py.nodes import (
+    SimpleActionNode,
+    StatefulActionNode
+)
 from scripts.entities import ActionStatus
-from scripts.behaviortree_py.base_nodes import Failer, Succeeder, Talker
-from scripts.behaviortree_py import base_nodes
+from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
+from scripts.behaviortree_py import dummy_nodes
 from pygame_gui.elements import UILabel
 
 # TODO:

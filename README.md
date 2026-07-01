@@ -26,24 +26,30 @@ pip install -e .
     -------------------------------------------------
     --> add more/better documentation as you go!! <--
     -------------------------------------------------
-    Unit behavior (Btrees!)
-    - study skeleton, revisit documentation
+    BTree extensions:
+    - Add a Tree superclass that holds my nodes. Add convenience functions. Namely halting, resetting.
+        - reset blackboard
+
+    
+        Unit behavior (Btrees!)
+        - study skeleton, revisit documentation
     - tardigrade
         - construction beheavior
         - _building progress bar
         - click on _building while tardigrade is selected
         - on fill: kill and replace with building
     - thopter
-        - pickup/dropoff behavior
-        - clone skeleton bheavior?
-        - make degenerate behavior:
+        v pickup/dropoff behavior
+        v clone skeleton bheavior?
+        v make degenerate behavior:
             - move to pos
             - move to another random pos
             - goto 2
         - make tree that can be claimed (StatefulTile oid?)
-        - think about how action should be cancelled mid-execution
+        ~ think about how action should be cancelled mid-execution
             - empty inventory
             - something like stop_execution in tree, set some current_action whiteboard item, run tree from beginning, basically.
+    
         
         
 

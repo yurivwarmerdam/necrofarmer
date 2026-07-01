@@ -1,9 +1,9 @@
 from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
-    SimpleActionNode,
 )
 
 from scripts.behaviortree_py.behaviortree import PortsList
+from scripts.behaviortree_py.nodes import SimpleActionNode
 
 
 class Succeeder(SimpleActionNode):
