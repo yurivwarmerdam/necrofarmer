@@ -5,28 +5,12 @@ from pygame.sprite import Group
 from dataclasses import dataclass, field
 
 
-
-
 class NodeStatus(Enum):
     IDLE = 0
     RUNNING = 1
     SUCCESS = 2
     FAILURE = 3
     SKIPPED = 4
-
-
-# class BTGroup(Group):
-#     def tick(self, *args, **kwargs):
-#         """call the tick method of every member sprite
-
-#         Group.tick(*args, **kwargs): return None
-
-#         Calls the update method of every member sprite. All arguments that
-#         were passed to this method are passed to the Sprite update function.
-
-#         """
-#         for sprite in self.sprites():
-#             sprite.tick(*args, **kwargs)
 
 
 class InputPort:
@@ -144,13 +128,6 @@ class LeafNode(Node):
         output_ports: Dict containing name:Output ports used to address output ports by name.
     """
 
-    # def __init__(
-    #     self, input_ports: dict[str, InputPort], output_ports: dict[str, OutputPort]
-    # ):
-    #     super().__init__()
-    #     self.input_ports = input_ports
-    #     self.output_ports = output_ports
-
     def get_ports_list(self):
         return getattr(self, "ports_list", PortsList())
 
@@ -171,5 +148,3 @@ class LeafNode(Node):
     def set_output(self, name, value):
         """set named output port to value. Uses internally local name."""
         self.output_ports[name].set(value)
-
-

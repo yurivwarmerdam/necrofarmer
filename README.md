@@ -30,6 +30,29 @@ pip install -e .
     - Add a Tree superclass that holds my nodes. Add convenience functions. Namely halting, resetting.
         - reset blackboard
 
+
+```python
+#some pseudocode:
+
+def on_click(self):
+    self.default_tree.reset() #maybe don't reset for some trees? Some one-time trees might want to act more "in-line"
+    self.current_tree = click-specific_tree
+
+# ...
+
+# inside update():
+
+if self.current_tree != default_tree:
+    tick_result = self.current_tree.tick()
+    if tick_result != NodeStatus.RUNNING:
+        self.current_tree.reset()
+        self.current_tree = self.default_tree
+    else:
+        _tick_result=self.current_tree.tick()
+
+```
+
+
     
         Unit behavior (Btrees!)
         - study skeleton, revisit documentation
