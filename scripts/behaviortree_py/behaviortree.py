@@ -151,7 +151,14 @@ class LeafNode(Node):
 
 
 class Tree:
-    def __init__(self, root_node) -> None:
+    def __init__(self, root_node: Node) -> None:
+        self.root_node: Node = root_node
+
+    def tick_tree(self):
         pass
 
-    pass
+    def halt(self):
+        pass
+
+    def reset_tree(self):
+        pass
