@@ -1,11 +1,15 @@
-from scripts.behaviortree_py.behaviortree import BBInputPort, ControlNode, DecoratorNode, LeafNode, Node, OutputPort, StaticInputPort
-
-
+from scripts.behaviortree_py.behaviortree import (
+    BBInputPort,
+    ControlNode,
+    DecoratorNode,
+    LeafNode,
+    Node,
+    OutputPort,
+    StaticInputPort,
+    Tree,
+)
 from bs4 import BeautifulSoup as soup
-
-
 from typing import Callable, Type
-from scripts.behaviortree_py.nodes import *
 from scripts.behaviortree_py import nodes
 
 
@@ -13,7 +17,7 @@ class BehaviorTreeFactory:
     def __init__(self):
         self.nodes: dict = {}
         self.blackboard: dict = {}
-        self.conversion_context={}
+        self.conversion_context = {}
 
     def register_blackboard(self, blackboard: dict):
         self.blackboard = blackboard
@@ -34,14 +38,14 @@ class BehaviorTreeFactory:
             data = f.read()
         bs_data = soup(data, "xml")
         bs_tree = bs_data.find("BehaviorTree")
-        tree = self.parse_elems(bs_tree)
-        return tree
+        tree_nodes: ControlNode = self.parse_elems(bs_tree) # type: ignore
+        return Tree(tree_nodes)
 
     def get_elem_class(self, elem_name: str) -> Type:
         # if elem_name in globals():
         #     return globals()[elem_name]
-        if hasattr(nodes,elem_name):
-            return getattr(nodes,elem_name)
+        if hasattr(nodes, elem_name):
+            return getattr(nodes, elem_name)
         elif elem_name in self.nodes:
             return self.nodes[elem_name]
         else:

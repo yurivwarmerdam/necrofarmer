@@ -3,7 +3,7 @@ import ast
 from enum import Enum
 from pygame.sprite import Group
 from dataclasses import dataclass, field
-
+from typing import Any
 
 class NodeStatus(Enum):
     IDLE = 0
@@ -13,8 +13,9 @@ class NodeStatus(Enum):
     SKIPPED = 4
 
 
-class InputPort:
-    def get(self) -> any:
+class InputPort(ABC):
+    @abstractmethod
+    def get(self) -> Any:
         pass
 
 
@@ -28,7 +29,7 @@ class StaticInputPort(InputPort):
     def __init__(self, value, conversion_context: dict = {}):
         self.value = self.parse_value(value, conversion_context)
 
-    def get(self) -> any:
+    def get(self) -> Any:
         return self.value
 
     def parse_value(self, value, context: dict):
@@ -53,7 +54,7 @@ class BBInputPort(InputPort):
         self.blackboard = blackboard
         self.key = key
 
-    def get(self) -> any:
+    def get(self) -> Any:
         return self.blackboard[self.key]
 
 
@@ -110,11 +111,13 @@ class ControlNode(Node):
 
     def tick(self) -> NodeStatus:
         """Demo-like template behavior. Not really intended to be called."""
-        return self.children(self.current_node).tick()
+        return self.children[self.current_node].tick()
 
     def reset_children(self):
         for child in self.children:
             child.node_status = NodeStatus.IDLE
+            if isinstance(child, ControlNode):
+                child.reset_children()
 
 
 class LeafNode(Node):
@@ -151,14 +154,14 @@ class LeafNode(Node):
 
 
 class Tree:
-    def __init__(self, root_node: Node) -> None:
-        self.root_node: Node = root_node
+    def __init__(self, root_node: ControlNode) -> None:
+        self.root_node: ControlNode = root_node
 
     def tick_tree(self):
-        pass
+        self.root_node.tick()
 
-    def halt(self):
-        pass
-
-    def reset_tree(self):
-        pass
+    def halt_tree(self):
+        # the halt should propagate to all the node if the nodes
+        # have been implemented correctly
+        self.root_node.reset_children()
+        self.root_node.node_status = NodeStatus.IDLE
