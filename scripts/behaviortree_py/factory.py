@@ -24,11 +24,9 @@ class BehaviorTreeFactory:
 
     def register_node(self, name, node: Callable):
         self.nodes[name] = node
-        # self.nodes.append(node)
 
     def register_nodes(self, nodes: dict):
         self.nodes.update(nodes)
-        # self.nodes += nodes
 
     def register_conversion_context(self, conversion_context: dict):
         self.conversion_context: dict = conversion_context
@@ -38,7 +36,7 @@ class BehaviorTreeFactory:
             data = f.read()
         bs_data = soup(data, "xml")
         bs_tree = bs_data.find("BehaviorTree")
-        tree_nodes: ControlNode = self.parse_elems(bs_tree) # type: ignore
+        tree_nodes: ControlNode = self.parse_elems(bs_tree)  # type: ignore
         return Tree(tree_nodes)
 
     def get_elem_class(self, elem_name: str) -> Type:

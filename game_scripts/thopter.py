@@ -14,10 +14,7 @@ from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     PortsList,
 )
-from scripts.behaviortree_py.nodes import (
-    SimpleActionNode,
-    StatefulActionNode
-)
+from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from scripts.behaviortree_py import dummy_nodes

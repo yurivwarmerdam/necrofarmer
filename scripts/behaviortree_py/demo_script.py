@@ -52,7 +52,7 @@ def main():
     late_talker_tree = factory.load_tree_from_xml(
         "scripts/behaviortree_py/demo_trees/dummy_tree.xml"
     )
-    
+
     tick_result = main_tree.tick()
     while tick_result == NodeStatus.RUNNING:
         tick_result = main_tree.tick()

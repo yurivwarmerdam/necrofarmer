@@ -8,19 +8,20 @@ xml_doc = """
 
 
 from bs4 import BeautifulSoup
-soup = BeautifulSoup(xml_doc, 'xml')
+
+soup = BeautifulSoup(xml_doc, "xml")
 
 # print(soup.prettify())
-walker=soup.find("WalkTowardsPos")
-inputs=walker.find_all("InputPort")
+walker = soup.find("WalkTowardsPos")
+inputs = walker.find_all("InputPort")
 
-pos=walker.find(local="pos")
+pos = walker.find(local="pos")
 
-pos=walker.find("InputPort",local="action_status")
+pos = walker.find("InputPort", local="action_status")
 print(pos or "default")
 
 
-a={}
+a = {}
 print(a.keys())
 for i in a.keys():
     print(i)

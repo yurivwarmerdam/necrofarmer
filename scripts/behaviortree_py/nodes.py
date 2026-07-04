@@ -1,6 +1,9 @@
-from scripts.behaviortree_py.behaviortree import ControlNode, DecoratorNode, LeafNode, NodeStatus
-
-
+from scripts.behaviortree_py.behaviortree import (
+    ControlNode,
+    DecoratorNode,
+    LeafNode,
+    NodeStatus,
+)
 
 
 class InverterNode(DecoratorNode):

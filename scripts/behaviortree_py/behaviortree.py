@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import ast
 from enum import Enum
-from pygame.sprite import Group
 from dataclasses import dataclass, field
 from typing import Any
+
 
 class NodeStatus(Enum):
     IDLE = 0
