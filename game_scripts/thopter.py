@@ -95,7 +95,7 @@ class Ornithopter(AnimatedSprite, Selectable):
         func(delta, params)
 
     def tick(self):
-        self.tree.tick()
+        self.tree.tick_tree()
 
     @property
     def context_panel(self) -> type[ContextPanel]:
