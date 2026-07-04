@@ -17,7 +17,6 @@ from scripts.behaviortree_py.behaviortree import (
 from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
-from scripts.behaviortree_py import dummy_nodes
 from pygame_gui.elements import UILabel
 
 # TODO:
@@ -78,24 +77,27 @@ class Ornithopter(AnimatedSprite, Selectable):
         factory.register_conversion_context(
             {"Vector2": Vector2}
         )  # In case nonstandard datatypes are described in tree.xml, provide mappings here.
-        self.tree = factory.load_tree_from_xml(
+        self.default_tree = factory.load_tree_from_xml(
             "trees/ornithopter.xml"
         )  # where your tree is defined
+        self.another_tree = factory.load_tree_from_xml("trees/success_tree.xml")
+        self.active_tree = self.default_tree
 
     def update(self, delta):
         super().update(delta)
-        if self.blackboard["action_status"] in [
-            ActionStatus.IDLE,
-            ActionStatus.SUCCESS,
-            ActionStatus.FAILURE,
-        ]:
+        if self.blackboard["action_status"] != NodeStatus.RUNNING:
             return
         status, func, params = self.blackboard["action_status"]
         func = getattr(self, func)  # Only class funcs. May need to look in globals.
         func(delta, params)
 
     def tick(self):
-        self.tree.tick_tree()
+        if self.active_tree == self.default_tree:
+            self.active_tree.tick_tree()
+        else:
+            result = self.active_tree.tick_tree()
+            if result != NodeStatus.RUNNING:
+                self.active_tree = self.default_tree
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -142,6 +144,10 @@ class Ornithopter(AnimatedSprite, Selectable):
                     self.blackboard["action_status"] = ActionStatus.FAILURE
                 else:
                     self.cargo -= result
+
+    def change_tree_to(self, name):
+        tree = getattr(self, name)
+        self.active_tree = tree
 
 
 # --- Behavior tree section ---
@@ -291,13 +297,17 @@ class OrnithopterPanel(ContextPanel):
             portrait_id="#ornithopter_button",
             context_container=context_container,
         )
+
         UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
             object_id="#haul_logs_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: print("now do a thing!"),
+            command=lambda: self.commander.selected.sprites()[0].change_tree_to(
+                "another_tree"
+            ),
+            # command=lambda: print("asdasd"),
         )
         self.stock_label = UILabel(
             pg.Rect(20, 3, 100, 18), "0", container=context_container
