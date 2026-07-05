@@ -20,10 +20,6 @@ from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from pygame_gui.elements import UILabel
 
 # TODO:
-# - add btree
-# - def move (maybe with random target position button)
-# - def load
-# - def unload
 # - def idle (land)
 # - def take off
 
@@ -85,7 +81,11 @@ class Ornithopter(AnimatedSprite, Selectable):
 
     def update(self, delta):
         super().update(delta)
-        if self.blackboard["action_status"] != NodeStatus.RUNNING:
+        if self.blackboard["action_status"] in [
+            ActionStatus.IDLE,
+            ActionStatus.SUCCESS,
+            ActionStatus.FAILURE,
+        ]:
             return
         status, func, params = self.blackboard["action_status"]
         func = getattr(self, func)  # Only class funcs. May need to look in globals.
@@ -298,15 +298,15 @@ class OrnithopterPanel(ContextPanel):
             context_container=context_container,
         )
 
+        th: Ornithopter = self.commander.selected.sprites()[0]
+
         UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
             object_id="#haul_logs_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: self.commander.selected.sprites()[0].change_tree_to(
-                "another_tree"
-            ),
+            command=lambda: th.change_tree_to("another_tree"),
             # command=lambda: print("asdasd"),
         )
         self.stock_label = UILabel(
