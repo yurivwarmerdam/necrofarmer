@@ -27,7 +27,8 @@ class GameTilemap(EntityTilemap):
         if "wood" not in properties:
             return None
         stock = properties["wood"]
-        print(stock, amount)
+        # This where it goes wrong!
+        # print(stock, amount)
         if stock <= amount:
             self.kill_tile("active", *map_pos)
             return stock

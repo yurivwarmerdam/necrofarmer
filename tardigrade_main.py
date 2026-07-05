@@ -135,6 +135,12 @@ while True:
 
         processed = False
         processed = ui_manager.process_events(event)
+
+        # --- debug ---
+        if event.type in [pg.MOUSEBUTTONUP, pg.MOUSEBUTTONDOWN, pg.MOUSEWHEEL]:
+            print(processed, event)
+        # /-- debug --/
+
         if not processed:
             processed = commander.process_events(event)
 

@@ -130,16 +130,13 @@ class Ornithopter(AnimatedSprite, Selectable):
         if self.load_progress >= self.LOAD_SPEED:
             self.load_progress = 0
             headroom = min(self.cargo, self.LOAD_VOLUME)
-            print(headroom, headroom <= 0)
             if headroom <= 0:
                 # cargo is empty
-                # print("empty")
                 self.blackboard["action_status"] = ActionStatus.SUCCESS
             else:
                 entity = get_tilemap().get_tile("active", *put_pos)
                 result = entity.put_wood(headroom)
                 if result is None or result < headroom:
-                    print(f"overfilling? {headroom}")
                     # sawmill//stock is apparently full (not implemented yet at write-time)
                     self.blackboard["action_status"] = ActionStatus.FAILURE
                 else:
