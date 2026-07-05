@@ -1,7 +1,6 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
         <SequenceNode name="haul_logs">
-            <Succeeder />
             <GetClosestTree>
                 <InputPort local="self" bb="self" />
                 <OutputPort local="wood_pos" bb="wood_pos" />
@@ -36,7 +35,6 @@
                     <InputPort local="building_type" value="thopter_factory_1" />
                     <OutputPort local="building_pos" bb="wood_unload_pos" />
                 </GetClosestBuilding>
-                <Failer />
             </FallbackNode>
             <MapToWorld>
                 <InputPort local="map_pos" bb="wood_unload_pos" />
