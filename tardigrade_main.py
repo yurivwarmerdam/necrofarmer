@@ -107,6 +107,8 @@ def handle_camera_move():
     return camera_move
 
 
+delay = False
+
 # ---- core loop ----
 while True:
     _delta = clock.get_time()
@@ -115,6 +117,12 @@ while True:
     # --- event loop ---
     events = pg.event.get()
     pressed = pg.mouse.get_pressed()
+
+    if delay:
+        print(pressed)
+        if not pressed[0]:
+            delay = not delay
+
     for event in events:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
@@ -141,6 +149,7 @@ while True:
         # --- debug ---
         if event.type in [pg.MOUSEBUTTONUP, pg.MOUSEBUTTONDOWN, pg.MOUSEWHEEL]:
             print(processed, event, pressed, _delta)
+            delay = True
         # /-- debug --/
 
         if not processed:
