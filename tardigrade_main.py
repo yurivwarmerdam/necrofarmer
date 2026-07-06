@@ -13,7 +13,7 @@ from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
 from scripts import image_server
 from scripts.camera import initialize_camera
-
+from scripts.async_runner import async_runner
 
 # Server architecture:
 # spin up and have global access to the following:
@@ -107,29 +107,26 @@ def handle_camera_move():
     return camera_move
 
 
-delay = False
-
 # ---- core loop ----
 while True:
     _delta = clock.get_time()
+
+    # runner.run_once()
 
     camera_move = Vector2(0, 0)
     # --- event loop ---
     events = pg.event.get()
     pressed = pg.mouse.get_pressed()
 
-    if delay:
-        print(pressed)
-        if not pressed[0]:
-            delay = not delay
 
     for event in events:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
         elif event.type == BTREE_EVENT:
+            # runner.create_task(group_server.behavior_trees.tick)
             group_server.behavior_trees.tick()
-            break
+            continue
         elif event.type == pg.VIDEORESIZE:
             camera.set_window_resolution(event.size)
             ui_manager.set_window_resolution(event.size)
@@ -145,12 +142,6 @@ while True:
 
         processed = False
         processed = ui_manager.process_events(event)
-
-        # --- debug ---
-        if event.type in [pg.MOUSEBUTTONUP, pg.MOUSEBUTTONDOWN, pg.MOUSEWHEEL]:
-            print(processed, event, pressed, _delta)
-            delay = True
-        # /-- debug --/
 
         if not processed:
             processed = commander.process_events(event)
