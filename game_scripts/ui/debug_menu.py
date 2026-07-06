@@ -17,7 +17,7 @@ from pygame_gui.elements import UIWindow
 class DebugMenu(UIWindow):
     def __init__(self) -> None:
         super().__init__(Rect(510, 30, 125, 200), resizable=True)
-        get_commander().special = self
+        get_commander().debug = self
         self.spawning: type[AnimatedSprite] | TileData | None = None
 
         UIButton(

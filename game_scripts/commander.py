@@ -21,13 +21,16 @@ class SelectBox(NodeSprite):
         self.camera: Camera = get_camera()
         self.group_server = group_server.get_group_server()
 
-    def start_drag(self):
+    def start_click(self):
         self.start = self.camera.get_global_mouse_pos()
 
     def stop_drag(self):
         self.image = pg.Surface((0, 0))
         self.start = None
         self.dragging = False
+
+    def has_started_click(self):
+        return self.start is not None
 
     def update(self, _delta=0.0):
         if self.dragging:
@@ -77,7 +80,7 @@ class Commander:
     """
 
     def __init__(self):
-        self.special: Sprite | UIElement | None = None
+        self.debug: Sprite | UIElement | None = None
         self.selected = Group()
         self.dragging = False
         self.select_box = SelectBox()
@@ -95,10 +98,10 @@ class Commander:
         # -- mouse buttons --
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
             processed = []
-            if self.special:
-                if hasattr(self.special, "process_events"):
-                    processed.append(self.special.process_events(event))
-            if self.selected and not any(processed):
+            if self.debug:
+                if hasattr(self.debug, "process_events"):
+                    processed.append(self.debug.process_events(event))
+            elif self.selected and not any(processed):
                 for sprite in self.selected:
                     if hasattr(sprite, "process_events"):
                         processed.append(sprite.process_events(event))
@@ -107,19 +110,23 @@ class Commander:
                 return True
             if event.button == 1:
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    self.box.start_drag()
+                    self.box.start_click()
                     return True
                 elif self.box.dragging:
                     self.do_box_select()
                     return True
                 else:
-                    collided_sprites = pointcollide(
-                        self.camera.get_global_mouse_pos(), self.group_server.colliders
-                    )
-                    self.unselect_all()
-                    if collided_sprites:
-                        self.select(collided_sprites[0])
-                    return True
+                    if self.box.has_started_click():
+                        print("already started")
+                        collided_sprites = pointcollide(
+                            self.camera.get_global_mouse_pos(),
+                            self.group_server.colliders,
+                        )
+                        self.unselect_all()
+                        if collided_sprites:
+                            self.select(collided_sprites[0])
+                        self.box.stop_drag()
+                        return True
         return False
 
     def unselect_all(self):

@@ -111,8 +111,6 @@ def handle_camera_move():
 while True:
     _delta = clock.get_time()
 
-    # runner.run_once()
-
     camera_move = Vector2(0, 0)
     # --- event loop ---
     events = pg.event.get()
@@ -142,6 +140,8 @@ while True:
 
         processed = False
         processed = ui_manager.process_events(event)
+        if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
+            print(processed, event)
 
         if not processed:
             processed = commander.process_events(event)
