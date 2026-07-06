@@ -118,19 +118,19 @@ while True:
     events = pg.event.get()
     pressed = pg.mouse.get_pressed()
 
-
     for event in events:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
             pg.quit()
             sys.exit()
         elif event.type == BTREE_EVENT:
-            # runner.create_task(group_server.behavior_trees.tick)
             group_server.behavior_trees.tick()
-            continue
+            continue  # This was break. You know what you did.
         elif event.type == pg.VIDEORESIZE:
             camera.set_window_resolution(event.size)
             ui_manager.set_window_resolution(event.size)
         elif event.type == pg.KEYDOWN:
+            # this all wants to be camera.process_events()
+            # Also: camera zoom does not properly handle mouse pos rescaling.
             if event.key == pg.K_1:
                 camera.set_zoom(1)
             elif event.key == pg.K_2:
