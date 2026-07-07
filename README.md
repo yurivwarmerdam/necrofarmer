@@ -29,6 +29,11 @@ pip install -e .
     BTree extensions:
     - Add a Tree superclass that holds my nodes. Add convenience functions. Namely halting, resetting.
         - reset blackboard
+    - use-cases:
+        - idle modality
+        - click on tree (right click, prbably): set tree as goal, set gathering trees as modality
+        - click on sawmill: set it as "home", keep using that.
+        - click button: stop(?): start idling.
 
 
 ```python
