@@ -117,7 +117,6 @@ class Commander:
                     return True
                 else:
                     if self.box.has_started_click():
-                        print("already started")
                         collided_sprites = pointcollide(
                             self.camera.get_global_mouse_pos(),
                             self.group_server.colliders,

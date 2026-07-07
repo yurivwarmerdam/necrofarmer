@@ -18,6 +18,7 @@ from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from pygame_gui.elements import UILabel
+from scripts.camera import get_camera
 
 # TODO:
 # - def idle (land)
@@ -98,6 +99,15 @@ class Ornithopter(AnimatedSprite, Selectable):
             result = self.active_tree.tick_tree()
             if result != NodeStatus.RUNNING:
                 self.active_tree = self.default_tree
+
+    def process_events(self, event: pg.Event):
+        print(event)
+        if event.type == pg.MOUSEBUTTONUP:
+            mouse_pos = get_camera().get_global_mouse_pos()
+            map_pos = get_tilemap().world_to_map(mouse_pos)
+            tile = get_tilemap().get_tilev("active", map_pos)
+            print(tile)
+        return True
 
     @property
     def context_panel(self) -> type[ContextPanel]:
