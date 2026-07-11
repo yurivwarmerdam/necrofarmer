@@ -19,7 +19,7 @@ from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from pygame_gui.elements import UILabel
 from scripts.camera import get_camera
-from scripts.utils import pointcollide
+from game_scripts.commander import get_commander
 
 # TODO:
 # - def idle (land)
@@ -103,13 +103,9 @@ class Ornithopter(AnimatedSprite, Selectable):
 
     def process_events(self, event: pg.Event):
         print(event)
-        if event.type == pg.MOUSEBUTTONUP:
-            mouse_pos = get_camera().get_global_mouse_pos()
-            map_pos = get_tilemap().world_to_map(mouse_pos)
-            tile = get_tilemap().get_tilev("active", map_pos)
-            active_group=group_server.get_group_server().colliders
-            collides=pointcollide(mouse_pos,active_group)
-            print(tile,collides)
+        if event.type == pg.MOUSEBUTTONUP and event.button == 3:
+            collisions = get_commander().get_mouse_collisions()
+            print(collisions)
             return True
         return False
 
