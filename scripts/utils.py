@@ -1,6 +1,9 @@
 import pygame as pg
 from pygame import Rect, Surface
+from pygame.mask import from_surface
 from pygame.math import Vector2
+from pygame.sprite import Sprite
+
 
 # from typing import List
 
@@ -77,3 +80,44 @@ def sheet_to_sprites_with_pad(sheet: Surface, tile_size: Vector2, pad=(0, 0)) ->
             sprite.blit(sheet, (0, 0), rect)
             sprites[(col, row)] = sprite
     return sprites
+
+
+def pointcollide_mask(point: tuple[int, int], sprite: Sprite) -> bool:
+    """
+    collision detection between a point and a sprite, using masks.
+
+    pygame.sprite.collide_mask(point, sprite): bool
+
+    Tests for collision between a point and a sprite by testing if the sprites' bitmask
+    is occupied at the point. If the sprite has a "mask" attribute, that is used as the mask;
+    otherwise, a mask is created from the sprite image. Intended to be passed
+    as a collided callback function to pointcollide. Sprites must
+    have a "rect" and an optional "mask" attribute.
+    """
+    xoffset = point[0] - sprite.rect[0]
+    yoffset = point[1] - sprite.rect[1]
+    try:
+        mask = sprite.mask
+    except AttributeError:
+        mask = from_surface(sprite.image)
+
+    if (
+        xoffset < 0
+        or xoffset >= mask.get_size()[0]
+        or yoffset < 0
+        or yoffset >= mask.get_size()[1]
+    ):
+        return False
+    return bool(mask.get_at((xoffset, yoffset)))
+
+
+def pointcollide(point, group, collide_callback=None):
+    """Kind of extra for now. However, it mostly follows the pattern of *collide functions in official pygame."""
+    default_callback = pointcollide_mask
+
+    if collide_callback is not None:
+        return [sprite for sprite in group if collide_callback(point, sprite)]
+
+    return [sprite for sprite in group if default_callback(point, sprite)]
+
+    pass

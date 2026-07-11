@@ -19,7 +19,7 @@ from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from pygame_gui.elements import UILabel
 from scripts.camera import get_camera
-from game_scripts.commander import pointcollide
+from scripts.utils import pointcollide
 
 # TODO:
 # - def idle (land)

@@ -1,13 +1,13 @@
 import pygame as pg
 from blinker import signal
 from pygame import Rect, Surface, Vector2
-from pygame.mask import from_surface
 from pygame.sprite import Group, Sprite
 from pygame_gui.core import UIElement
 
 from game_scripts import group_server
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
+from scripts.utils import pointcollide
 
 
 class SelectBox(NodeSprite):
@@ -117,10 +117,7 @@ class Commander:
                     return True
                 else:
                     if self.box.has_started_click():
-                        collided_sprites = pointcollide(
-                            self.camera.get_global_mouse_pos(),
-                            self.group_server.colliders,
-                        )
+                        collided_sprites = self.get_mouse_collisions()
                         self.unselect_all()
                         if collided_sprites:
                             self.select(collided_sprites[0])
@@ -150,6 +147,12 @@ class Commander:
         self.box.stop_drag()
         self.selected_changed.send(self)
 
+    def get_mouse_collisions(self):
+        return pointcollide(
+            self.camera.get_global_mouse_pos(),
+            self.group_server.colliders,
+        )
+
 
 _instance = None
 
@@ -159,44 +162,3 @@ def get_commander() -> Commander:
     if _instance is None:
         _instance = Commander()
     return _instance
-
-
-def pointcollide(point, group, collide_callback=None):
-    """Kind of extra for now. However, it mostly follows the pattern of *collide functions in official pygame."""
-    default_callback = pointcollide_mask
-
-    if collide_callback is not None:
-        return [sprite for sprite in group if collide_callback(point, sprite)]
-
-    return [sprite for sprite in group if default_callback(point, sprite)]
-
-    pass
-
-
-def pointcollide_mask(point: tuple[int, int], sprite: Sprite) -> bool:
-    """
-    collision detection between a point and a sprite, using masks.
-
-    pygame.sprite.collide_mask(point, sprite): bool
-
-    Tests for collision between a point and a sprite by testing if the sprites' bitmask
-    is occupied at the point. If the sprite has a "mask" attribute, that is used as the mask;
-    otherwise, a mask is created from the sprite image. Intended to be passed
-    as a collided callback function to pointcollide. Sprites must
-    have a "rect" and an optional "mask" attribute.
-    """
-    xoffset = point[0] - sprite.rect[0]
-    yoffset = point[1] - sprite.rect[1]
-    try:
-        mask = sprite.mask
-    except AttributeError:
-        mask = from_surface(sprite.image)
-
-    if (
-        xoffset < 0
-        or xoffset >= mask.get_size()[0]
-        or yoffset < 0
-        or yoffset >= mask.get_size()[1]
-    ):
-        return False
-    return bool(mask.get_at((xoffset, yoffset)))
