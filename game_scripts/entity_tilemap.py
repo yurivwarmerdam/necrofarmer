@@ -2,6 +2,7 @@ from pygame import Vector2
 from game_scripts import whiteboard
 
 from game_scripts.bigtiles.bigtile import BigTile
+from typing import override
 
 from scripts.tilemap import Tile, Tilemap
 
@@ -17,6 +18,7 @@ class EntityTilemap(Tilemap):
             for idx in self.get_tile_idxs_by_property("bigtile", layer):
                 self.bigtiles[layer][idx] = self.get_tile(layer, *idx)
 
+    @override
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
         if isinstance(tile, BigTile):
             tiles_positioned = [subtile + map_pos for subtile in tile.tiles]

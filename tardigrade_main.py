@@ -62,8 +62,8 @@ tilemap = game_tilemap.get_tilemap(
 )
 star.get_star_server(tilemap)
 
-group_server.add_render(tilemap.layers)
-group_server.add_render({"draw": Group()})
+group_server.add_render_groups(tilemap.layers)
+group_server.add_render_groups({"draw": Group()})
 
 
 camera = initialize_camera(

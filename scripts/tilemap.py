@@ -25,6 +25,10 @@ class TileData:
     anchor: str = "bottomleft"
 
     @property
+    def collision_mask(self) -> int:
+        return self.properties.get("collision_mask", 0)
+
+    @property
     def world_pos(self) -> Vector2:
         return map_to_worldv(self.map_pos, self.tile_size, self.isometric)
 
