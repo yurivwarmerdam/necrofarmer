@@ -4,10 +4,10 @@ from pygame import Rect, Surface, Vector2
 from pygame.sprite import Group, Sprite
 from pygame_gui.core import UIElement
 
-from game_scripts import group_server
+from game_scripts.group_server import get_group_server
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
-from scripts.utils import pointcollide
+# from scripts.utils import pointcollide
 
 
 class SelectBox(NodeSprite):
@@ -19,7 +19,7 @@ class SelectBox(NodeSprite):
         self.dragging: bool = False
         self.start: Vector2 | None = None
         self.camera: Camera = get_camera()
-        self.group_server = group_server.get_group_server()
+        self.group_server = get_group_server()
 
     def start_click(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -85,7 +85,7 @@ class Commander:
         self.dragging = False
         self.select_box = SelectBox()
         self.box = SelectBox()
-        self.group_server = group_server.get_group_server()
+        self.group_server = get_group_server()
         self.camera = get_camera()
         self.selected_changed = signal("selected_changed")
 
@@ -148,9 +148,10 @@ class Commander:
         self.selected_changed.send(self)
 
     def get_mouse_collisions(self):
-        return pointcollide(
-            self.camera.get_global_mouse_pos(),
-            self.group_server.colliders,
+        pos = self.camera.get_global_mouse_pos()
+        return self.group_server.point_collide(
+            (pos.x, pos.y),
+            1,
         )
 
 

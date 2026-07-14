@@ -6,6 +6,7 @@
   <properties>
    <property name="bigtile" value="[[0,0],[1,0],[0,-1],[1,-1]]"/>
    <property name="can_walk" type="bool" value="false"/>
+   <property name="collision_mask" type="int" value="1"/>
    <property name="name" value="sawmill"/>
    <property name="update" type="bool" value="true"/>
   </properties>
@@ -14,6 +15,7 @@
   <properties>
    <property name="bigtile" value="[[0,0],[1,0],[0,-1],[1,-1]]"/>
    <property name="can_walk" type="bool" value="false"/>
+   <property name="collision_mask" type="int" value="1"/>
    <property name="name" value="thopter_factory_1"/>
    <property name="update" type="bool" value="true"/>
   </properties>
@@ -28,6 +30,7 @@
   <properties>
    <property name="bigtile" value="[[0,0],[1,0],[0,-1],[1,-1]]"/>
    <property name="can_walk" type="bool" value="false"/>
+   <property name="collision_mask" type="int" value="1"/>
    <property name="name" value="_sawmill"/>
    <property name="update" type="bool" value="true"/>
   </properties>
@@ -36,6 +39,7 @@
   <properties>
    <property name="bigtile" value="[[0,0],[1,0],[0,-1],[1,-1]]"/>
    <property name="can_walk" type="bool" value="false"/>
+   <property name="collision_mask" type="int" value="1"/>
    <property name="name" value="_thopter_factory"/>
    <property name="update" type="bool" value="true"/>
   </properties>
