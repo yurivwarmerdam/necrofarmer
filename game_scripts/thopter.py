@@ -18,7 +18,6 @@ from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
 from pygame_gui.elements import UILabel
-from scripts.camera import get_camera
 from game_scripts.commander import get_commander
 
 # TODO:
@@ -102,10 +101,19 @@ class Ornithopter(AnimatedSprite, Selectable):
                 self.active_tree = self.default_tree
 
     def process_events(self, event: pg.Event):
-        print(event)
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             print(collisions)
+            for c in collisions:
+                if hasattr(c,"properties"):
+                    if c.properties.get("wood"):
+                        # update whiteboard active tree
+                        # have tree default to idle
+                        # add idle button
+                        # change get_closest_tree to validate tree or somesuch.
+                        # mayyybe keep validating on each-tick composite node
+                        pass
+
             return True
         return False
 
