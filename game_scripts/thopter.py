@@ -305,7 +305,7 @@ class OrnithopterPanel(ContextPanel):
             context_container=context_container,
         )
 
-        th: Ornithopter = self.commander.selected.sprites()[0]
+        th: Ornithopter = get_commander().selected.sprites()[0]
 
         UIButton(
             pg.Rect(0, 0, 54, 46),
@@ -321,6 +321,6 @@ class OrnithopterPanel(ContextPanel):
         )
 
     def update(self, _delta):
-        cargo = self.commander.selected.sprites()[0].cargo
-        cargo_capacity = self.commander.selected.sprites()[0].CARGO_CAPACITY
+        cargo = get_commander().selected.sprites()[0].cargo
+        cargo_capacity = get_commander().selected.sprites()[0].CARGO_CAPACITY
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")

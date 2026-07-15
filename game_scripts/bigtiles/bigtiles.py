@@ -11,6 +11,7 @@ from scripts.ui_shim import UIButton
 from scripts.tilemap import TileData
 from pygame_gui.elements import UILabel, UIStatusBar
 from game_scripts.stockpile import get_stockpile
+from game_scripts.commander import get_commander
 
 
 class Sawmill(BigTile, Selectable):
@@ -62,16 +63,16 @@ class SawmillPanel(ContextPanel):
         self.progress_bar = UIStatusBar(
             pg.Rect(0, 20, 100, 20),
             container=context_container,
-            percent_method=self.commander.selected.sprites()[0].get_sawmill_progress,
+            percent_method=get_commander().selected.sprites()[0].get_sawmill_progress,
         )
 
     def set_stock_text(self):
         self.stock_label.set_text(
-            f"Logs: {str(self.commander.selected.sprites()[0].stock)}"
+            f"Logs: {str(get_commander().selected.sprites()[0].stock)}"
         )
 
     def update(self, _delta):
-        if self.commander.selected.sprites()[0].stock == 0:
+        if get_commander().selected.sprites()[0].stock == 0:
             self.progress_bar.visible = False
         else:
             self.progress_bar.visible = True

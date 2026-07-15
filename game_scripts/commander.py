@@ -7,6 +7,7 @@ from pygame_gui.core import UIElement
 from game_scripts.group_server import get_group_server
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
+
 # from scripts.utils import pointcollide
 from game_scripts.selectable import Selectable
 
@@ -121,7 +122,9 @@ class Commander:
                         collided_sprites = self.get_mouse_collisions()
                         self.unselect_all()
                         if collided_sprites:
-                            self.select(collided_sprites[0])
+                            for collided_sprite in collided_sprites:
+                                if isinstance(collided_sprite, Selectable):
+                                    self.select(collided_sprites[0])
                         self.box.stop_drag()
                         return True
         return False

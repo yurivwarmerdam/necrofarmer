@@ -15,7 +15,7 @@ from scripts.image_server import get_image_server
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.ui_shim import UIButton
-
+from game_scripts.commander import get_commander
 
 # Needs access to:
 # - groups
@@ -125,7 +125,7 @@ class TardigradePanel(ContextPanel):
         )
         UILabel(
             pg.Rect(6, 50, 120, 30),
-            f"Num selected: {len(self.commander.selected)}",
+            f"Num selected: {len(get_commander().selected)}",
             container=context_container,
         )
         self.counter = UILabel(

@@ -1,7 +1,6 @@
 from abc import ABC
 
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
-from game_scripts.commander import Commander, get_commander
 
 
 class ContextPanel(ABC):
@@ -22,17 +21,6 @@ class ContextPanel(ABC):
         context_container: context_panel container
         """
         self.portrait_id: str = portrait_id
-        self.commander: Commander = get_commander()
-
-    # @abstractmethod
-    # def set_context_elems(self, context_container: IContainerAndContainerLike):
-    #     """
-    #     set elements inside context_panel of main_ui.
-    #     Note that this excludes portrait_panel.
-
-    #     context_container: context_panel container
-    #     """
-    #     pass
 
     def update(self, _delta) -> None:
         pass
