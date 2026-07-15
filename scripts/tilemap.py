@@ -25,10 +25,6 @@ class TileData:
     anchor: str = "bottomleft"
 
     @property
-    def collision_mask(self) -> int:
-        return self.properties.get("collision_mask", 0)
-
-    @property
     def world_pos(self) -> Vector2:
         return map_to_worldv(self.map_pos, self.tile_size, self.isometric)
 
@@ -39,6 +35,10 @@ class Tile(NodeSprite):
             Tiledata.surf, Tiledata.world_pos, Tiledata.anchor, Tiledata.offset, *groups
         )
         self.properties = Tiledata.properties
+
+    @property
+    def collision_mask(self) -> int:
+        return self.properties.get("collision_mask", 0)
 
     def has(self, attribute):
         return attribute in self.properties

@@ -64,7 +64,10 @@ star.get_star_server(tilemap)
 
 group_server.add_render_groups(tilemap.layers)
 group_server.add_render_groups({"draw": Group()})
+for layer in tilemap.layers.values():
+    group_server.add_group_to_colliders(layer)
 
+print(group_server.collide_groups)
 
 camera = initialize_camera(
     group_server.render_groups,

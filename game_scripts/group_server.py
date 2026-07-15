@@ -37,10 +37,17 @@ class GroupServer:
         self.render_groups = self.render_groups | groups.copy()
 
     def add_collider_sprite(self, sprite: Sprite):
-        mask = sprite.collide_mask if hasattr(sprite, "collide_mask") else 0
+        mask = sprite.collision_mask if hasattr(sprite, "collision_mask") else 0
         for group in self.get_collide_groups_by_mask(mask):
             group.add(sprite)
         self.colliders.add(sprite)
+
+    def add_group_to_colliders(self, group: Group):
+        """Add any sprites in the provided group to relevant collision layers.
+        Only adds sprites that have a collision_mask property"""
+        for sprite in group.sprites():
+            if hasattr(sprite, "collision_mask"):
+                self.add_collider_sprite(sprite)
 
     def add_update_sprite(self, entity: Sprite):
         """for sprites that should be processed with an update method"""

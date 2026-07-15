@@ -8,6 +8,7 @@ from game_scripts.group_server import get_group_server
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
 # from scripts.utils import pointcollide
+from game_scripts.selectable import Selectable
 
 
 class SelectBox(NodeSprite):
@@ -142,7 +143,7 @@ class Commander:
         self.selected.empty()
         # TODO: Is this test even needed?
         for collide in self.box.get_collides():
-            if isinstance(collide, Sprite):
+            if isinstance(collide, Selectable):
                 collide.add(self.selected)
         self.box.stop_drag()
         self.selected_changed.send(self)
