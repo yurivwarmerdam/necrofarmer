@@ -1,55 +1,70 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
-        <SequenceNode name="haul_logs">
-            <GetClosestTree>
-                <InputPort local="self" bb="self" />
-                <OutputPort local="wood_pos" bb="wood_pos" />
-            </GetClosestTree>
-            <MapToWorld>
-                <InputPort local="map_pos" bb="wood_pos" />
-                <OutputPort local="world_pos" bb="wood_world_pos" />
-            </MapToWorld>
-            <MoveTowardsPos>
-                <InputPort local="pos" bb="wood_world_pos" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </MoveTowardsPos>
-            <TakeWood>
-                <InputPort local="wood_pos" bb="wood_pos" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </TakeWood>
-            <FallbackNode name="identify dropoff">
-                <GetClosestBuilding>
-                    <InputPort local="self" bb="self" />
-                    <InputPort local="building_type" value="sawmill" />
-                    <OutputPort local="building_pos" bb="wood_unload_pos" />
-                </GetClosestBuilding>
-                <GetClosestBuilding>
-                    <InputPort local="self" bb="self" />
-                    <InputPort local="building_type" value="thopter_factory_2" />
-                    <OutputPort local="building_pos" bb="wood_unload_pos" />
-                </GetClosestBuilding>
-                <GetClosestBuilding>
-                    <InputPort local="self" bb="self" />
-                    <InputPort local="building_type" value="thopter_factory_1" />
-                    <OutputPort local="building_pos" bb="wood_unload_pos" />
-                </GetClosestBuilding>
-            </FallbackNode>
-            <MapToWorld>
-                <InputPort local="map_pos" bb="wood_unload_pos" />
-                <OutputPort local="world_pos" bb="wood_unload_world_pos" />
-            </MapToWorld>
-            <MoveTowardsPos>
-                <InputPort local="pos" bb="wood_unload_world_pos" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </MoveTowardsPos>
-            <PutWood>
-                <InputPort local="put_pos" bb="wood_unload_pos" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </PutWood>
-        </SequenceNode>
+        <FallbackNode>
+            <ReactiveSequenceNode>
+                <BlackboardEntryEquals>
+                    <InputPort local="entry" bb="action_mode" />
+                    <InputPort local="value" value="idle" />
+                </BlackboardEntryEquals>
+                <Succeeder />
+            </ReactiveSequenceNode>
+            <ReactiveSequenceNode name="haul_logs">
+                <BlackboardEntryEquals>
+                    <InputPort local="entry" bb="action_mode" />
+                    <InputPort local="value" value="wood" />
+                </BlackboardEntryEquals>
+                <SequenceNode>
+                    <GetClosestTree>
+                        <InputPort local="self" bb="self" />
+                        <OutputPort local="wood_pos" bb="wood_pos" />
+                    </GetClosestTree>
+                    <MapToWorld>
+                        <InputPort local="map_pos" bb="wood_pos" />
+                        <OutputPort local="world_pos" bb="wood_world_pos" />
+                    </MapToWorld>
+                    <MoveTowardsPos>
+                        <InputPort local="pos" bb="wood_world_pos" />
+                        <InputPort local="action_status" bb="action_status" />
+                        <OutputPort local="action_status" bb="action_status" />
+                    </MoveTowardsPos>
+                    <TakeWood>
+                        <InputPort local="wood_pos" bb="wood_pos" />
+                        <InputPort local="action_status" bb="action_status" />
+                        <OutputPort local="action_status" bb="action_status" />
+                    </TakeWood>
+                    <FallbackNode name="identify dropoff">
+                        <GetClosestBuilding>
+                            <InputPort local="self" bb="self" />
+                            <InputPort local="building_type" value="sawmill" />
+                            <OutputPort local="building_pos" bb="wood_unload_pos" />
+                        </GetClosestBuilding>
+                        <GetClosestBuilding>
+                            <InputPort local="self" bb="self" />
+                            <InputPort local="building_type" value="thopter_factory_2" />
+                            <OutputPort local="building_pos" bb="wood_unload_pos" />
+                        </GetClosestBuilding>
+                        <GetClosestBuilding>
+                            <InputPort local="self" bb="self" />
+                            <InputPort local="building_type" value="thopter_factory_1" />
+                            <OutputPort local="building_pos" bb="wood_unload_pos" />
+                        </GetClosestBuilding>
+                    </FallbackNode>
+                    <MapToWorld>
+                        <InputPort local="map_pos" bb="wood_unload_pos" />
+                        <OutputPort local="world_pos" bb="wood_unload_world_pos" />
+                    </MapToWorld>
+                    <MoveTowardsPos>
+                        <InputPort local="pos" bb="wood_unload_world_pos" />
+                        <InputPort local="action_status" bb="action_status" />
+                        <OutputPort local="action_status" bb="action_status" />
+                    </MoveTowardsPos>
+                    <PutWood>
+                        <InputPort local="put_pos" bb="wood_unload_pos" />
+                        <InputPort local="action_status" bb="action_status" />
+                        <OutputPort local="action_status" bb="action_status" />
+                    </PutWood>
+                </SequenceNode>
+            </ReactiveSequenceNode>
+        </FallbackNode>
     </BehaviorTree>
 </root>

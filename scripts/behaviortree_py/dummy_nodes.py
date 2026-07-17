@@ -46,9 +46,22 @@ class HaveBlackboardEntry(SimpleActionNode):
     def tick(self) -> NodeStatus:
         # print(f"thyicking! {self.get_input('entry')}")
         try:
-            self.get_input("entry")
+            the_entry = self.get_input("entry")
+            print("the entry:", the_entry)
             print("not excepting:", self.get_input("entry"))
             return NodeStatus.SUCCESS
         except KeyError:
             print("excepting")
+            return NodeStatus.FAILURE
+
+
+class BlackboardEntryEquals(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"entry": any, "value": any}, {})
+
+    def tick(self):
+        if self.get_input("entry") == self.get_input("value"):
+            return NodeStatus.SUCCESS
+        else:
             return NodeStatus.FAILURE

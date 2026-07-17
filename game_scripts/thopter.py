@@ -14,9 +14,17 @@ from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     PortsList,
 )
-from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
+from scripts.behaviortree_py.nodes import (
+    SimpleActionNode,
+    StatefulActionNode,
+)
 from scripts.entities import ActionStatus
-from scripts.behaviortree_py.dummy_nodes import Failer, Succeeder, Talker
+from scripts.behaviortree_py.dummy_nodes import (
+    Failer,
+    Succeeder,
+    Talker,
+    BlackboardEntryEquals,
+)
 from pygame_gui.elements import UILabel
 from game_scripts.commander import get_commander
 
@@ -54,6 +62,7 @@ class Ornithopter(AnimatedSprite, Selectable):
         self.blackboard = {
             "action_status": ActionStatus.IDLE,
             "self": self,
+            "action_mode": "idle",
         }  # minimal required set of blackboard entries.
         nodes = {
             "Succeeder": Succeeder,
@@ -62,6 +71,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             "PickMoveGoal": PickMoveGoal,
             "MoveTowardsPos": MoveTowardsPos,
             "GetClosestTree": GetClosestTree,
+            "BlackboardEntryEquals": BlackboardEntryEquals,
             "TakeWood": TakeWood,
             "MapToWorld": MapToWorld,
             "GetClosestBuilding": GetClosestBuilding,
@@ -105,7 +115,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             collisions = get_commander().get_mouse_collisions()
             print(collisions)
             for c in collisions:
-                if hasattr(c,"properties"):
+                if hasattr(c, "properties"):
                     if c.properties.get("wood"):
                         # update whiteboard active tree
                         # have tree default to idle

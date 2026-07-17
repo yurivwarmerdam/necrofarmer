@@ -110,8 +110,6 @@ class ReactiveSequenceNode(SequenceNode):
                 )
                 return NodeStatus.FAILURE
 
-    pass
-
 
 class SimpleActionNode(LeafNode):
     """Simple, stateless action node. Recommended for actions that do not require internal bookkeeping."""

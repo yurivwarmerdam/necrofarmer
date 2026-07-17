@@ -158,7 +158,10 @@ class Tree:
         self.root_node: ControlNode = root_node
 
     def tick_tree(self):
-        self.root_node.tick()
+        return self.root_node.tick()
+
+    def tree_status(self):
+        return self.root_node.node_status
 
     def halt_tree(self):
         # the halt should propagate to all the node if the nodes

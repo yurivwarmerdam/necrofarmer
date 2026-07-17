@@ -3,7 +3,7 @@ from scripts.behaviortree_py.behaviortree import NodeStatus
 from scripts.behaviortree_py import dummy_nodes
 from time import sleep
 
-from scripts.behaviortree_py.behaviortree import Node
+from scripts.behaviortree_py.behaviortree import Tree
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
     factory = BehaviorTreeFactory()
     factory.register_blackboard(blackboard)
     factory.register_nodes(nodes)
-    main_tree: Node = factory.load_tree_from_xml(
+    main_tree: Tree = factory.load_tree_from_xml(
         "scripts/behaviortree_py/demo_trees/fallback_tree.xml"
     )
     late_talker_tree = factory.load_tree_from_xml(
@@ -53,21 +53,22 @@ def main():
         "scripts/behaviortree_py/demo_trees/dummy_tree.xml"
     )
 
-    tick_result = main_tree.tick()
+    tick_result = main_tree.tick_tree()
     while tick_result == NodeStatus.RUNNING:
-        tick_result = main_tree.tick()
-        print(f"tick result: {tick_result} | Tree status: {main_tree.node_status}")
+        tick_result = main_tree.tick_tree()
+        print(f"tick result: {tick_result} | Tree status: {main_tree.tree_status()}")
         sleep(0.2)
 
     print("----------")
 
-    tick_result = late_talker_tree.tick()
-    while tick_result == NodeStatus.RUNNING:
-        tick_result = late_talker_tree.tick()
-        print(
-            f"tick result: {tick_result} | Tree status: {late_talker_tree.node_status}"
-        )
-        sleep(0.2)
+    # tick_result = late_talker_tree.tick_tree()
+    # while tick_result == NodeStatus.RUNNING:
+    # # while True:
+    #     tick_result = late_talker_tree.tick_tree()
+    #     print(
+    #         f"tick result: {tick_result} | Tree status: {late_talker_tree.tree_status()}"
+    #     )
+    #     sleep(0.2)
 
 
 if __name__ == "__main__":
