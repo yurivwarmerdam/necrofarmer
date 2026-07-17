@@ -62,7 +62,7 @@ class Ornithopter(AnimatedSprite, Selectable):
         self.blackboard = {
             "action_status": ActionStatus.IDLE,
             "self": self,
-            "action_mode": "idle",
+            "action_mode": "wood",
         }  # minimal required set of blackboard entries.
         nodes = {
             "Succeeder": Succeeder,
@@ -171,8 +171,12 @@ class Ornithopter(AnimatedSprite, Selectable):
                     self.cargo -= result
 
     def change_tree_to(self, name):
+        """Deprecated. Probably never used."""
         tree = getattr(self, name)
         self.active_tree = tree
+
+    def set_blackboard_entry(self, key, value):
+        self.blackboard[key] = value
 
 
 # --- Behavior tree section ---
@@ -323,16 +327,17 @@ class OrnithopterPanel(ContextPanel):
             context_container=context_container,
         )
 
-        th: Ornithopter = get_commander().selected.sprites()[0]
-
         UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
-            object_id="#haul_logs_button",
+            object_id="#thopter_cancel_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: th.change_tree_to("another_tree"),
-            # command=lambda: print("asdasd"),
+            command=lambda: (
+                get_commander()
+                .selected.sprites()[0]
+                .set_blackboard_entry("action_mode", "idle")
+            ),
         )
         self.stock_label = UILabel(
             pg.Rect(20, 3, 100, 18), "0", container=context_container

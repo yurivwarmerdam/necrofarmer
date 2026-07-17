@@ -13,6 +13,7 @@ button_ids = {
     "#thopter_factory_2_button": "184,76,46,38",
     "#thopter_factory_button": "138,76,46,38",
     "#haul_logs_button": "46,114,46,38",
+    "#thopter_cancel_button": "92,114,46,38",
 }
 
 
