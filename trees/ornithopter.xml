@@ -8,17 +8,17 @@
                 </BlackboardEntryEquals>
                 <Succeeder />
             </ReactiveSequenceNode>
-            <Failer/>
             <ReactiveSequenceNode name="haul_logs">
                 <BlackboardEntryEquals>
                     <InputPort local="entry" bb="action_mode" />
                     <InputPort local="value" value="wood" />
                 </BlackboardEntryEquals>
                 <SequenceNode>
-                    <GetClosestTree>
+                    <ValidateOrGetClosestTree>
                         <InputPort local="self" bb="self" />
+                        <InputPort local="wood_pos" bb="wood_pos" />
                         <OutputPort local="wood_pos" bb="wood_pos" />
-                    </GetClosestTree>
+                    </ValidateOrGetClosestTree>
                     <MapToWorld>
                         <InputPort local="map_pos" bb="wood_pos" />
                         <OutputPort local="world_pos" bb="wood_world_pos" />

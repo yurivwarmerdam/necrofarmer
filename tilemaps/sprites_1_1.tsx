@@ -12,7 +12,7 @@
   <properties>
    <property name="can_walk" type="bool" value="false"/>
    <property name="collision_mask" type="int" value="1"/>
-   <property name="wood" type="int" value="5"/>
+   <property name="wood" type="int" value="8"/>
   </properties>
  </tile>
  <tile id="13">
@@ -25,7 +25,7 @@
   <properties>
    <property name="can_walk" type="bool" value="false"/>
    <property name="collision_mask" type="int" value="1"/>
-   <property name="wood" type="int" value="5"/>
+   <property name="wood" type="int" value="8"/>
   </properties>
  </tile>
  <tile id="23">
@@ -38,7 +38,7 @@
   <properties>
    <property name="can_walk" type="bool" value="false"/>
    <property name="collision_mask" type="int" value="1"/>
-   <property name="wood" type="int" value="5"/>
+   <property name="wood" type="int" value="8"/>
   </properties>
  </tile>
  <tile id="33">

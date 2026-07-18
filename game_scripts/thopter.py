@@ -71,7 +71,7 @@ class Ornithopter(AnimatedSprite, Selectable):
             "Talker": Talker,
             "PickMoveGoal": PickMoveGoal,
             "MoveTowardsPos": MoveTowardsPos,
-            "GetClosestTree": GetClosestTree,
+            "ValidateOrGetClosestTree": ValidateOrGetClosestTree,
             "BlackboardEntryEquals": BlackboardEntryEquals,
             "TakeWood": TakeWood,
             "MapToWorld": MapToWorld,
@@ -115,14 +115,15 @@ class Ornithopter(AnimatedSprite, Selectable):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             for c in collisions:
-                if hasattr(c, "properties"):
-                    if c.properties.get("wood"):
-                        # update whiteboard active tree
-                        # have tree default to idle
-                        # add idle button
-                        # change get_closest_tree to validate tree or somesuch.
-                        # mayyybe keep validating on each-tick composite node
-                        pass
+                if not hasattr(c, "properties"):
+                    continue
+                if c.properties.get("wood"):
+                    # v update whiteboard active tree
+                    # v have tree default to idle
+                    # v add idle button
+                    # change get_closest_tree to validate tree or somesuch.
+                    # mayyybe keep validating on each-tick composite node
+                    pass
 
             return True
         return False
@@ -230,12 +231,21 @@ class MapToWorld(SimpleActionNode):
         return NodeStatus.SUCCESS
 
 
-class GetClosestTree(SimpleActionNode):
+class ValidateOrGetClosestTree(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"self": Ornithopter}, {"wood_pos": Vector2})
+        self.ports_list = PortsList(
+            {"self": Ornithopter, "wood_pos": Vector2}, {"wood_pos": Vector2}
+        )
 
     def tick(self) -> NodeStatus:
+        try:
+            wood_pos = self.get_input("wood_pos")
+            props = get_tilemap().get_tile_properties(*wood_pos,"active")
+            if "wood" in props:
+                return NodeStatus.SUCCESS
+        except KeyError:
+            pass
         pos = self.get_input("self").pos
         map_pos = get_tilemap().world_to_map(pos)
         closest_tree = get_tilemap().get_closest_local_tree_idx(map_pos)
