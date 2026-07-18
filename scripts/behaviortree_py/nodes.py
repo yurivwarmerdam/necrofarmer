@@ -87,6 +87,8 @@ class FallbackNode(ControlNode):
                     return NodeStatus.SUCCESS
 
 
+from time import time
+last_time=time()
 class ReactiveSequenceNode(SequenceNode):
     """Ticks first child every tick. Behaves like a regular Sequence for the other children.
     First child should always return success or failure. This node will log en error if it returns something else."""
@@ -96,6 +98,10 @@ class ReactiveSequenceNode(SequenceNode):
             self.current_node += 1
 
         reactive_status = self.children[0].tick()
+        t=time()
+        global last_time
+        dt=t-last_time
+        last_time=t
         match reactive_status:
             case NodeStatus.FAILURE:
                 self.reset_children()

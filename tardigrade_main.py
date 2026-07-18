@@ -13,7 +13,6 @@ from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
 from scripts import image_server
 from scripts.camera import initialize_camera
-from scripts.async_runner import async_runner
 
 # Server architecture:
 # spin up and have global access to the following:
@@ -66,8 +65,6 @@ group_server.add_render_groups(tilemap.layers)
 group_server.add_render_groups({"draw": Group()})
 for layer in tilemap.layers.values():
     group_server.add_group_to_colliders(layer)
-
-print(group_server.collide_groups)
 
 camera = initialize_camera(
     group_server.render_groups,

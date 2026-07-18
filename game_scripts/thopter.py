@@ -18,7 +18,8 @@ from scripts.behaviortree_py.nodes import (
     SimpleActionNode,
     StatefulActionNode,
 )
-from scripts.entities import ActionStatus
+
+# from scripts.entities import ActionStatus
 from scripts.behaviortree_py.dummy_nodes import (
     Failer,
     Succeeder,
@@ -60,7 +61,7 @@ class Ornithopter(AnimatedSprite, Selectable):
 
         # --- BehaviorTree stuff ---
         self.blackboard = {
-            "action_status": ActionStatus.IDLE,
+            "action_status": NodeStatus.IDLE,
             "self": self,
             "action_mode": "wood",
         }  # minimal required set of blackboard entries.
@@ -93,9 +94,9 @@ class Ornithopter(AnimatedSprite, Selectable):
     def update(self, delta):
         super().update(delta)
         if self.blackboard["action_status"] in [
-            ActionStatus.IDLE,
-            ActionStatus.SUCCESS,
-            ActionStatus.FAILURE,
+            NodeStatus.IDLE,
+            NodeStatus.SUCCESS,
+            NodeStatus.FAILURE,
         ]:
             return
         status, func, params = self.blackboard["action_status"]
@@ -113,7 +114,6 @@ class Ornithopter(AnimatedSprite, Selectable):
     def process_events(self, event: pg.Event):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
-            print(collisions)
             for c in collisions:
                 if hasattr(c, "properties"):
                     if c.properties.get("wood"):
@@ -134,7 +134,7 @@ class Ornithopter(AnimatedSprite, Selectable):
     def move_towards(self, delta, goal: Vector2):
         self.pos = Vector2(self.pos).move_towards(goal, delta * self.MOVE_SPEED)
         if self.pos == goal:
-            self.blackboard["action_status"] = ActionStatus.SUCCESS
+            self.blackboard["action_status"] = NodeStatus.SUCCESS
 
     def take_wood(self, delta, wood_pos: tuple[int, int]):
         self.load_progress += delta / 1000
@@ -143,13 +143,12 @@ class Ornithopter(AnimatedSprite, Selectable):
             headroom = min(self.CARGO_CAPACITY - self.cargo, self.LOAD_VOLUME)
             if headroom <= 0:
                 # cargo is full
-                self.blackboard["action_status"] = ActionStatus.SUCCESS
+                self.blackboard["action_status"] = NodeStatus.SUCCESS
             else:
                 result = get_tilemap().take_wood(wood_pos, headroom)
                 if result is None:
-                    print("failing")
                     # Tree apparently does not exist (anymore)
-                    self.blackboard["action_status"] = ActionStatus.FAILURE
+                    self.blackboard["action_status"] = NodeStatus.FAILURE
                 else:
                     self.cargo += result
 
@@ -160,13 +159,13 @@ class Ornithopter(AnimatedSprite, Selectable):
             headroom = min(self.cargo, self.LOAD_VOLUME)
             if headroom <= 0:
                 # cargo is empty
-                self.blackboard["action_status"] = ActionStatus.SUCCESS
+                self.blackboard["action_status"] = NodeStatus.SUCCESS
             else:
                 entity = get_tilemap().get_tile("active", *put_pos)
                 result = entity.put_wood(headroom)
                 if result is None or result < headroom:
                     # sawmill//stock is apparently full (not implemented yet at write-time)
-                    self.blackboard["action_status"] = ActionStatus.FAILURE
+                    self.blackboard["action_status"] = NodeStatus.FAILURE
                 else:
                     self.cargo -= result
 
@@ -177,6 +176,9 @@ class Ornithopter(AnimatedSprite, Selectable):
 
     def set_blackboard_entry(self, key, value):
         self.blackboard[key] = value
+
+    def get_blackboard_value(self, entry):
+        return self.blackboard.get(entry)
 
 
 # --- Behavior tree section ---
@@ -192,11 +194,11 @@ class MoveTowardsPos(StatefulActionNode):
     def on_start(self) -> NodeStatus:
         # this is the pattern when delegating actions to actual unit behavior
         pos = self.get_input("pos")
-        self.set_output("action_status", (ActionStatus.RUNNING, "move_towards", pos))
+        self.set_output("action_status", (NodeStatus.RUNNING, "move_towards", pos))
         return super().on_start()
 
     def on_running(self) -> NodeStatus:
-        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+        if self.get_input("action_status") in [NodeStatus.IDLE, NodeStatus.SUCCESS]:
             self.node_status = NodeStatus.SUCCESS
             return self.node_status
         else:
@@ -263,7 +265,6 @@ class GetClosestBuilding(SimpleActionNode):
             self.set_output("building_pos", closest_building_idx)
             return NodeStatus.SUCCESS
         else:
-            print("can't find type: ", building_type)
             return NodeStatus.FAILURE
 
 
@@ -278,16 +279,16 @@ class TakeWood(StatefulActionNode):
 
     def on_start(self) -> NodeStatus:
         wood_pos = self.get_input("wood_pos")
-        self.set_output("action_status", (ActionStatus.RUNNING, "take_wood", wood_pos))
+        self.set_output("action_status", (NodeStatus.RUNNING, "take_wood", wood_pos))
         return super().on_start()
 
     def on_running(self) -> NodeStatus:
         # TODO: This seems.. odd. Why wouldn't it always match the tuple it's assigned to on start?
         # I may be confused on when on_running is actually called.
-        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+        if self.get_input("action_status") in [NodeStatus.IDLE, NodeStatus.SUCCESS]:
             self.node_status = NodeStatus.SUCCESS
             return self.node_status
-        elif self.get_input("action_status") is ActionStatus.FAILURE:
+        elif self.get_input("action_status") is NodeStatus.FAILURE:
             self.node_status = NodeStatus.FAILURE
             return self.node_status
         else:
@@ -304,13 +305,13 @@ class PutWood(StatefulActionNode):
 
     def on_start(self) -> NodeStatus:
         put_pos = self.get_input("put_pos")
-        self.set_output("action_status", (ActionStatus.RUNNING, "put_wood", put_pos))
+        self.set_output("action_status", (NodeStatus.RUNNING, "put_wood", put_pos))
         return super().on_start()
 
     def on_running(self) -> NodeStatus:
         # TODO: This seems.. odd. Why wouldn't it always match the tuple it's assigned to on start?
         # I may be confused on when on_running is actually called.
-        if self.get_input("action_status") in [ActionStatus.IDLE, ActionStatus.SUCCESS]:
+        if self.get_input("action_status") in [NodeStatus.IDLE, NodeStatus.SUCCESS]:
             self.node_status = NodeStatus.SUCCESS
             return self.node_status
         else:
@@ -333,11 +334,7 @@ class OrnithopterPanel(ContextPanel):
             object_id="#thopter_cancel_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: (
-                get_commander()
-                .selected.sprites()[0]
-                .set_blackboard_entry("action_mode", "idle")
-            ),
+            command=self.cancel_button,
         )
         self.stock_label = UILabel(
             pg.Rect(20, 3, 100, 18), "0", container=context_container
@@ -347,3 +344,9 @@ class OrnithopterPanel(ContextPanel):
         cargo = get_commander().selected.sprites()[0].cargo
         cargo_capacity = get_commander().selected.sprites()[0].CARGO_CAPACITY
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")
+
+    def cancel_button(self):
+        thopter: Ornithopter = get_commander().selected.sprites()[0]
+        if thopter.get_blackboard_value("action_mode") != "idle":
+            thopter.set_blackboard_entry("action_mode", "idle")
+            thopter.set_blackboard_entry("action_status", NodeStatus.IDLE)
