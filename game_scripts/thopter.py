@@ -63,7 +63,7 @@ class Ornithopter(AnimatedSprite, Selectable):
         self.blackboard = {
             "action_status": NodeStatus.IDLE,
             "self": self,
-            "action_mode": "wood",
+            "action_mode": "idle",
         }  # minimal required set of blackboard entries.
         nodes = {
             "Succeeder": Succeeder,
@@ -118,6 +118,11 @@ class Ornithopter(AnimatedSprite, Selectable):
                 if not hasattr(c, "properties"):
                     continue
                 if c.properties.get("wood"):
+                    tile_pos = get_tilemap().world_to_map(c.pos)
+                    self.blackboard["wood_pos"] = tile_pos
+                    self.blackboard["action_mode"] = "wood"
+                    self.blackboard["action_status"] = NodeStatus.IDLE
+                    # self.blackboard[]
                     # v update whiteboard active tree
                     # v have tree default to idle
                     # v add idle button
@@ -241,7 +246,7 @@ class ValidateOrGetClosestTree(SimpleActionNode):
     def tick(self) -> NodeStatus:
         try:
             wood_pos = self.get_input("wood_pos")
-            props = get_tilemap().get_tile_properties(*wood_pos,"active")
+            props = get_tilemap().get_tile_properties(*wood_pos, "active")
             if "wood" in props:
                 return NodeStatus.SUCCESS
         except KeyError:
