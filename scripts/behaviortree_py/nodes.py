@@ -104,9 +104,7 @@ class ReactiveSequenceNode(SequenceNode):
             case NodeStatus.SUCCESS:
                 return super().tick()
             case x:
-                print(
-                    f"This should be an error! Reactive child state is: {x}"
-                )
+                print(f"This should be an error! Reactive child state is: {x}")
                 return NodeStatus.FAILURE
 
 

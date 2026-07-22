@@ -1,4 +1,3 @@
-
 import pygame as pg
 from pygame_gui.elements import UILabel, UIStatusBar
 
