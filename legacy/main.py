@@ -1,19 +1,19 @@
 import sys
 
 import pygame as pg
-from scripts.async_runner import async_runner
-from scripts.camera import Camera
-from scripts.entities import BTGroup, Seed
-from legacy.global_blackboard import global_blackboard
-from legacy.player import PlayerEntity
-from legacy.skeleton import Skeleton
-from legacy.ui_necro import ManaBar
-from scripts.utils import load_image
 from pygame import Rect
 from pygame.math import Vector2
 from pygame.sprite import Group, LayeredUpdates
 
+from legacy.global_blackboard import global_blackboard
+from legacy.player import PlayerEntity
+from legacy.skeleton import Skeleton
+from legacy.ui_necro import ManaBar
 from legacy.world_tilemap import WorldTilemap
+from scripts.async_runner import async_runner
+from scripts.camera import Camera
+from scripts.entities import BTGroup, Seed
+from scripts.utils import load_image
 
 
 class MainClass:

@@ -1,13 +1,13 @@
+from functools import partial
 from typing import Dict
 
 import pygame as pg
-from scripts.ui_shim import UIPanel
 from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
 from pygame_gui.core.interfaces import IUIElementInterface, IUIManagerInterface
-from scripts.custom_sprites import ninepatchscale, tilingscale
-from functools import partial
 from pygame_gui.elements import UIImage
 
+from scripts.custom_sprites import ninepatchscale, tilingscale
+from scripts.ui_shim import UIPanel
 
 NINE_SLICE_FUNC = partial(ninepatchscale, patch_margain=3, scale_func=tilingscale)
 

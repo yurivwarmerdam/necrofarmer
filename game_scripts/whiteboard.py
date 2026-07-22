@@ -1,5 +1,5 @@
-from scripts.tilemap import TileDataLayers, TileData
 from game_scripts.bigtiles import bigtiles
+from scripts.tilemap import TileData, TileDataLayers
 
 # statics
 bigtile_entities = {

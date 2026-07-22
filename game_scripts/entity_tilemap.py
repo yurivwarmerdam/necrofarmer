@@ -1,9 +1,9 @@
-from pygame import Vector2
-from game_scripts import whiteboard
-
-from game_scripts.bigtiles.bigtile import BigTile
 from typing import override
 
+from pygame import Vector2
+
+from game_scripts import whiteboard
+from game_scripts.bigtiles.bigtile import BigTile
 from scripts.tilemap import Tile, Tilemap
 
 

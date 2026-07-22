@@ -6,11 +6,11 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from game_scripts import game_tilemap, star
-from game_scripts.group_server import get_group_server
 from game_scripts.commander import get_commander
-from game_scripts.ui.main_ui import MainUI
+from game_scripts.group_server import get_group_server
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
+from game_scripts.ui.main_ui import MainUI
 from scripts import image_server
 from scripts.camera import initialize_camera
 
@@ -22,7 +22,7 @@ from scripts.camera import initialize_camera
 # - entity_tilemap
 # - groups
 # in addition, there's also singletons associated with Behavior trees:
-# - async_runner
+# - async_runner (unused)
 # - global_blackboard
 
 

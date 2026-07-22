@@ -1,9 +1,8 @@
-from scripts.behaviortree_py.factory import BehaviorTreeFactory
-from scripts.behaviortree_py.behaviortree import NodeStatus
-from scripts.behaviortree_py import dummy_nodes
 from time import sleep
 
-from scripts.behaviortree_py.behaviortree import Tree
+from scripts.behaviortree_py import dummy_nodes
+from scripts.behaviortree_py.behaviortree import NodeStatus, Tree
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
 
 
 def main():

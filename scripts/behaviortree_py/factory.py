@@ -1,3 +1,8 @@
+from typing import Callable, Type
+
+from bs4 import BeautifulSoup as soup
+
+from scripts.behaviortree_py import nodes
 from scripts.behaviortree_py.behaviortree import (
     BBInputPort,
     ControlNode,
@@ -8,9 +13,6 @@ from scripts.behaviortree_py.behaviortree import (
     StaticInputPort,
     Tree,
 )
-from bs4 import BeautifulSoup as soup
-from typing import Callable, Type
-from scripts.behaviortree_py import nodes
 
 
 class BehaviorTreeFactory:

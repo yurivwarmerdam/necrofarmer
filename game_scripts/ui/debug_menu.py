@@ -1,17 +1,16 @@
-from game_scripts.commander import get_commander
-from game_scripts.tardigrade import Tardigrade
-from game_scripts.thopter import Ornithopter
-from scripts.camera import get_camera
-from scripts.custom_sprites import AnimatedSprite, integer_scale
-from scripts.ui_shim import UIButton
-from scripts.tilemap import world_to_mapv
-from game_scripts.game_tilemap import get_tilemap
-from game_scripts.whiteboard import get_Whiteboard
-
-from scripts.tilemap import TileData
 import pygame as pg
 from pygame.rect import Rect
 from pygame_gui.elements import UIWindow
+
+from game_scripts.commander import get_commander
+from game_scripts.game_tilemap import get_tilemap
+from game_scripts.tardigrade import Tardigrade
+from game_scripts.thopter import Ornithopter
+from game_scripts.whiteboard import get_Whiteboard
+from scripts.camera import get_camera
+from scripts.custom_sprites import AnimatedSprite, integer_scale
+from scripts.tilemap import TileData, world_to_mapv
+from scripts.ui_shim import UIButton
 
 
 class DebugMenu(UIWindow):

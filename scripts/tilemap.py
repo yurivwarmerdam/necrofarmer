@@ -1,14 +1,14 @@
+from dataclasses import dataclass
 from math import floor
 
 import pygame as pg
 from pygame import Vector2
 from pygame.sprite import AbstractGroup, Group, LayeredUpdates
-from pytmx.map import TiledMap, TiledLayer
+from pygame.surface import Surface
+from pytmx.map import TiledLayer, TiledMap
 from pytmx.util_pygame import load_pygame
 
 from scripts.custom_sprites import NodeSprite
-from dataclasses import dataclass
-from pygame.surface import Surface
 
 
 # lol. Allows for weird notation

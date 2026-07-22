@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from pygame.sprite import AbstractGroup, Group, Sprite
+from pygame.sprite import AbstractGroup, Group, Sprite, spritecollide
+
 from scripts.behaviortree_py.util_pygame import BTGroup
-from pygame.sprite import spritecollide
 from scripts.utils import pointcollide
 
 

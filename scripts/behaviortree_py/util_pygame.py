@@ -1,5 +1,6 @@
 from pygame.sprite import Group
 
+
 class BTGroup(Group):
     def tick(self, *args, **kwargs):
         """call the tick method of every member sprite

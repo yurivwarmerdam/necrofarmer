@@ -4,7 +4,6 @@ from pygame.mask import from_surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
 
-
 # from typing import List
 
 

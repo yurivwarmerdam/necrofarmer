@@ -5,11 +5,11 @@ from pygame.sprite import Group, Sprite
 from pygame_gui.core import UIElement
 
 from game_scripts.group_server import get_group_server
-from scripts.camera import Camera, get_camera
-from scripts.custom_sprites import NodeSprite
 
 # from scripts.utils import pointcollide
 from game_scripts.selectable import Selectable
+from scripts.camera import Camera, get_camera
+from scripts.custom_sprites import NodeSprite
 
 
 class SelectBox(NodeSprite):

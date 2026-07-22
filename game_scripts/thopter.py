@@ -1,33 +1,34 @@
-import pygame as pg
-from scripts.behaviortree_py.factory import BehaviorTreeFactory
-from scripts.custom_sprites import AnimatedSprite
-from game_scripts.ui.context_panel import ContextPanel
-from game_scripts.selectable import Selectable
-from scripts import image_server
-from game_scripts import group_server
-from pygame.math import Vector2
 from random import randint
-from scripts.ui_shim import UIButton
-from scripts.custom_sprites import integer_scale
+
+import pygame as pg
+from pygame.math import Vector2
+from pygame_gui.elements import UILabel
+
+from game_scripts import group_server
+from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
+from game_scripts.selectable import Selectable
+from game_scripts.ui.context_panel import ContextPanel
+from scripts import image_server
 from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     PortsList,
 )
+
+# from scripts.entities import ActionStatus
+from scripts.behaviortree_py.dummy_nodes import (
+    BlackboardEntryEquals,
+    Failer,
+    Succeeder,
+    Talker,
+)
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
 from scripts.behaviortree_py.nodes import (
     SimpleActionNode,
     StatefulActionNode,
 )
-
-# from scripts.entities import ActionStatus
-from scripts.behaviortree_py.dummy_nodes import (
-    Failer,
-    Succeeder,
-    Talker,
-    BlackboardEntryEquals,
-)
-from pygame_gui.elements import UILabel
-from game_scripts.commander import get_commander
+from scripts.custom_sprites import AnimatedSprite, integer_scale
+from scripts.ui_shim import UIButton
 
 # TODO:
 # - def idle (land)

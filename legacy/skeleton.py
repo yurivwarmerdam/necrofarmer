@@ -5,15 +5,15 @@ from pygame import Surface
 from pygame.math import Vector2
 from pygame.sprite import Sprite
 
+from legacy.global_blackboard import global_blackboard
 from scripts.async_runner import async_runner
-from scripts.behaviortree_py.factory import BehaviorTreeFactory
 from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
 )
 from scripts.behaviortree_py.dummy_nodes import Failer, Outputter, Succeeder, Talker
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
 from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.entities import ActionStatus
-from legacy.global_blackboard import global_blackboard
 
 
 class Skeleton(Sprite):

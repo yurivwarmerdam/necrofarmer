@@ -1,5 +1,6 @@
-from game_scripts.entity_tilemap import EntityTilemap
 from pygame.math import Vector2
+
+from game_scripts.entity_tilemap import EntityTilemap
 
 
 class GameTilemap(EntityTilemap):
