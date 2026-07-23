@@ -122,6 +122,7 @@ class Commander:
                         collided_sprites = self.get_mouse_collisions()
                         self.unselect_all()
                         if collided_sprites:
+                            print(collided_sprites)
                             for collided_sprite in collided_sprites:
                                 if isinstance(collided_sprite, Selectable):
                                     self.select(collided_sprites[0])

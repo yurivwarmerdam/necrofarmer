@@ -14,6 +14,7 @@ button_ids = {
     "#thopter_factory_button": "138,76,46,38",
     "#haul_logs_button": "46,114,46,38",
     "#thopter_cancel_button": "92,114,46,38",
+    "#cancel_button": "0,76,46,38",
 }
 
 
@@ -26,8 +27,6 @@ class Whiteboard:
       Whiteboard.weird_var="value"
       use_variable(whiteboard.weird_var)
     """
-
-    # Ohgod, how could I possibly avoid circular import warnings!?
 
     def __init__(self) -> None:
         self.tile_entities: dict[str, TileData] = self.parse_tiledata()

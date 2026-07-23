@@ -4,12 +4,11 @@ import pygame as pg
 from pygame.math import Vector2
 from pygame_gui.elements import UILabel
 
-from game_scripts import group_server
 from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
+from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.ui.context_panel import ContextPanel
-from scripts import image_server
 from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     PortsList,
@@ -28,6 +27,7 @@ from scripts.behaviortree_py.nodes import (
     StatefulActionNode,
 )
 from scripts.custom_sprites import AnimatedSprite, integer_scale
+from scripts.image_server import get_image_server
 from scripts.ui_shim import UIButton
 
 # TODO:
@@ -42,8 +42,8 @@ class Ornithopter(AnimatedSprite, Selectable):
     LOAD_VOLUME = 1
 
     def __init__(self, pos):
-        img_server = image_server.get_image_server()
-        groups = group_server.get_group_server()
+        img_server = get_image_server()
+        group_server = get_group_server()
         super().__init__(
             {
                 "0": img_server.animations["thopter_0"],
@@ -52,11 +52,12 @@ class Ornithopter(AnimatedSprite, Selectable):
                 "3": img_server.animations["thopter_3"],
             },
             pos,
-            groups.update,
-            groups.colliders,
-            groups.render_groups["active"],
-            groups.behavior_trees,
+            group_server.update,
+            group_server.render_groups["active"],
+            group_server.behavior_trees,
         )
+        self.collision_mask = 1
+        group_server.add_collider_sprite(self)
         self.cargo = 0
         self.load_progress = 0.0
 
@@ -340,7 +341,7 @@ class PutWood(StatefulActionNode):
 class OrnithopterPanel(ContextPanel):
     def __init__(self, *, context_container):
         super().__init__(
-            portrait_id="#ornithopter_button",
+            portrait_id="#thopter_button",
             context_container=context_container,
         )
 

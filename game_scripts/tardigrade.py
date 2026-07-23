@@ -25,7 +25,7 @@ from scripts.ui_shim import UIButton
 class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
         img_server = get_image_server()
-        groups = get_group_server()
+        group_server = get_group_server()
         super().__init__(
             {
                 "0": img_server.animations["tardigrade_0"],
@@ -34,12 +34,13 @@ class Tardigrade(AnimatedSprite, Selectable):
                 "3": img_server.animations["tardigrade_3"],
             },
             pos,
-            groups.update,
-            groups.colliders,
-            groups.render_groups["active"],
+            group_server.update,
+            group_server.render_groups["active"],
             anchor="center",
             offset=Vector2(0, 10),
         )
+        self.collision_mask = 1
+        group_server.add_collider_sprite(self)
 
         self.camera = get_camera()
         self.tilemap = game_tilemap.get_tilemap()

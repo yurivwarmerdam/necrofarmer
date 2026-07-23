@@ -7,7 +7,7 @@ from scripts.behaviortree_py.nodes import SimpleActionNode
 
 class Succeeder(SimpleActionNode):
     def tick(self) -> NodeStatus:
-        print("success")
+        # print("success")
         return NodeStatus.SUCCESS
 
 

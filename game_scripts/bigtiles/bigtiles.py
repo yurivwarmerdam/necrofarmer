@@ -6,6 +6,7 @@ from game_scripts.commander import get_commander
 from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.stockpile import get_stockpile
+from game_scripts.thopter import Ornithopter
 from game_scripts.ui.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale
 from scripts.tilemap import TileData
@@ -16,8 +17,8 @@ class Sawmill(BigTile, Selectable):
     def __init__(self, tiledata: TileData, *groups):
         super().__init__(
             tiledata,
-            get_group_server().colliders,  # prepending colliders to groups.
-            get_group_server().update,
+            # get_group_server().colliders,  # prepending colliders to groups.
+            get_group_server().update,  # prepending update to groups.
             *groups,
         )
         self.saw_progress: float = 0
@@ -81,10 +82,11 @@ class ThopterFactory(BigTile, Selectable):
     def __init__(self, tiledata: TileData, *groups):
         super().__init__(
             tiledata,
-            get_group_server().colliders,  # prepending colliders to groups.
-            get_group_server().update,
+            # get_group_server().colliders,
+            get_group_server().update,  # prepending update to groups.
             *groups,
         )
+        self.constructing = None
 
     def put_wood(self, amount: int):
         get_stockpile().add_wood(amount)
@@ -93,6 +95,10 @@ class ThopterFactory(BigTile, Selectable):
     @property
     def context_panel(self) -> type[ContextPanel]:
         return ThopterFactoryPanel
+
+    def update(self, _delta) -> None:
+        print("asd")
+        pass
 
 
 class ThopterFactoryPanel(ContextPanel):
@@ -107,5 +113,20 @@ class ThopterFactoryPanel(ContextPanel):
             object_id="#thopter_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: print("I do nothing yet!"),
+            command=self.start_build_thopter,
         )
+        UIButton(
+            pg.Rect(56, 0, 54, 46),
+            text="",
+            object_id="#cancel_button",
+            scale_func=integer_scale,
+            container=context_container,
+            command=self.cancel_build,
+            visible=False,
+        )
+
+    def start_build_thopter(self):
+        print("I do nothing yet!")
+
+    def cancel_build(self):
+        print("Should I be visible?")
