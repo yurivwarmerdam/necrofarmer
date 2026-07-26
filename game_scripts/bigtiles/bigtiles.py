@@ -6,11 +6,11 @@ from game_scripts.commander import get_commander
 from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.stockpile import get_stockpile
-from game_scripts.thopter import Ornithopter
 from game_scripts.ui.context_panel import ContextPanel
 from scripts.custom_sprites import integer_scale
 from scripts.tilemap import TileData
 from scripts.ui_shim import UIButton
+from blinker import signal
 
 
 class Sawmill(BigTile, Selectable):
@@ -97,7 +97,7 @@ class ThopterFactory(BigTile, Selectable):
         return ThopterFactoryPanel
 
     def update(self, _delta) -> None:
-        print("asd")
+        # TODO: progress; emit stuff
         pass
 
 
@@ -127,6 +127,10 @@ class ThopterFactoryPanel(ContextPanel):
 
     def start_build_thopter(self):
         print("I do nothing yet!")
+        print(get_group_server().update)
+        sawmill = get_commander().selected.sprites()[0]
+        signal("spawn_thopter").send(sawmill)
+        print(get_group_server().update)
 
     def cancel_build(self):
         print("Should I be visible?")

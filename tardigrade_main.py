@@ -11,6 +11,7 @@ from game_scripts.group_server import get_group_server
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Ornithopter
 from game_scripts.ui.main_ui import MainUI
+from game_scripts.spawner import get_spawner
 from scripts import image_server
 from scripts.camera import initialize_camera
 
@@ -55,6 +56,7 @@ ui = MainUI()
 # -- group initialization --
 
 group_server = get_group_server()
+spawner = get_spawner()
 
 tilemap = game_tilemap.get_tilemap(
     "tilemaps/another_island.tmx",
