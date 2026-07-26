@@ -126,11 +126,8 @@ class ThopterFactoryPanel(ContextPanel):
         )
 
     def start_build_thopter(self):
-        print("I do nothing yet!")
-        print(get_group_server().update)
         sawmill = get_commander().selected.sprites()[0]
         signal("spawn_thopter").send(sawmill)
-        print(get_group_server().update)
 
     def cancel_build(self):
         print("Should I be visible?")
