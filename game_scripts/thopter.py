@@ -41,9 +41,22 @@ class Ornithopter(AnimatedSprite, Selectable):
     LOAD_SPEED = 1
     LOAD_VOLUME = 1
 
-    def __init__(self, pos):
-        img_server = get_image_server()
+    def __init__(self, pos, preload=False):
+        print(
+            type(self),
+        )
         group_server = get_group_server()
+        if preload:
+            groups = [group_server.typed_groups[f"_{type(self).__name__}"]]
+        else:
+            groups = [
+                group_server.typed_groups[type(self).__name__],
+                group_server.update,
+                group_server.render_groups["active"],
+                group_server.behavior_trees,
+            ]
+
+        img_server = get_image_server()
         super().__init__(
             {
                 "0": img_server.animations["thopter_0"],
@@ -52,9 +65,7 @@ class Ornithopter(AnimatedSprite, Selectable):
                 "3": img_server.animations["thopter_3"],
             },
             pos,
-            group_server.update,
-            group_server.render_groups["active"],
-            group_server.behavior_trees,
+            *groups,
         )
         self.collision_mask = 1
         group_server.add_collider_sprite(self)

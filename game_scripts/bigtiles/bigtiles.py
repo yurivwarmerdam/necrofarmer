@@ -98,7 +98,12 @@ class ThopterFactory(BigTile, Selectable):
 
     def update(self, _delta) -> None:
         # TODO: progress; emit stuff
+        if self.constructing and self.progress == 100 and self.constructing == "thopter":
+            signal("spawn_thopter").send(self)
         pass
+
+    def start_build_thopter(self):
+        signal("start_build_thopter").send(self)
 
 
 class ThopterFactoryPanel(ContextPanel):
@@ -126,8 +131,9 @@ class ThopterFactoryPanel(ContextPanel):
         )
 
     def start_build_thopter(self):
-        sawmill = get_commander().selected.sprites()[0]
-        signal("spawn_thopter").send(sawmill)
+        factory:ThopterFactory = get_commander().selected.sprites()[0]
+        factory.start_build_thopter()
+        
 
     def cancel_build(self):
         print("Should I be visible?")

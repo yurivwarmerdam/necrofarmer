@@ -4,6 +4,7 @@ from pygame.sprite import AbstractGroup, Group, Sprite, spritecollide
 
 from scripts.behaviortree_py.util_pygame import BTGroup
 from scripts.utils import pointcollide
+from typing import DefaultDict
 
 
 @dataclass
@@ -32,6 +33,7 @@ class GroupServer:
     colliders: Group = Group()
     update: Group = Group()
     behavior_trees: BTGroup = BTGroup()
+    typed_groups: dict[str, Group] = field(default_factory=lambda: DefaultDict(Group))
 
     def add_render_groups(self, groups: dict[str, Group] | dict[str, AbstractGroup]):
         self.render_groups = self.render_groups | groups.copy()
