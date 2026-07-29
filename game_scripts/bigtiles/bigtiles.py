@@ -11,6 +11,7 @@ from scripts.custom_sprites import integer_scale
 from scripts.tilemap import TileData
 from scripts.ui_shim import UIButton
 from blinker import signal
+from game_scripts.statistics import get_statistics
 
 
 class Sawmill(BigTile, Selectable):
@@ -86,7 +87,8 @@ class ThopterFactory(BigTile, Selectable):
             get_group_server().update,  # prepending update to groups.
             *groups,
         )
-        self.constructing = None
+        self.stop_build()
+        self.statistics=get_statistics()
 
     def put_wood(self, amount: int):
         get_stockpile().add_wood(amount)
@@ -96,14 +98,24 @@ class ThopterFactory(BigTile, Selectable):
     def context_panel(self) -> type[ContextPanel]:
         return ThopterFactoryPanel
 
-    def update(self, _delta) -> None:
-        # TODO: progress; emit stuff
-        if self.constructing and self.progress == 100 and self.constructing == "thopter":
-            signal("spawn_thopter").send(self)
-        pass
+    def update(self, delta) -> None:
+        if self.constructing:
+            self.construciton_progress += delta
+            if self.construciton_progress>=self.statistics[self.constructing]["build_time"]
+                match self.constructing:
+                    case "thopter":
+                        signal("spawn_thopter").send(self)
+                    case x:
+                        print(f"how are we here? {x}")
+                self.stop_build()
 
     def start_build_thopter(self):
         signal("start_build_thopter").send(self)
+        self.constructing="thopter"
+
+    def stop_build(self):
+        self.constructing=None
+        self.construciton_progress=0.0
 
 
 class ThopterFactoryPanel(ContextPanel):
@@ -131,9 +143,8 @@ class ThopterFactoryPanel(ContextPanel):
         )
 
     def start_build_thopter(self):
-        factory:ThopterFactory = get_commander().selected.sprites()[0]
+        factory: ThopterFactory = get_commander().selected.sprites()[0]
         factory.start_build_thopter()
-        
 
     def cancel_build(self):
         print("Should I be visible?")

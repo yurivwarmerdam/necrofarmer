@@ -1,0 +1,9 @@
+{
+    "thopter": {
+        "build_time": 20,
+        "cargo_capacity": 5
+    },
+    "sawmill": {
+        "build_time": 20
+    }
+}
