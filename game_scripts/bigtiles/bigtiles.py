@@ -150,6 +150,8 @@ class ThopterFactoryPanel(ContextPanel):
         factory.start_build_thopter()
 
     def cancel_build(self):
+        factory: ThopterFactory = get_commander().first_selected
+        factory.stop_build()
         print("Should I be visible?")
 
     def update(self, _delta) -> None:
