@@ -88,7 +88,7 @@ class ThopterFactory(BigTile, Selectable):
             *groups,
         )
         self.stop_build()
-        self.statistics=get_statistics()
+        self.statistics = get_statistics()
 
     def put_wood(self, amount: int):
         get_stockpile().add_wood(amount)
@@ -100,8 +100,11 @@ class ThopterFactory(BigTile, Selectable):
 
     def update(self, delta) -> None:
         if self.constructing:
-            self.construction_progress += delta/1000
-            if self.construction_progress>=self.statistics[self.constructing]["build_time"]:
+            self.construction_progress += delta / 1000
+            if (
+                self.construction_progress
+                >= self.statistics[self.constructing]["build_time"]
+            ):
                 match self.constructing:
                     case "thopter":
                         signal("spawn_thopter").send(self)
@@ -111,11 +114,11 @@ class ThopterFactory(BigTile, Selectable):
 
     def start_build_thopter(self):
         signal("start_build_thopter").send(self)
-        self.constructing="thopter"
+        self.constructing = "thopter"
 
     def stop_build(self):
-        self.constructing=None
-        self.construction_progress=0.0
+        self.constructing = None
+        self.construction_progress = 0.0
 
 
 class ThopterFactoryPanel(ContextPanel):
@@ -132,7 +135,7 @@ class ThopterFactoryPanel(ContextPanel):
             container=context_container,
             command=self.start_build_thopter,
         )
-        UIButton(
+        self.cancel_button = UIButton(
             pg.Rect(56, 0, 54, 46),
             text="",
             object_id="#cancel_button",
@@ -143,8 +146,14 @@ class ThopterFactoryPanel(ContextPanel):
         )
 
     def start_build_thopter(self):
-        factory: ThopterFactory = get_commander().selected.sprites()[0]
+        factory: ThopterFactory = get_commander().first_selected
         factory.start_build_thopter()
 
     def cancel_build(self):
         print("Should I be visible?")
+
+    def update(self, _delta) -> None:
+        if get_commander().first_selected.constructing:
+            self.cancel_button.visible = True
+        else:
+            self.cancel_button.visible = False

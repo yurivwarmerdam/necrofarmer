@@ -159,6 +159,10 @@ class Commander:
             1,
         )
 
+    @property
+    def first_selected(self) -> NodeSprite|None:
+        return self.selected.sprites()[0] if self.selected.sprites else None
+
 
 _instance = None
 
