@@ -1,5 +1,5 @@
 from game_scripts.group_server import get_group_server
-from game_scripts.thopter import Ornithopter
+from game_scripts.thopter import Thopter
 from blinker import signal
 from scripts.custom_sprites import NodeSprite
 
@@ -12,19 +12,18 @@ class Spawner:
         pass
 
     def start_build_thopter(self, sender: NodeSprite):
-        Ornithopter(sender.pos, preload=True)
-        # make//add _thopter
-        pass
+        Thopter(sender.pos, preload=True)
 
     def spawn_thopter(self, sender: NodeSprite):
         # TODO: thechnically more efficient to reassign existing thopter to regular groups
         # instead of removing and adding one.
-        unfinished_l = self.group_server.typed_groups["_thopter"].sprites()
+        unfinished_l = self.group_server.typed_groups["_Thopter"].sprites()
         val = unfinished_l[0] if len(unfinished_l) > 0 else None
+        print(unfinished_l,val)
         if not val:
             raise Exception("finishing construction without ever starting")
         val.kill()
-        Ornithopter(sender.pos)
+        Thopter(sender.pos)
         pass
 
 

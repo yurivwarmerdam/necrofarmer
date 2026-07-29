@@ -100,8 +100,8 @@ class ThopterFactory(BigTile, Selectable):
 
     def update(self, delta) -> None:
         if self.constructing:
-            self.construciton_progress += delta
-            if self.construciton_progress>=self.statistics[self.constructing]["build_time"]
+            self.construction_progress += delta/1000
+            if self.construction_progress>=self.statistics[self.constructing]["build_time"]:
                 match self.constructing:
                     case "thopter":
                         signal("spawn_thopter").send(self)
@@ -115,7 +115,7 @@ class ThopterFactory(BigTile, Selectable):
 
     def stop_build(self):
         self.constructing=None
-        self.construciton_progress=0.0
+        self.construction_progress=0.0
 
 
 class ThopterFactoryPanel(ContextPanel):

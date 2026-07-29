@@ -9,7 +9,7 @@ from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
 from game_scripts.group_server import get_group_server
 from game_scripts.tardigrade import Tardigrade
-from game_scripts.thopter import Ornithopter
+from game_scripts.thopter import Thopter
 from game_scripts.ui.main_ui import MainUI
 from game_scripts.spawner import get_spawner
 from scripts import image_server
@@ -93,7 +93,7 @@ Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
 Tardigrade(Vector2(150, 150))
 
-Ornithopter(Vector2(200, 200))
+Thopter(Vector2(200, 200))
 
 
 def handle_camera_move():

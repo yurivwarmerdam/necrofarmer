@@ -5,7 +5,7 @@ from pygame_gui.elements import UIWindow
 from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
 from game_scripts.tardigrade import Tardigrade
-from game_scripts.thopter import Ornithopter
+from game_scripts.thopter import Thopter
 from game_scripts.whiteboard import get_Whiteboard
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
@@ -33,7 +33,7 @@ class DebugMenu(UIWindow):
             object_id="#ornithopter_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: self.set_spawning_state(Ornithopter),
+            command=lambda: self.set_spawning_state(Thopter),
         )
         UIButton(
             Rect(5, 56, 54, 46),

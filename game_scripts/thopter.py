@@ -35,7 +35,7 @@ from scripts.ui_shim import UIButton
 # - def take off
 
 
-class Ornithopter(AnimatedSprite, Selectable):
+class Thopter(AnimatedSprite, Selectable):
     MOVE_SPEED = 0.09
     CARGO_CAPACITY = 5
     LOAD_SPEED = 1
@@ -148,7 +148,7 @@ class Ornithopter(AnimatedSprite, Selectable):
 
     @property
     def context_panel(self) -> type[ContextPanel]:
-        return OrnithopterPanel
+        return ThopterPanel
 
     def move_towards(self, delta, goal: Vector2):
         self.pos = Vector2(self.pos).move_towards(goal, delta * self.MOVE_SPEED)
@@ -228,7 +228,7 @@ class MoveTowardsPos(StatefulActionNode):
 class PickMoveGoal(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"self": Ornithopter}, {"goal": Vector2})
+        self.ports_list = PortsList({"self": Thopter}, {"goal": Vector2})
 
     def tick(self) -> NodeStatus:
         goal = self.get_input("self").pos + Vector2(randint(-50, 50), randint(-50, 50))
@@ -253,7 +253,7 @@ class ValidateOrGetClosestTree(SimpleActionNode):
     def __init__(self):
         super().__init__()
         self.ports_list = PortsList(
-            {"self": Ornithopter, "wood_pos": Vector2}, {"wood_pos": Vector2}
+            {"self": Thopter, "wood_pos": Vector2}, {"wood_pos": Vector2}
         )
 
     def tick(self) -> NodeStatus:
@@ -279,7 +279,7 @@ class GetClosestBuilding(SimpleActionNode):
     def __init__(self):
         super().__init__()
         self.ports_list = PortsList(
-            {"self": Ornithopter, "building_type": str}, {"building_pos": Vector2}
+            {"self": Thopter, "building_type": str}, {"building_pos": Vector2}
         )
 
     def tick(self) -> NodeStatus:
@@ -349,7 +349,7 @@ class PutWood(StatefulActionNode):
 # --- UI Section ---
 
 
-class OrnithopterPanel(ContextPanel):
+class ThopterPanel(ContextPanel):
     def __init__(self, *, context_container):
         super().__init__(
             portrait_id="#thopter_button",
@@ -374,7 +374,7 @@ class OrnithopterPanel(ContextPanel):
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")
 
     def cancel_button(self):
-        thopter: Ornithopter = get_commander().selected.sprites()[0]
+        thopter: thopter = get_commander().selected.sprites()[0]
         if thopter.get_blackboard_value("action_mode") != "idle":
             thopter.set_blackboard_entry("action_mode", "idle")
             thopter.set_blackboard_entry("action_status", NodeStatus.IDLE)
