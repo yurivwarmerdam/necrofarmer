@@ -167,7 +167,6 @@ class MainUI:
         )
 
     def update(self, _delta):
-        # print(f"stocky: {.wood}")
         self.wood_text.set_text(str(get_stockpile().wood))
         self.stone_text.set_text(str(get_stockpile().stone))
         if self.active_panel:
