@@ -1,6 +1,4 @@
 import pygame as pg
-from pygame_gui.core import IContainerLikeInterface, ObjectID, UIElement
-from pygame_gui.core.interfaces import IUIElementInterface
 from pygame_gui.elements import UILabel, UIStatusBar
 
 from game_scripts.bigtiles.bigtile import BigTile
@@ -8,18 +6,12 @@ from game_scripts.commander import get_commander
 from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.stockpile import get_stockpile
-from game_scripts.ui.context_panel import ContextPanel
+from game_scripts.ui.ui_elements import ContextPanel, BackgroundPanel
 from scripts.custom_sprites import integer_scale
 from scripts.tilemap import TileData
 from scripts.ui_shim import UIButton
 from blinker import signal
 from game_scripts.statistics import get_statistics
-
-from scripts.ui_shim import UIPanel
-from scripts.custom_ui import ImagePanel
-from functools import partial
-from scripts.custom_sprites import ninepatchscale, tilingscale
-from scripts.utils import load_image, sheet_to_sprite
 
 
 class Sawmill(BigTile, Selectable):
@@ -152,6 +144,7 @@ class ThopterFactoryPanel(ContextPanel):
             command=self.cancel_build,
             visible=False,
         )
+        BackgroundPanel(pg.Rect(120,0,120,80),context_container)
 
     def start_build_thopter(self):
         factory: ThopterFactory = get_commander().first_selected
@@ -167,49 +160,3 @@ class ThopterFactoryPanel(ContextPanel):
             self.cancel_button.visible = True
         else:
             self.cancel_button.visible = False
-
-
-class BackgroundPanel(UIPanel):
-    def __init__(
-        self,
-        relative_rect: pg.Rect,
-        container: IContainerLikeInterface | None = None,
-        parent_element: UIElement | None = None,
-        anchors: dict[str, str | IUIElementInterface] | None = {
-                "left": "left",
-                "right": "right",
-                "top": "top",
-                "bottom": "top",
-            },
-        visible: int = 1,
-    ):
-        NINE_SLICE_FUNC = (
-            partial(
-                ninepatchscale,
-                patch_margain=3,
-                scale_func=tilingscale,
-            ),
-        )
-        ui_components_sheet = load_image("art/ui_components.png")
-        ui_background_sprite = sheet_to_sprite(
-            ui_components_sheet, pg.Rect(0, 0, 60, 62)
-        )
-        super().__init__(
-            relative_rect,
-            container=container,
-            parent_element=parent_element,
-            anchors=anchors,
-            visible=visible,
-            scale_func=NINE_SLICE_FUNC,
-        )
-        self.context_background = ImagePanel(
-            relative_rect,
-            anchors={
-                "left": "left",
-                "right": "right",
-                "top": "bottom",
-                "bottom": "bottom",
-            },
-            image_surf=ui_background_sprite,
-            scale_func=NINE_SLICE_FUNC,
-        )

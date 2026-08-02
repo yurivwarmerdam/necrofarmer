@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from game_scripts.ui.context_panel import ContextPanel
+from game_scripts.ui.ui_elements import ContextPanel
 
 
 class Selectable(ABC):

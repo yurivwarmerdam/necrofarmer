@@ -5,7 +5,7 @@ from pygame_gui.elements import UIImage, UILabel
 
 from game_scripts.commander import Commander, get_commander
 from game_scripts.stockpile import get_stockpile
-from game_scripts.ui.context_panel import ContextPanel
+from game_scripts.ui.ui_elements import ContextPanel
 from game_scripts.ui.debug_menu import DebugMenu
 from scripts.custom_sprites import integer_scale
 from scripts.custom_ui import NINE_SLICE_FUNC, ImagePanel

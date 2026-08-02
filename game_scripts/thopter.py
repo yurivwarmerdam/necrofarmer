@@ -8,7 +8,7 @@ from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
 from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
-from game_scripts.ui.context_panel import ContextPanel
+from game_scripts.ui.ui_elements import ContextPanel
 from scripts.behaviortree_py.behaviortree import (
     NodeStatus,
     PortsList,

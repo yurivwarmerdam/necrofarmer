@@ -11,7 +11,7 @@ from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
 from game_scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
-from game_scripts.ui.context_panel import ContextPanel
+from game_scripts.ui.ui_elements import ContextPanel
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.image_server import get_image_server
