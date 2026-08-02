@@ -69,9 +69,10 @@ class BackgroundPanel(UIPanel):
             anchors={
                 "left": "left",
                 "right": "right",
-                "top": "bottom",
+                "top": "top",
                 "bottom": "bottom",
             },
             image_surf=ui_background_sprite,
             scale_func=NINE_SLICE_FUNC,
+            container=container,
         )
