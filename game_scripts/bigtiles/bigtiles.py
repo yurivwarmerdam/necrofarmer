@@ -13,6 +13,7 @@ from scripts.tilemap import TileData
 from scripts.ui_shim import UIButton
 from blinker import signal
 from game_scripts.statistics import get_statistics
+from pygame_gui.elements import UIProgressBar
 
 
 class Sawmill(BigTile, Selectable):
@@ -113,6 +114,12 @@ class ThopterFactory(BigTile, Selectable):
                         print(f"how are we here? {x}")
                 self.stop_build()
 
+    def get_construction_progress_fraction(self) -> float:
+        return (
+            self.construction_progress
+            / self.statistics[self.constructing]["build_time"]
+        )
+
     def start_build_thopter(self):
         signal("start_build_thopter").send(self)
         self.constructing = "thopter"
@@ -151,6 +158,7 @@ class ThopterFactoryPanel(ContextPanel):
     def update(self, _delta) -> None:
         if get_commander().first_selected.constructing:
             self.progress_panel.show()
+            self.progress_panel.set_progress()
         else:
             self.progress_panel.hide()
 
@@ -160,7 +168,7 @@ class ProgressPanel(BackgroundPanel):
         super().__init__(pg.Rect(120, -3, 160, 99), context_container, visible=visible)
 
         self.cancel_button = UIButton(
-            pg.Rect(0, 0, 54, 46),
+            pg.Rect(0, 41, 54, 46),
             text="",
             object_id="#cancel_button",
             scale_func=integer_scale,
@@ -168,7 +176,16 @@ class ProgressPanel(BackgroundPanel):
             command=self.cancel_build,
             # visible=True,
         )
+        self.progress_bar = UIProgressBar(
+            pg.Rect(0, 0, 150, 40), container=self.get_container()
+        )
 
     def cancel_build(self):
         factory: ThopterFactory = get_commander().first_selected
         factory.stop_build()
+
+    def set_progress(self):
+        factory: ThopterFactory = get_commander().first_selected
+        self.progress_bar.set_current_progress(
+            factory.get_construction_progress_fraction() * 100
+        )
