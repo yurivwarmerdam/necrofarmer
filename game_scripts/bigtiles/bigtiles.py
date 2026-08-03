@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame_gui.core import IContainerLikeInterface
 from pygame_gui.elements import UILabel, UIStatusBar
 
 from game_scripts.bigtiles.bigtile import BigTile
@@ -135,16 +136,9 @@ class ThopterFactoryPanel(ContextPanel):
             container=context_container,
             command=self.start_build_thopter,
         )
-        self.cancel_button = UIButton(
-            pg.Rect(56, 0, 54, 46),
-            text="",
-            object_id="#cancel_button",
-            scale_func=integer_scale,
-            container=context_container,
-            command=self.cancel_build,
-            visible=False,
-        )
-        BackgroundPanel(pg.Rect(120,0,120,80),context_container)
+
+        self.progress_panel = ProgressPanel(context_container)
+        # BackgroundPanel(pg.Rect(120,-3,120,99),context_container)
 
     def start_build_thopter(self):
         factory: ThopterFactory = get_commander().first_selected
@@ -153,10 +147,28 @@ class ThopterFactoryPanel(ContextPanel):
     def cancel_build(self):
         factory: ThopterFactory = get_commander().first_selected
         factory.stop_build()
-        print("Should I be visible?")
 
     def update(self, _delta) -> None:
         if get_commander().first_selected.constructing:
-            self.cancel_button.visible = True
+            self.progress_panel.show()
         else:
-            self.cancel_button.visible = False
+            self.progress_panel.hide()
+
+
+class ProgressPanel(BackgroundPanel):
+    def __init__(self, context_container, visible: int = 1):
+        super().__init__(pg.Rect(120, -3, 160, 99), context_container, visible=visible)
+
+        self.cancel_button = UIButton(
+            pg.Rect(0, 0, 54, 46),
+            text="",
+            object_id="#cancel_button",
+            scale_func=integer_scale,
+            container=self.get_container(),
+            command=self.cancel_build,
+            # visible=True,
+        )
+
+    def cancel_build(self):
+        factory: ThopterFactory = get_commander().first_selected
+        factory.stop_build()

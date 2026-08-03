@@ -42,9 +42,9 @@ class BackgroundPanel(UIPanel):
         relative_rect: pg.Rect,
         container: IContainerLikeInterface | None = None,
         # parent_element: UIElement | None = None,
-        anchors: dict[str, str | IUIElementInterface] | None = {
+        anchors: dict[str, str] = {
             "left": "left",
-            "right": "right",
+            "right": "left",
             "top": "top",
             "bottom": "top",
         },
@@ -65,7 +65,8 @@ class BackgroundPanel(UIPanel):
             ui_components_sheet, pg.Rect(0, 0, 60, 62)
         )
         self.context_background = ImagePanel(
-            relative_rect,
+            relative_rect.move(-relative_rect.x, -relative_rect.y),
+            starting_height=0,
             anchors={
                 "left": "left",
                 "right": "right",
@@ -74,5 +75,6 @@ class BackgroundPanel(UIPanel):
             },
             image_surf=ui_background_sprite,
             scale_func=NINE_SLICE_FUNC,
-            container=container,
+            container=self.get_container(),
+            visible=visible,
         )
