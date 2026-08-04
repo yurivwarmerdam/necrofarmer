@@ -86,6 +86,11 @@ class GroupServer:
                 collisions.update(hits)
         return list(collisions)
 
+    def get_typed_group_size(self, name: str, include_preload=True):
+        a = len(self.typed_groups["name"].sprites)
+        b = len(self.typed_groups[f"_{name}"].sprites) if include_preload else 0
+        return a + b
+
 
 _instance = None
 
