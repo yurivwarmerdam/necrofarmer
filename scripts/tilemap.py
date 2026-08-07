@@ -28,6 +28,21 @@ class TileData:
     def world_pos(self) -> Vector2:
         return map_to_worldv(self.map_pos, self.tile_size, self.isometric)
 
+    def move(self, map_pos):
+        return TileData(
+            tile_type=self.tile_type,
+            map_pos=map_pos,  # Note that this is the changed one.
+            tile_size=self.tile_size,
+            properties=self.properties,
+            surf=self.surf,
+            offset=self.offset,
+            isometric=self.isometric,
+            anchor=self.anchor,
+        )
+
+    def move_ip(self, map_pos):
+        self.map_pos = map_pos
+
 
 class Tile(NodeSprite):
     def __init__(self, Tiledata: TileData, *groups):

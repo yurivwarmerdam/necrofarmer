@@ -7,7 +7,7 @@ class Statistics:
             self.data = json.load(file)
 
     def __getitem__(self, key):
-        return self.data[key]
+        return self.data.get(key) or {}
 
 
 _instance = None

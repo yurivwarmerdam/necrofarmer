@@ -1,0 +1,74 @@
+import pygame as pg
+from pygame_gui.elements import UILabel, UIStatusBar
+
+from game_scripts.bigtiles.bigtile import BigTile
+from game_scripts.commander import get_commander
+from game_scripts.group_server import get_group_server
+from game_scripts.selectable import Selectable
+from game_scripts.stockpile import get_stockpile
+from game_scripts.ui.ui_elements import ContextPanel
+from scripts.tilemap import TileData
+
+
+class Sawmill(BigTile, Selectable):
+    def __init__(self, tiledata: TileData, *groups):
+        super().__init__(
+            tiledata,
+            get_group_server().update,  # prepending update to groups.
+            *groups,
+        )
+        self.saw_progress: float = 0
+        self.stock = 0
+
+    def update(self, _delta) -> None:
+        if self.stock > 0:
+            self.saw_progress += _delta / 1000
+            if self.saw_progress >= 1:
+                get_stockpile().add_wood(1)
+                self.saw_progress = 0
+                self.stock -= 1
+        pass
+
+    def put_wood(self, amount: int):
+        self.stock += amount
+        return amount
+
+    def get_sawmill_progress(self):
+        return self.saw_progress
+
+    @property
+    def context_panel(self) -> type[ContextPanel]:
+        return SawmillPanel
+
+
+class SawmillPanel(ContextPanel):
+    def __init__(self, context_container) -> None:
+        super().__init__(
+            portrait_id="#sawmill_button",
+            context_container=context_container,
+        )
+
+        self.stock_label = UILabel(
+            pg.Rect(0, 0, 100, 16),
+            "",
+            container=context_container,
+        )
+        self.set_stock_text()
+
+        self.progress_bar = UIStatusBar(
+            pg.Rect(0, 20, 100, 20),
+            container=context_container,
+            percent_method=get_commander().selected.sprites()[0].get_sawmill_progress,
+        )
+
+    def set_stock_text(self):
+        self.stock_label.set_text(
+            f"Logs: {str(get_commander().selected.sprites()[0].stock)}"
+        )
+
+    def update(self, _delta):
+        if get_commander().selected.sprites()[0].stock == 0:
+            self.progress_bar.visible = False
+        else:
+            self.progress_bar.visible = True
+        self.set_stock_text()

@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from game_scripts.ui.ui_elements import ContextPanel
 
 

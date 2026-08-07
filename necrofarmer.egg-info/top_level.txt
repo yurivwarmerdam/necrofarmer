@@ -1,4 +1,5 @@
 art
+build
 docs
 game_scripts
 legacy

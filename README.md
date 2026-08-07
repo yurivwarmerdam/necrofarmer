@@ -23,17 +23,26 @@ pip install -e .
 ====================
 ### current:
 
-    -------------------------------------------------
-    --> add more/better documentation as you go!! <--
-    -------------------------------------------------
-    BTree extensions:
-    - Add a Tree superclass that holds my nodes. Add convenience functions. Namely halting, resetting.
-        - reset blackboard
-    - use-cases:
-        - idle modality
-        - click on tree (right click, prbably): set tree as goal, set gathering trees as modality
-        - click on sawmill: set it as "home", keep using that.
-        - click button: stop(?): start idling.
+tardigrade constuction behavior
+    - _building progress
+    - add (resettable) BTree to tardigrade
+    - test with idle//walk
+    - place _building (integrates defer_update nonsense)
+    - click on _building while tardigrade is selected
+    - gonna be some find adjacent tile logic for pathfinding
+    - on fill: kill and replace with building
+
+-------------------------------------------------
+--> add more/better documentation as you go!! <--
+-------------------------------------------------
+BTree extensions:
+v Add a Tree superclass that holds my nodes. Add convenience functions. Namely halting, resetting.
+    - reset blackboard
+- use-cases:
+    - idle modality
+    - click on tree (right click, prbably): set tree as goal, set gathering trees as modality
+    - click on sawmill: set it as "home", keep using that.
+    - click button: stop(?): start idling.
 
 
 ```python
@@ -57,15 +66,8 @@ if self.current_tree != default_tree:
 
 ```
 
-
-    
-        Unit behavior (Btrees!)
-        - study skeleton, revisit documentation
-    - tardigrade
-        - construction beheavior
-        - _building progress bar
-        - click on _building while tardigrade is selected
-        - on fill: kill and replace with building
+Unit behavior (Btrees!)
+    - study skeleton, revisit documentation
     - thopter
         v pickup/dropoff behavior
         v clone skeleton bheavior?

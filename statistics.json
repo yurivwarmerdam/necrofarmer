@@ -1,8 +1,8 @@
 {
     "thopter": {
-        "build_time": 4,
+        "build_time": 10,
         "cargo_capacity": 5,
-        "base_cost":100
+        "base_cost": 100
     },
     "sawmill": {
         "build_time": 20

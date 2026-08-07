@@ -6,7 +6,6 @@ from pygame_gui.core import UIElement
 
 from game_scripts.group_server import get_group_server
 
-# from scripts.utils import pointcollide
 from game_scripts.selectable import Selectable
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
@@ -160,7 +159,7 @@ class Commander:
         )
 
     @property
-    def first_selected(self) -> NodeSprite|None:
+    def first_selected(self) -> Selectable | None:
         return self.selected.sprites()[0] if self.selected.sprites else None
 
 
