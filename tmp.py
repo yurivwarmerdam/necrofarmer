@@ -1,45 +1,44 @@
-def lumped_capacity_dt_dt(T, I, R20, Rth, C, T_amb):
-    """
-    Calculates the rate of temperature change (dT/dt) for a lumped capacity model.
-
-    Parameters:
-    T     : float - Current temperature of the component (C or K)
-    t     : float - Current time (s) [required for ODE solvers, even if unused]
-    I     : float - Electrical current (A)
-    R20   : float - Electrical resistance at 20°C (Ohms)
-    Rth   : float - Thermal resistance (K/W or C/W)
-    C     : float - Thermal capacitance (J/K or J/C)
-    T_amb : float - Ambient temperature (C or K)
-
-    Returns:
-    float - dT/dt, the rate of temperature change (K/s or C/s)
-    """
-    joule_heating = (I**2) * R20
-    heat_loss = (T - T_amb) / Rth
-
-    dT_dt = (joule_heating - heat_loss) / C
-    return dT_dt
+import sys
+import pygame as pg
+from pygame.sprite import Sprite, Group
 
 
-iteraitons = 240
-I = 19.118
-R20 = 0.025  # tbd variable
-Rth = 5.7
-C = 25
-T_amb = 20  # tbd variable
+class MySprite(Sprite):
+    def __init__(self, rect: pg.Rect, *groups) -> None:
+        super().__init__(*groups)
+
+        self.image = pg.Surface([rect[2], rect[3]], flags=pg.SRCALPHA)
+        self.image.fill("blue")
+        self.rect = self.image.get_rect()
+        self.rect = rect
+
+        center = (rect[2] // 2, rect[3] // 2)
+        radius = min(rect[2], rect[3]) / 2
+        pg.draw.circle(self.image, (0, 0, 0, 0), center, radius)
 
 
-def iterate_cap(iterations):
-    idx = 0
-    current_tmp = T_amb
+class Main:
+    def __init__(self):
+        pg.init()
+        self.screen = pg.display.set_mode((400, 300))
+        self.clock = pg.time.Clock()
+        self.group = Group()
+        self.sprite = MySprite(pg.Rect(20, 20, 60, 60), self.group)
+        self.indicator = pg.Surface([10, 10])
+        self.indicator.fill("red")
 
-    while idx < iterations:
-        dT = lumped_capacity_dt_dt(
-            T=current_tmp, I=I, R20=R20, Rth=Rth, C=C, T_amb=T_amb
-        )
-        current_tmp += dT
-        print(dT, current_tmp, T_amb)
-        idx += 1
+    def run(self):
+        while True:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+
+            self.screen.fill((200, 200, 200))
+            self.group.draw(self.screen)
+            pg.display.flip()
+            self.clock.tick(60)
 
 
-iterate_cap(240)
+if __name__ == "__main__":
+    Main().run()

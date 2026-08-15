@@ -37,6 +37,15 @@ class EntityTilemap(Tilemap):
             print("erroneous place! This an unwanted state? Killing the newborn.")
             new_tile.kill()
 
+    def spawn_tile_str(self,tile_data_name,pos,world_pos=False):
+
+        pass
+
+    def can_spawn_tile(self,map_pos)->bool:
+        return False
+    def can_spawn_tile_w(self,map_pos)->bool:
+            return False
+
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer: str):
         """
         list-based verison of is_valid_placement.
