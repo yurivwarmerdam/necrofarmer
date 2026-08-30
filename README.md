@@ -270,6 +270,13 @@ Tilemaps are loaded in two phases:
 
 Loading tiles
 
+spawn tile at runtime
+TileData's move() method creates a new tiledata at a new pos.
+Now I need to find how to extract a named tiledata from tiledata
+Ideally, I'd create it from the spritesheet (really, tsx), instead of a placed tile.
+That allows me to get rid of tile_entities.tmx
+If all else fails I can have tilemap load it? Not super elegant, but whatever works.
+
 
 #### old notes, ramblings, background.
 - Stardew spawns tile entities, using the transparent tiles. I _believe_ concernedape adds tile data to supply/override tile properties. I do not need this FOR NOW. I do not think he uses any tiled-specific features to ensure something like a building will not overlap with path objects or somesuch.
