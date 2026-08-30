@@ -258,51 +258,21 @@ options as to how to handle collision
 I want:
 - anything I click to be returned (so anything that's in the Group) to be addressible directly. So no get_parent shenenigans on the Sprite. The Sprite in the Group should have relevant components like select() to show/hide a select_sprite, open relevant ui panels, etc.
     
-### Tilemap
-v remove predefines layers from tilemap (also test in ortho actual necro game)
-- Map should become dict. This fixes negative key access bug, and then we can remove layers (layers is almost already this??)
-- this makes addressing purely through map the way to go
-- I can then start deleting tiles after instancing, and create tiles more consistently.
+## Tilemap
+Current tilemap has two main structures:
+- map. a dict[tuple[int,int],Tile]. This is the easy way of accessing tiles.
+- layers. a list[Group]. This handles things like rendering, and other "python core" ways of addressing sprites.
+This means that a tile cannot simply kill itself, since it will sitll be referenced in the map. This may become an issue later, and should have some back and forth system like how groups have an _add_internal method. Or perhaps tilemap should inherit Group.
+Loading tilemap
+Tilemaps are loaded in two phases:
+- tiledata is created
+- tiles are spawned into the map based on the tile data
+
+Loading tiles
 
 
-- Multitile tiles and/or tile entities
-    - approches:
-        - tile entities
-        - multitile tiles as a core feature
-    - tile entities: 
-        - make a placeholder tile in tiled
-        - load map regularly in tilemap
-        - for each placeholder tile: 
-            - replace each instance with the active entity.
-        - tilemap should delegate processing
-        - Should collision be handled through the tilemap? Or independently? (probably the latter)
-        - entities should be able to occupy multiple tiles in the map
-        - deleting an inetity should empty all tiles it occupies (should be easy if correctly using groups, and making the entity a Sprite?)
-    - multitile tiles
-        - add some kind of multitile array attribute to a BigTile
-        - BigTile should be able to occupy multiple tiles on load time.
-        - slice up the tile's sprite into discrete chunks for each of its component tiles
-        - for each pos in its array (assuming the tile's origin is 0,0):
-            - replace that location with a (regular tile?) sprite.
-            - make sure to do this in both plocations what with teh oduble bookkeeping in a tilemap
-        - alternatively: have the Sprites' draw() function behave differently? (probably a bad idea, since I intend to zsort tilemaps)
-        - deletion should be easy, since we can delete tiles, and that immediately removes them from a group, since that's how they're rendered.
-
-- [ ] generic tiledata loading
-    - what tile data do I want to include?
-        - walkable (collision)
-        - buildable (ground)
-        - specific buildable (mine_buildable)
-        - walk_speed
-        - this _may_ also link up with click areas for selecting things
-- [ ] multitile integration
-    - slice to ribbons
-    - block tiles
-    - check if other tiles get overridden
-        - perhaps just throw an error/warning, reporting conflicting tiles?
-        - alternatively, jsut destroy everything conflicting instead.
-
-- Stardew does this through spawning entties when they are "tile entities", using the transparent tiles. I _believe_ concernedape adds tile data to supply/override tile properties. I do not need this FOR NOW. I do not think he uses any tiled-specific features to ensure something like a building will not overlap with path objects or somesuch.
+#### old notes, ramblings, background.
+- Stardew spawns tile entities, using the transparent tiles. I _believe_ concernedape adds tile data to supply/override tile properties. I do not need this FOR NOW. I do not think he uses any tiled-specific features to ensure something like a building will not overlap with path objects or somesuch.
 
 - This makes me think that I can split this work up into:
     - tile entity spawning logic (can also include units!)

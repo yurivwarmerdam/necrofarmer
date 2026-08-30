@@ -118,12 +118,13 @@ class Tilemap:
     Generic Tilemap. Holds several layers of Sprite Groups.
     Args:
         tmx_file: filename to load tilemap from
+        typed_tiles: used for any tile with a "name" property
     """
 
     def __init__(
         self,
         tmx_file,
-        tile_types: dict[str, type[Tile]] = {},
+        typed_tiles: dict[str, type[Tile]] = {},
     ):
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.layers: dict[str, AbstractGroup] = {}
@@ -134,23 +135,26 @@ class Tilemap:
 
         tmx_data = load_pygame(tmx_file)
         self.isometric = self.tmx_data.orientation == "isometric"
-        self.tile_data_layers = TileDataLayers(tmx_data, tile_types)
+
+        self.tile_data_layers = TileDataLayers(tmx_data, typed_tiles)
 
         for layer_name in self.tile_data_layers.layers:
-            self.init_layer(layer_name)
+            self.make_layer(layer_name)
 
-    def init_layer(self, layer_name):
+    def make_layer(self, layer_name):
         self.map[layer_name] = {}
-
         if self.tmx_data.layernames[layer_name].properties.get("LayeredUpdates", False):
             layer = LayeredUpdates()
         else:
             layer = Group()
         self.layers[layer_name] = layer
+
         data_layer = self.tile_data_layers.layers[layer_name]
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
-            self.make_tile(tile_data, layer_name)
+
+            if self.can_spawn_tile(tile_data.map_pos, layer_name):
+                self.spawn_tile(tile_data, layer_name)
 
     def populate_layer(self, layere_name):
         # TODO: split out the non-init stuff from init_layer and create actual tiles here.
@@ -182,14 +186,20 @@ class Tilemap:
     def get_tilev(self, layer: str, pos: Vector2) -> Tile | None:
         return self.get_tile(layer, floor(pos.x), floor(pos.y))
 
-    def make_tile(self, tile_data: TileData, layer_name: str):
-        """Instantiates new tiles from TileData"""
+    def spawn_tile(self, tile_data: TileData, layer_name: str):
+        """creatues new tile from TileData"""
         tile = tile_data.tile_type(tile_data)
         self.set_tile_in_map(tile, layer_name, tile_data.map_pos)
 
+    def can_spawn_tile(self, map_pos, layer) -> bool:
+        return self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is None
+
+    def spawn_tile_str(self, tile_data_name, map_pos, layer):
+        self.tile_data_layers.layers[til]
+        if self.can_spawn_tile(map_pos):
+            pass
+
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
-        if self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is not None:
-            return False
         self.layers[layer].add(tile)
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
         return True
@@ -198,7 +208,6 @@ class Tilemap:
         tile = self.map[layer][x, y]
         tile.kill()
         del self.map[layer][x, y]
-        self.layers[layer].remove(tile)
 
     def kill_tilev(self, layer: str, pos: Vector2):
         self.kill_tile(layer, floor(pos.x), floor(pos.y))

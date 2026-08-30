@@ -31,36 +31,16 @@ class EntityTilemap(Tilemap):
             return super().set_tile_in_map(tile, layer, map_pos)
 
     # This should probably also be an override of some default behavior.
-    def spawn_tile(self, tile_data: TileData, layer: str):
+    def spawn_tile(self, tile_data: TileData, layer_name: str):
         new_tile = tile_data.tile_type(tile_data)
-        if not self.set_tile_in_map(new_tile, layer, tile_data.map_pos):
-            print("erroneous place! This an unwanted state? Killing the newborn.")
+        if not self.set_tile_in_map(new_tile, layer_name, tile_data.map_pos):
+            print("erroneous tile placement! This an unwanted state? Killing the newborn.")
             new_tile.kill()
 
-    def spawn_tile_str(self,tile_data_name,pos,world_pos=False):
 
-        pass
-
-    def can_spawn_tile(self,map_pos)->bool:
-        return False
-    def can_spawn_tile_w(self,map_pos)->bool:
-            return False
 
     def is_valid_placement_idxs(self, idxs: list[Vector2], layer: str):
         """
         list-based verison of is_valid_placement.
         """
         return all(self.is_valid_placement(x, layer) for x in idxs)
-
-
-# _instance = None
-
-
-# # TODO: how to deal with re-instantiating tilemap on load, level change, map expansion, whatever.
-# def get_tilemap(tmx_path: str | None = None) -> EntityTilemap:
-#     global _instance
-#     if _instance is None and tmx_path is None:
-#         raise Exception("Tilemap server not yet initiated with a map.")
-#     elif _instance is None:
-#         _instance = EntityTilemap(tmx_path)
-#     return _instance
