@@ -278,6 +278,17 @@ That allows me to get rid of tile_entities.tmx
 If all else fails I can have tilemap load it? Not super elegant, but whatever works.
 
 
+```
+tmx_data = load_pygame("tilemaps/another_island.tmx", load_all_tiles=True)
+
+# Map GID to a tuple of (Surface, properties dict)
+tile_set = {
+    (tmx_data.get_tile_image_by_gid(gid), props)
+    for gid, props in tmx_data.tile_properties.items()
+}
+```
+
+
 #### old notes, ramblings, background.
 - Stardew spawns tile entities, using the transparent tiles. I _believe_ concernedape adds tile data to supply/override tile properties. I do not need this FOR NOW. I do not think he uses any tiled-specific features to ensure something like a building will not overlap with path objects or somesuch.
 
