@@ -61,6 +61,9 @@ spawner = get_spawner()
 tilemap = game_tilemap.get_tilemap(
     "tilemaps/another_island.tmx",
 )
+
+print(tilemap.tile_data_layers.named_tiles.keys())
+
 star.get_star_server(tilemap)
 
 group_server.add_render_groups(tilemap.layers)

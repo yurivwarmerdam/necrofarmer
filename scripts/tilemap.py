@@ -78,6 +78,7 @@ class TileDataLayers:
         self.tile_types = tile_types
         self.tile_size = Vector2(tmx_data.tilewidth, tmx_data.tileheight)
         self.isometric = self.tmx_data.orientation == "isometric"
+        self.named_tiles = {}
 
         self.layers: dict[str, dict[Vector2, TileData]] = {}
 
@@ -102,7 +103,7 @@ class TileDataLayers:
         )
         properties: dict = self.tmx_data.get_tile_properties_by_gid(pytmx_gid) or {}
         tile_type = self.tile_types.get(properties.get("name", ""), Tile)
-        return TileData(
+        new_data = TileData(
             tile_type=tile_type,
             map_pos=Vector2(x, y),
             tile_size=self.tile_size,
@@ -111,6 +112,10 @@ class TileDataLayers:
             offset=offset,
             isometric=self.isometric,
         )
+        if "name" in properties.keys():
+            if properties["name"] not in self.named_tiles:
+                self.named_tiles[properties["name"]] = new_data.move(Vector2(0, 0))
+        return new_data
 
 
 class Tilemap:
