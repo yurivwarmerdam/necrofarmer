@@ -279,6 +279,11 @@ If all else fails I can have tilemap load it? Not super elegant, but whatever wo
 
 
 ```
+
+import pygame as pg
+pg.display.set_mode((50,50))
+from pytmx import util_pygame
+util_pygame.load_pygame("tilemaps/another_island.tmx")
 tmx_data = load_pygame("tilemaps/another_island.tmx", load_all_tiles=True)
 
 # Map GID to a tuple of (Surface, properties dict)
