@@ -112,6 +112,12 @@ def handle_camera_move():
     return camera_move
 
 
+from game_scripts.whiteboard import get_Whiteboard
+from pprint import pprint
+
+pprint(get_Whiteboard().tile_entities.keys())
+pprint(tilemap.named_tiledata.keys())
+
 # ---- core loop ----
 while True:
     _delta = clock.get_time()
