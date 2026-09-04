@@ -166,6 +166,7 @@ class Tilemap:
                 )
                 name = properties_dict[gid]["name"]
                 tile = typed_tiles.get(name, Tile)  # TBD
+                print(tile)
                 size = Vector2(self.tmx_data.tileheight, self.tmx_data.tilewidth)
                 properties = properties_dict[gid]
                 surf = self.tmx_data.get_tile_image_by_gid(gid)

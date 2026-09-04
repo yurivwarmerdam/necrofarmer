@@ -6,7 +6,6 @@ from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
-from game_scripts.whiteboard import get_Whiteboard
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.tilemap import TileData, world_to_mapv
@@ -30,7 +29,7 @@ class DebugMenu(UIWindow):
         UIButton(
             Rect(64, 5, 54, 46),
             "",
-            object_id="#ornithopter_button",
+            object_id="#thopter_button",
             scale_func=integer_scale,
             container=self,
             command=lambda: self.set_spawning_state(Thopter),
@@ -42,7 +41,7 @@ class DebugMenu(UIWindow):
             scale_func=integer_scale,
             container=self,
             command=lambda: self.set_spawning_state(
-                get_Whiteboard().tile_entities["thopter_factory_2"]
+                get_tilemap().named_tiledata["thopter_factory_2"]
             ),
         )
         UIButton(
@@ -52,7 +51,7 @@ class DebugMenu(UIWindow):
             scale_func=integer_scale,
             container=self,
             command=lambda: self.set_spawning_state(
-                get_Whiteboard().tile_entities["sawmill"]
+                get_tilemap().named_tiledata["sawmill"]
             ),
         )
 
