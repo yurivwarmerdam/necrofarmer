@@ -24,6 +24,9 @@ class TileData:
     isometric: bool = False
     anchor: str = "bottomleft"
 
+    def get_property(self, prop_name):
+        return self.properties.get(prop_name)
+
     @property
     def world_pos(self) -> Vector2:
         return map_to_worldv(self.map_pos, self.tile_size, self.isometric)
@@ -146,7 +149,7 @@ class Tilemap:
         self.tile_data_layers = TileDataLayers(tmx_data, typed_tiles)
 
         for layer_name in self.tile_data_layers.layers:
-            self.make_layer(layer_name)
+            self.init_layer(layer_name)
 
     def make_named_tiledata(
         self, typed_tiles: dict[str, type[Tile]]
@@ -182,7 +185,7 @@ class Tilemap:
                 )
         return named_tiledata
 
-    def make_layer(self, layer_name):
+    def init_layer(self, layer_name):
         self.map[layer_name] = {}
         if self.tmx_data.layernames[layer_name].properties.get("LayeredUpdates", False):
             layer = LayeredUpdates()
@@ -194,7 +197,7 @@ class Tilemap:
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
 
-            if self.can_spawn_tile(tile_data.map_pos, layer_name):
+            if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
 
     def populate_layer(self, layere_name):
@@ -229,16 +232,22 @@ class Tilemap:
 
     def spawn_tile(self, tile_data: TileData, layer_name: str):
         """creatues new tile from TileData"""
-        tile = tile_data.tile_type(tile_data)
-        self.set_tile_in_map(tile, layer_name, tile_data.map_pos)
+        new_tile = tile_data.tile_type(tile_data)
+        if not self.set_tile_in_map(new_tile, layer_name, tile_data.map_pos):
+            print(
+                "erroneous tile placement! This an unwanted state? Killing the newborn."
+            )
+            new_tile.kill()
 
-    def can_spawn_tile(self, map_pos, layer) -> bool:
+    def can_spawn_tile(self, tile_data: TileData, layer: str) -> bool:
+        map_pos = tile_data.map_pos
         return self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is None
 
-    def spawn_tile_str(self, tile_data_name, map_pos, layer):
-        self.tile_data_layers.layers[til]
-        if self.can_spawn_tile(map_pos):
-            pass
+    def spawn_tile_str(self, tile_data_name: str, map_pos, layer):
+        # TODO: How do I spawn something simple like grass?
+        new_tile = self.named_tiledata[tile_data_name].move(map_pos)
+        if self.can_spawn_tile(new_tile, layer):
+            self.spawn_tile(new_tile, layer)
 
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
         self.layers[layer].add(tile)
@@ -316,14 +325,6 @@ class Tilemap:
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
         return self.map_to_world(floor(map_pos.x), floor(map_pos.y))
-
-    def is_valid_placement(self, pos: Vector2, layer: str) -> bool:
-        """
-        Collision detection funciton can be overridden when needed
-        (for example, conditions based on other layers is required)
-        """
-        return self.get_tilev(layer, pos) is None
-
 
 def map_to_world(x, y, tilewidth, tileheight, isometric=False):
     if isometric:

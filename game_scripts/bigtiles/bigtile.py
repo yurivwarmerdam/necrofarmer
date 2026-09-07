@@ -12,9 +12,10 @@ class BigTile(Tile):
         Should also be compatible with orthogonal tiles with comparatively little effort.
         """
         super().__init__(tiledata, *groups)
-        self.tiles: list[Vector2] = self.bigtile_prop_to_vectors(
+        self.tiles: list[Vector2] = bigtile_prop_to_vectors(
             tiledata.properties["bigtile"]
         )
 
-    def bigtile_prop_to_vectors(self, property) -> list[Vector2]:
-        return [Vector2(*p) for p in json.loads(property)]
+
+def bigtile_prop_to_vectors(property) -> list[Vector2]:
+    return [Vector2(*p) for p in json.loads(property)]
