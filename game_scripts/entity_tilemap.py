@@ -33,9 +33,11 @@ class EntityTilemap(Tilemap):
         if bigtile:
             vectors = bigtile_prop_to_vectors(bigtile)
             vectors = [vector + tile_data.map_pos for vector in vectors]
-            return all(
+            result = [
                 super().can_spawn_tile(tile_data.move(vector), layer)
                 for vector in vectors
-            )
+            ]
+            print(result)
+            return all(result)
         else:
             return super().can_spawn_tile(tile_data, layer)
