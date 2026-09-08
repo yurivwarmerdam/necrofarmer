@@ -41,7 +41,7 @@ class DebugMenu(UIWindow):
             scale_func=integer_scale,
             container=self,
             command=lambda: self.set_spawning_state(
-                get_tilemap().named_tiledata["thopter_factory_2"]
+                "thopter_factory_2"
             ),
         )
         UIButton(
@@ -51,7 +51,7 @@ class DebugMenu(UIWindow):
             scale_func=integer_scale,
             container=self,
             command=lambda: self.set_spawning_state(
-                get_tilemap().named_tiledata["sawmill"]
+                "sawmill"
             ),
         )
 
@@ -74,10 +74,9 @@ class DebugMenu(UIWindow):
             if issubclass(self.spawning, AnimatedSprite):
                 self.spawn_unit()
                 return
-        elif isinstance(self.spawning, TileData):
+        elif isinstance(self.spawning, str):
             self.spawn_tile()
             return
-        # mouse pos ==camera.get_mouse_pos
         print("finally")
         pass
 
@@ -86,6 +85,7 @@ class DebugMenu(UIWindow):
         entity(get_camera().get_global_mouse_pos())
 
     def spawn_tile(self):
+        get_tilemap().spawn_tile_str(self.spawning)
         entity_to_spawn: TileData = self.spawning
         mouse_pos = get_camera().get_global_mouse_pos()
         map_pos = world_to_mapv(mouse_pos, entity_to_spawn.tile_size, True)

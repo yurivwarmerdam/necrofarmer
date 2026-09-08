@@ -242,8 +242,9 @@ class Tilemap:
         map_pos = tile_data.map_pos
         return self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is None
 
-    def spawn_tile_str(self, tile_data_name: str, map_pos, layer):
+    def spawn_tile_str(self, tile_data_name: str, world_pos, layer):
         # TODO: How do I spawn something simple like grass?
+        map_pos=self.world_to_map(world_pos)
         new_tile = self.named_tiledata[tile_data_name].move(map_pos)
         if self.can_spawn_tile(new_tile, layer):
             self.spawn_tile(new_tile, layer)
