@@ -1,4 +1,3 @@
-from typing import Any
 from game_scripts.commander import get_commander
 from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.selectable import Selectable

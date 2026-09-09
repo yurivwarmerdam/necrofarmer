@@ -246,6 +246,7 @@ class Tilemap:
         # TODO: How do I spawn something simple like grass?
         map_pos=self.world_to_map(world_pos)
         new_tile = self.named_tiledata[tile_data_name].move(map_pos)
+        print(world_pos,map_pos,new_tile.map_pos)
         if self.can_spawn_tile(new_tile, layer):
             self.spawn_tile(new_tile, layer)
 

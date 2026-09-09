@@ -37,7 +37,6 @@ class EntityTilemap(Tilemap):
                 super().can_spawn_tile(tile_data.move(vector), layer)
                 for vector in vectors
             ]
-            print(result)
             return all(result)
         else:
             return super().can_spawn_tile(tile_data, layer)
