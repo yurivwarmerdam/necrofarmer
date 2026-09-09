@@ -195,14 +195,10 @@ class Tilemap:
         data_layer = self.tile_data_layers.layers[layer_name]
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
-
+            if tile_data.get_property("bigtile"):
+                print(tile_data)
             if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
-
-    def populate_layer(self, layere_name):
-        # TODO: split out the non-init stuff from init_layer and create actual tiles here.
-        # init_layer should just make an empty map.
-        pass
 
     def get_neigbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
         result = []
@@ -244,11 +240,11 @@ class Tilemap:
 
     def spawn_tile_str(self, tile_data_name: str, world_pos, layer):
         # TODO: How do I spawn something simple like grass?
-        map_pos=self.world_to_map(world_pos)
-        new_tile = self.named_tiledata[tile_data_name].move(map_pos)
-        print(world_pos,map_pos,new_tile.map_pos)
-        if self.can_spawn_tile(new_tile, layer):
-            self.spawn_tile(new_tile, layer)
+        map_pos = self.world_to_map(world_pos)
+        new_tiledata = self.named_tiledata[tile_data_name].move(map_pos)
+        print(new_tiledata)
+        if self.can_spawn_tile(new_tiledata, layer):
+            self.spawn_tile(new_tiledata, layer)
 
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
         self.layers[layer].add(tile)
@@ -326,6 +322,7 @@ class Tilemap:
 
     def map_to_worldv(self, map_pos: Vector2) -> Vector2:
         return self.map_to_world(floor(map_pos.x), floor(map_pos.y))
+
 
 def map_to_world(x, y, tilewidth, tileheight, isometric=False):
     if isometric:

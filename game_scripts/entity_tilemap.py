@@ -13,10 +13,6 @@ class EntityTilemap(Tilemap):
     def __init__(self, tmx_path):
         super().__init__(tmx_path, whiteboard.bigtile_entities)
         self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
-        # for layer in self.layers:
-        #     self.bigtiles[layer] = {}
-        #     for idx in self.get_tile_idxs_by_property("bigtile", layer):
-        #         self.bigtiles[layer][idx] = self.get_tile(layer, *idx)
 
     @override
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
