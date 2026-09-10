@@ -36,3 +36,8 @@ class EntityTilemap(Tilemap):
             return all(result)
         else:
             return super().can_spawn_tile(tile_data, layer)
+
+    # TODO: fix this.
+    @override
+    def kill_tile(self, layer: str, x: int, y: int):
+        return super().kill_tile(layer, x, y)
