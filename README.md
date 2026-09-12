@@ -290,7 +290,17 @@ does not require Tile to have special kill()
 
 does require:
 tilemap.remove()
-tilemap.remove)internal()
+tilemap.remove_internal()
+
+wait... separating tile init and adding to group. Like it normal.
+ok, so Tile(tiledata)
+tile.add(self)
+can I use the tile's tiledata to figure out where to place the tile in map?
+No, not really. There's a pos, but no map_pos, and no layer.
+tilemap should be responsible for these things, not the children.
+So how about:
+we keep the current set_tile_in_map, always add through spawn_tile & spawn_tile_str, and really only override tilemap.remove()
+It's a bybrid approach, and feels pragmatic
 
 ```
 

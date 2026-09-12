@@ -110,6 +110,9 @@ def handle_camera_move():
     return camera_move
 
 
+tilemap.spawn_tile_str("sawmill",Vector2(92, 128), "active")
+
+
 # ---- core loop ----
 while True:
     _delta = clock.get_time()

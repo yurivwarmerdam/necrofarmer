@@ -226,6 +226,7 @@ class Tilemap:
     def spawn_tile(self, tile_data: TileData, layer_name: str):
         """creatues new tile from TileData"""
         new_tile = tile_data.tile_type(tile_data)
+        print(new_tile,new_tile.properties)
         if not self.set_tile_in_map(new_tile, layer_name, tile_data.map_pos):
             print(
                 "erroneous tile placement! This an unwanted state? Killing the newborn."
