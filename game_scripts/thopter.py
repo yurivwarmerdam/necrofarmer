@@ -42,9 +42,6 @@ class Thopter(AnimatedSprite, Selectable):
     LOAD_VOLUME = 1
 
     def __init__(self, pos, preload=False):
-        print(
-            type(self),
-        )
         group_server = get_group_server()
         if preload:
             groups = [group_server.typed_groups[f"_{type(self).__name__}"]]

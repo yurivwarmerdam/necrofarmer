@@ -8,7 +8,7 @@ from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
-from scripts.tilemap import TileData, world_to_mapv
+from scripts.tilemap import TileData
 from scripts.ui_shim import UIButton
 
 
@@ -85,4 +85,5 @@ class DebugMenu(UIWindow):
         entity(get_camera().get_global_mouse_pos())
 
     def spawn_tile(self):
+        print(get_camera().get_global_mouse_pos())
         get_tilemap().spawn_tile_str(self.spawning,get_camera().get_global_mouse_pos(),"active")

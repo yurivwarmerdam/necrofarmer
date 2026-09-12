@@ -169,7 +169,7 @@ class Tilemap:
                 )
                 name = properties_dict[gid]["name"]
                 tile = typed_tiles.get(name, Tile)  # TBD
-                size = Vector2(self.tmx_data.tileheight, self.tmx_data.tilewidth)
+                size = Vector2(self.tmx_data.tilewidth, self.tmx_data.tileheight)
                 properties = properties_dict[gid]
                 surf = self.tmx_data.get_tile_image_by_gid(gid)
 
@@ -195,8 +195,6 @@ class Tilemap:
         data_layer = self.tile_data_layers.layers[layer_name]
         for map_pos in data_layer:
             tile_data: TileData = data_layer[map_pos]
-            if tile_data.get_property("bigtile"):
-                print(tile_data)
             if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
 
@@ -242,7 +240,6 @@ class Tilemap:
         # TODO: How do I spawn something simple like grass?
         map_pos = self.world_to_map(world_pos)
         new_tiledata = self.named_tiledata[tile_data_name].move(map_pos)
-        print(new_tiledata)
         if self.can_spawn_tile(new_tiledata, layer):
             self.spawn_tile(new_tiledata, layer)
 

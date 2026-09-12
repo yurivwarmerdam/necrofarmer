@@ -109,7 +109,6 @@ def handle_camera_move():
     )
     return camera_move
 
-print("-------")
 
 # ---- core loop ----
 while True:
