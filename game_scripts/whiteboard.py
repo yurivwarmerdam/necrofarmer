@@ -31,20 +31,7 @@ class Whiteboard:
     """
 
     def __init__(self) -> None:
-        self.tile_entities: dict[str, TileData] = self.parse_tiledata()
-        print(len(self.tile_entities))
-
-    def parse_tiledata(self):
-        file_data = TileDataLayers(
-            "tilemaps/tile_entities.tmx", bigtile_entities
-        ).layers["tile_entities"]
-        tile_entities: dict[str, TileData] = {}
-
-        for key in bigtile_entities:
-            for idx in file_data:
-                if file_data[idx].tile_type == bigtile_entities[key]:
-                    tile_entities[key] = file_data[idx]
-        return tile_entities
+        print("not actually implemented! So far everything's static here, yo.")
 
 
 _instance: Whiteboard | None = None

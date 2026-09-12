@@ -278,6 +278,20 @@ That allows me to get rid of tile_entities.tmx
 If all else fails I can have tilemap load it? Not super elegant, but whatever works.
 
 
+IF I make tilemap a group:
+
+A tile that want to kill() itself would properly be rmeoved from any parent groups, including the tilemap. Particularly the map[][] (and... underlying layer groups)
+
+adding to group, though...
+adding still needs to happen from inside tilemap, I think. (can be base don name, though spawn_tile_str).
+This is.. mostly unchanged reasoning from outside?
+
+does not require Tile to have special kill()
+
+does require:
+tilemap.remove()
+tilemap.remove)internal()
+
 ```
 
 import pygame as pg
