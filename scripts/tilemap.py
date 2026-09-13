@@ -10,6 +10,7 @@ from pytmx.util_pygame import load_pygame
 
 from scripts.custom_sprites import NodeSprite
 
+from typing import Any, Iterable, override
 
 # lol. Allows for weird notation
 # some_tiledata.tile.type(some_tiledata)
@@ -121,7 +122,7 @@ class TileDataLayers:
         return new_data
 
 
-class Tilemap:
+class Tilemap(AbstractGroup):
     """
     Generic Tilemap. Holds several layers of Sprite Groups.
     Args:
@@ -150,6 +151,14 @@ class Tilemap:
 
         for layer_name in self.tile_data_layers.layers:
             self.init_layer(layer_name)
+
+    @override
+    def remove(self, *sprites: Any | AbstractGroup | Iterable) -> None:
+        #How... do I find out at what place a sprite is?
+        for sprite in sprites:
+            
+            pass
+        return super().remove(*sprites)
 
     def make_named_tiledata(
         self, typed_tiles: dict[str, type[Tile]]
