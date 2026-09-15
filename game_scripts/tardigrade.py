@@ -62,6 +62,7 @@ class Tardigrade(AnimatedSprite, Selectable):
 
     def process_events(self, event: pg.event.Event) -> bool:
         # print(event)
+        # if 
         if (
             hasattr(event, "button")
             and event.type == pg.MOUSEBUTTONUP

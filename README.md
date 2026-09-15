@@ -113,6 +113,13 @@ Unit behavior (Btrees!)
     v make stuff on click (at x/y? at grid cell? Whichever)
     v first investigate if crashing always happens properly wihtin own layer.
 
+    - I don't have a cursor yet.
+    - in godot, tardigrade checked if cursor was building (on process_input, which only happens when it is selected)
+    - is probably makes clearing build state make a lot more sense (on unselect in commander)
+    - commander kiiiiiind of owns cursor, but not really.
+    - cursor probably a server? It's only ever a singleton.
+
+    - side point: have a look at close window clicks being eaten atm. Other clicks are also eaten after debug has been opened. Maybe it's got something to do with deferring to debug menu. That meny might be bugged, ironically.
 
     Current BigTile Tilemap notes:
     v GOAL is to get a bunch of data ready so I can instantiate a bigtile
