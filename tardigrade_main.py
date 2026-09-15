@@ -110,8 +110,17 @@ def handle_camera_move():
     return camera_move
 
 
-tilemap.spawn_tile_str("sawmill",Vector2(92, 128), "active")
-
+tilemap.spawn_tile_str("sawmill", Vector2(92, 128), "active")
+t = tilemap.get_tile("ground", 5, 1)
+t.kill()
+print(tilemap.get_tile("ground", 5, 1))
+print(tilemap.get_tile("active", 11, 5))
+t2 = tilemap.get_tile("active", 11, 4)
+t2.kill()
+print(tilemap.get_tile("active", 11, 5))
+print(tilemap.get_tile("active", 11, 4))
+print(tilemap.get_tile("active", 12, 5))
+print(tilemap.get_tile("active", 12, 4))
 
 # ---- core loop ----
 while True:
