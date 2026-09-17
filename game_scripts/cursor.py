@@ -3,6 +3,8 @@ from game_scripts.group_server import get_group_server
 from scripts.utils import sheet_to_sprite
 from pygame import Rect
 from pygame.math import Vector2
+from scripts.camera import get_camera
+from game_scripts.game_tilemap import get_tilemap
 
 
 class Cursor(NodeSprite):
@@ -18,8 +20,9 @@ class Cursor(NodeSprite):
         self.active_building = ""
 
     def update(self, _delta):
-        print(_delta)
-        # set pos(center?) to mouse global cursor pos
+        self.pos = get_camera().get_global_mouse_pos()
+        if self.active_building:
+            pass
         # if constructing: grab building sprite (might do that when initializing building):
         #   quantize building pos to tilemap
         #   if can build:
@@ -30,6 +33,7 @@ class Cursor(NodeSprite):
 
     def enable_build(self, build_name: str):
         self.active_building = build_name
+        get_tilemap().named_tiledata[build_name]
         # also look up the corresponding sprite in tilemap, put that in some var,
         # maybe make it own sprite?
 

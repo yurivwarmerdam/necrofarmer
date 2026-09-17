@@ -16,7 +16,7 @@ from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.image_server import get_image_server
 from scripts.ui_shim import UIButton
-
+from game_scripts.cursor import Cursor
 
 # Needs access to:
 # - groups
