@@ -14,6 +14,7 @@ from game_scripts.ui.main_ui import MainUI
 from game_scripts.spawner import get_spawner
 from scripts import image_server
 from scripts.camera import initialize_camera
+from game_scripts.cursor import Cursor
 
 # Server architecture:
 # spin up and have global access to the following:
@@ -65,7 +66,10 @@ tilemap = game_tilemap.get_tilemap(
 star.get_star_server(tilemap)
 
 group_server.add_render_groups(tilemap.layers)
+# Should I add the following 2 groups as a core part of group server?
+group_server.add_render_groups({"front": Group()})
 group_server.add_render_groups({"draw": Group()})
+
 for layer in tilemap.layers.values():
     group_server.add_group_to_colliders(layer)
 
@@ -76,6 +80,8 @@ camera = initialize_camera(
     Vector2(-300, 0),
 )
 
+
+cursor = Cursor()
 commander = get_commander()
 commander.box.add(group_server.render_groups["draw"])
 
@@ -108,6 +114,7 @@ def handle_camera_move():
         keys_pressed[pg.K_UP] | keys_pressed[pg.K_w]
     )
     return camera_move
+
 
 # ---- core loop ----
 while True:
