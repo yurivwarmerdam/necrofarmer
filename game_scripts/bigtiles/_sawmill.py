@@ -7,13 +7,10 @@ from game_scripts.group_server import get_group_server
 from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.statistics import get_statistics
 
+
 class _Sawmill(BigTile, Selectable):
-    def __init__(self, tiledata: TileData, *groups):
-        super().__init__(
-            tiledata,
-            get_group_server().update,  # prepending update to groups.
-            *groups,
-        )
+    def __init__(self, tiledata: TileData):
+        super().__init__(tiledata)
         self.build_progress = 0.0
 
     def get_construction_progress_fraction(self):

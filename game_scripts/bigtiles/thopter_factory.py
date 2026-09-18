@@ -15,13 +15,8 @@ from game_scripts.statistics import get_statistics
 
 
 class ThopterFactory(BigTile, Selectable):
-    def __init__(self, tiledata: TileData, *groups):
-        super().__init__(
-            tiledata,
-            # get_group_server().colliders,
-            get_group_server().update,  # prepending update to groups.
-            *groups,
-        )
+    def __init__(self, tiledata: TileData):
+        super().__init__(tiledata)
         self.stop_construction()
         self.statistics = get_statistics()
 

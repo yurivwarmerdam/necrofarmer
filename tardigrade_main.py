@@ -70,8 +70,8 @@ group_server.add_render_groups(tilemap.layers)
 group_server.add_render_groups({"front": Group()})
 group_server.add_render_groups({"draw": Group()})
 
-for layer in tilemap.layers.values():
-    group_server.add_group_to_colliders(layer)
+# for layer in tilemap.layers.values():
+#     group_server.add_group_to_colliders(layer)
 
 camera = initialize_camera(
     group_server.render_groups,
@@ -99,6 +99,7 @@ pg.time.set_timer(BTREE_EVENT, 100)
 Tardigrade(Vector2(150, 120))
 Tardigrade(Vector2(120, 150))
 Tardigrade(Vector2(150, 150))
+
 
 Thopter(Vector2(200, 200))
 
