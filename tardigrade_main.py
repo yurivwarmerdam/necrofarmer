@@ -104,7 +104,8 @@ Tardigrade(Vector2(150, 150))
 Thopter(Vector2(200, 200))
 
 
-tilemap.spawn_tile_str("sawmill",Vector2(96,130),"active")
+tilemap.spawn_tile_str("sawmill", Vector2(96, 130), "active")
+
 
 def handle_camera_move():
     # ----------Alternate way of processing?------------#
@@ -149,7 +150,9 @@ while True:
                 camera.set_zoom(3)
             elif event.key == pg.K_4:
                 camera.set_zoom(4)
-
+        pygame_gui
+        if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
+            print(event)
         processed = False
         processed = ui_manager.process_events(event)
 

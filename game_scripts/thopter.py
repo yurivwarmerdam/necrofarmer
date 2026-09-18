@@ -54,6 +54,8 @@ class Thopter(AnimatedSprite, Selectable):
             ]
 
         img_server = get_image_server()
+        self.collision_mask = 1
+        groups += group_server.get_collide_groups_by_mask(self.collision_mask)
         super().__init__(
             {
                 "0": img_server.animations["thopter_0"],
@@ -64,8 +66,7 @@ class Thopter(AnimatedSprite, Selectable):
             pos,
             *groups,
         )
-        self.collision_mask = 1
-        group_server.add_collider_sprite(self)
+        # group_server.add_collider_sprite(self)
         self.cargo = 0
         self.load_progress = 0.0
 

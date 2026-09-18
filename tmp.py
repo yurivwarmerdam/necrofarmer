@@ -1,38 +1,51 @@
-import pygame as pg
-from pytmx import util_pygame
-from math import floor
+import pygame
+import pygame_gui
 
-from scripts.tilemap import TileData, Tile
-from pygame.math import Vector2
-from pprint import pprint
+pygame.init()
 
-pg.display.set_mode((50, 50))
-tmx_data = util_pygame.load_pygame("tilemaps/another_island.tmx")
-# tmx_a = util_pygame.load_pygame("tilemaps/another_island.tmx", load_all_tiles=True)
-named_tiledata = {}
-properties_dict = tmx_data.tile_properties
-isometric = tmx_data.orientation == "isometric"
-for gid in properties_dict.keys():
-    if "name" in properties_dict[gid]:
-        tileset = tmx_data.get_tileset_from_gid(gid)
-        offset = -(
-            Vector2(tileset.offset)
-            + (-floor(tmx_data.tilewidth / 2), floor(tmx_data.tileheight / 2))
-        )
-        name = properties_dict[gid]["name"]
-        tile = Tile  # TBD
-        size = Vector2(tmx_data.tileheight, tmx_data.tilewidth)
-        properties = properties_dict[gid]
-        surf = tmx_data.get_tile_image_by_gid(gid)
+# Display setup
+WINDOW_SIZE = (800, 600)
+screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption("Pygame GUI Window Example")
 
-        named_tiledata[name] = TileData(
-            Tile,  # TBD
-            Vector2(0, 0),
-            size,
-            properties,
-            surf,
-            offset,
-            isometric,
-        )
+# GUI Manager setup
+manager = pygame_gui.UIManager(WINDOW_SIZE)
 
-pprint(named_tiledata.keys())
+# Create a UIWindow
+ui_window = pygame_gui.elements.UIWindow(
+    rect=pygame.Rect((200, 150), (400, 300)),
+    manager=manager,
+    window_display_title="My UI Window"
+)
+
+# Add a label inside the UIWindow
+pygame_gui.elements.UILabel(
+    relative_rect=pygame.Rect((50, 50), (300, 50)),
+    text="Hello inside UIWindow!",
+    manager=manager,
+    container=ui_window
+)
+
+clock = pygame.time.Clock()
+is_running = True
+
+while is_running:
+    time_delta = clock.tick(60) / 1000.0
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            is_running = False
+
+        # Process GUI events
+        manager.process_events(event)
+
+    # Update GUI state
+    manager.update(time_delta)
+
+    # Render
+    screen.fill((40, 40, 40))
+    manager.draw_ui(screen)
+
+    pygame.display.update()
+
+pygame.quit()
