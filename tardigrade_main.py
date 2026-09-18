@@ -103,6 +103,8 @@ Tardigrade(Vector2(150, 150))
 Thopter(Vector2(200, 200))
 
 
+tilemap.spawn_tile_str("sawmill",Vector2(96,130),"active")
+
 def handle_camera_move():
     # ----------Alternate way of processing?------------#
     keys_pressed = pg.key.get_pressed()

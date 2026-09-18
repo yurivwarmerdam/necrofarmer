@@ -23,6 +23,11 @@ pip install -e .
 ====================
 ### current:
 
+active bugs:
+- cannot select spawned tiles
+    - need to reverse adding tiles to group; tiles should be responsible of collision additon theyselves.
+- debug click behavior is strange. Probably overly enthousiastic in eating inputs
+
 tardigrade constuction behavior
     - _building progress
     - add (resettable) BTree to tardigrade
