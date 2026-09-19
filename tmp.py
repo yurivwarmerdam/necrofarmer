@@ -37,6 +37,8 @@ while is_running:
             is_running = False
 
         # Process GUI events
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            print(event)
         manager.process_events(event)
 
     # Update GUI state

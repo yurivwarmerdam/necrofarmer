@@ -119,6 +119,10 @@ def handle_camera_move():
     )
     return camera_move
 
+from pygame_gui.elements import UIWindow
+from pygame import Rect
+
+UIWindow(Rect(50,50,100,100))
 
 # ---- core loop ----
 while True:
@@ -150,7 +154,7 @@ while True:
                 camera.set_zoom(3)
             elif event.key == pg.K_4:
                 camera.set_zoom(4)
-        if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
             print(event)
         processed = False
         processed = ui_manager.process_events(event)
