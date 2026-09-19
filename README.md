@@ -27,6 +27,7 @@ active bugs:
 - cannot select spawned tiles
     - need to reverse adding tiles to group; tiles should be responsible of collision additon theyselves.
 - debug click behavior is strange. Probably overly enthousiastic in eating inputs
+    - there's something involving weird theming behavior, and default button images.
 
 tardigrade constuction behavior
     - _building progress

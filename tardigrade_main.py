@@ -150,7 +150,6 @@ while True:
                 camera.set_zoom(3)
             elif event.key == pg.K_4:
                 camera.set_zoom(4)
-        pygame_gui
         if event.type in [pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP]:
             print(event)
         processed = False
