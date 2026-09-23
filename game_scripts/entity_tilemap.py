@@ -12,7 +12,7 @@ from scripts.tilemap import Tile, Tilemap, TileData
 class EntityTilemap(Tilemap):
     def __init__(self, tmx_path):
         super().__init__(tmx_path, whiteboard.bigtile_entities)
-        self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
+        # self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
 
     @override
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:

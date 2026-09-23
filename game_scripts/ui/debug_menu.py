@@ -85,5 +85,4 @@ class DebugMenu(UIWindow):
         entity(get_camera().get_global_mouse_pos())
 
     def spawn_tile(self):
-        print(get_camera().get_global_mouse_pos())
         get_tilemap().spawn_tile_str(self.spawning,get_camera().get_global_mouse_pos(),"active")

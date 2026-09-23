@@ -3,12 +3,14 @@ from math import floor
 
 import pygame as pg
 from pygame import Vector2
-from pygame.sprite import AbstractGroup, Group, LayeredUpdates
+from pygame.sprite import AbstractGroup, Group, LayeredUpdates, Sprite
 from pygame.surface import Surface
 from pytmx.map import TiledLayer, TiledMap
 from pytmx.util_pygame import load_pygame
 
 from scripts.custom_sprites import NodeSprite
+
+from typing import Any, Iterable, override
 
 
 # lol. Allows for weird notation
@@ -121,7 +123,7 @@ class TileDataLayers:
         return new_data
 
 
-class Tilemap:
+class Tilemap(AbstractGroup):
     """
     Generic Tilemap. Holds several layers of Sprite Groups.
     Args:
@@ -134,6 +136,7 @@ class Tilemap:
         tmx_file,
         typed_tiles: dict[str, type[Tile]] = {},
     ):
+        super().__init__()
         self.tmx_data: TiledMap = load_pygame(tmx_file)
         self.layers: dict[str, AbstractGroup] = {}
 
@@ -150,6 +153,18 @@ class Tilemap:
 
         for layer_name in self.tile_data_layers.layers:
             self.init_layer(layer_name)
+
+    @override
+    def remove_internal(self, sprite: Sprite) -> None:
+        # TODO: This is slow. Perhaaaaps the layers should actually take care of this?
+        # They already know if a tile is in the layer; that's the definition!
+        # also... allows me to remove map from the tilemap, and move it to a tilemaplayer, instead.
+        super().remove_internal(sprite)
+
+        for layer in self.map.values():
+            if sprite in layer.values():
+                for key in [k for k, v in layer.items() if v == sprite]:
+                    del layer[key]
 
     def make_named_tiledata(
         self, typed_tiles: dict[str, type[Tile]]
@@ -226,7 +241,6 @@ class Tilemap:
     def spawn_tile(self, tile_data: TileData, layer_name: str):
         """creatues new tile from TileData"""
         new_tile = tile_data.tile_type(tile_data)
-        print(new_tile,new_tile.properties)
         if not self.set_tile_in_map(new_tile, layer_name, tile_data.map_pos):
             print(
                 "erroneous tile placement! This an unwanted state? Killing the newborn."
@@ -245,6 +259,7 @@ class Tilemap:
             self.spawn_tile(new_tiledata, layer)
 
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
+        self.add(tile)
         self.layers[layer].add(tile)
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
         return True

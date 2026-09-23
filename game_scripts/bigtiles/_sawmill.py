@@ -7,6 +7,7 @@ from game_scripts.group_server import get_group_server
 from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.statistics import get_statistics
 
+
 class _Sawmill(BigTile, Selectable):
     def __init__(self, tiledata: TileData):
         super().__init__(

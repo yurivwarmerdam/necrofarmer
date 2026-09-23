@@ -11,12 +11,8 @@ from scripts.tilemap import TileData
 
 
 class Sawmill(BigTile, Selectable):
-    def __init__(self, tiledata: TileData, *groups):
-        super().__init__(
-            tiledata,
-            get_group_server().update,  # prepending update to groups.
-            *groups,
-        )
+    def __init__(self, tiledata: TileData):
+        super().__init__(tiledata)
         self.saw_progress: float = 0
         self.stock = 0
 
