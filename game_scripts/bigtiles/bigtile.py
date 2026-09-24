@@ -3,7 +3,7 @@ import json
 from pygame import Vector2
 
 from scripts.tilemap import Tile, TileData
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 
 
 class BigTile(Tile):

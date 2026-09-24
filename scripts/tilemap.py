@@ -50,7 +50,7 @@ class TileData:
 
 
 class Tile(NodeSprite):
-    def __init__(self, Tiledata: TileData, *groups):
+    def __init__(self, Tiledata: TileData,*groups):
         super().__init__(
             Tiledata.surf, Tiledata.world_pos, Tiledata.anchor, Tiledata.offset, *groups
         )

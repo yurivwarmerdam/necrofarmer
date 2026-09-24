@@ -7,7 +7,7 @@ from pygame.sprite import Group
 
 from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
 from game_scripts.ui.main_ui import MainUI
@@ -69,9 +69,6 @@ group_server.add_render_groups(tilemap.layers)
 # Should I add the following 2 groups as a core part of group server?
 group_server.add_render_groups({"front": Group()})
 group_server.add_render_groups({"draw": Group()})
-
-# for layer in tilemap.layers.values():
-#     group_server.add_group_to_colliders(layer)
 
 camera = initialize_camera(
     group_server.render_groups,

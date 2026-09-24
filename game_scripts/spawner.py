@@ -1,4 +1,4 @@
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.thopter import Thopter
 from blinker import signal
 from scripts.custom_sprites import NodeSprite

@@ -1,5 +1,5 @@
 from scripts.custom_sprites import NodeSprite
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from scripts.utils import sheet_to_sprite
 from pygame import Rect
 from pygame.math import Vector2

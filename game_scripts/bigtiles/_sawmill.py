@@ -3,7 +3,7 @@ from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.tilemap import TileData
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.statistics import get_statistics
 
