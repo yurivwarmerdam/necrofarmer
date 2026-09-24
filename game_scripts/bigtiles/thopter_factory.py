@@ -2,7 +2,7 @@ import pygame as pg
 
 from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.commander import get_commander
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.stockpile import get_stockpile
 from game_scripts.ui.ui_elements import ContextPanel

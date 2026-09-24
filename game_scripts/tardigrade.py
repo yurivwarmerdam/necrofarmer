@@ -9,7 +9,7 @@ from pygame_gui.elements import UILabel
 
 from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.camera import get_camera
@@ -61,8 +61,6 @@ class Tardigrade(AnimatedSprite, Selectable):
             self.pos = self.move_along_path(self.pos, self.path, delta)
 
     def process_events(self, event: pg.event.Event) -> bool:
-        # print(event)
-        # if 
         if (
             hasattr(event, "button")
             and event.type == pg.MOUSEBUTTONUP

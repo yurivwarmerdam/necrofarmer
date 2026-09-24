@@ -6,7 +6,7 @@ from pygame_gui.elements import UILabel
 
 from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
-from game_scripts.group_server import get_group_server
+from scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.behaviortree_py.behaviortree import (
@@ -126,9 +126,11 @@ class Thopter(AnimatedSprite, Selectable):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             for c in collisions:
+                print(c)
                 if not hasattr(c, "properties"):
                     continue
                 if c.properties.get("wood"):
+                    print("we got wood")
                     tile_pos = get_tilemap().world_to_map(c.pos)
                     self.blackboard["wood_pos"] = tile_pos
                     self.blackboard["action_mode"] = "wood"

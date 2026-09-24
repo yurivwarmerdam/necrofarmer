@@ -1,5 +1,5 @@
 from game_scripts.statistics import get_statistics
-from group_server import get_group_server
+from scripts.group_server import get_group_server
 
 
 class DynamicStatistics:
