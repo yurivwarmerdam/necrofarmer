@@ -136,8 +136,6 @@ class Thopter(AnimatedSprite, Selectable):
                     self.blackboard["action_status"] = NodeStatus.IDLE
                     # change get_closest_tree to validate tree or somesuch.
                     # mayyybe keep validating on each-tick composite node
-                    pass
-
             return True
         return False
 

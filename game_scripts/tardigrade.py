@@ -122,7 +122,7 @@ class TardigradePanel(ContextPanel):
             object_id="#thopter_button",
             scale_func=integer_scale,
             container=context_container,
-            command=lambda: print("I do nothing yet!"),
+            command=self.on_thopter_button_clicked,
         )
         UILabel(
             pg.Rect(6, 50, 120, 30),
@@ -137,3 +137,6 @@ class TardigradePanel(ContextPanel):
 
     def update(self, _delta):
         self.counter.set_text(f"Time! {time()}")
+
+    def on_thopter_button_clicked(self):
+        print(get_commander().selected.sprites()[0])

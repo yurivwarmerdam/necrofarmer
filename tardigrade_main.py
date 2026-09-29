@@ -124,7 +124,7 @@ while True:
     camera_move = Vector2(0, 0)
     # --- event loop ---
     events = pg.event.get()
-    pressed = pg.mouse.get_pressed()
+    # pressed = pg.mouse.get_pressed()
 
     for event in events:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
