@@ -9,6 +9,7 @@ from pytmx.map import TiledLayer, TiledMap
 from pytmx.util_pygame import load_pygame
 
 from scripts.custom_sprites import NodeSprite
+from scripts.group_server import get_group_server
 
 from typing import Any, Iterable, override
 
@@ -51,6 +52,9 @@ class TileData:
 
 class Tile(NodeSprite):
     def __init__(self, Tiledata: TileData,*groups):
+        if mask:=Tiledata.get_property("collision_mask"):
+            collide_groups=get_group_server().get_collide_groups_by_mask(mask)
+            groups=groups+tuple(collide_groups)
         super().__init__(
             Tiledata.surf, Tiledata.world_pos, Tiledata.anchor, Tiledata.offset, *groups
         )

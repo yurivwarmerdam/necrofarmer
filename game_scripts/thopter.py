@@ -130,15 +130,10 @@ class Thopter(AnimatedSprite, Selectable):
                 if not hasattr(c, "properties"):
                     continue
                 if c.properties.get("wood"):
-                    print("we got wood")
                     tile_pos = get_tilemap().world_to_map(c.pos)
                     self.blackboard["wood_pos"] = tile_pos
                     self.blackboard["action_mode"] = "wood"
                     self.blackboard["action_status"] = NodeStatus.IDLE
-                    # self.blackboard[]
-                    # v update whiteboard active tree
-                    # v have tree default to idle
-                    # v add idle button
                     # change get_closest_tree to validate tree or somesuch.
                     # mayyybe keep validating on each-tick composite node
                     pass
