@@ -1,4 +1,5 @@
 from scripts.game import Game
 
 class TardigradeGame(Game):
-    pass
+    def process_events(self):
+        pass
