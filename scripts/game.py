@@ -17,10 +17,16 @@ class Game(ABC):
         self.ui_manager.get_theme().load_theme("theme/buttons_generated.json")
         self.clock = pg.time.Clock()
 
-        # game-specific
-        # ui = MainUI()
-        # tilemap = game_tilemap.get_tilemap("tilemaps/another_island.tmx")
-        # star.get_star_server(tilemap)
+        # late init (after group server made groups in game-specific inits)
+        # alternatively: have camera know group server, which is engine-specific now anyway
+        # the second allows up to dynamically change render groups during runtime
+        camera = initialize_camera(
+        group_server.render_groups,
+        Group(),
+        display,
+        Vector2(-300, 0),
+        )
+
         pass
 
     def run(self):
