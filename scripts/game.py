@@ -1,19 +1,28 @@
 from abc import ABC, abstractmethod
 
 import pygame as pg
+from pygame.math import Vector2
+from pygame.sprite import Group
+
+from scripts.camera import initialize_camera
+from scripts.group_server import get_group_server
+from scripts.image_server import get_image_server
+
 
 class Game(ABC):
     # params editable (in config file?)
-    def __init__(self,resolution:tuple[int,int]) -> None:
+    def __init__(self, resolution: tuple[int, int]) -> None:
         pg.init()
 
         self.display = pg.display.set_mode(
-        resolution,
-        pg.RESIZABLE,
-        # pg.SCALED,
+            resolution,
+            pg.RESIZABLE,
+            # pg.SCALED,
         )
-        #editable theme path(s)
-        self.ui_manager = pygame_gui.UIManager(resolution, theme_path="theme/theme.json")
+        # editable theme path(s)
+        self.ui_manager = pygame_gui.UIManager(
+            resolution, theme_path="theme/theme.json"
+        )
         self.ui_manager.get_theme().load_theme("theme/buttons_generated.json")
         self.clock = pg.time.Clock()
 
@@ -21,11 +30,13 @@ class Game(ABC):
         # alternatively: have camera know group server, which is engine-specific now anyway
         # the second allows up to dynamically change render groups during runtime
         camera = initialize_camera(
-        group_server.render_groups,
-        Group(),
-        display,
-        Vector2(-300, 0),
+            get_group_server().render_groups,
+            Group(),
+            self.display,
+            Vector2(-300, 0),
         )
+
+        # img_server = get_image_server()
 
         pass
 
@@ -37,11 +48,11 @@ class Game(ABC):
             self.update(delta)
 
     @abstractmethod
-    def process_events(self,events):
+    def process_events(self, events):
         # event loop
         pass
 
     @abstractmethod
-    def update(self,delta):
+    def update(self, delta):
         # update whatever needs update running
         pass

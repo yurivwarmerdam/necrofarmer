@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
 from pygame.sprite import AbstractGroup, Group, Sprite, spritecollide
+from typing import DefaultDict
 
 from scripts.behaviortree_py.util_pygame import BTGroup
 from scripts.utils import pointcollide
-from typing import DefaultDict
 
 
 @dataclass

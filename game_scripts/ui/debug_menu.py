@@ -40,9 +40,7 @@ class DebugMenu(UIWindow):
             object_id="#thopter_factory_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: self.set_spawning_state(
-                "thopter_factory_2"
-            ),
+            command=lambda: self.set_spawning_state("thopter_factory_2"),
         )
         UIButton(
             Rect(64, 56, 54, 46),
@@ -50,9 +48,7 @@ class DebugMenu(UIWindow):
             object_id="#sawmill_button",
             scale_func=integer_scale,
             container=self,
-            command=lambda: self.set_spawning_state(
-                "sawmill"
-            ),
+            command=lambda: self.set_spawning_state("sawmill"),
         )
 
     def set_spawning_state(self, sprite_type: type[AnimatedSprite] | TileData):
@@ -85,4 +81,6 @@ class DebugMenu(UIWindow):
         entity(get_camera().get_global_mouse_pos())
 
     def spawn_tile(self):
-        get_tilemap().spawn_tile_str(self.spawning,get_camera().get_global_mouse_pos(),"active")
+        get_tilemap().spawn_tile_str(
+            self.spawning, get_camera().get_global_mouse_pos(), "active"
+        )

@@ -6,7 +6,6 @@ from pygame_gui.elements import UILabel
 
 from game_scripts.commander import get_commander
 from game_scripts.game_tilemap import get_tilemap
-from scripts.group_server import get_group_server
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.behaviortree_py.behaviortree import (
@@ -27,6 +26,7 @@ from scripts.behaviortree_py.nodes import (
     StatefulActionNode,
 )
 from scripts.custom_sprites import AnimatedSprite, integer_scale
+from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
 from scripts.ui_shim import UIButton
 

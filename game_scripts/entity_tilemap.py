@@ -4,7 +4,7 @@ from pygame import Vector2
 
 from game_scripts import whiteboard
 from game_scripts.bigtiles.bigtile import BigTile, bigtile_prop_to_vectors
-from scripts.tilemap import Tile, Tilemap, TileData
+from scripts.tilemap import Tile, TileData, Tilemap
 
 
 # I want to become a more generic class.

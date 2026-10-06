@@ -1,5 +1,6 @@
 from abc import ABC
 from functools import partial
+
 import pygame as pg
 from pygame_gui.core import IContainerLikeInterface
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
@@ -76,5 +77,3 @@ class BackgroundPanel(UIPanel):
             container=self.get_container(),
             visible=visible,
         )
-
-

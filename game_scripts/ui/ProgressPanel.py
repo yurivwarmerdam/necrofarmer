@@ -1,11 +1,10 @@
+import pygame as pg
+from pygame_gui.elements import UIProgressBar
+
 from game_scripts.commander import get_commander
 from game_scripts.ui.ui_elements import BackgroundPanel
 from scripts.custom_sprites import integer_scale
 from scripts.ui_shim import UIButton
-
-
-import pygame as pg
-from pygame_gui.elements import UIProgressBar
 
 
 class ProgressPanel(BackgroundPanel):

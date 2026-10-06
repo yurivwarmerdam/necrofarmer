@@ -4,11 +4,10 @@ from pygame import Rect, Surface, Vector2
 from pygame.sprite import Group, Sprite
 from pygame_gui.core import UIElement
 
-from scripts.group_server import get_group_server
-
 from game_scripts.selectable import Selectable
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
+from scripts.group_server import get_group_server
 
 
 class SelectBox(NodeSprite):

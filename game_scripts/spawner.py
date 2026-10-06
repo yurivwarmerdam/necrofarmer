@@ -1,7 +1,8 @@
-from scripts.group_server import get_group_server
-from game_scripts.thopter import Thopter
 from blinker import signal
+
+from game_scripts.thopter import Thopter
 from scripts.custom_sprites import NodeSprite
+from scripts.group_server import get_group_server
 
 
 class Spawner:
@@ -19,7 +20,7 @@ class Spawner:
         # instead of removing and adding one.
         unfinished_l = self.group_server.typed_groups["_Thopter"].sprites()
         val = unfinished_l[0] if len(unfinished_l) > 0 else None
-        print(unfinished_l,val)
+        print(unfinished_l, val)
         if not val:
             raise Exception("finishing construction without ever starting")
         val.kill()

@@ -7,14 +7,14 @@ from pygame.sprite import Group
 
 from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
-from scripts.group_server import get_group_server
+from game_scripts.cursor import Cursor
+from game_scripts.spawner import get_spawner
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
 from game_scripts.ui.main_ui import MainUI
-from game_scripts.spawner import get_spawner
 from scripts import image_server
 from scripts.camera import initialize_camera
-from game_scripts.cursor import Cursor
+from scripts.group_server import get_group_server
 
 # Server architecture:
 # spin up and have global access to the following:
