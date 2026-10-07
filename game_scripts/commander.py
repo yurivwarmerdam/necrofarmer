@@ -20,6 +20,7 @@ class SelectBox(NodeSprite):
         self.start: Vector2 | None = None
         self.camera: Camera = get_camera()
         self.group_server = get_group_server()
+        self.collide_mask=1
 
     def start_click(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -63,13 +64,14 @@ class SelectBox(NodeSprite):
                 self.dragging = False
 
     def get_collides(self):
-        collides = pg.sprite.spritecollide(
-            self,
-            self.group_server.colliders,
-            dokill=False,
-            collided=pg.sprite.collide_mask,
-        )
-        return collides
+        return get_group_server().sprite_collide(self)
+        # collides = pg.sprite.spritecollide(
+        #     self,
+        #     self.group_server.colliders,
+        #     dokill=False,
+        #     collided=pg.sprite.collide_mask,
+        # )
+        # return collides
 
 
 class Commander:

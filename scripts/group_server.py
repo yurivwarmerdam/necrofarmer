@@ -14,7 +14,10 @@ class GroupServer:
     # --------------
     #
     # dict of groups, since rendering happens in layers.
+    # TODO: revisit groups. the 2 privileged Groups feels a little artificial.
     render_groups: dict[str, Group] = field(default_factory=dict)
+    front = Group()
+    draw = Group()
 
     collide_groups: dict[int, Group] = field(
         default_factory=lambda: {

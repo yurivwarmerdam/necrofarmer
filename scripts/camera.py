@@ -4,6 +4,7 @@ from pygame.color import Color
 from pygame.math import Vector2
 from pygame.sprite import Group, LayeredUpdates
 from pygame.transform import scale_by
+from scripts.group_server import get_group_server
 
 
 class Camera:
@@ -11,14 +12,14 @@ class Camera:
     # https://github.com/clear-code-projects/Pygame-Cameras/blob/main/camera.py
     def __init__(
         self,
-        render_layers: dict[str, Group],
+        # render_layers: dict[str, Group],
         ui: Group,
         display: Surface,
         pos=Vector2(0, 0),
         bg_color: Color = Color("blue1"),
     ) -> None:
         self.pos = pos
-        self.render_layers = render_layers
+        # self.render_layers = render_layers
         self.ui = ui
         self.display = display
         self.bg_color = bg_color
@@ -44,8 +45,12 @@ class Camera:
 
     def draw_all(self):
         self.buffer.fill(self.bg_color)
-        for group in self.render_layers:
-            self.draw_layer(self.render_layers[group])
+        for group_name in get_group_server().render_groups:
+            self.draw_layer(get_group_server().render_groups[group_name])
+        # for group in self.render_layers:
+        #     self.draw_layer(self.render_layers[group])
+        self.draw_layer(get_group_server().front)
+        self.draw_layer(get_group_server().draw)
         self.ui.draw(self.buffer)
 
         # scale by instead of blitting
@@ -96,14 +101,20 @@ _instance: Camera | None = None
 
 
 def initialize_camera(
-    render_layers: dict[str, Group],
+    # render_layers: dict[str, Group],
     ui: Group,
     display: Surface,
     pos=Vector2(0, 0),
     bg_color: Color = Color("blue1"),
 ) -> Camera:
     global _instance
-    _instance = Camera(render_layers, ui, display, pos, bg_color)
+    _instance = Camera(
+        # render_layers,
+        ui,
+        display,
+        pos,
+        bg_color,
+    )
     return _instance
 
 

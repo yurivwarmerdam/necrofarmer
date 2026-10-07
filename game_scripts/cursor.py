@@ -15,7 +15,7 @@ class Cursor(NodeSprite):
             Vector2(100, 100),
             "center",
             Vector2(0, 0),
-            get_group_server().render_groups["front"],
+            get_group_server().front,
             get_group_server().update,
         )
         self.active_building = ""

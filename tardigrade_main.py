@@ -67,11 +67,11 @@ star.get_star_server(tilemap)
 
 group_server.add_render_groups(tilemap.layers)
 # Should I add the following 2 groups as a core part of group server?
-group_server.add_render_groups({"front": Group()})
-group_server.add_render_groups({"draw": Group()})
+# group_server.add_render_groups({"front": Group()})
+# group_server.add_render_groups({"draw": Group()})
 
 camera = initialize_camera(
-    group_server.render_groups,
+    # group_server.render_groups,
     Group(),
     display,
     Vector2(-300, 0),
@@ -80,7 +80,7 @@ camera = initialize_camera(
 
 cursor = Cursor()
 commander = get_commander()
-commander.box.add(group_server.render_groups["draw"])
+commander.box.add(group_server.draw)
 
 img_server = image_server.get_image_server()
 
@@ -158,7 +158,7 @@ while True:
         camera.pos += camera_move
 
     # --- update loop ---
-    camera.render_layers["draw"].update()
+    group_server.draw.update()
     group_server.update.update(_delta)
     ui.update(_delta)
 
