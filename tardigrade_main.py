@@ -66,13 +66,8 @@ tilemap = game_tilemap.get_tilemap(
 star.get_star_server(tilemap)
 
 group_server.add_render_groups(tilemap.layers)
-# Should I add the following 2 groups as a core part of group server?
-# group_server.add_render_groups({"front": Group()})
-# group_server.add_render_groups({"draw": Group()})
 
 camera = initialize_camera(
-    # group_server.render_groups,
-    Group(),
     display,
     Vector2(-300, 0),
 )

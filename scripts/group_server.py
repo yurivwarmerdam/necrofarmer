@@ -31,6 +31,8 @@ class GroupServer:
     )
 
     update: Group = Group()
+    # TODO: This might not want to be engine core.
+    # This singleton wants some dynamic or game-specific groups, instead.
     behavior_trees: BTGroup = BTGroup()
     typed_groups: dict[str, Group] = field(default_factory=lambda: DefaultDict(Group))
 

@@ -13,14 +13,14 @@ class Camera:
     def __init__(
         self,
         # render_layers: dict[str, Group],
-        ui: Group,
+        # ui: Group,
         display: Surface,
         pos=Vector2(0, 0),
         bg_color: Color = Color("blue1"),
     ) -> None:
         self.pos = pos
         # self.render_layers = render_layers
-        self.ui = ui
+        # self.ui = ui
         self.display = display
         self.bg_color = bg_color
         self.buffer = Surface(self.display.get_size())
@@ -51,7 +51,7 @@ class Camera:
         #     self.draw_layer(self.render_layers[group])
         self.draw_layer(get_group_server().front)
         self.draw_layer(get_group_server().draw)
-        self.ui.draw(self.buffer)
+        # self.ui.draw(self.buffer)
 
         # scale by instead of blitting
         scale_by(self.buffer, self.zoom_level, self.scale_buffer)
@@ -101,16 +101,14 @@ _instance: Camera | None = None
 
 
 def initialize_camera(
-    # render_layers: dict[str, Group],
-    ui: Group,
+    # ui: Group,
     display: Surface,
     pos=Vector2(0, 0),
-    bg_color: Color = Color("blue1"),
+    bg_color: Color = Color("blue4"),
 ) -> Camera:
     global _instance
     _instance = Camera(
-        # render_layers,
-        ui,
+        # ui,
         display,
         pos,
         bg_color,

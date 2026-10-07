@@ -26,14 +26,12 @@ class TardigradeGame(Game):
 
         group_server = get_group_server()
         group_server.add_render_groups(tilemap.layers)
-        # Should I add the following 2 groups as a core part of group server?
-        # group_server.add_render_groups({"front": Group()})
-        # group_server.add_render_groups({"draw": Group()})
 
         spawner = get_spawner()
 
         cursor = Cursor()
         commander = get_commander()
+        # why doesn't commander do this inside init?
         commander.box.add(group_server.draw)
 
         BTREE_EVENT = pg.USEREVENT + 999

@@ -30,13 +30,11 @@ class Game(ABC):
         # alternatively: have camera know group server, which is engine-specific now anyway
         # the second allows up to dynamically change render groups during runtime
         camera = initialize_camera(
-            get_group_server().render_groups,
-            Group(),
             self.display,
             Vector2(-300, 0),
         )
 
-        # img_server = get_image_server()
+        img_server = get_image_server()
 
         pass
 
