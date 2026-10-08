@@ -29,9 +29,9 @@ class GameTilemap(EntityTilemap):
             return None
         stock = properties["wood"]
         # This where it goes wrong!
-        # print(stock, amount)
+        print(stock, amount)
         if stock <= amount:
-            self.kill_tile("active", *map_pos)
+            self.map["active"][*map_pos].kill()
             return stock
         else:
             properties["wood"] -= amount

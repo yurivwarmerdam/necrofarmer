@@ -267,14 +267,6 @@ class Tilemap(AbstractGroup):
         self.map[layer][floor(map_pos.x), floor(map_pos.y)] = tile
         return True
 
-    def kill_tile(self, layer: str, x: int, y: int):
-        tile = self.map[layer][x, y]
-        tile.kill()
-        del self.map[layer][x, y]
-
-    def kill_tilev(self, layer: str, pos: Vector2):
-        self.kill_tile(layer, floor(pos.x), floor(pos.y))
-
     def get_tile_idxs_by_property(
         self, property, layer_name, property_value=None
     ) -> list[tuple[int, int]]:

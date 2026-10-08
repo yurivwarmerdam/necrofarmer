@@ -91,8 +91,10 @@ class TardigradeGame(Game):
         if camera_move != Vector2(0, 0):
             self.camera.pos += camera_move
         self.ui.update(delta)
-        pass
 
+    def main(self):
+
+        super().main()
 
 if __name__ == "__main__":
     game = TardigradeGame()
