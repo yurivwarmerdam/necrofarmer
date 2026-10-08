@@ -13,6 +13,7 @@ from game_scripts.game_tilemap import get_tilemap
 from game_scripts.ui.main_ui import MainUI
 from pygame.math import Vector2
 
+BTREE_EVENT = pg.USEREVENT + 999
 
 class TardigradeGame(Game):
     def __init__(self) -> None:
@@ -24,17 +25,16 @@ class TardigradeGame(Game):
         tilemap = get_tilemap("tilemaps/another_island.tmx")
         star.get_star_server(tilemap)
 
-        group_server = get_group_server()
-        group_server.add_render_groups(tilemap.layers)
+        self.group_server = get_group_server()
+        self.group_server.add_render_groups(tilemap.layers)
 
         spawner = get_spawner()
 
         cursor = Cursor()
-        commander = get_commander()
+        self.commander = get_commander()
         # why doesn't commander do this inside init?
-        commander.box.add(group_server.draw)
+        self.commander.box.add(self.group_server.draw)
 
-        BTREE_EVENT = pg.USEREVENT + 999
         pg.time.set_timer(BTREE_EVENT, 100)
 
         # -----------------------------
@@ -81,8 +81,8 @@ class TardigradeGame(Game):
             processed = False
             processed = self.ui_manager.process_events(event)
 
-        if not processed:
-            processed = self.commander.process_events(event)
+            if not processed:
+                processed = self.commander.process_events(event)
 
         pass
 
@@ -92,3 +92,8 @@ class TardigradeGame(Game):
             self.camera.pos += camera_move
         # update whatever needs update running
         pass
+
+
+if __name__ == "__main__":
+    game=TardigradeGame()
+    game.main()

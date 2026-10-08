@@ -4,9 +4,9 @@ import sys
 import pygame as pg
 from pygame.math import Vector2
 from pygame.sprite import Group
+import pygame_gui
 
 from scripts.camera import initialize_camera
-from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
 
 
@@ -30,7 +30,7 @@ class Game(ABC):
         # late init (after group server made groups in game-specific inits)
         # alternatively: have camera know group server, which is engine-specific now anyway
         # the second allows up to dynamically change render groups during runtime
-        camera = initialize_camera(
+        self.camera = initialize_camera(
             self.display,
             Vector2(-300, 0),
         )
@@ -39,7 +39,7 @@ class Game(ABC):
 
         pass
 
-    def run(self):
+    def main(self):
         while True:
             delta = self.clock.get_time()
             events = pg.event.get()
@@ -49,16 +49,19 @@ class Game(ABC):
                     sys.exit()
             self.process_events(events)
             self.update(delta)
+            # render stuff
+            self.camera.draw_all()
+            pg.display.update()
+            self.clock.tick(60)
+
 
     @abstractmethod
     def process_events(self, events):
         # event loop
         pass
 
-    @abstractmethod
     def update(self, delta):
         self.group_server.draw.update()
         self.group_server.update.update(delta)
         self.ui.update(delta)
-        # update whatever needs update running
-        pass
+        self.ui_manager.update(delta / 1000)
