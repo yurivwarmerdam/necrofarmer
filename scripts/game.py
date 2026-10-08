@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import sys
 
 import pygame as pg
 from pygame.math import Vector2
@@ -42,6 +43,10 @@ class Game(ABC):
         while True:
             delta = self.clock.get_time()
             events = pg.event.get()
+            for event in events:
+                if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_F8):
+                    pg.quit()
+                    sys.exit()
             self.process_events(events)
             self.update(delta)
 
@@ -52,5 +57,8 @@ class Game(ABC):
 
     @abstractmethod
     def update(self, delta):
+        self.group_server.draw.update()
+        self.group_server.update.update(delta)
+        self.ui.update(delta)
         # update whatever needs update running
         pass
