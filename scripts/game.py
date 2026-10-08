@@ -7,6 +7,7 @@ from pygame.sprite import Group
 import pygame_gui
 
 from scripts.camera import initialize_camera
+from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
 
 
@@ -35,7 +36,10 @@ class Game(ABC):
             Vector2(-300, 0),
         )
 
-        img_server = get_image_server()
+        self.group_server = get_group_server()
+
+        # worth initializing?
+        get_image_server()
 
         pass
 
@@ -51,6 +55,7 @@ class Game(ABC):
             self.update(delta)
             # render stuff
             self.camera.draw_all()
+            self.ui_manager.draw_ui(self.display)
             pg.display.update()
             self.clock.tick(60)
 
@@ -63,5 +68,4 @@ class Game(ABC):
     def update(self, delta):
         self.group_server.draw.update()
         self.group_server.update.update(delta)
-        self.ui.update(delta)
         self.ui_manager.update(delta / 1000)

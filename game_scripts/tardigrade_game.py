@@ -1,5 +1,4 @@
 import pygame as pg
-from pygame.sprite import Group
 
 from game_scripts.commander import get_commander
 from game_scripts.cursor import Cursor
@@ -15,22 +14,22 @@ from pygame.math import Vector2
 
 BTREE_EVENT = pg.USEREVENT + 999
 
+
 class TardigradeGame(Game):
     def __init__(self) -> None:
         resolution = (636, 333)
         super().__init__(resolution)
 
-        ui = MainUI()
+        self.ui = MainUI()
 
         tilemap = get_tilemap("tilemaps/another_island.tmx")
         star.get_star_server(tilemap)
 
-        self.group_server = get_group_server()
         self.group_server.add_render_groups(tilemap.layers)
 
-        spawner = get_spawner()
+        # spawner = get_spawner()
 
-        cursor = Cursor()
+        Cursor()
         self.commander = get_commander()
         # why doesn't commander do this inside init?
         self.commander.box.add(self.group_server.draw)
@@ -87,13 +86,14 @@ class TardigradeGame(Game):
         pass
 
     def update(self, delta):
+        super().update(delta)
         camera_move = self.handle_camera_move()
         if camera_move != Vector2(0, 0):
             self.camera.pos += camera_move
-        # update whatever needs update running
+        self.ui.update(delta)
         pass
 
 
 if __name__ == "__main__":
-    game=TardigradeGame()
+    game = TardigradeGame()
     game.main()
