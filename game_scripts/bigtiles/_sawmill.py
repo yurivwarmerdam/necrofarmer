@@ -4,14 +4,13 @@ from game_scripts.selectable import Selectable
 from game_scripts.statistics import get_statistics
 from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.ui.ui_elements import ContextPanel
-from scripts.group_server import get_group_server
 from scripts.tilemap import TileData
 
 
 class _Sawmill(BigTile, Selectable):
     def __init__(self, tiledata: TileData):
         super().__init__(tiledata)
-        self.build_progress = 0.0
+        self.build_progress = 15.0
 
     def get_construction_progress_fraction(self):
         return self.build_progress / get_statistics()["sawmill"]["build_time"]
@@ -24,12 +23,12 @@ class _Sawmill(BigTile, Selectable):
             self.jobs_done()
 
     def jobs_done(self):
-        # spawn replacement
-        if self in get_commander().selected.sprites():
-            # get_commander().select(newly spawned replacement)
-            pass
         get_commander().unselect(self)
+        # get own position from tilemap (issue: circular dependency)
+        # kill self
+        # spawn replacement by name
         self.kill()
+        print("gerominooo!")
 
     # currently only doing update for debugging purposes.
     def update(self, _delta) -> None:
