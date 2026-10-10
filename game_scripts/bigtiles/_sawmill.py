@@ -1,3 +1,5 @@
+from blinker import signal
+
 from game_scripts.bigtiles.bigtile import BigTile
 from game_scripts.commander import get_commander
 from game_scripts.selectable import Selectable
@@ -27,6 +29,7 @@ class _Sawmill(BigTile, Selectable):
         # get own position from tilemap (issue: circular dependency)
         # kill self
         # spawn replacement by name
+        signal("spawn_sawmill").send(self)
         self.kill()
         print("gerominooo!")
 

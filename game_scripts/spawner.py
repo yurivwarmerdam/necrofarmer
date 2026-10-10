@@ -3,13 +3,17 @@ from blinker import signal
 from game_scripts.thopter import Thopter
 from scripts.custom_sprites import NodeSprite
 from scripts.group_server import get_group_server
+from game_scripts.game_tilemap import get_tilemap
 
 
 class Spawner:
     def __init__(self) -> None:
+        print("spawner")
         signal("spawn_thopter").connect(self.spawn_thopter, weak=False)
         signal("start_build_thopter").connect(self.start_build_thopter, weak=False)
+        signal("spawn_sawmill").connect(self.spawn_sawmill, weak=False)
         self.group_server = get_group_server()
+        self.tilemap = get_tilemap()
         pass
 
     def start_build_thopter(self, sender: NodeSprite):
@@ -25,6 +29,10 @@ class Spawner:
             raise Exception("finishing construction without ever starting")
         val.kill()
         Thopter(sender.pos)
+        pass
+
+    def spawn_sawmill(self, sender):
+        print("Oh yeah!")
         pass
 
 

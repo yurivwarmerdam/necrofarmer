@@ -43,7 +43,6 @@ class ThopterFactory(BigTile, Selectable):
                 self.stop_construction()
 
     def get_construction_progress_fraction(self) -> float:
-        # print(self.build_progress / get_statistics()["sawmill"]["build_time"])
         return (
             self.construction_progress
             / self.statistics[self.constructing]["build_time"]

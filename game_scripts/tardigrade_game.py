@@ -27,7 +27,7 @@ class TardigradeGame(Game):
 
         self.group_server.add_render_groups(tilemap.layers)
 
-        # spawner = get_spawner()
+        get_spawner()
 
         Cursor()
         self.commander = get_commander()
