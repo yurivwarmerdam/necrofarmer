@@ -6,7 +6,6 @@ from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
 from scripts.game import Game
 from game_scripts import star
-from scripts.group_server import get_group_server
 from game_scripts.spawner import get_spawner
 from game_scripts.game_tilemap import get_tilemap
 from game_scripts.ui.main_ui import MainUI
@@ -27,9 +26,9 @@ class TardigradeGame(Game):
 
         self.group_server.add_render_groups(tilemap.layers)
 
-        get_spawner()
 
         Cursor()
+        get_spawner()
         self.commander = get_commander()
         # why doesn't commander do this inside init?
         self.commander.box.add(self.group_server.draw)

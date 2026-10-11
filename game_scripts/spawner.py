@@ -31,9 +31,8 @@ class Spawner:
         Thopter(sender.pos)
         pass
 
-    def spawn_sawmill(self, sender):
-        print("Oh yeah!")
-        pass
+    def spawn_sawmill(self, sender: NodeSprite):
+        self.tilemap.spawn_tile_str("sawmill", sender.pos, "active")
 
 
 _instance = None

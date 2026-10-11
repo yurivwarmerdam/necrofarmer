@@ -29,8 +29,8 @@ class _Sawmill(BigTile, Selectable):
         # get own position from tilemap (issue: circular dependency)
         # kill self
         # spawn replacement by name
-        signal("spawn_sawmill").send(self)
         self.kill()
+        signal("spawn_sawmill").send(self)
         print("gerominooo!")
 
     # currently only doing update for debugging purposes.

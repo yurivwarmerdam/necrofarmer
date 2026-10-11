@@ -27,6 +27,14 @@ from scripts.group_server import get_group_server
 # - async_runner (unused)
 # - global_blackboard
 
+import warnings
+
+warnings.warn(
+        "tardigrade main is deprecated. Use tardigrade_game instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+
 
 pg.init()
 
