@@ -9,7 +9,6 @@ from pygame_gui.elements import UILabel
 
 from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
-from game_scripts.cursor import Cursor
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.camera import get_camera
@@ -18,11 +17,8 @@ from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
 from scripts.ui_shim import UIButton
 
+from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 
-# Needs access to:
-# - groups
-# v tilemap
-# v star (already has a server)
 class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
         img_server = get_image_server()
@@ -106,6 +102,19 @@ class Tardigrade(AnimatedSprite, Selectable):
     @property
     def context_panel(self) -> type[ContextPanel]:
         return TardigradePanel
+
+
+# --- Behavior tree section ---
+
+class PlanPath(SimpleActionNode):
+    pass
+
+class MoveAlongPath(StatefulActionNode):
+    pass
+
+
+
+# --- UI Section ---
 
 
 class TardigradePanel(ContextPanel):
