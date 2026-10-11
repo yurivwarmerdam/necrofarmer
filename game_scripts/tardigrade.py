@@ -11,6 +11,7 @@ from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
+from scripts.behaviortree_py.behaviortree import NodeStatus
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.group_server import get_group_server
@@ -18,6 +19,8 @@ from scripts.image_server import get_image_server
 from scripts.ui_shim import UIButton
 
 from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
+
 
 class Tardigrade(AnimatedSprite, Selectable):
     def __init__(self, pos: Vector2):
@@ -45,6 +48,19 @@ class Tardigrade(AnimatedSprite, Selectable):
 
         # self.move_goal = None
         self.path = []
+
+        self.blackboard = {
+            "action_status": NodeStatus.IDLE,
+            "self": self,
+        }
+        nodes = {
+            "PlanPath": PlanPath,
+            "MoveAlongPath": MoveAlongPath,
+        }
+
+        factory = BehaviorTreeFactory()
+        factory.register_blackboard(self.blackboard)
+        factory.register_nodes(nodes)
 
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
@@ -106,12 +122,13 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 # --- Behavior tree section ---
 
+
 class PlanPath(SimpleActionNode):
     pass
 
+
 class MoveAlongPath(StatefulActionNode):
     pass
-
 
 
 # --- UI Section ---
