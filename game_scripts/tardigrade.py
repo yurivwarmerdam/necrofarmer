@@ -74,6 +74,19 @@ class Tardigrade(AnimatedSprite, Selectable):
             self.pos = self.move_along_path(self.pos, self.path, delta)
 
     def process_events(self, event: pg.event.Event) -> bool:
+        if event.type == pg.MOUSEBUTTONUP and event.button == 3:
+            collisions = get_commander().get_mouse_collisions()
+            if not collisions:
+                pass
+                # move click (if navmesh?)
+                # (How to deal with non-navigable clicks like buildings or lakes?)
+                # set move goal to whiteboard
+                # change active btree to move
+            for c in collisions:
+                # if hasattr "build":
+                # set goal to build
+                # change active btree to build
+                pass
         if (
             hasattr(event, "button")
             and event.type == pg.MOUSEBUTTONUP
