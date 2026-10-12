@@ -96,11 +96,8 @@ class Thopter(AnimatedSprite, Selectable):
         factory.register_conversion_context(
             {"Vector2": Vector2}
         )  # In case nonstandard datatypes are described in tree.xml, provide mappings here.
-        self.default_tree = factory.load_tree_from_xml(
-            "trees/ornithopter.xml"
-        )  # where your tree is defined
-        self.another_tree = factory.load_tree_from_xml("trees/success_tree.xml")
-        self.active_tree = self.default_tree
+
+        self.tree = self.default_tree
 
     def update(self, delta):
         super().update(delta)
@@ -115,12 +112,7 @@ class Thopter(AnimatedSprite, Selectable):
         func(delta, params)
 
     def tick(self):
-        if self.active_tree == self.default_tree:
-            self.active_tree.tick_tree()
-        else:
-            result = self.active_tree.tick_tree()
-            if result != NodeStatus.RUNNING:
-                self.active_tree = self.default_tree
+        self.tree.tick_tree()
 
     def process_events(self, event: pg.Event):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
@@ -184,7 +176,7 @@ class Thopter(AnimatedSprite, Selectable):
     def change_tree_to(self, name):
         """Deprecated. Probably never used."""
         tree = getattr(self, name)
-        self.active_tree = tree
+        self.tree = tree
 
     def set_blackboard_entry(self, key, value):
         self.blackboard[key] = value

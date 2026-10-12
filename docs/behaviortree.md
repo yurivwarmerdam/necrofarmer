@@ -1,7 +1,5 @@
 # BehaviorTree.py
 
-Normal behavior tree rules are followed.
-
 Trees can be ticked on some regular interval using events, but this can be set up to tick every frame if needed.
 
 Minimal class with some behavior:
@@ -26,7 +24,7 @@ class SomeSprite(Sprite): # using sprite, because we are in pygame. Could feasib
         self.tree = factory.load_tree_from_xml("trees/some_tree.xml") # where your tree is defined
 
     def tick(self):
-        self.tree.tick()
+        self.tree.tick_tree()
 ```
 
 This class needs to be ticked in a corresponding main class:

@@ -12,6 +12,7 @@ from game_scripts.commander import get_commander
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.behaviortree_py.behaviortree import NodeStatus
+from scripts.behaviortree_py.dummy_nodes import Succeeder
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.group_server import get_group_server
@@ -27,7 +28,7 @@ class Tardigrade(AnimatedSprite, Selectable):
         img_server = get_image_server()
         group_server = get_group_server()
         self.collision_mask = 1
-        groups = group_server.get_collide_groups_by_mask(self.collision_mask)
+        collide_groups = group_server.get_collide_groups_by_mask(self.collision_mask)
         super().__init__(
             {
                 "0": img_server.animations["tardigrade_0"],
@@ -36,7 +37,8 @@ class Tardigrade(AnimatedSprite, Selectable):
                 "3": img_server.animations["tardigrade_3"],
             },
             pos,
-            groups,
+            collide_groups,
+            group_server.behavior_trees,
             group_server.update,
             group_server.render_groups["active"],
             anchor="center",
@@ -46,7 +48,6 @@ class Tardigrade(AnimatedSprite, Selectable):
         self.tilemap = game_tilemap.get_tilemap()
         self.path_planner = star.get_star_server()
 
-        # self.move_goal = None
         self.path = []
 
         self.blackboard = {
@@ -54,6 +55,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             "self": self,
         }
         nodes = {
+            "Succeeder":Succeeder,
             "PlanPath": PlanPath,
             "MoveAlongPath": MoveAlongPath,
         }
@@ -61,6 +63,12 @@ class Tardigrade(AnimatedSprite, Selectable):
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
+        factory.register_conversion_context({"Vector2":Vector2})
+        self.tree=factory.load_tree_from_xml("trees/tardigrade.xml")
+
+    def tick(self):
+        self.tree.tick_tree()
+        pass
 
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
