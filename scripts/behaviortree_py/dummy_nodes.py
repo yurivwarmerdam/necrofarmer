@@ -13,7 +13,7 @@ class Succeeder(SimpleActionNode):
 
 class Failer(SimpleActionNode):
     def tick(self) -> NodeStatus:
-        print("Failure")
+        # print("Failure")
         return NodeStatus.FAILURE
 
 
