@@ -55,7 +55,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             "self": self,
         }
         nodes = {
-            "Succeeder":Succeeder,
+            "Succeeder": Succeeder,
             "PlanPath": PlanPath,
             "MoveAlongPath": MoveAlongPath,
         }
@@ -63,12 +63,15 @@ class Tardigrade(AnimatedSprite, Selectable):
         factory = BehaviorTreeFactory()
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
-        factory.register_conversion_context({"Vector2":Vector2})
-        self.tree=factory.load_tree_from_xml("trees/tardigrade.xml")
+        factory.register_conversion_context({"Vector2": Vector2})
+        self.idle = factory.load_tree_from_xml("trees/tardigrade_idle.xml")
+        self.move = factory.load_tree_from_xml("trees/tardigrade_move.xml")
+        self.tree = self.idle
 
     def tick(self):
-        self.tree.tick_tree()
-        pass
+        result = self.tree.tick_tree()
+        if result != NodeStatus.RUNNING:
+            self.tree = self.idle
 
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
@@ -85,11 +88,13 @@ class Tardigrade(AnimatedSprite, Selectable):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             if not collisions:
-                pass
+                self.blackboard["move_goal"] = self.camera.get_global_mouse_pos()
+
                 # move click (if navmesh?)
                 # (How to deal with non-navigable clicks like buildings or lakes?)
                 # set move goal to whiteboard
                 # change active btree to move
+                pass
             for c in collisions:
                 # if hasattr "build":
                 # set goal to build

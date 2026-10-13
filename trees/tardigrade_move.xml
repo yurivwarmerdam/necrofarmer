@@ -1,5 +1,8 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
-        <MoveAlongPath/>
+        <SequenceNode>
+            <planpath />
+            <MoveAlongPath />
+        </SequenceNode>
     </BehaviorTree>
 </root>
