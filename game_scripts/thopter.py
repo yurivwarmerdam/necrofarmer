@@ -97,7 +97,7 @@ class Thopter(AnimatedSprite, Selectable):
             {"Vector2": Vector2}
         )  # In case nonstandard datatypes are described in tree.xml, provide mappings here.
 
-        self.tree = self.default_tree
+        self.tree = factory.load_tree_from_xml("trees/ornithopter.xml")
 
     def update(self, delta):
         super().update(delta)

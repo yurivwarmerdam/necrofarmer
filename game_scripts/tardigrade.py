@@ -66,12 +66,12 @@ class Tardigrade(AnimatedSprite, Selectable):
         factory.register_conversion_context({"Vector2": Vector2})
         self.idle = factory.load_tree_from_xml("trees/tardigrade_idle.xml")
         self.move = factory.load_tree_from_xml("trees/tardigrade_move.xml")
-        self.tree = self.idle
+        self.active_tree = self.idle
 
     def tick(self):
-        result = self.tree.tick_tree()
+        result = self.active_tree.tick_tree()
         if result != NodeStatus.RUNNING:
-            self.tree = self.idle
+            self.active_tree = self.idle
 
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
@@ -150,11 +150,13 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 
 class PlanPath(SimpleActionNode):
-    pass
+    def tick(self) -> NodeStatus:
+        return NodeStatus.SUCCESS
 
 
 class MoveAlongPath(StatefulActionNode):
-    pass
+    def tick(self) -> NodeStatus:
+        return NodeStatus.SUCCESS
 
 
 # --- UI Section ---
