@@ -7,11 +7,12 @@ from pygame import Vector2
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from pygame_gui.elements import UILabel
 
-from game_scripts import game_tilemap, star
+from game_scripts.game_tilemap import get_tilemap
+from game_scripts.star import get_star_server
 from game_scripts.commander import get_commander
 from game_scripts.selectable import Selectable
 from game_scripts.ui.ui_elements import ContextPanel
-from scripts.behaviortree_py.behaviortree import NodeStatus
+from scripts.behaviortree_py.behaviortree import NodeStatus, PortsList
 from scripts.behaviortree_py.dummy_nodes import Succeeder
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
@@ -45,8 +46,8 @@ class Tardigrade(AnimatedSprite, Selectable):
             offset=Vector2(0, 10),
         )
         self.camera = get_camera()
-        self.tilemap = game_tilemap.get_tilemap()
-        self.path_planner = star.get_star_server()
+        self.tilemap = get_tilemap()
+        self.path_planner = get_star_server()
 
         self.path = []
 
@@ -150,7 +151,20 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 
 class PlanPath(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"self": Tardigrade,"goal":Vector2}, {"path": Vector2})
+
     def tick(self) -> NodeStatus:
+        # move_goal = get_camera().get_global_mouse_pos()
+        trd=self.get_input("self")
+        start = tuple(get_tilemap().world_to_map(trd.pos))
+        goal=self.get_input("goal")
+        goal = tuple(get_tilemap().world_to_map(goal))
+        path = get_star_server().astar(start, goal) or []
+        path = deque([get_tilemap().map_to_world(*waypoint) for waypoint in path])
+        self.set_output("path",path)
+        print(path)
         return NodeStatus.SUCCESS
 
 
