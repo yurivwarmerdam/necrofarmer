@@ -77,13 +77,23 @@ class Tardigrade(AnimatedSprite, Selectable):
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
         super().update(delta)
+        if self.blackboard["action_status"] in [
+            NodeStatus.IDLE,
+            NodeStatus.SUCCESS,
+            NodeStatus.FAILURE,
+        ]:
+            return
 
-        if randint(0, 100) > 99:
-            self.set_animation(str(randint(0, 3)))
-            self.flip_h = bool(randint(0, 1))
+        status, func, params = self.blackboard["action_status"]
+        func = getattr(self, func)  # Only class funcs. May need to look in globals.
+        func(delta, params)
 
-        if self.path:
-            self.pos = self.move_along_path(self.pos, self.path, delta)
+        # if randint(0, 100) > 99:
+        #     self.set_animation(str(randint(0, 3)))
+        #     self.flip_h = bool(randint(0, 1))
+
+        # if self.path:
+        #     self.move_along_path(self.path, delta)
 
     def process_events(self, event: pg.event.Event) -> bool:
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
@@ -127,20 +137,21 @@ class Tardigrade(AnimatedSprite, Selectable):
         return source + delta.normalize() * by
 
     def move_along_path(
-        self, source: Vector2, path: deque[Vector2], by: float
-    ) -> Vector2:
+        self,  by: float, path: deque[Vector2]
+    ) -> None:
         """Note: this consumes path when waypoints are reached."""
         EPS = 1e-9
         move_speed = 0.1
         by *= move_speed
-        result = source.copy()
+        result = self.pos.copy()
         while by > EPS and path:
             intermediate = self.move_towards(result, path[0], by)
             by -= (intermediate - result).length()
             result = intermediate
             if path[0] == result:
                 path.popleft()
-        return result
+        self.pos=result
+        print("moving")
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -159,18 +170,35 @@ class PlanPath(SimpleActionNode):
         # move_goal = get_camera().get_global_mouse_pos()
         trd=self.get_input("self")
         start = tuple(get_tilemap().world_to_map(trd.pos))
-        goal=self.get_input("goal")
+        goal = self.get_input("goal")
         goal = tuple(get_tilemap().world_to_map(goal))
         path = get_star_server().astar(start, goal) or []
         path = deque([get_tilemap().map_to_world(*waypoint) for waypoint in path])
         self.set_output("path",path)
-        print(path)
+        # print(path)
         return NodeStatus.SUCCESS
 
 
 class MoveAlongPath(StatefulActionNode):
-    def tick(self) -> NodeStatus:
-        return NodeStatus.SUCCESS
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList(
+            {"path": deque[Vector2], "action_status": NodeStatus}, {"action_status": NodeStatus}
+        )
+
+    def on_start(self) -> NodeStatus:
+        # this is the pattern when delegating actions to actual unit behavior
+        path = self.get_input("path")
+        self.set_output("action_status", (NodeStatus.RUNNING, "move_along_path", path))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        if self.get_input("action_status") in [NodeStatus.IDLE, NodeStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        else:
+            return NodeStatus.RUNNING
+
 
 
 # --- UI Section ---
