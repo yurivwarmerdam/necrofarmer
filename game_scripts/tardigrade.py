@@ -136,9 +136,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             return target
         return source + delta.normalize() * by
 
-    def move_along_path(
-        self,  by: float, path: deque[Vector2]
-    ) -> None:
+    def move_along_path(self, by: float, path: deque[Vector2]) -> None:
         """Note: this consumes path when waypoints are reached."""
         EPS = 1e-9
         move_speed = 0.1
@@ -150,8 +148,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             result = intermediate
             if path[0] == result:
                 path.popleft()
-        self.pos=result
-        print("moving")
+        self.pos = result
 
     @property
     def context_panel(self) -> type[ContextPanel]:
@@ -164,17 +161,19 @@ class Tardigrade(AnimatedSprite, Selectable):
 class PlanPath(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"self": Tardigrade,"goal":Vector2}, {"path": Vector2})
+        self.ports_list = PortsList(
+            {"self": Tardigrade, "goal": Vector2}, {"path": Vector2}
+        )
 
     def tick(self) -> NodeStatus:
         # move_goal = get_camera().get_global_mouse_pos()
-        trd=self.get_input("self")
+        trd = self.get_input("self")
         start = tuple(get_tilemap().world_to_map(trd.pos))
         goal = self.get_input("goal")
         goal = tuple(get_tilemap().world_to_map(goal))
         path = get_star_server().astar(start, goal) or []
         path = deque([get_tilemap().map_to_world(*waypoint) for waypoint in path])
-        self.set_output("path",path)
+        self.set_output("path", path)
         # print(path)
         return NodeStatus.SUCCESS
 
@@ -183,7 +182,8 @@ class MoveAlongPath(StatefulActionNode):
     def __init__(self):
         super().__init__()
         self.ports_list = PortsList(
-            {"path": deque[Vector2], "action_status": NodeStatus}, {"action_status": NodeStatus}
+            {"path": deque[Vector2], "action_status": NodeStatus},
+            {"action_status": NodeStatus},
         )
 
     def on_start(self) -> NodeStatus:
@@ -198,7 +198,6 @@ class MoveAlongPath(StatefulActionNode):
             return self.node_status
         else:
             return NodeStatus.RUNNING
-
 
 
 # --- UI Section ---

@@ -2,11 +2,16 @@
     <BehaviorTree ID="MainTree">
         <SequenceNode>
             <PlanPath>
-                <InputPort local="self" bb="self"/>
-                <InputPort local="goal" bb="click_goal"/>
-                <OutputPort local="path" bb="path">
+                <InputPort local="self" bb="self" />
+                <InputPort local="goal" bb="click_goal" />
+                <OutputPort local="path" bb="path" />
             </PlanPath>
-            <MoveAlongPath />
+            <MoveAlongPath>
+                <InputPort local="path" bb="path" />
+                <InputPort local="action_status" bb="action_status" />
+                <OutputPort local="action_status" bb="action_status" />
+            </MoveAlongPath>
+            <MoveAlongPath></MoveAlongPath>
         </SequenceNode>
     </BehaviorTree>
 </root>

@@ -52,6 +52,10 @@ class BehaviorTreeFactory:
             raise Exception(f"Unrcognized node name: {elem_name} in tree")
 
     def make_port(self, elem):
+        if not elem:
+            raise Exception(
+                "No port elems. Suspected missing port declaration in xml."
+            )
         local = elem.get("local")
         bb_key = elem.get("bb")
         value = elem.get("value")
