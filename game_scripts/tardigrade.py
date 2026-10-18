@@ -45,11 +45,6 @@ class Tardigrade(AnimatedSprite, Selectable):
             anchor="center",
             offset=Vector2(0, 10),
         )
-        self.camera = get_camera()
-        self.tilemap = get_tilemap()
-        self.path_planner = get_star_server()
-
-        self.path = []
 
         self.blackboard = {
             "action_status": NodeStatus.IDLE,
@@ -65,14 +60,14 @@ class Tardigrade(AnimatedSprite, Selectable):
         factory.register_blackboard(self.blackboard)
         factory.register_nodes(nodes)
         factory.register_conversion_context({"Vector2": Vector2})
-        self.idle = factory.load_tree_from_xml("trees/tardigrade_idle.xml")
-        self.move = factory.load_tree_from_xml("trees/tardigrade_move.xml")
-        self.active_tree = self.idle
+        self.idle_tree = factory.load_tree_from_xml("trees/tardigrade_idle.xml")
+        self.move_tree = factory.load_tree_from_xml("trees/tardigrade_move.xml")
+        self.active_tree = self.idle_tree
 
     def tick(self):
         result = self.active_tree.tick_tree()
         if result != NodeStatus.RUNNING:
-            self.active_tree = self.idle
+            self.active_tree = self.idle_tree
 
     def update(self, delta):
         # gotta call super because it handles animation frame. May want to separate that out...?
@@ -88,23 +83,14 @@ class Tardigrade(AnimatedSprite, Selectable):
         func = getattr(self, func)  # Only class funcs. May need to look in globals.
         func(delta, params)
 
-        # if randint(0, 100) > 99:
-        #     self.set_animation(str(randint(0, 3)))
-        #     self.flip_h = bool(randint(0, 1))
-
-        # if self.path:
-        #     self.move_along_path(self.path, delta)
-
     def process_events(self, event: pg.event.Event) -> bool:
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             if not collisions:
-                self.blackboard["move_goal"] = self.camera.get_global_mouse_pos()
-
-                # move click (if navmesh?)
-                # (How to deal with non-navigable clicks like buildings or lakes?)
-                # set move goal to whiteboard
-                # change active btree to move
+                self.blackboard["click_goal"] = get_camera().get_global_mouse_pos()
+                self.move_tree.halt_tree()
+                self.active_tree = self.move_tree
+                # TODO: How to deal with non-navigable clicks like buildings or lakes?
                 pass
             for c in collisions:
                 # if hasattr "build":
@@ -122,11 +108,11 @@ class Tardigrade(AnimatedSprite, Selectable):
             return False
 
     def plan_path(self):
-        start = tuple(self.tilemap.world_to_map(self.pos))
-        move_goal = self.camera.get_global_mouse_pos()
-        goal = tuple(self.tilemap.world_to_map(move_goal))
-        path = self.path_planner.astar(start, goal) or []
-        path = deque([self.tilemap.map_to_world(*waypoint) for waypoint in path])
+        start = tuple(get_tilemap().world_to_map(self.pos))
+        move_goal = get_camera().get_global_mouse_pos()
+        goal = tuple(get_tilemap().world_to_map(move_goal))
+        path = get_star_server().astar(start, goal) or []
+        path = deque([get_tilemap().map_to_world(*waypoint) for waypoint in path])
         return path
 
     def move_towards(self, source: Vector2, target: Vector2, by: float) -> Vector2:
@@ -149,10 +135,17 @@ class Tardigrade(AnimatedSprite, Selectable):
             if path[0] == result:
                 path.popleft()
         self.pos = result
+        if len(path) == 0:
+            self.blackboard["action_status"] = NodeStatus.SUCCESS
 
     @property
     def context_panel(self) -> type[ContextPanel]:
         return TardigradePanel
+
+    def idle(self, _delta):
+        if randint(0, 1000) > 999:
+            self.set_animation(str(randint(0, 3)))
+            self.flip_h = bool(randint(0, 1))
 
 
 # --- Behavior tree section ---
@@ -174,7 +167,6 @@ class PlanPath(SimpleActionNode):
         path = get_star_server().astar(start, goal) or []
         path = deque([get_tilemap().map_to_world(*waypoint) for waypoint in path])
         self.set_output("path", path)
-        # print(path)
         return NodeStatus.SUCCESS
 
 

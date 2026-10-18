@@ -26,12 +26,9 @@ class _Sawmill(BigTile, Selectable):
 
     def jobs_done(self):
         get_commander().unselect(self)
-        # get own position from tilemap (issue: circular dependency)
-        # kill self
-        # spawn replacement by name
         self.kill()
         signal("spawn_sawmill").send(self)
-        print("gerominooo!")
+        # TODO: reselect new sawmill if self if was selected previously (tricky)
 
     # currently only doing update for debugging purposes.
     def update(self, _delta) -> None:

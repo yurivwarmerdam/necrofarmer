@@ -1,16 +1,7 @@
 <root main_tree="MainTree" BTPY_FORMAT="1">
     <BehaviorTree ID="MainTree">
         <SequenceNode>
-            <PlanPath>
-                <InputPort local="self" bb="self" />
-                <InputPort local="goal" value="Vector2(10,10)" />
-                <OutputPort local="path" bb="path" />
-            </PlanPath>
-            <MoveAlongPath>
-                <InputPort local="path" bb="path" />
-                <InputPort local="action_status" bb="action_status" />
-                <OutputPort local="action_status" bb="action_status" />
-            </MoveAlongPath>
+            <Succeeder />
         </SequenceNode>
     </BehaviorTree>
 </root>
