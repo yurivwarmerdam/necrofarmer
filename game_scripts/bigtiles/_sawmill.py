@@ -17,7 +17,7 @@ class _Sawmill(BigTile, Selectable):
     def get_construction_progress_fraction(self):
         return self.build_progress / get_statistics()["sawmill"]["build_time"]
 
-    def construct(self, amount):
+    def build(self, amount):
         self.build_progress = min(
             self.build_progress + amount, get_statistics()["sawmill"]["build_time"]
         )
@@ -32,7 +32,8 @@ class _Sawmill(BigTile, Selectable):
 
     # currently only doing update for debugging purposes.
     def update(self, _delta) -> None:
-        self.construct(_delta / 1000)
+        # self.build(_delta / 1000)
+        pass
 
     def stop_construction(self):
         # Let's see how easy this is.

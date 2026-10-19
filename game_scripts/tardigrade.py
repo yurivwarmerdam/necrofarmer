@@ -18,6 +18,7 @@ from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
+from scripts.tilemap import Tile
 from scripts.ui_shim import UIButton
 
 from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
@@ -54,6 +55,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             "Succeeder": Succeeder,
             "PlanPath": PlanPath,
             "MoveAlongPath": MoveAlongPath,
+            "GetTilePos": GetTilePos,
         }
 
         factory = BehaviorTreeFactory()
@@ -62,6 +64,7 @@ class Tardigrade(AnimatedSprite, Selectable):
         factory.register_conversion_context({"Vector2": Vector2})
         self.idle_tree = factory.load_tree_from_xml("trees/tardigrade_idle.xml")
         self.move_tree = factory.load_tree_from_xml("trees/tardigrade_move.xml")
+        self.build_tree = factory.load_tree_from_xml("trees/tardigrade_build.xml")
         self.active_tree = self.idle_tree
 
     def tick(self):
@@ -93,10 +96,13 @@ class Tardigrade(AnimatedSprite, Selectable):
                 # TODO: How to deal with non-navigable clicks like buildings or lakes?
                 pass
             for c in collisions:
-                # if hasattr "build":
-                # set goal to build
-                # change active btree to build
-                pass
+                if hasattr(c, "build"):
+                    self.blackboard["build_goal"] = c
+                    self.build_tree.halt_tree()
+                    self.active_tree = self.build_tree
+                    # set goal to build
+                    # change active btree to build
+                    pass
         if (
             hasattr(event, "button")
             and event.type == pg.MOUSEBUTTONUP
@@ -149,6 +155,18 @@ class Tardigrade(AnimatedSprite, Selectable):
 
 
 # --- Behavior tree section ---
+
+
+class GetTilePos(SimpleActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList({"tile": Tile}, {"pos": Vector2})
+
+    def tick(self) -> NodeStatus:
+        tile: Tile = self.get_input("tile")
+        self.set_output("pos", tile.pos)
+        print(tile.pos)
+        return NodeStatus.SUCCESS
 
 
 class PlanPath(SimpleActionNode):
