@@ -23,11 +23,16 @@ pip install -e .
 ====================
 ### current:
 
-active bugs:
-- cannot select spawned tiles
-    - need to reverse adding tiles to group; tiles should be responsible of collision additon theyselves.
-- debug click behavior is strange. Probably overly enthousiastic in eating inputs
-    - there's something involving weird theming behavior, and default button images.
+how to think about getting surrounding tiles
+get subtiles from tile
+world to map tile
+iter subtiles + map_pos
+    get surrounding tiles
+put that into a set
+can_walk on those
+sort by distance from unit
+try to plan path to each in order
+
 
 tardigrade constuction behavior
     - _building progress
