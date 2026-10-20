@@ -170,13 +170,21 @@ class GetTilePos(SimpleActionNode):
         trd_pos = get_tilemap().world_to_map(trd.pos)
         tile: Tile = self.get_input("tile")
         self.set_output("pos", tile.pos)
-        tile_pos = get_tilemap().world_to_map(tile.pos)
-        if not isinstance(tile, BigTile):
-            
-        
-        tile_pos = [t + tile_pos for t in tile.tiles]
-        sorted(tile_pos, key=lambda v: v.distance_squared_to(trd_pos))
-        print(tile_pos)
+        tile_pos = [get_tilemap().world_to_map(tile.pos)]
+        if isinstance(tile, BigTile):
+            tile_pos = [t + tile_pos[0] for t in tile.tiles]
+        # tile_pos:list[Vector2]
+        neighbors = []
+        for x in tile_pos:
+            neighbors += get_tilemap().get_neighbors(x)
+        unique = []
+        for i in neighbors:
+            if i not in unique and i not in tile_pos:
+                unique.append(i)
+        walkable = get_star_server().can_walk_nodes(unique)
+        sorted_nodes = sorted(walkable, key=lambda v: v.distance_squared_to(trd_pos))
+        print(neighbors)
+        print(walkable, sorted_nodes)
         return NodeStatus.SUCCESS
 
         if not isinstance(tile_pos, Vector2):
@@ -188,10 +196,8 @@ class GetTilePos(SimpleActionNode):
                 if i not in unique and i not in tile_pos:
                     unique.append(i)
             return unique
-    def get_walkable_neighbors(self,):
-        
-        pass
 
+    # TODO: Everythin neighbor-related wants to be in utils
 
 
 class PlanPath(SimpleActionNode):

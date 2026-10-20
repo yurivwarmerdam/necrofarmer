@@ -12,18 +12,33 @@ class WalkPath(AStar):
         super().__init__()
         self.tilemap: Tilemap = tilemap
 
-    def neighbors(self, node: Vector2 | list[Vector2]) -> Iterable:
+    # TODO: Everythin neighbor-related wants to be in utils
+    def neighbors(self, node: Vector2) -> Iterable:
         # TODO: What about non-orthogonal tiles??
         neighbors = self.tilemap.get_neighbors(node)
+        result = [tuple(node) for node in self.can_walk_nodes(neighbors)]
+        return result
+        # n_iter = neighbors.copy()
+        # for neighbor in n_iter:
+        #     for layer in self.tilemap.layers:
+        #         properties = self.tilemap.get_tilev_properties(neighbor, layer)
+        #         if not properties.get("can_walk", True):
+        #             neighbors.remove(neighbor)
+        # neighbors = [tuple(neighbor) for neighbor in neighbors]
+
+    def can_walk_nodes(self, nodes: list[Vector2]) -> list[Vector2]:
+        """
+        Returns new list of the subset of nodes that can be walked on
+        """
         # making a copy, so I can modify neighbors without losing my place during iteration.
-        n_iter = neighbors.copy()
-        for neighbor in n_iter:
+        result = nodes.copy()
+        for node in nodes:
             for layer in self.tilemap.layers:
-                properties = self.tilemap.get_tilev_properties(neighbor, layer)
+                properties = self.tilemap.get_tilev_properties(node, layer)
                 if not properties.get("can_walk", True):
-                    neighbors.remove(neighbor)
-        neighbors = [tuple(neighbor) for neighbor in neighbors]
-        return neighbors
+                    result.remove(node)
+        return result
+        
 
     def distance_between(self, n1: Vector2, n2: Vector2) -> float:
         # TODO: something about sqrt(2) if neigbors return non-orthogonal cells.
