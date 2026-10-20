@@ -14,7 +14,7 @@ class WalkPath(AStar):
 
     def neighbors(self, node: Vector2) -> Iterable:
         # TODO: What about non-orthogonal tiles??
-        neighbors = self.tilemap.get_neigbors(node)
+        neighbors = self.tilemap.get_neighbors(node)
         # making a copy, so I can modify neighbors without losing my place during iteration.
         n_iter = neighbors.copy()
         for neighbor in n_iter:

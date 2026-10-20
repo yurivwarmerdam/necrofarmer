@@ -43,6 +43,9 @@ class TardigradeGame(Game):
 
         Thopter(Vector2(200, 200))
 
+        print(tilemap.get_neighbors(Vector2(0,0)))
+        print(tilemap.get_neighbors([Vector2(0,0),Vector2(1,0)]))
+
         # tilemap.spawn_tile_str("sawmill", Vector2(96, 130), "active")
 
     def handle_camera_move(self):

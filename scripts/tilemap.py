@@ -216,7 +216,17 @@ class Tilemap(AbstractGroup):
             if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
 
-    def get_neigbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
+    def get_neighbors(self, tile_pos: Vector2|list[Vector2], distance=1) -> list[Vector2]:
+        if not isinstance(tile_pos,Vector2):
+            result = []
+            for i in tile_pos:
+                result+=self.get_neighbors(i,distance=distance)
+            unique =[]
+            for i in result:
+                if i not in unique and i not in tile_pos:
+                    unique.append(i)
+            return unique
+
         result = []
         for x in range(-distance, distance + 1):
             for y in range(-distance, distance + 1):
@@ -366,7 +376,6 @@ def world_to_map(world_x, world_y, tilewidth, tileheight, isometric=False):
 
 def world_to_mapv(world_pos: Vector2, tile_size: Vector2, isometric=False):
     return world_to_map(world_pos.x, world_pos.y, tile_size.x, tile_size.y, isometric)
-
 
 if __name__ == "__main__":
     pg.init()
