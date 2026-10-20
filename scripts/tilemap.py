@@ -216,6 +216,7 @@ class Tilemap(AbstractGroup):
             if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
 
+    # TODO: Everything neighbor-related wants to be in utils
     def get_neighbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
         result = []
         for x in range(-distance, distance + 1):
