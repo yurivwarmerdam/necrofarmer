@@ -8,6 +8,7 @@ from pygame_gui.core.interfaces.container_interface import IContainerAndContaine
 from pygame_gui.elements import UILabel
 
 from game_scripts.game_tilemap import get_tilemap
+from game_scripts.entity_tilemap import BigTile
 from game_scripts.star import get_star_server
 from game_scripts.commander import get_commander
 from game_scripts.selectable import Selectable
@@ -160,13 +161,37 @@ class Tardigrade(AnimatedSprite, Selectable):
 class GetTilePos(SimpleActionNode):
     def __init__(self):
         super().__init__()
-        self.ports_list = PortsList({"tile": Tile}, {"pos": Vector2})
+        self.ports_list = PortsList(
+            {"self": Tardigrade, "tile": Tile}, {"pos": Vector2}
+        )
 
     def tick(self) -> NodeStatus:
+        trd: Tardigrade = self.get_input("self")
+        trd_pos = get_tilemap().world_to_map(trd.pos)
         tile: Tile = self.get_input("tile")
         self.set_output("pos", tile.pos)
-        print(tile.pos)
+        tile_pos = get_tilemap().world_to_map(tile.pos)
+        if not isinstance(tile, BigTile):
+            
+        
+        tile_pos = [t + tile_pos for t in tile.tiles]
+        sorted(tile_pos, key=lambda v: v.distance_squared_to(trd_pos))
+        print(tile_pos)
         return NodeStatus.SUCCESS
+
+        if not isinstance(tile_pos, Vector2):
+            result = []
+            for i in tile_pos:
+                result += self.get_neighbors(i, distance=distance)
+            unique = []
+            for i in result:
+                if i not in unique and i not in tile_pos:
+                    unique.append(i)
+            return unique
+    def get_walkable_neighbors(self,):
+        
+        pass
+
 
 
 class PlanPath(SimpleActionNode):

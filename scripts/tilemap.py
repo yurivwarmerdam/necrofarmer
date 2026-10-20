@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from math import floor
-from typing import Any, Iterable, override
+from typing import override
 
 import pygame as pg
 from pygame import Vector2
@@ -216,17 +216,7 @@ class Tilemap(AbstractGroup):
             if self.can_spawn_tile(tile_data, layer_name):
                 self.spawn_tile(tile_data, layer_name)
 
-    def get_neighbors(self, tile_pos: Vector2|list[Vector2], distance=1) -> list[Vector2]:
-        if not isinstance(tile_pos,Vector2):
-            result = []
-            for i in tile_pos:
-                result+=self.get_neighbors(i,distance=distance)
-            unique =[]
-            for i in result:
-                if i not in unique and i not in tile_pos:
-                    unique.append(i)
-            return unique
-
+    def get_neighbors(self, tile_pos: Vector2, distance=1) -> list[Vector2]:
         result = []
         for x in range(-distance, distance + 1):
             for y in range(-distance, distance + 1):

@@ -2,6 +2,7 @@
     <BehaviorTree ID="MainTree">
         <SequenceNode>
             <GetTilePos>
+                <InputPort local="self" bb="self" />
                 <InputPort local="tile" bb="build_goal" />
                 <OutputPort local="pos" bb="goal_pos" />
             </GetTilePos>
