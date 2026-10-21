@@ -57,6 +57,7 @@ class Tardigrade(AnimatedSprite, Selectable):
             "PlanPath": PlanPath,
             "MoveAlongPath": MoveAlongPath,
             "GetTilePos": GetTilePos,
+            "Build": Build,
         }
 
         factory = BehaviorTreeFactory()
@@ -154,6 +155,11 @@ class Tardigrade(AnimatedSprite, Selectable):
             self.set_animation(str(randint(0, 3)))
             self.flip_h = bool(randint(0, 1))
 
+    def build(self, _delta, build_goal: Tile):
+        if (not build_goal) or (not hasattr(build_goal, "build")):
+            self.blackboard["action_status"] = NodeStatus.SUCCESS
+        build_goal.build(_delta)  # * build speed
+
 
 # --- Behavior tree section ---
 
@@ -183,21 +189,11 @@ class GetTilePos(SimpleActionNode):
                 unique.append(i)
         walkable = get_star_server().can_walk_nodes(unique)
         sorted_nodes = sorted(walkable, key=lambda v: v.distance_squared_to(trd_pos))
-        print(neighbors)
-        print(walkable, sorted_nodes)
+        if not sorted_nodes:
+            return NodeStatus.FAILURE
+        pos = get_tilemap().map_to_worldv(sorted_nodes[0])
+        self.set_output("pos", pos)
         return NodeStatus.SUCCESS
-
-        if not isinstance(tile_pos, Vector2):
-            result = []
-            for i in tile_pos:
-                result += self.get_neighbors(i, distance=distance)
-            unique = []
-            for i in result:
-                if i not in unique and i not in tile_pos:
-                    unique.append(i)
-            return unique
-
-    # TODO: Everythin neighbor-related wants to be in utils
 
 
 class PlanPath(SimpleActionNode):
@@ -231,6 +227,27 @@ class MoveAlongPath(StatefulActionNode):
         # this is the pattern when delegating actions to actual unit behavior
         path = self.get_input("path")
         self.set_output("action_status", (NodeStatus.RUNNING, "move_along_path", path))
+        return super().on_start()
+
+    def on_running(self) -> NodeStatus:
+        if self.get_input("action_status") in [NodeStatus.IDLE, NodeStatus.SUCCESS]:
+            self.node_status = NodeStatus.SUCCESS
+            return self.node_status
+        else:
+            return NodeStatus.RUNNING
+
+
+class Build(StatefulActionNode):
+    def __init__(self):
+        super().__init__()
+        self.ports_list = PortsList(
+            {"build_goal": Tile, "action_status": NodeStatus},
+            {"action_status": NodeStatus},
+        )
+
+    def on_start(self) -> NodeStatus:
+        build_goal = self.get_input("build_goal")
+        self.set_output("action_status", (NodeStatus.RUNNING, "build", build_goal))
         return super().on_start()
 
     def on_running(self) -> NodeStatus:

@@ -16,7 +16,11 @@
                 <InputPort local="action_status" bb="action_status" />
                 <OutputPort local="action_status" bb="action_status" />
             </MoveAlongPath>
-            <!-- <Build /> -->
+            <Build>
+                <InputPort local="build_goal" bb="build_goal" />
+                <InputPort local="action_status" bb="action_status" />
+                <OutputPort local="action_status" bb="action_status" />
+            </Build>
         </SequenceNode>
     </BehaviorTree>
 </root>

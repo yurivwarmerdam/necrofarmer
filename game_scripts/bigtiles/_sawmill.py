@@ -18,6 +18,7 @@ class _Sawmill(BigTile, Selectable):
         return self.build_progress / get_statistics()["sawmill"]["build_time"]
 
     def build(self, amount):
+        amount = amount / 1000
         self.build_progress = min(
             self.build_progress + amount, get_statistics()["sawmill"]["build_time"]
         )
