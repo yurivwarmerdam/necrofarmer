@@ -38,8 +38,8 @@ class TardigradeGame(Game):
         # -----------------------------
 
         Tardigrade(pg.Vector2(150, 120))
-        Tardigrade(Vector2(120, 150))
-        Tardigrade(Vector2(150, 150))
+        # Tardigrade(Vector2(120, 150))
+        # Tardigrade(Vector2(150, 150))
 
         Thopter(Vector2(200, 200))
 

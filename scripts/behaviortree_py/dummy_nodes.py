@@ -4,10 +4,12 @@ from scripts.behaviortree_py.behaviortree import (
 )
 from scripts.behaviortree_py.nodes import SimpleActionNode
 
+# from time import time
+
 
 class Succeeder(SimpleActionNode):
     def tick(self) -> NodeStatus:
-        # print("success")
+        # print(f"success {time()}")
         return NodeStatus.SUCCESS
 
 

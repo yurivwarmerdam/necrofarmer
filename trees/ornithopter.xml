@@ -6,7 +6,7 @@
                     <InputPort local="entry" bb="action_mode" />
                     <InputPort local="value" value="idle" />
                 </BlackboardEntryEquals>
-                <Succeeder />
+                <Failer />
             </ReactiveSequenceNode>
             <ReactiveSequenceNode name="haul_logs">
                 <BlackboardEntryEquals>

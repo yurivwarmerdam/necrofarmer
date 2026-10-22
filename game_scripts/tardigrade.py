@@ -1,3 +1,4 @@
+import weakref
 from collections import deque
 from random import randint
 from time import time
@@ -99,7 +100,7 @@ class Tardigrade(AnimatedSprite, Selectable):
                 pass
             for c in collisions:
                 if hasattr(c, "build"):
-                    self.blackboard["build_goal"] = c
+                    self.blackboard["build_goal"] = weakref.ref(c)
                     self.build_tree.halt_tree()
                     self.active_tree = self.build_tree
                     # set goal to build
@@ -155,10 +156,11 @@ class Tardigrade(AnimatedSprite, Selectable):
             self.set_animation(str(randint(0, 3)))
             self.flip_h = bool(randint(0, 1))
 
-    def build(self, _delta, build_goal: Tile):
-        if (not build_goal) or (not hasattr(build_goal, "build")):
+    def build(self, _delta, build_goal: weakref.ref):
+        if (not build_goal()) or (not hasattr(build_goal(), "build")):
             self.blackboard["action_status"] = NodeStatus.SUCCESS
-        build_goal.build(_delta)  # * build speed
+            return
+        build_goal().build(_delta)  # * build speed
 
 
 # --- Behavior tree section ---
@@ -168,13 +170,13 @@ class GetTilePos(SimpleActionNode):
     def __init__(self):
         super().__init__()
         self.ports_list = PortsList(
-            {"self": Tardigrade, "tile": Tile}, {"pos": Vector2}
+            {"self": Tardigrade, "tile": weakref.ref}, {"pos": Vector2}
         )
 
     def tick(self) -> NodeStatus:
         trd: Tardigrade = self.get_input("self")
         trd_pos = get_tilemap().world_to_map(trd.pos)
-        tile: Tile = self.get_input("tile")
+        tile: Tile = self.get_input("tile")()
         self.set_output("pos", tile.pos)
         tile_pos = [get_tilemap().world_to_map(tile.pos)]
         if isinstance(tile, BigTile):
@@ -204,7 +206,6 @@ class PlanPath(SimpleActionNode):
         )
 
     def tick(self) -> NodeStatus:
-        # move_goal = get_camera().get_global_mouse_pos()
         trd = self.get_input("self")
         start = tuple(get_tilemap().world_to_map(trd.pos))
         goal = self.get_input("goal")
