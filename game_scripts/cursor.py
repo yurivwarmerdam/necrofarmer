@@ -34,7 +34,7 @@ class Cursor(NodeSprite):
 
     def enable_build(self, build_name: str):
         self.active_building = build_name
-        get_tilemap().named_tiledata[build_name]
+        surf = get_tilemap().named_tiledata[build_name].surf
         # also look up the corresponding sprite in tilemap, put that in some var,
         # maybe make it own sprite?
 

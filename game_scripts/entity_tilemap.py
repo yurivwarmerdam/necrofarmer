@@ -7,12 +7,9 @@ from game_scripts.bigtiles.bigtile import BigTile, bigtile_prop_to_vectors
 from scripts.tilemap import Tile, TileData, Tilemap
 
 
-# I want to become a more generic class.
-# TODO: Work out what I want to make more/less generic.
 class EntityTilemap(Tilemap):
     def __init__(self, tmx_path):
         super().__init__(tmx_path, whiteboard.bigtile_entities)
-        # self.bigtiles: dict[str, dict[tuple[int, int], BigTile]] = {}
 
     @override
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
