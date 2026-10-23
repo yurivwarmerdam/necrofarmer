@@ -65,13 +65,6 @@ class SelectBox(NodeSprite):
 
     def get_collides(self):
         return get_group_server().sprite_collide(self)
-        # collides = pg.sprite.spritecollide(
-        #     self,
-        #     self.group_server.colliders,
-        #     dokill=False,
-        #     collided=pg.sprite.collide_mask,
-        # )
-        # return collides
 
 
 class Commander:
