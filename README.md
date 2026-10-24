@@ -23,15 +23,14 @@ pip install -e .
 ====================
 ### current:
 
-how to think about getting surrounding tiles
-get subtiles from tile
-world to map tile
-iter subtiles + map_pos
-    get surrounding tiles
-put that into a set
-can_walk on those
-sort by distance from unit
-try to plan path to each in order
+make new (global) list of tiledatas.
+- separate tiledata into own file
+- separate make_named_tiledata into own file, or into whiteboard
+- supply this to tilemap at creation time
+- THINK ABOUT IF THIS MAKES SENSE AS AN ENGINE (too tired, atm)
+    - maybe named tiledata wants to be in a dir with tilemap?
+    - subtype that for specific game?? No idea.
+- This allows accessing tile surfaces from outside of tilemap (That's the need)
 
 
 tardigrade constuction behavior
