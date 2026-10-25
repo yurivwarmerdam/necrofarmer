@@ -4,6 +4,7 @@ from pygame.color import Color
 from pygame.math import Vector2
 from pygame.sprite import Group, LayeredUpdates
 from pygame.transform import scale_by
+
 from scripts.group_server import get_group_server
 
 

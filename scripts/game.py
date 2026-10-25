@@ -1,10 +1,9 @@
-from abc import ABC, abstractmethod
 import sys
+from abc import ABC, abstractmethod
 
 import pygame as pg
-from pygame.math import Vector2
-from pygame.sprite import Group
 import pygame_gui
+from pygame.math import Vector2
 
 from scripts.camera import initialize_camera
 from scripts.group_server import get_group_server

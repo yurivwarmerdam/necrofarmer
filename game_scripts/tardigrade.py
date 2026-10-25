@@ -8,23 +8,22 @@ from pygame import Vector2
 from pygame_gui.core.interfaces.container_interface import IContainerAndContainerLike
 from pygame_gui.elements import UILabel
 
-from game_scripts.game_tilemap import get_tilemap
-from game_scripts.entity_tilemap import BigTile
-from game_scripts.star import get_star_server
 from game_scripts.commander import get_commander
+from game_scripts.entity_tilemap import BigTile
+from game_scripts.game_tilemap import get_tilemap
 from game_scripts.selectable import Selectable
+from game_scripts.star import get_star_server
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.behaviortree_py.behaviortree import NodeStatus, PortsList
 from scripts.behaviortree_py.dummy_nodes import Succeeder
+from scripts.behaviortree_py.factory import BehaviorTreeFactory
+from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
-from scripts.tilemap.tilemap import Tile
+from scripts.tilemap.tile import Tile
 from scripts.ui_shim import UIButton
-
-from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode
-from scripts.behaviortree_py.factory import BehaviorTreeFactory
 
 
 class Tardigrade(AnimatedSprite, Selectable):

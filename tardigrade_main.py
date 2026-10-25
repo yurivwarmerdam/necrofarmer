@@ -1,9 +1,20 @@
 import sys
 
+# Server architecture:
+# spin up and have global access to the following:
+# - image_server
+# - camera
+# - star
+# - entity_tilemap
+# - groups
+# in addition, there's also singletons associated with Behavior trees:
+# - async_runner (unused)
+# - global_blackboard
+import warnings
+
 import pygame as pg
 import pygame_gui
 from pygame import Vector2
-from pygame.sprite import Group
 
 from game_scripts import game_tilemap, star
 from game_scripts.commander import get_commander
@@ -15,19 +26,6 @@ from game_scripts.ui.main_ui import MainUI
 from scripts import image_server
 from scripts.camera import initialize_camera
 from scripts.group_server import get_group_server
-
-# Server architecture:
-# spin up and have global access to the following:
-# - image_server
-# - camera
-# - star
-# - entity_tilemap
-# - groups
-# in addition, there's also singletons associated with Behavior trees:
-# - async_runner (unused)
-# - global_blackboard
-
-import warnings
 
 warnings.warn(
         "tardigrade main is deprecated. Use tardigrade_game instead.",

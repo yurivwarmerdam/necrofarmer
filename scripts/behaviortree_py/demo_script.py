@@ -45,10 +45,10 @@ def main():
     main_tree: Tree = factory.load_tree_from_xml(
         "scripts/behaviortree_py/demo_trees/fallback_tree.xml"
     )
-    late_talker_tree = factory.load_tree_from_xml(
+    _late_talker_tree = factory.load_tree_from_xml(
         "scripts/behaviortree_py/demo_trees/late_tree.xml"
     )
-    late_talker_tree = factory.load_tree_from_xml(
+    _late_talker_tree = factory.load_tree_from_xml(
         "scripts/behaviortree_py/demo_trees/dummy_tree.xml"
     )
 

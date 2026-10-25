@@ -1,9 +1,9 @@
 from blinker import signal
 
+from game_scripts.game_tilemap import get_tilemap
 from game_scripts.thopter import Thopter
 from scripts.custom_sprites import NodeSprite
 from scripts.group_server import get_group_server
-from game_scripts.game_tilemap import get_tilemap
 
 
 class Spawner:

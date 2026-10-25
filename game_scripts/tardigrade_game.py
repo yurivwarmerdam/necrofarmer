@@ -1,15 +1,15 @@
 import pygame as pg
+from pygame.math import Vector2
 
+from game_scripts import star
 from game_scripts.commander import get_commander
 from game_scripts.cursor import Cursor
+from game_scripts.game_tilemap import get_tilemap
+from game_scripts.spawner import get_spawner
 from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
-from scripts.game import Game
-from game_scripts import star
-from game_scripts.spawner import get_spawner
-from game_scripts.game_tilemap import get_tilemap
 from game_scripts.ui.main_ui import MainUI
-from pygame.math import Vector2
+from scripts.game import Game
 
 BTREE_EVENT = pg.USEREVENT + 999
 

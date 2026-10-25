@@ -4,7 +4,8 @@ from pygame import Vector2
 
 from game_scripts import whiteboard
 from game_scripts.bigtiles.bigtile import BigTile, bigtile_prop_to_vectors
-from scripts.tilemap.tilemap import Tile, TileData, Tilemap
+from scripts.tilemap.tile import Tile
+from scripts.tilemap.tilemap import TileData, Tilemap
 
 
 class EntityTilemap(Tilemap):

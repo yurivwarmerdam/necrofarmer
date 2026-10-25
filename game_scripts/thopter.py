@@ -359,7 +359,7 @@ class ThopterPanel(ContextPanel):
         self.stock_label.set_text(f"Cargo: {cargo}/{cargo_capacity}")
 
     def cancel_button(self):
-        thopter: thopter = get_commander().selected.sprites()[0]
+        thopter: Thopter = get_commander().selected.sprites()[0]
         if thopter.get_blackboard_value("action_mode") != "idle":
             thopter.set_blackboard_entry("action_mode", "idle")
             thopter.set_blackboard_entry("action_status", NodeStatus.IDLE)
