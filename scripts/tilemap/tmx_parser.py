@@ -9,8 +9,9 @@ from scripts.tilemap.tiledata import TileData
 
 
 class TmxParser:
-    def __init__(self, tmx_file) -> None:
+    def __init__(self, tmx_file, typed_tiles: dict[str, type[Tile]]) -> None:
         self.tmx_data: TiledMap = load_pygame(tmx_file)
+        self.named_tiledata = self.make_named_tiledata(typed_tiles)
         pass
 
     def make_named_tiledata(

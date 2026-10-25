@@ -32,6 +32,12 @@ make new (global) list of tiledatas.
     - subtype that for specific game?? No idea.
 - This allows accessing tile surfaces from outside of tilemap (That's the need)
 
+tmx_parser
+called by tilemap
+or supplied to tilemap
+called by others who want access to images used in tilemap (also image server...?)
+I'm hesitant to create a new server
+but persistance is required
 
 tardigrade constuction behavior
     - _building progress
