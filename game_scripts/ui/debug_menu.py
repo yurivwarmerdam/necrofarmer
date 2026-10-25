@@ -8,7 +8,7 @@ from game_scripts.tardigrade import Tardigrade
 from game_scripts.thopter import Thopter
 from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
-from scripts.tilemap import TileData
+from scripts.tilemap.tilemap import TileData
 from scripts.ui_shim import UIButton
 
 

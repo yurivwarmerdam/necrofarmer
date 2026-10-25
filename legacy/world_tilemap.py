@@ -1,6 +1,6 @@
 from pygame.sprite import Group
 
-from scripts.tilemap import Tilemap
+from scripts.tilemap.tilemap import Tilemap
 
 
 class WorldTilemap(Tilemap):

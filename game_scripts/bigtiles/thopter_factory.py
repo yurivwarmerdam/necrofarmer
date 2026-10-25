@@ -10,7 +10,7 @@ from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.ui.ui_elements import ContextPanel
 from scripts.custom_sprites import integer_scale
 from scripts.group_server import get_group_server
-from scripts.tilemap import TileData
+from scripts.tilemap.tilemap import TileData
 from scripts.ui_shim import UIButton
 
 

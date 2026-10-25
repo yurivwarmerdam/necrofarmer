@@ -4,7 +4,7 @@ from typing import Iterable
 from astar import AStar
 from pygame import Vector2
 
-from scripts.tilemap import Tilemap
+from scripts.tilemap.tilemap import Tilemap
 
 
 class WalkPath(AStar):

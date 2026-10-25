@@ -20,7 +20,7 @@ from scripts.camera import get_camera
 from scripts.custom_sprites import AnimatedSprite, integer_scale
 from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
-from scripts.tilemap import Tile
+from scripts.tilemap.tilemap import Tile
 from scripts.ui_shim import UIButton
 
 from scripts.behaviortree_py.nodes import SimpleActionNode, StatefulActionNode

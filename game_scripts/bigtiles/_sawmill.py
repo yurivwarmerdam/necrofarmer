@@ -6,7 +6,7 @@ from game_scripts.selectable import Selectable
 from game_scripts.statistics import get_statistics
 from game_scripts.ui.ProgressPanel import ProgressPanel
 from game_scripts.ui.ui_elements import ContextPanel
-from scripts.tilemap import TileData
+from scripts.tilemap.tilemap import TileData
 
 
 class _Sawmill(BigTile, Selectable):
