@@ -8,6 +8,7 @@ from pytmx.util_pygame import load_pygame
 
 from scripts.tilemap.tile import Tile, TileDataLayers
 from scripts.tilemap.tiledata import TileData
+from scripts.tilemap.tmx_parser import get_tmx_parser
 
 
 class Tilemap(AbstractGroup):
@@ -24,7 +25,7 @@ class Tilemap(AbstractGroup):
         typed_tiles: dict[str, type[Tile]] = {},
     ):
         super().__init__()
-        self.tmx_data: TiledMap = load_pygame(tmx_file)
+        self.tmx_data: TiledMap = get_tmx_parser().get_or_create(tmx_file)
         self.layers: dict[str, AbstractGroup] = {}
 
         # map has structure map[layer][(x,y)]
@@ -34,8 +35,8 @@ class Tilemap(AbstractGroup):
         tmx_data = load_pygame(tmx_file)
         self.isometric = self.tmx_data.orientation == "isometric"
 
-        self.named_tiledata: dict[str, TileData] = self.make_named_tiledata(typed_tiles)
-
+        self.named_tiledata: dict[str, TileData] = get_tmx_parser().register_named_tiles(typed_tiles)
+        print(self.named_tiledata.keys())
         self.tile_data_layers = TileDataLayers(tmx_data, typed_tiles)
 
         for layer_name in self.tile_data_layers.layers:
@@ -53,38 +54,38 @@ class Tilemap(AbstractGroup):
                 for key in [k for k, v in layer.items() if v == sprite]:
                     del layer[key]
 
-    def make_named_tiledata(
-        self, typed_tiles: dict[str, type[Tile]]
-    ) -> dict[str, TileData]:
-        named_tiledata = {}
-        properties_dict = self.tmx_data.tile_properties
-        isometric = self.tmx_data.orientation == "isometric"
-        for gid in properties_dict.keys():
-            if "name" in properties_dict[gid]:
-                tileset = self.tmx_data.get_tileset_from_gid(gid)
-                offset = -(
-                    Vector2(tileset.offset)
-                    + (
-                        -floor(self.tmx_data.tilewidth / 2),
-                        floor(self.tmx_data.tileheight / 2),
-                    )
-                )
-                name = properties_dict[gid]["name"]
-                tile = typed_tiles.get(name, Tile)  # TBD
-                size = Vector2(self.tmx_data.tilewidth, self.tmx_data.tileheight)
-                properties = properties_dict[gid]
-                surf = self.tmx_data.get_tile_image_by_gid(gid)
+    # def make_named_tiledata(
+    #     self, typed_tiles: dict[str, type[Tile]]
+    # ) -> dict[str, TileData]:
+    #     named_tiledata = {}
+    #     properties_dict = self.tmx_data.tile_properties
+    #     isometric = self.tmx_data.orientation == "isometric"
+    #     for gid in properties_dict.keys():
+    #         if "name" in properties_dict[gid]:
+    #             tileset = self.tmx_data.get_tileset_from_gid(gid)
+    #             offset = -(
+    #                 Vector2(tileset.offset)
+    #                 + (
+    #                     -floor(self.tmx_data.tilewidth / 2),
+    #                     floor(self.tmx_data.tileheight / 2),
+    #                 )
+    #             )
+    #             name = properties_dict[gid]["name"]
+    #             tile = typed_tiles.get(name, Tile)  # TBD
+    #             size = Vector2(self.tmx_data.tilewidth, self.tmx_data.tileheight)
+    #             properties = properties_dict[gid]
+    #             surf = self.tmx_data.get_tile_image_by_gid(gid)
 
-                named_tiledata[name] = TileData(
-                    tile,
-                    Vector2(0, 0),
-                    size,
-                    properties,
-                    surf,
-                    offset,
-                    isometric,
-                )
-        return named_tiledata
+    #             named_tiledata[name] = TileData(
+    #                 tile,
+    #                 Vector2(0, 0),
+    #                 size,
+    #                 properties,
+    #                 surf,
+    #                 offset,
+    #                 isometric,
+    #             )
+    #     return named_tiledata
 
     def init_layer(self, layer_name):
         self.map[layer_name] = {}
