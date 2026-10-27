@@ -273,10 +273,10 @@ class TardigradePanel(ContextPanel):
         UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
-            object_id="#thopter_button",
+            object_id="#sawmill_button",
             scale_func=integer_scale,
             container=context_container,
-            command=self.on_thopter_button_clicked,
+            command=self.on_sawmill_button_clicked,
         )
         UILabel(
             pg.Rect(6, 50, 120, 30),
@@ -292,5 +292,6 @@ class TardigradePanel(ContextPanel):
     def update(self, _delta):
         self.counter.set_text(f"Time! {time()}")
 
-    def on_thopter_button_clicked(self):
-        print(get_commander().selected.sprites()[0])
+    def on_sawmill_button_clicked(self):
+        # print(get_commander().selected.sprites()[0])
+        get_commander().cursor.enable_build("sawmill")

@@ -27,7 +27,7 @@ class TardigradeGame(Game):
         self.group_server.add_render_groups(tilemap.layers)
 
 
-        Cursor()
+        # Cursor()
         get_spawner()
         self.commander = get_commander()
         # why doesn't commander do this inside init?

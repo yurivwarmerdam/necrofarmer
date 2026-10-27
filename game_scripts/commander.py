@@ -4,6 +4,7 @@ from pygame import Rect, Surface, Vector2
 from pygame.sprite import Group, Sprite
 from pygame_gui.core import UIElement
 
+from game_scripts.cursor import Cursor
 from game_scripts.selectable import Selectable
 from scripts.camera import Camera, get_camera
 from scripts.custom_sprites import NodeSprite
@@ -83,6 +84,7 @@ class Commander:
         self.group_server = get_group_server()
         self.camera = get_camera()
         self.selected_changed = signal("selected_changed")
+        self.cursor=Cursor()
 
     def process_events(self, event: pg.event.Event) -> bool:
         # -- motion --

@@ -35,18 +35,19 @@ make new (global) list of tiledatas.
 tmx_parser
 called by tilemap
 or supplied to tilemap
-called by others who want access to images used in tilemap (also image server...?)
+called by others who want access to images used in tilemap 
+(also image server...?)
 I'm hesitant to create a new server
 but persistance is required
 
 tardigrade constuction behavior
-    - _building progress
-    - add (resettable) BTree to tardigrade
-    - test with idle//walk
+    v _building progress
+    v add (resettable) BTree to tardigrade
+    v test with idle//walk
+    v click on _building while tardigrade is selected
+    v gonna be some find adjacent tile logic for pathfinding
+    v on fill: kill and replace with building
     - place _building (integrates defer_update nonsense)
-    - click on _building while tardigrade is selected
-    - gonna be some find adjacent tile logic for pathfinding
-    - on fill: kill and replace with building
 
 -------------------------------------------------
 --> add more/better documentation as you go!! <--

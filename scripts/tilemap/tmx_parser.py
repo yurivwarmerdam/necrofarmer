@@ -17,7 +17,7 @@ class TmxParser:
     # instead of a name property
     def __init__(self) -> None:
         self.tmx: dict[str, TiledMap] = {}
-        self.named_tiles: dict[str, type[Tile]] = {}
+        self._named_tiles: dict[str, type[Tile]] = {}
         self.named_data: dict[str, TileData] = {}
 
     def register_named_tiles(
@@ -28,7 +28,7 @@ class TmxParser:
         This will allow looking up an associated class that inherits from Tile.
         The generated tiledata is stored in named_data and all stored_data si returned
         """
-        self.named_tiles.update(named_tiles)
+        self._named_tiles.update(named_tiles)
         self._make_named_tiledata()
         return self.named_data
 
@@ -54,7 +54,7 @@ class TmxParser:
                         )
                     )
                     name = properties_dict[gid]["name"]
-                    tile = self.named_tiles.get(name, Tile)  # TBD
+                    tile = self._named_tiles.get(name, Tile)  # TBD
                     size = Vector2(tmx_map.tilewidth, tmx_map.tileheight)
                     properties = properties_dict[gid]
                     surf = tmx_map.get_tile_image_by_gid(gid)
