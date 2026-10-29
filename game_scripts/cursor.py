@@ -36,8 +36,17 @@ class Cursor(NodeSprite):
 
     def enable_build(self, build_name: str):
         self.active_building = build_name
-        self.build_surf = get_tmx_parser().named_data[build_name].surf
-        print(self.build_surf.get_rect())
+        tiledata = get_tmx_parser().named_data[build_name]
+        surf = tiledata.surf
+        offset = tiledata.offset
+        self.rect = surf.get_rect()
+        self.offset = offset
+        self.anchor = tiledata.anchor
+        self.image = surf
+        surf.set_alpha(170)
+
+        print("---")
+
         # perhaps surf.copy
         # I am a sprite. make this my surf.
         # do math for rects, I guess
