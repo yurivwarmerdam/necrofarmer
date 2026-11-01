@@ -21,7 +21,7 @@ class SelectBox(NodeSprite):
         self.start: Vector2 | None = None
         self.camera: Camera = get_camera()
         self.group_server = get_group_server()
-        self.collide_mask=1
+        self.collide_mask = 1
 
     def start_click(self):
         self.start = self.camera.get_global_mouse_pos()
@@ -84,7 +84,7 @@ class Commander:
         self.group_server = get_group_server()
         self.camera = get_camera()
         self.selected_changed = signal("selected_changed")
-        self.cursor=Cursor()
+        self.cursor = Cursor()
 
     def process_events(self, event: pg.event.Event) -> bool:
         # -- motion --

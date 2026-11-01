@@ -89,6 +89,13 @@ class Tardigrade(AnimatedSprite, Selectable):
         func(delta, params)
 
     def process_events(self, event: pg.event.Event) -> bool:
+        if get_commander().cursor.is_build_planning():
+            if event.type == pg.MOUSEBUTTONUP:
+                if event.button == 3:
+                    get_commander().cursor.disable_build_plan()
+                elif event.button == 1:
+                    print("now spawn")
+                return True
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             if not collisions:
@@ -102,9 +109,6 @@ class Tardigrade(AnimatedSprite, Selectable):
                     self.blackboard["build_goal"] = weakref.ref(c)
                     self.build_tree.halt_tree()
                     self.active_tree = self.build_tree
-                    # set goal to build
-                    # change active btree to build
-                    pass
         if (
             hasattr(event, "button")
             and event.type == pg.MOUSEBUTTONUP
@@ -293,5 +297,4 @@ class TardigradePanel(ContextPanel):
         self.counter.set_text(f"Time! {time()}")
 
     def on_sawmill_button_clicked(self):
-        # print(get_commander().selected.sprites()[0])
-        get_commander().cursor.enable_build("sawmill")
+        get_commander().cursor.enable_build_plan("sawmill")

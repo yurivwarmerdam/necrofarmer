@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pygame import Vector2
 from pygame.surface import Surface
 
-from scripts.tilemap.utils import map_to_worldv
+from scripts.tilemap.tilemap_utils import map_to_worldv
 
 
 @dataclass
