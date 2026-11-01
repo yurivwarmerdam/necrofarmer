@@ -28,7 +28,7 @@ class _Sawmill(BigTile, Selectable):
     def jobs_done(self):
         get_commander().unselect(self)
         self.kill()
-        signal("spawn_sawmill").send(self)
+        signal("spawn_tile").send(self, tile_type="sawmill", tile_pos=self.pos)
         # TODO: reselect new sawmill if self if was selected previously (tricky)
 
     # currently only doing update for debugging purposes.

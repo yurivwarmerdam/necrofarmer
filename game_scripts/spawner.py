@@ -11,7 +11,7 @@ class Spawner:
         print("spawner")
         signal("spawn_thopter").connect(self.spawn_thopter, weak=False)
         signal("start_build_thopter").connect(self.start_build_thopter, weak=False)
-        signal("spawn_sawmill").connect(self.spawn_sawmill, weak=False)
+        signal("spawn_tile").connect(self.spawn_tile, weak=False)
         self.group_server = get_group_server()
         self.tilemap = get_tilemap()
         pass
@@ -31,8 +31,8 @@ class Spawner:
         Thopter(sender.pos)
         pass
 
-    def spawn_sawmill(self, sender: NodeSprite):
-        self.tilemap.spawn_tile_str("sawmill", sender.pos, "active")
+    def spawn_tile(self, sender: NodeSprite, tile_type: str, tile_pos):
+        self.tilemap.spawn_tile_str(tile_type, tile_pos, "active")
 
 
 _instance = None

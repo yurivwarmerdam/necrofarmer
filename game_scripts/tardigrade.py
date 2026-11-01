@@ -2,6 +2,7 @@ import weakref
 from collections import deque
 from random import randint
 from time import time
+from blinker import signal
 
 import pygame as pg
 from pygame import Vector2
@@ -94,6 +95,11 @@ class Tardigrade(AnimatedSprite, Selectable):
                 if event.button == 3:
                     get_commander().cursor.disable_build_plan()
                 elif event.button == 1:
+                    signal("spawn_tile").send(
+                        self,
+                        tile_type="_sawmill",
+                        tile_pos=get_camera().get_global_mouse_pos(),
+                    )
                     print("now spawn")
                 return True
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
