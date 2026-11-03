@@ -95,12 +95,13 @@ class Tardigrade(AnimatedSprite, Selectable):
                 if event.button == 3:
                     get_commander().cursor.disable_build_plan()
                 elif event.button == 1:
-                    signal("spawn_tile").send(
-                        self,
-                        tile_type="_sawmill",
-                        tile_pos=get_camera().get_global_mouse_pos(),
+                    from game_scripts.game_tilemap import get_tilemap
+
+                    get_tilemap().spawn_tile_str(
+                        "_sawmill",
+                        get_camera().get_global_mouse_pos(),
+                        "active",
                     )
-                    print("now spawn")
                 return True
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
