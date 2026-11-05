@@ -35,7 +35,9 @@ class Tilemap(AbstractGroup):
         tmx_data = load_pygame(tmx_file)
         self.isometric = self.tmx_data.orientation == "isometric"
 
-        self.named_tiledata: dict[str, TileData] = get_tmx_parser().register_named_tiles(typed_tiles)
+        self.named_tiledata: dict[str, TileData] = (
+            get_tmx_parser().register_named_tiles(typed_tiles)
+        )
         print(self.named_tiledata.keys())
         self.tile_data_layers = TileDataLayers(tmx_data, typed_tiles)
 
@@ -127,7 +129,7 @@ class Tilemap(AbstractGroup):
     def get_tilev(self, layer: str, pos: Vector2) -> Tile | None:
         return self.get_tile(layer, floor(pos.x), floor(pos.y))
 
-    def spawn_tile(self, tile_data: TileData, layer_name: str):
+    def spawn_tile(self, tile_data: TileData, layer_name: str) -> None | Tile:
         """creatues new tile from TileData"""
         new_tile = tile_data.tile_type(tile_data)
         if not self.set_tile_in_map(new_tile, layer_name, tile_data.map_pos):
@@ -135,17 +137,23 @@ class Tilemap(AbstractGroup):
                 "erroneous tile placement! This an unwanted state? Killing the newborn."
             )
             new_tile.kill()
+            return None
+        return new_tile
 
     def can_spawn_tile(self, tile_data: TileData, layer: str) -> bool:
         map_pos = tile_data.map_pos
         return self.map[layer].get((floor(map_pos.x), floor(map_pos.y)), None) is None
 
-    def spawn_tile_str(self, tile_data_name: str, world_pos, layer):
+    def can_spawn_tile_str(self, tile_data_name, world_pos, layer) -> bool:
+        return False
+
+    def spawn_tile_str(self, tile_data_name: str, world_pos, layer) -> None | Tile:
         # TODO: How do I spawn something simple like grass?
         map_pos = self.world_to_map(world_pos)
         new_tiledata = self.named_tiledata[tile_data_name].move(map_pos)
         if self.can_spawn_tile(new_tiledata, layer):
-            self.spawn_tile(new_tiledata, layer)
+            return self.spawn_tile(new_tiledata, layer)
+        return None
 
     def set_tile_in_map(self, tile: Tile, layer: str, map_pos: Vector2) -> bool:
         self.add(tile)

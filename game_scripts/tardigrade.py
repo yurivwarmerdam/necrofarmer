@@ -95,13 +95,8 @@ class Tardigrade(AnimatedSprite, Selectable):
                 if event.button == 3:
                     get_commander().cursor.disable_build_plan()
                 elif event.button == 1:
-                    from game_scripts.game_tilemap import get_tilemap
-
-                    get_tilemap().spawn_tile_str(
-                        "_sawmill",
-                        get_camera().get_global_mouse_pos(),
-                        "active",
-                    )
+                    if entity := self.spawn_building():
+                        self.start_build(entity)
                 return True
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
@@ -113,6 +108,7 @@ class Tardigrade(AnimatedSprite, Selectable):
                 pass
             for c in collisions:
                 if hasattr(c, "build"):
+                    self.start_build(c)
                     self.blackboard["build_goal"] = weakref.ref(c)
                     self.build_tree.halt_tree()
                     self.active_tree = self.build_tree
@@ -171,6 +167,20 @@ class Tardigrade(AnimatedSprite, Selectable):
             self.blackboard["action_status"] = NodeStatus.SUCCESS
             return
         build_goal().build(_delta)  # * build speed
+
+    def spawn_building(self) -> None | Tile:
+        from game_scripts.game_tilemap import get_tilemap
+
+        return get_tilemap().spawn_tile_str(
+            f"_{get_commander().cursor.active_building}",
+            get_camera().get_global_mouse_pos(),
+            "active",
+        )
+
+    def start_build(self, entity):
+        self.blackboard["build_goal"] = weakref.ref(entity)
+        self.build_tree.halt_tree()
+        self.active_tree = self.build_tree
 
 
 # --- Behavior tree section ---
