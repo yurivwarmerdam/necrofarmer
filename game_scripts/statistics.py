@@ -1,4 +1,5 @@
 import json
+from scripts.group_server import get_group_server
 
 
 class Statistics:
@@ -8,6 +9,18 @@ class Statistics:
 
     def __getitem__(self, key):
         return self.data.get(key) or {}
+
+    @property
+    def thopter_cost(self):
+        base_cost = self["thopter"]["base_cost"]
+        num = get_group_server().get_typed_group_size("Thopter")
+        return base_cost * (2**num)
+
+    @property
+    def sawmnill_cost(self):
+        base_cost = self["sawmill"]["base_cost"]
+        num = get_group_server().get_typed_group_size("sawmill")
+        return base_cost + (base_cost * num)
 
 
 _instance = None

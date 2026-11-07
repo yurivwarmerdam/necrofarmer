@@ -25,6 +25,8 @@ from scripts.group_server import get_group_server
 from scripts.image_server import get_image_server
 from scripts.tilemap.tile import Tile
 from scripts.ui_shim import UIButton
+from game_scripts.stockpile import get_stockpile
+from game_scripts.statistics import get_statistics
 
 
 class Tardigrade(AnimatedSprite, Selectable):
@@ -171,6 +173,9 @@ class Tardigrade(AnimatedSprite, Selectable):
     def spawn_building(self) -> None | Tile:
         from game_scripts.game_tilemap import get_tilemap
 
+        # TODO: problem: sawmill cost is static....
+        cost = get_statistics().sawmnill_cost()
+        get_stockpile().can_afford_wood()
         return get_tilemap().spawn_tile_str(
             f"_{get_commander().cursor.active_building}",
             get_camera().get_global_mouse_pos(),

@@ -5,6 +5,7 @@
         "base_cost": 100
     },
     "sawmill": {
-        "build_time": 20
+        "build_time": 20,
+        "base_cost": 100
     }
 }
