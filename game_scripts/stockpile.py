@@ -12,11 +12,32 @@ class Stockpile:
     def add_stone(self, amount: int):
         self.stone += amount
 
+    def add_resource(self, amount: list[int]):
+        self.wood += amount[0]
+        self.stone += amount[1]
+
+    def can_afford(self, amount: list[int]):
+        return amount[0] <= self.wood and amount[1] <= self.stone
+
+    def take_resource(self, amount: list[int], partial=False) -> bool | list[int]:
+        if self.can_afford(amount):
+            self.wood -= amount[0]
+            self.stone -= amount[1]
+            return True
+        else:
+            if not partial:
+                return False
+            wood_taken = min(self.wood, amount[0])
+            stone_taken = min(self.stone, amount[1])
+            self.wood = max(0, self.wood - amount[0])
+            self.stone = max(0, self.wood - amount[1])
+            return [wood_taken, stone_taken, 0]
+
     def can_afford_wood(self, amount) -> bool:
-        return amount >= self.wood
+        return amount <= self.wood
 
     def can_afford_stone(self, amount) -> bool:
-        return amount >= self.stone
+        return amount <= self.stone
 
     def take_wood(self, amount, partial=False) -> int | bool:
         if partial:

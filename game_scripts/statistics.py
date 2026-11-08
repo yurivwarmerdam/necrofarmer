@@ -11,16 +11,19 @@ class Statistics:
         return self.data.get(key) or {}
 
     @property
-    def thopter_cost(self):
+    def thopter_cost(self) -> list[int]:
         base_cost = self["thopter"]["base_cost"]
         num = get_group_server().get_typed_group_size("Thopter")
-        return base_cost * (2**num)
+        return [base_cost[0] * (2**num), 0, 0]
 
     @property
-    def sawmnill_cost(self):
+    def sawmill_cost(self) -> list[int]:
         base_cost = self["sawmill"]["base_cost"]
         num = get_group_server().get_typed_group_size("sawmill")
-        return base_cost + (base_cost * num)
+        return [base_cost[0] + (base_cost[0] * num), 0, 0]
+
+    def get_cost(self, name: str) -> list[int]:
+        return getattr(self, f"{name}_cost")
 
 
 _instance = None

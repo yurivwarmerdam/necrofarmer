@@ -173,9 +173,11 @@ class Tardigrade(AnimatedSprite, Selectable):
     def spawn_building(self) -> None | Tile:
         from game_scripts.game_tilemap import get_tilemap
 
-        # TODO: problem: sawmill cost is static....
-        cost = get_statistics().sawmnill_cost()
-        get_stockpile().can_afford_wood()
+        name = get_commander().cursor.active_building
+        cost = get_statistics().get_cost(name)
+        if not get_stockpile().can_afford(cost):
+            return None
+        get_stockpile().take_resource(cost)
         return get_tilemap().spawn_tile_str(
             f"_{get_commander().cursor.active_building}",
             get_camera().get_global_mouse_pos(),
@@ -296,7 +298,7 @@ class TardigradePanel(ContextPanel):
         self.set_context_elems(context_container)
 
     def set_context_elems(self, context_container: IContainerAndContainerLike):
-        UIButton(
+        self.sawmill_button = UIButton(
             pg.Rect(0, 0, 54, 46),
             text="",
             object_id="#sawmill_button",
@@ -316,6 +318,10 @@ class TardigradePanel(ContextPanel):
         )
 
     def update(self, _delta):
+        if get_stockpile().can_afford(get_statistics().get_cost("sawmill")):
+            self.sawmill_button.enable()
+        else:
+            self.sawmill_button.disable()
         self.counter.set_text(f"Time! {time()}")
 
     def on_sawmill_button_clicked(self):
