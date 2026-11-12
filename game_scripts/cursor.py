@@ -8,6 +8,7 @@ from scripts.custom_sprites import NodeSprite
 from scripts.group_server import get_group_server
 from scripts.utils import sheet_to_sprite
 from scripts.tilemap import tilemap_utils
+from game_scripts.statistics import get_statistics
 
 
 class Cursor(NodeSprite):
@@ -28,11 +29,12 @@ class Cursor(NodeSprite):
 
     def update(self, _delta):
         new_pos = get_camera().get_global_mouse_pos()
+        # weird qualifier
         if self.tile_size:
             tl = tilemap_utils.world_to_mapv(new_pos, self.tile_size, True)
             snapped_pos = tilemap_utils.map_to_worldv(tl, self.tile_size, True)
             new_pos = snapped_pos
-
+            get_statistics().can_afford(self.active_building)
         self.pos = new_pos
         # if constructing: grab building sprite (might do that when initializing building):
         #   quantize building pos to tilemap
@@ -45,23 +47,23 @@ class Cursor(NodeSprite):
     def enable_build_plan(self, build_name: str):
         self.active_building = build_name
         tiledata = get_tmx_parser().named_data[build_name]
-        surf = tiledata.surf
+        surf = tiledata.surf.copy()
+        self.image = surf
+        self.rect = self.image.get_rect()
         offset = tiledata.offset
-        self.rect = surf.get_rect()
         self.offset = offset
         self.anchor = tiledata.anchor
-        self.image = surf
         self.tile_size = tiledata.tile_size
-        surf.set_alpha(170)
+        self.image.set_alpha(170)
 
     def disable_build_plan(self):
-        print("disabling")
         self.active_building = ""
-        self.rect = self.cursor_image.get_rect()
         self.image = self.cursor_image
+        self.rect = self.image.get_rect()
         self.offset = Vector2()
         self.anchor = "center"
         self.tile_size = Vector2()
+        self.image.set_alpha(255)
 
     def is_build_planning(self):
         return bool(self.active_building)

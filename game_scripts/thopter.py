@@ -44,10 +44,10 @@ class Thopter(AnimatedSprite, Selectable):
     def __init__(self, pos, preload=False):
         group_server = get_group_server()
         if preload:
-            groups = [group_server.typed_groups[f"_{type(self).__name__}"]]
+            groups = [group_server.typed_groups[f"_{self.__class__.__name__}"]]
         else:
             groups = [
-                group_server.typed_groups[type(self).__name__],
+                group_server.typed_groups[self.__class__.__name__],
                 group_server.update,
                 group_server.render_groups["active"],
                 group_server.behavior_trees,
@@ -118,7 +118,6 @@ class Thopter(AnimatedSprite, Selectable):
         if event.type == pg.MOUSEBUTTONUP and event.button == 3:
             collisions = get_commander().get_mouse_collisions()
             for c in collisions:
-                print(c)
                 if not hasattr(c, "properties"):
                     continue
                 if c.properties.get("wood"):

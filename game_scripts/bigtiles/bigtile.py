@@ -15,7 +15,11 @@ class BigTile(Tile):
         """
 
         # TODO: Might wanna check if update method is overridden.
-        groups = [get_group_server().update]
+        get_group_server().typed_groups[self.__class__.__name__]
+        groups = [
+            get_group_server().update,
+            get_group_server().typed_groups[self.__class__.__name__],
+        ]
         if mask := tiledata.properties.get("collision_mask"):
             groups += get_group_server().get_collide_groups_by_mask(mask)
         super().__init__(tiledata, *groups)

@@ -3,7 +3,6 @@ from pygame.math import Vector2
 
 from game_scripts import star
 from game_scripts.commander import get_commander
-from game_scripts.cursor import Cursor
 from game_scripts.game_tilemap import get_tilemap
 from game_scripts.spawner import get_spawner
 from game_scripts.tardigrade import Tardigrade
@@ -26,11 +25,9 @@ class TardigradeGame(Game):
 
         self.group_server.add_render_groups(tilemap.layers)
 
-
-        # Cursor()
         get_spawner()
         self.commander = get_commander()
-        # why doesn't commander do this inside init?
+        # TODO: why doesn't commander do this inside init?
         self.commander.box.add(self.group_server.draw)
 
         pg.time.set_timer(BTREE_EVENT, 100)
@@ -43,9 +40,7 @@ class TardigradeGame(Game):
 
         Thopter(Vector2(200, 200))
 
-        # print(tilemap.get_neighbors(Vector2(0,0)))
-        # print(tilemap.get_neighbors([Vector2(0,0),Vector2(1,0)]))
-
+        print(self.group_server.typed_groups)
         # tilemap.spawn_tile_str("sawmill", Vector2(96, 130), "active")
 
     def handle_camera_move(self):
@@ -85,8 +80,6 @@ class TardigradeGame(Game):
             if not processed:
                 processed = self.commander.process_events(event)
 
-        pass
-
     def update(self, delta):
         super().update(delta)
         camera_move = self.handle_camera_move()
@@ -97,6 +90,7 @@ class TardigradeGame(Game):
     def main(self):
 
         super().main()
+
 
 if __name__ == "__main__":
     game = TardigradeGame()

@@ -38,7 +38,6 @@ class Tilemap(AbstractGroup):
         self.named_tiledata: dict[str, TileData] = (
             get_tmx_parser().register_named_tiles(typed_tiles)
         )
-        print(self.named_tiledata.keys())
         self.tile_data_layers = TileDataLayers(tmx_data, typed_tiles)
 
         for layer_name in self.tile_data_layers.layers:

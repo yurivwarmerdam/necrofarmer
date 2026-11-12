@@ -5,10 +5,9 @@ from game_scripts.thopter import Thopter
 from scripts.custom_sprites import NodeSprite
 from scripts.group_server import get_group_server
 
-
+# TODO: deprecate this
 class Spawner:
     def __init__(self) -> None:
-        print("spawner")
         signal("spawn_thopter").connect(self.spawn_thopter, weak=False)
         signal("start_build_thopter").connect(self.start_build_thopter, weak=False)
         signal("spawn_tile").connect(self.spawn_tile, weak=False)
