@@ -23,13 +23,20 @@ pip install -e .
 ====================
 ### current:
 
+options:
+- build thopterfactory//thopterworkshop
+- red/green planning cursor
+- build progress on building (settlers)
+- digging pit? (big, exciting, new, lots of work)
+
+
 make new (global) list of tiledatas.
 - separate tiledata into own file
 - separate make_named_tiledata into own file, or into whiteboard
 - supply this to tilemap at creation time
 - THINK ABOUT IF THIS MAKES SENSE AS AN ENGINE (too tired, atm)
     - maybe named tiledata wants to be in a dir with tilemap?
-    - subtype that for specific game?? No idea.
+- subtype that for specific game?? No idea.
 - This allows accessing tile surfaces from outside of tilemap (That's the need)
 
 tmx_parser
