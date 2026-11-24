@@ -28,7 +28,7 @@ options:
 - red/green planning cursor
 - build progress on building (settlers)
 - digging pit? (big, exciting, new, lots of work)
-
+- fishing (also big, also exciting, new lots of work)
 
 make new (global) list of tiledatas.
 - separate tiledata into own file
